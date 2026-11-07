@@ -75,6 +75,24 @@
 <div class="sl-heading-wrapper level-h2"><h2 id="07112026">07.11.2026</h2><a class="sl-anchor-link" href="#07112026"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Abschnitt betitelt „07.11.2026“</span></a></div>
 <ul>
 <li>
+<p>Neu: Sentinel-2-Satellitenbild für Österreich (Best-Pixel-Composite, täglich fortgeschrieben, z5 bis z13) als Tileset <code dir="auto">sentinel2</code>.</p>
+</li>
+<li>
+<p>Neu: ÖV mit aktuellen und Folgejahr-Fahrplänen, Haltestellen feedübergreifend zusammengeführt (IFOPT), Abfahrtsmonitor <code dir="auto">/v1/departures</code> und Haltestellen <code dir="auto">/v1/stops</code>.</p>
+</li>
+<li>
+<p>Neu: Maut in Directions (<code dir="auto">exclude=toll</code>, <code dir="auto">routes[].toll</code>, <code dir="auto">toll_road</code>, <code dir="auto">toll_road_m</code>).</p>
+</li>
+<li>
+<p>Neu: Tilesets <code dir="auto">rastanlagen</code> (ASFINAG-Rastanlagen) und <code dir="auto">sharing</code> (Shared-Mobility-Standorte), Suchkategorien <code dir="auto">rastplatz</code> und <code dir="auto">sharing</code>.</p>
+</li>
+<li>
+<p>Neu: Verkehrsmeldungen <code dir="auto">/v1/traffic/*</code> (Ereignisse, Wechselverkehrszeichen) und <code dir="auto">incidents[]</code> in Directions.</p>
+</li>
+<li>
+<p>Geändert: Reverse-Geocoding antwortet in 3 bis 60 ms statt rund 1 s; XYZ-Kacheln unter <code dir="auto">/v1/tiles</code>; Attribution in den Antworten; <code dir="auto">operationId</code> je Endpunkt in der OpenAPI.</p>
+</li>
+<li>
 <p>Neu: <a href="/api/weather/">Wetter</a> (<code dir="auto">/v1/weather/current</code>, <code dir="auto">/v1/weather/forecast</code>, Wetterkacheln mit TileJSON und Zeitdimension) aus offenen Daten der GeoSphere Austria, CC BY 4.0; Beispiel <a href="/beispiele/wetter-overlay/">Wetter-Overlay</a>.</p>
 </li>
 <li>

@@ -4,6 +4,13 @@
 
 ## 07.11.2026
 
+- Neu: Sentinel-2-Satellitenbild für Österreich (Best-Pixel-Composite, täglich fortgeschrieben, z5 bis z13) als Tileset `sentinel2`.
+- Neu: ÖV mit aktuellen und Folgejahr-Fahrplänen, Haltestellen feedübergreifend zusammengeführt (IFOPT), Abfahrtsmonitor `/v1/departures` und Haltestellen `/v1/stops`.
+- Neu: Maut in Directions (`exclude=toll`, `routes[].toll`, `toll_road`, `toll_road_m`).
+- Neu: Tilesets `rastanlagen` (ASFINAG-Rastanlagen) und `sharing` (Shared-Mobility-Standorte), Suchkategorien `rastplatz` und `sharing`.
+- Neu: Verkehrsmeldungen `/v1/traffic/*` (Ereignisse, Wechselverkehrszeichen) und `incidents[]` in Directions.
+- Geändert: Reverse-Geocoding antwortet in 3 bis 60 ms statt rund 1 s; XYZ-Kacheln unter `/v1/tiles`; Attribution in den Antworten; `operationId` je Endpunkt in der OpenAPI.
+
 - Neu: [Wetter](/api/weather/) (`/v1/weather/current`, `/v1/weather/forecast`, Wetterkacheln mit TileJSON und Zeitdimension) aus offenen Daten der GeoSphere Austria, CC BY 4.0; Beispiel [Wetter-Overlay](/beispiele/wetter-overlay/).
 
 - Neu: [Static Images](/api/static/) (`/v1/static`, Luftbild und Gelände als PNG oder WebP mit Overlays), [SDK mapx-gl](/api/sdk/); englische Doku auf Stand der deutschen.

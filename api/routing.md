@@ -44,7 +44,7 @@ Live: [Route](/beispiele/route/).
 
 **GET https://api.mapx.at/v1/directions/driving-ev/{coordinates}**
 
-Genau Start und Ziel. Die Pkw-Route wird berechnet, bei zu geringer Reichweite wählt der Dienst Ladestationen entlang der Route ([Daten](/daten/ladestationen/)) und routet über sie. Reichweitenmodell linear: Verbrauch pro Kilometer konstant, Start mit voller Batterie, Laden bis `ev_charge_to`, Ankunft nie unter `ev_reserve`.
+Genau Start und Ziel. Die Pkw-Route wird berechnet, bei zu geringer Reichweite wählt der Dienst Ladestationen entlang der Route und routet über sie. Reichweitenmodell linear: Verbrauch pro Kilometer konstant, Start mit voller Batterie, Laden bis `ev_charge_to`, Ankunft nie unter `ev_reserve`.
 
 <ParamTable params={[
   { name: "ev_range_km", type: "number", desc: "Pflicht. Reichweite bei voller Batterie in km (1 bis 1500)." },

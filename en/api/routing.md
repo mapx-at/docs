@@ -44,7 +44,7 @@ Live: [Route](/en/beispiele/route/).
 
 **GET https://api.mapx.at/v1/directions/driving-ev/{coordinates}**
 
-Exactly start and destination. The car route is computed; if the range is too short the service picks charging stations along the route ([data](/en/daten/ladestationen/)) and routes via them. Linear range model: constant consumption per kilometre, start with a full battery, charge up to `ev_charge_to`, never arrive below `ev_reserve`.
+Exactly start and destination. The car route is computed; if the range is too short the service picks charging stations along the route and routes via them. Linear range model: constant consumption per kilometre, start with a full battery, charge up to `ev_charge_to`, never arrive below `ev_reserve`.
 
 <ParamTable params={[
   { name: "ev_range_km", type: "number", desc: "Required. Range on a full battery in km (1 to 1500)." },
