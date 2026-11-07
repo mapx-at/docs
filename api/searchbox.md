@@ -28,7 +28,7 @@ Die Antwort enthält `suggestions`, je Eintrag `name`, `mapbox_id`, `feature_typ
 
 `id` ist der `mapbox_id` eines Vorschlags. Die Antwort ist eine `FeatureCollection` mit einem `Feature`: `geometry` (Punkt), `properties` wie im Vorschlag, dazu `coordinates` (`longitude`, `latitude`), meist `bbox` und `zoom`. `404` bei unbekannter ID. Parameter `session_token` (ohne Wirkung) und `proximity` (für `distance`).
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/searchbox/retrieve/station-735?session_token=abc"`} />
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/searchbox/retrieve/station-at_43_7226?session_token=abc"`} />
 
 ## Orte einer Kategorie
 
