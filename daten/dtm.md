@@ -42,7 +42,7 @@ const map = new maplibregl.Map({
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));`} />
   </TabItem>
   <TabItem label="Leaflet">
-    Leaflet kennt kein `raster-dem`. Über den XYZ-Endpunkt ([API](/api/#xyz)) kommen die Rohkacheln; sie zeigen die kodierte Farbe, nicht
+    Leaflet kennt kein `raster-dem`. Über den XYZ-Endpunkt ([API](/api/kacheln/#xyz)) kommen die Rohkacheln; sie zeigen die kodierte Farbe, nicht
     eine Karte. Für Höhenwerte die Pixel selbst dekodieren (Abschnitt 4).
     <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 16, maxZoom: 20,
@@ -166,8 +166,8 @@ Die Stufen z15 bis z5 sind 2×2-Mittel im Höhenraum (Dekodieren, mitteln, neu k
 | Produkt | Inhalt | Datei | Größe |
 |---|---|---|---|
 | DTM (diese Seite) | Gelände | <code>{t.datei}</code> | {(t.bytes / 1e9).toFixed(1)} GB |
-| DSM | Oberfläche (inkl. Gebäude, Bewuchs), gleiche Kodierung, BEV ALS-DOM 1 m | <code>{dsm.datei}</code> | {(dsm.bytes / 1e9).toFixed(1)} GB |
-| Höhenlinien | Vektor, z10–z16 | siehe Manifest | |
+| [DSM](/daten/dsm/) | Oberfläche (inkl. Gebäude, Bewuchs), gleiche Kodierung, BEV ALS-DOM 1 m | <code>{dsm.datei}</code> | {(dsm.bytes / 1e9).toFixed(1)} GB |
+| [Höhenlinien](/daten/hoehenlinien/) | Vektor, z10–z16 | siehe Produktseite | |
 
 Ein nDSM (DSM minus DTM, Bewuchs- und Gebäudehöhe) ist angedacht, aber nicht verfügbar.
 

@@ -4,8 +4,11 @@
 
 ## 07.11.2026
 
+- Doku für alle Datenprodukte: DSM, Höhenlinien, Basiskarte, Kataster, Orthophoto, Flugblöcke, jeweils mit Live-Karte und Layer-Tabelle aus den Metadaten.
+- API in eigene Seiten geteilt: Übersicht, Kacheln, TileJSON, Höhe und Profil (mit Testkonsole), Fehler und Limits. Endpunkte sind in Betrieb.
+- Neuer Aufbau mit vier Bereichen, jede Seite auch als Markdown.
 - Doku-Website gestartet (Deutsch, DTM-Seite auch auf Englisch).
-- Spezifikation der Endpunkte `v1/{tileset}.json`, `v1/{tileset}/{z}/{x}/{y}.webp` und `elevation` veröffentlicht. Verfügbarkeit: siehe hier, sobald die Endpunkte in Betrieb sind.
+- Spezifikation der Endpunkte `v1/{tileset}.json`, `v1/{tileset}/{z}/{x}/{y}.webp` und `elevation` veröffentlicht.
 - `relief/README.md` korrigiert: Quell-Nodata wird nicht als Höhe 0 kodiert, sondern per Füllraster glatt fortgesetzt.
 
 ## Datenstände

@@ -34,6 +34,6 @@ Die Datei in `index.html` speichern, mit einem beliebigen statischen Server öff
 ## 2. Weiter
 
 - Live-Karte mit Höhe pro Klick, Codebeispiele für Leaflet, OpenLayers, QGIS und Python: [DTM Geländemodell](/daten/dtm/).
-- Höhe per HTTP statt Kachel-Dekodierung: [API](/api/#elevation).
+- Höhe per HTTP statt Kachel-Dekodierung: [API](/api/hoehe/).
 - Wie die Höhe in die Farbe kommt: [Terrain-RGB](/konzepte/terrain-rgb/).
-- Namen mit Stichtag und Hash ändern sich bei jedem neuen Stand. Der aktuelle Name steht auf der Produktseite und im [TileJSON](/api/#tilejson).
+- Namen mit Stichtag und Hash ändern sich bei jedem neuen Stand. Der aktuelle Name steht auf der Produktseite und im [TileJSON](/api/tilejson/).
