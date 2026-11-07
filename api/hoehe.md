@@ -36,7 +36,7 @@ Antwort: GeoJSON `FeatureCollection`. Jedes Feature ist ein Punkt (Koordinaten `
   }]
 }`} />
 
-Der Wert von `elevation` im Beispiel ist ein Platzhalter für die Form, kein Messwert.
+Der Wert von `elevation` im Beispiel zeigt nur die Form der Antwort.
 
 ### Beispiel: Profil
 

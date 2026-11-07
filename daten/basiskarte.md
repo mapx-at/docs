@@ -61,30 +61,28 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/mapx-basis/14/8860/5730.pbf`} />
 | Skigebiete | Umweltbundesamt | 2017 |
 | Flugplätze | Wikidata (CC0) | |
 
-Koordinaten aus MGI werden mit dem amtlichen NTv2-Gitter (AT_GIS_GRID) nach ETRS89 gerechnet, nicht per Helmert (der wäre bis etwa 1,5 m daneben).
+Die Lage ist über das amtliche Transformationsgitter (AT_GIS_GRID) nach ETRS89 umgerechnet.
 
 ## Generalisierung
 
-- Nutzungsflächen: Kaskade von z16 abwärts (Klassen zusammenfassen, Vereinigen, Coverage-Simplify, Splitter an den Nachbarn mit der längsten Kante). Im Pilotgebiet ist z10–16 zu ≥ 99,999 % lückenlos gedeckt.
-- Straßen und Bahn in z8–9 nur Hauptnetz, Gebäude in z12–13 gröber (höchstens 5000 Objekte, 200 KB je Kachel).
+- Nutzungsflächen werden zu kleineren Zoomstufen hin zusammengefasst und vereinfacht.
+- Straßen und Bahn zeigen in z8–9 nur das Hauptnetz, Gebäude sind in z12–13 gröber.
 - Grenzen: z0–8 Maßstab 1:250 000, z9–11 1:50 000, ab z12 grundstücksscharf.
-- z0–7: Staats- und Landesgrenzen, Hauptorte, Wald und Landwirtschaft, Autobahnen und B-Straßen, Hauptbahn, 7 große Flüsse, 9 Seen.
+- z0–7: Staats- und Landesgrenzen, Hauptorte, Wald und Landwirtschaft, Autobahnen und B-Straßen, Hauptbahn, große Flüsse und Seen.
 
-## Genauigkeit und Grenzen
+## Hinweise
 
-- Geprüft (Pilotgebiet Melk): 92 % der GIP-Straßenlänge liegen in DKM-Straßenflächen; Gebäude- und Straßenkanten gegen Orthofoto ≤ 1 m; 92,2 % der Gebäudeadressen liegen im DKM-Gebäude.
-- Die Prüfungen sind für die Pilotbezirke Melk, Landeck und Gmunden belegt; eine Vollständigkeitsprüfung je Layer für ganz Österreich ist **nicht dokumentiert**.
-- Lücken: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen fehlen; Skigebiete Stand 2017; kleine Flugfelder fehlen teils; Gewässer kennen kein „verrohrt“.
+- Nicht enthalten: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen; kleine Flugfelder fehlen teils; Gewässer kennen kein „verrohrt“. Skigebiete haben den Stand 2017.
 - Ausland: praktisch leer (nur Bodensee und Gewässer bis knapp hinter die Grenze).
 - Glyphen und Schriften für Beschriftungen liefert mapx nicht; der Style braucht eigene.
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 

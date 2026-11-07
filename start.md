@@ -29,11 +29,11 @@ nur die Kacheln, die er braucht. Es gibt keinen Schlüssel und keine Anmeldung, 
   });
 </script>`} />
 
-Die Datei in `index.html` speichern, mit einem beliebigen statischen Server öffnen (`python3 -m http.server`), fertig: schattiertes 3D-Gelände rund um den Großglockner.
+Die Datei in `index.html` speichern, mit einem beliebigen statischen Server öffnen (zum Beispiel `npx serve`), fertig: schattiertes 3D-Gelände rund um den Großglockner.
 
 ## 2. Weiter
 
 - Live-Karte mit Höhe pro Klick, Codebeispiele für Leaflet, OpenLayers, QGIS und Python: [DTM Geländemodell](/daten/dtm/).
 - Höhe per HTTP statt Kachel-Dekodierung: [API](/api/hoehe/).
 - Wie die Höhe in die Farbe kommt: [Terrain-RGB](/konzepte/terrain-rgb/).
-- Namen mit Stichtag und Hash ändern sich bei jedem neuen Stand. Der aktuelle Name steht auf der Produktseite und im [TileJSON](/api/tilejson/).
+- Dateinamen enthalten den Stichtag und ändern sich bei jedem neuen Stand. Der aktuelle Name steht auf der Produktseite und im [TileJSON](/api/tilejson/).

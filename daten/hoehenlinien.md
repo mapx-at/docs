@@ -21,14 +21,14 @@ Höhenlinien aus dem [DTM](/daten/dtm/), in vier Generalisierungsstufen. Jede St
 
 ## Stufen
 
-| `lvl` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß σ) | Mindestlänge |
-|---|---|---|---|---|---|---|
-| 10 | 10–11 | 100 m | 500 m | 20 m | 60 m | 600 m |
-| 12 | 12–13 | 50 m | 200 m | 10 m | 25 m | 250 m |
-| 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
-| 16 | ab 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
+| `lvl` | Zoom | Abstand | Indexlinie |
+|---|---|---|---|
+| 10 | 10–11 | 100 m | 500 m |
+| 12 | 12–13 | 50 m | 200 m |
+| 14 | 14–15 | 20 m | 100 m |
+| 16 | ab 16 | 10 m | 50 m |
 
-Die Staffelung folgt dem früheren basemap.at-Höhenlinien-Cache. Unter z10 gibt es keine Linien. Im Style nach `lvl` filtern, sonst liegen in z12 und darüber mehrere Stufen übereinander,
+Jede Stufe hat eigene Glättung und Mindestlänge der Linien. Unter z10 gibt es keine Linien. Im Style nach `lvl` filtern, sonst liegen in z12 und darüber mehrere Stufen übereinander,
 falls der Client überzoomt.
 
 <Code lang="js" code={`{ id: "hl", type: "line", source: "v", "source-layer": "contour_l",
@@ -63,24 +63,22 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/hoehenlinien/14/8860/5730.pbf`} /
 ## Datenherkunft
 
 - Quelle: BEV ALS-DTM 1 m, Stichtag 15.09.2025 (wie das DTM).
-- Erzeugt mit `crates/mapx-contours` (Rust, ohne GDAL): Quelle je Stufe auf das Zielraster mitteln, Gauß-Glättung, Marching Squares, Douglas-Peucker je Kachel.
-- Stehgewässer ab 1 ha (GGN) sind maskiert, die Linien enden am Ufer.
+- Die Linien sind je Stufe geglättet und generalisiert. Stehgewässer ab 1 ha sind maskiert, die Linien enden am Ufer.
 
-## Genauigkeit und Grenzen
+## Hinweise
 
-- Geprüft: Lauf aus URL und aus lokalen Blöcken byte-gleich, Fortsetzen nach Abbruch byte-gleich zum Lauf am Stück. Gegenüber `gdal_contour` weichen an Sätteln 3 von 362 Linien ab (anderer Sattelentscheid).
-- Absolute Lagegenauigkeit gegen das DTM: **nicht gemessen**. Durch die Glättung liegt die Linie in groben Stufen bewusst nicht exakt auf der Rohhöhe.
-- Linien enden am Gebiets- bzw. DTM-Rand (Staatsgrenze), Lücke höchstens ein Rasterpixel der Stufe.
-- In Steilwänden (z. B. Dachstein-Südwand) liegen 10-m-Linien sehr dicht; Ausdünnen ist Aufgabe des Styles.
+- Durch die Glättung liegt die Linie in groben Stufen bewusst nicht exakt auf der Rohhöhe.
+- Linien enden am Rand der Daten (Staatsgrenze).
+- In Steilwänden liegen 10-m-Linien sehr dicht; Ausdünnen ist Aufgabe des Styles.
 - Beschriftung nur über `ele`, es gibt keine eigenen Label-Punkte.
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 

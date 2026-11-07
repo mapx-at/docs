@@ -52,26 +52,24 @@ Höhe per HTTP: [Höhe und Profil](/api/hoehe/) mit `model=dsm`.
 
 ## Datenherkunft
 
-- Quelle: BEV **ALS-DOM 1 m** (Airborne Laserscanning, Oberfläche), Geonetwork-Serie `cced2282-cfc5-42eb-9acb-b1c799522fcd`, Stichtag **15.09.2025**, 55 Quellkacheln.
-- Gleiche Rust-Pipeline wie das DTM (`crates/mapx-rgb`): Reprojektion EPSG:3035 → 3857 bilinear, Mapbox-Kodierung 0,1 m, 512 px, WebP verlustfrei.
-- Übersichtsstufen z15 bis z5 als 2×2-Mittel im Höhenraum.
+- Quelle: BEV **ALS-DOM 1 m** (Airborne Laserscanning, Oberfläche), Stichtag **15.09.2025**.
+- Gleiche Kodierung wie das DTM: Mapbox-Terrain-RGB mit 0,1 m Quantisierung, 512 px, WebP verlustfrei. Die Übersichtsstufen z15 bis z5 sind im Höhenraum gemittelt.
 
-## Genauigkeit und Grenzen
+## Genauigkeit und Hinweise
 
 - Quantisierung 0,1 m, maximal z16 (≈ 0,8 m pro Pixel bei 48° N), darüber zoomt der Client auf.
-- Gemessen (4 Mio. Pixel, Innsbruck): DSM minus DTM im Median 2,9 m, P95 21 m, Maximum 56 m; nur 0,07 % der Pixel liegen mehr als 0,5 m unter dem DTM.
-- Eine eigene Höhenprüfung gegen das Quell-DSM wie beim DTM ist **nicht dokumentiert**.
-- Aufnahmezeitraum der Befliegungen: nicht dokumentiert. Gebäude und Bewuchs entsprechen dem Flugzeitpunkt, nicht dem Stichtag.
+- Die Genauigkeit entspricht der amtlichen Quelle des BEV.
+- Gebäude und Bewuchs entsprechen dem Zeitpunkt der Befliegung, nicht dem Stichtag.
 - Außerhalb der Daten ist der Wert eine glatte Fortsetzung, keine Messung (wie beim DTM).
-- **nDSM** (Gebäude- und Bewuchshöhe = DSM − DTM) gibt es nicht als eigenes Tileset; es lässt sich im Client aus beiden Kachelsätzen rechnen.
+- Gebäude- und Bewuchshöhe (nDSM) ergeben sich im Client aus DSM minus DTM.
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 

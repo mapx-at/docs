@@ -9,7 +9,7 @@ Zwei Wege zu denselben Kacheln: die ganze PMTiles-Datei (Basisweg, je Kachel ein
 <Endpoint url="https://tiles.mapx.at/<datei>.pmtiles" />
 
 Die ganze PMTiles-Datei mit HTTP-Range. Das ist der Basisweg, MapLibre liest damit über das `pmtiles://`-Protokoll.
-Dateinamen enthalten Stichtag und Hash und ändern sich nie. Aktuelle Namen: auf jeder Produktseite unter „Kennwerte“.
+Dateinamen enthalten den Stichtag und ändern sich nie. Aktuelle Namen: auf jeder Produktseite unter „Kennwerte“.
 
 <Code lang="bash" code={`curl -s -r 0-126 https://tiles.mapx.at/<datei>.pmtiles | xxd | head`} />
 

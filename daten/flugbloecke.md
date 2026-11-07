@@ -5,7 +5,7 @@ Welcher Bildflug liefert welches Orthophoto-Pixel: Gewinnerflächen der BEV-Oper
 export const t = data.tilesets.dop_flugblock;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-Zu jedem Pixel des [Orthophotos](/daten/orthophoto/) die Fläche des Bildflugs (Operats), aus dem es stammt, mit Flugzeitraum und Quell-Mosaik.
+Zu jedem Pixel des [Orthophotos](/daten/orthophoto/) die Fläche des Bildflugs (Operats), aus dem es stammt, mit Flugzeitraum.
 Damit lässt sich zum Beispiel „Aufnahme von“ in einer Karte anzeigen.
 
 ## Kennwerte
@@ -28,12 +28,9 @@ Damit lässt sich zum Beispiel „Aufnahme von“ in einer Karte anzeigen.
 | `flugdatum` | Ende des Zeitraums, bestimmt den Vorrang |
 | `flugjahr` | Jahr aus dem Datum |
 | `rang` | Vorrang, 0 = höchster |
-| `mosaik_url` | URL des Quell-Mosaiks (COG) beim BEV |
-| `stichtag` | Lieferstand des Mosaiks (aus der URL), nicht das Flugdatum |
-| `fid` | laufende Nummer |
+| `stichtag` | Lieferstand der Bilddaten, nicht das Flugdatum |
 
-Ein Flugblock ist ein **Operat**, kein einzelner Flugtag: Das BEV liefert nur Operat-Umrisse, ein Operat kann bis zu drei Monate dauern.
-Die Beschreibung im Tileset („Operat × Flugtag“) ist in diesem Punkt ungenau.
+Ein Flugblock ist ein **Operat**, kein einzelner Flugtag: Es gibt kein Tagesdatum, nur den Zeitraum des Operats; ein Operat kann bis zu drei Monate dauern.
 
 ## Einbinden
 
@@ -60,23 +57,20 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} 
 
 ## Datenherkunft
 
-- Metadaten: BEV „Aktualität Orthophoto Operate Farbe und Infrarot“, 32 Operate.
-- Die Flächen kommen aus dem Besitzerraster des Orthophoto-Renderers, nicht aus den BEV-Umrissen: Sie zeigen, wo das Operat **tatsächlich** gewonnen hat. Ein Operat kann mehrere Flächen haben.
-- Eckpunkte liegen auf z18-Pixelecken; bis z15 pixelgenau, z16 und z17 fein unterteilt.
+- Quelle: BEV „Aktualität Orthophoto Operate Farbe und Infrarot“.
+- Die Flächen zeigen, wo ein Operat im Orthophoto **tatsächlich** zu sehen ist, nicht die ursprünglichen Umrisse. Ein Operat kann mehrere Flächen haben.
 
-## Genauigkeit und Grenzen
+## Hinweise
 
-- Geprüft: 0 Abweichungen Pixel gegen Polygon (35 400 Pixel, 830 000 Randpixel); die Fläche je Operat wird beim Lauf gegen die Pixelzahl geprüft.
-- Kein Tagesdatum, nur der Zeitraum des Operats.
 - Der Vorrang folgt dem Ende des Zeitraums und kann überraschen: St. Pölten (Ende 23.07.2023) liegt vor Linz (28.05.2023).
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 

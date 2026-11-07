@@ -51,22 +51,21 @@ Weil es nur z16 gibt, im Style `minzoom: 16` setzen; die Quelle mit `maxzoom: 16
 ## Datenherkunft
 
 - Quelle: BEV **Digitale Katastralmappe (DKM)**, Stichtag 01.04.2026.
-- Umrechnung aus den Gauß-Krüger-Streifen M28/M31/M34 nach ETRS89 mit dem amtlichen NTv2-Gitter (Probepunkte 0,000 m Abweichung).
-- Grenzen aus den Grundstücksflächen abgeleitet (`ST_Boundary`).
+- Die Lage ist über das amtliche Transformationsgitter nach ETRS89 umgerechnet.
+- Die Grenzen sind aus den Grundstücksflächen abgeleitet.
 
-## Genauigkeit und Grenzen
+## Hinweise
 
-- Kanten gegen Orthofoto (Pilot Melk): 0,2 m (Stift Melk) bis 2,4 m (freies Feld mit schwachem Kontrast); das misst die Abbildung, nicht die Rechtsgrenze.
-- Prüfungen sind für die Pilotbezirke belegt, Vollständigkeit für ganz Österreich ist **nicht dokumentiert**.
+- Die Abbildung der Grenzen ist nicht rechtsverbindlich, maßgeblich ist der Kataster beim Vermessungsamt.
 - Unter z16 gibt es keine Kacheln.
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 

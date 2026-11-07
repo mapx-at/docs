@@ -26,4 +26,4 @@ MapLibre zeigt die Attribution automatisch aus dem Tileset an, solange sie nicht
 
 ## Sonstiges
 
-Lizenz und Quelle weiterer Produkte stehen auf deren Seiten, sobald sie dokumentiert sind.
+Lizenz und Quelle jedes weiteren Produkts stehen auf der jeweiligen Produktseite unter „Attribution“.

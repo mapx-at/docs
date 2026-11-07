@@ -15,12 +15,12 @@ Alle Endpunkte antworten bei Fehlern mit `application/problem+json` (RFC 9457), 
 
 ## Limits
 
-Der Dienst begrenzt Anfragen je IP (Standard: 50 pro Sekunde, Spitze 300; Höhenabfragen zählen je 32 Punkte zusätzlich eins) und antwortet darüber mit `429` und `Retry-After`.
+Der Dienst begrenzt Anfragen je IP (Standard: 50 pro Sekunde, kurzzeitig bis 300; Höhenabfragen zählen je 32 Punkte zusätzlich eins) und antwortet darüber mit `429` und `Retry-After`.
 Bei `429` mit wachsendem Abstand erneut versuchen.
 
 ## Caching
 
-Kacheln und TileJSON tragen `ETag` und `Cache-Control`; mit `If-None-Match` antwortet der Dienst `304`. PMTiles-Dateinamen enthalten Stichtag und Hash und ändern sich nie.
+Kacheln und TileJSON tragen `ETag` und `Cache-Control`; mit `If-None-Match` antwortet der Dienst `304`. PMTiles-Dateinamen enthalten den Stichtag und ändern sich nie, die Dateien lassen sich daher dauerhaft cachen.
 
 ## Health und OpenAPI
 

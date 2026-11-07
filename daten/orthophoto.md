@@ -5,7 +5,7 @@ Luftbild Österreich des BEV als WebP-Kacheln, z5 bis z18, 20 cm, mit eindeutige
 export const t = data.tilesets.dop;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, beschreibt das Tileset [Flugblöcke](/daten/flugbloecke/).
+Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](/daten/flugbloecke/).
 
 ## Kennwerte
 
@@ -48,27 +48,24 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
 
 ## Datenherkunft
 
-- Quelle: BEV **Digitales Orthophoto (DOP) RGB**, 32 Operat-Mosaike, 20 cm, Aufnahmen 2022 bis 2025, gelesen direkt aus den Cloud-Optimized GeoTIFFs des BEV.
-- z18 je Kachel exakt über das amtliche Gitter (ETRS89 ↔ MGI) entzerrt, Neuabtastung Catmull-Rom, Maske gewichtet.
-- z17 bis z5 als 2×2-Mittel, WebP Qualität 80 ab z15, darunter 75. Leere Kacheln entfallen.
-- **Ein Besitzer je Pixel:** Wo sich Operate überlappen, gewinnt das mit dem späteren Ende des Flugzeitraums (dann früherer Beginn, dann Archivnummer). Keine Überblendung, harte Naht an der Operatgrenze.
+- Quelle: BEV **Digitales Orthophoto (DOP) RGB**, 20 cm, Aufnahmen 2022 bis 2025.
+- z18 ist über das amtliche Transformationsgitter (ETRS89 ↔ MGI) entzerrt; die Stufen z17 bis z5 sind daraus abgeleitet.
+- **Ein Flug je Pixel:** Wo sich Befliegungen überlappen, gewinnt die mit dem späteren Ende des Flugzeitraums. Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](/daten/flugbloecke/).
 
-## Genauigkeit und Grenzen
+## Hinweise
 
-- Geprüft: Pixel gegen Flugblock-Polygon 0 Abweichungen (35 400 Pixel, dazu 830 000 Randpixel). Georeferenz gegen basemap.at bestätigt, kein Versatz erkennbar; Farbabweichung (MAE RGB) 4,5 bis 6,6, bei gleichem Flug 3 bis 5.
-- Ganz Österreich ist bedeckt (0 km² ohne Bild).
-- Zwischen Operaten bleiben Farbnähte sichtbar, es gibt keine Farbangleichung.
-- An den Grenzen zu DE, CH, LI, IT, SI, CZ und SK reicht das Bild teils mehr als 3 km ins Ausland (insgesamt rund 3640 km²); an der Grenze zu Ungarn endet es an der Grenze.
+- Ganz Österreich ist bedeckt.
+- Zwischen Bildflügen sind Farbnähte sichtbar, es gibt keine Farbangleichung.
+- An den Grenzen zu DE, CH, LI, IT, SI, CZ und SK reicht das Bild teils mehr als 3 km ins Ausland; an der Grenze zu Ungarn endet es an der Grenze.
 - Unter z18 mischen sich an Blockgrenzen Pixel beider Flüge; eindeutig ist die Zuordnung nur in z18.
-- Der Stand in der Datei (`{t.stand}`) und der Lieferstand der Quell-Mosaike (15.04.2026, Feld `stichtag` der Flugblöcke) weichen voneinander ab.
 
 ## Versionen
 
-Datei mit Stichtag und Hash im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
+Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
 
-| Stand | Datei | SHA-256 |
-|---|---|---|
-| {t.stand} | <code>{t.datei}</code> | <code>{t.sha256}</code> |
+| Stand | Datei |
+|---|---|
+| {t.stand} | <code>{t.datei}</code> |
 
 Alle Änderungen: [Changelog](/changelog/).
 
