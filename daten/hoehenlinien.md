@@ -25,18 +25,18 @@ Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](/
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/hoehenlinien.json" } },
+    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/contours.json" } },
     layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
   }
 });`} />
     TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://${url}"` (Protokoll wie im [Schnellstart](/start/)).
   </TabItem>
   <TabItem label="QGIS">
-    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/hoehenlinien/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/contours/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/hoehenlinien.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/hoehenlinien/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/contours.json
+curl -s -o kachel.pbf https://tiles.mapx.at/v1/contours/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 

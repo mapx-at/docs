@@ -14,7 +14,7 @@ DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung, Vektor
 2. Name `mapx Orthophoto`, URL:
 
    ```
-   https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp
+   https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp
    ```
 
 3. **Min. Zoom** 5, **Max. Zoom** 18, **Kachelauflösung** 512 (Mapbox-Stil, 512 px). Bei **Referer** und **Authentifizierung** nichts eintragen.
@@ -48,7 +48,7 @@ https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp
 2. Name `mapx Basiskarte`, URL:
 
    ```
-   https://tiles.mapx.at/v1/mapx-basis/{z}/{x}/{y}.pbf
+   https://tiles.mapx.at/v1/streets/{z}/{x}/{y}.pbf
    ```
 
 3. **Min. Zoom** 0, **Max. Zoom** 16 eintragen, OK.

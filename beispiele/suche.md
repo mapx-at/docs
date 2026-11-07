@@ -8,7 +8,7 @@ Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder
 // Suche: Orte, Adressen, Gipfel und Grundstücke über /v1/geocode (GeoJSON im Mapbox-Stil).
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
 let marker;
 

@@ -25,18 +25,18 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/mapx-kataster.json" } },
+    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/cadastre.json" } },
     layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
   }
 });`} />
     TileJSON provides zoom range, bounds and attribution; with PMTiles directly use `url: "pmtiles://${url}"` (protocol as in the [Quickstart](/en/start/)).
   </TabItem>
   <TabItem label="QGIS">
-    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/mapx-kataster/{z}/{x}/{y}.pbf`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/cadastre/{z}/{x}/{y}.pbf`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/mapx-kataster.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/mapx-kataster/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/cadastre.json
+curl -s -o kachel.pbf https://tiles.mapx.at/v1/cadastre/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 

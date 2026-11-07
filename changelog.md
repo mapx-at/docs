@@ -2,6 +2,15 @@
 
 Änderungen an Datenprodukten, APIs und dieser Doku.
 
+## 08.11.2026
+
+- Deprecated: Die deutschen Bezeichner der API werden durch englische ersetzt. Die alten Namen funktionieren als Alias **bis zum 31.05.2027** (Sunset) und liefern die Header `Deprecation`, `Sunset` und `Link: …; rel="successor-version"`. Alle Zuordnungen: [Migration auf englische Namen](/api/migration/).
+  - Stil-IDs: `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`.
+  - Kachelsätze: `basis` → `streets`, `kataster` → `cadastre`, `hoehenlinien` → `contours`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks` (`dtm`, `dsm` bleiben).
+  - Suchkategorien: 49 neue IDs in snake_case, zum Beispiel `bahnhof` → `train_station`, `apotheke` → `pharmacy`, `schule` → `school`.
+  - Felder: Grundstück `gstnr`/`kgnr`/`bauflaeche`/`quelle` → `parcel_number`/`cadastral_municipality_id`/`is_building_land`/`source`, Höhe `stichtag` → `reference_date` (bis zum Sunset stehen beide Felder in der Antwort).
+  - Stil-Metadaten: `mapx:stil` → `mapx:style`, `mapx:api-stil` → `mapx:api_style`.
+
 ## 07.11.2026
 
 - Neu: Sentinel-2-Satellitenbild für Österreich (Best-Pixel-Composite, täglich fortgeschrieben, z5 bis z13) als Tileset `sentinel2`.

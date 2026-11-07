@@ -7,7 +7,7 @@
 - [English documentation](https://docs.mapx.at/en/): all pages exist under /en/, for example [API](https://docs.mapx.at/en/api/), [Static Images](https://docs.mapx.at/en/api/static/), [SDK mapx-gl](https://docs.mapx.at/en/api/sdk/), [Routing](https://docs.mapx.at/en/api/routing/), [Geocoding](https://docs.mapx.at/en/api/geocoding/), [Styles](https://docs.mapx.at/en/api/styles/), [Examples](https://docs.mapx.at/en/beispiele/), [DTM](https://docs.mapx.at/en/daten/dtm/)
 - [Terrain-RGB](https://docs.mapx.at/konzepte/terrain-rgb/): Formel -10000 + (R*65536+G*256+B)*0.1
 - [API](https://docs.mapx.at/api/): tiles, tilejson, xyz, elevation (Spezifikation)
-- [Styles](https://docs.mapx.at/api/styles/): fertige MapLibre-Stile karte, luftbild, gelaende
+- [Styles](https://docs.mapx.at/api/styles/): fertige MapLibre-Stile streets, satellite, outdoors
 - [Suche und Geocoding](https://docs.mapx.at/api/geocoding/): /v1/geocode, /v1/reverse, Suchindex
 - [Weather](https://docs.mapx.at/api/weather/): current observations, hourly forecast, weather tiles (GeoSphere Austria, CC BY 4.0)
 - [Routing](https://docs.mapx.at/api/routing/): directions, isochrone, matrix, matching (GIP.at)
@@ -43,5 +43,5 @@
 ## Hinweise für Werkzeuge
 
 - Beispielcode nutzt MapLibre GL JS 4.7.1 und pmtiles 3.2.1 (CDN), das Protokoll `pmtiles://` muss registriert sein.
-- Stile: https://mapx.at/styles/ (künftig /v1/styles/{karte|luftbild|gelaende}). Keine OSM-Daten, nur amtliche Quellen.
+- Stile: https://mapx.at/styles/ (künftig /v1/styles/{streets|satellite|outdoors}). Keine OSM-Daten, nur amtliche Quellen.
 - Such- und Routing-Dienst antworten nur auf freigegebene Herkünfte (CORS).

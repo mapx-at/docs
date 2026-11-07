@@ -2,6 +2,15 @@
 
 Changes to data products, APIs and these docs.
 
+## 08.11.2026
+
+- Deprecated: the German API identifiers are replaced by English ones. The old names keep working as aliases **until 2027-05-31** (sunset) and return the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"`. All mappings: [Migration to English names](/en/api/migration/).
+  - Style IDs: `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`.
+  - Tilesets: `basis` → `streets`, `kataster` → `cadastre`, `hoehenlinien` → `contours`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks` (`dtm`, `dsm` stay).
+  - Search categories: 49 new snake_case IDs, for example `bahnhof` → `train_station`, `apotheke` → `pharmacy`, `schule` → `school`.
+  - Fields: parcel `gstnr`/`kgnr`/`bauflaeche`/`quelle` → `parcel_number`/`cadastral_municipality_id`/`is_building_land`/`source`, elevation `stichtag` → `reference_date` (both fields are in the response until the sunset).
+  - Style metadata: `mapx:stil` → `mapx:style`, `mapx:api-stil` → `mapx:api_style`.
+
 ## 07.11.2026
 
 - New: Sentinel-2 satellite imagery for Austria (best-pixel composite, updated daily, z5 to z13) as tileset `sentinel2`.

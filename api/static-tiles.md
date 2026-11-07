@@ -7,7 +7,7 @@ Der Endpunkt liefert fertig gerenderte Rasterkacheln eines Stils, in der Form de
 **GET https://api.mapx.at/v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}[@2x][.png|.webp]**
 
 <ParamTable params={[
-  { name: "id", type: "string", required: true, desc: "Stil: <code>karte</code>, <code>karte-morgen</code>, <code>karte-abend</code>, <code>karte-nacht</code>, <code>luftbild</code>, <code>hybrid</code> oder <code>gelaende</code>." },
+  { name: "id", type: "string", required: true, desc: "Stil: <code>streets</code>, <code>streets-dawn</code>, <code>streets-dusk</code>, <code>streets-night</code>, <code>satellite</code>, <code>satellite-streets</code> oder <code>outdoors</code>." },
   { name: "tilesize", type: "integer", required: true, desc: "<code>256</code> (Standard-XYZ, Kartenzoom <code>z-1</code>) oder <code>512</code> (Kartenzoom <code>z</code>, Beschriftung wirkt kleiner)." },
   { name: "z, x, y", type: "integer", required: true, desc: "Kachel im XYZ-Schema (Ursprung oben links)." },
   { name: "@2x", type: "suffix", desc: "Doppelte Pixelzahl (512 bzw. 1024 Pixel) bei gleichem Ausschnitt." },
@@ -20,12 +20,12 @@ Der Ausschnitt wird mit einem Rand von 96 Pixeln gerendert und auf die Kachel zu
 
 ## Antworten und Limits
 
-`404` für Kacheln ohne Daten (außerhalb Österreichs) und unter dem Mindestzoom (`luftbild`, `hybrid` und `gelaende` ab Kartenzoom 5), ungültige Größe, Endung oder Kachelnummer sowie unbekannte Stile. `ETag` und `Cache-Control: public, max-age=86400`, `If-None-Match` ergibt `304`. Das Rendern ist aufwendig und zählt im Rate-Limit mehrfach (<a href="/api/fehler/">Fehler und Limits</a>); wiederholte Abrufe bedient der Cache.
+`404` für Kacheln ohne Daten (außerhalb Österreichs) und unter dem Mindestzoom (`satellite`, `satellite-streets` und `outdoors` ab Kartenzoom 5), ungültige Größe, Endung oder Kachelnummer sowie unbekannte Stile. `ETag` und `Cache-Control: public, max-age=86400`, `If-None-Match` ergibt `304`. Das Rendern ist aufwendig und zählt im Rate-Limit mehrfach (<a href="/api/fehler/">Fehler und Limits</a>); wiederholte Abrufe bedient der Cache.
 
 ## Leaflet
 
 ```js
-L.tileLayer('https://api.mapx.at/v1/styles/karte/tiles/256/{z}/{x}/{y}@2x', {
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/256/{z}/{x}/{y}@2x', {
   tileSize: 256,
   detectRetina: false, // @2x ist schon in der URL / @2x is already in the URL
   maxZoom: 22,
@@ -42,13 +42,13 @@ Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**:
 | | |
 |---|---|
 | Name | mapx Karte |
-| URL | `https://api.mapx.at/v1/styles/karte/tiles/256/{z}/{x}/{y}` |
+| URL | `https://api.mapx.at/v1/styles/streets/tiles/256/{z}/{x}/{y}` |
 | Max. Zoom | 22 |
 
-Für `luftbild` und `gelaende` Min. Zoom 5 eintragen. Die Ebene lässt sich wie jede Rasterebene in Layouts und Berichten verwenden.
+Für `satellite` und `outdoors` Min. Zoom 5 eintragen. Die Ebene lässt sich wie jede Rasterebene in Layouts und Berichten verwenden.
 
 ## Einzelne Kachel
 
 ```sh
-curl -o kachel.png 'https://api.mapx.at/v1/styles/luftbild/tiles/256/15/17767/11367'
+curl -o kachel.png 'https://api.mapx.at/v1/styles/satellite/tiles/256/15/17767/11367'
 ```

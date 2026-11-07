@@ -10,7 +10,7 @@ maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: 'https://api.mapx.at/v1/styles/karte',
+  style: 'https://api.mapx.at/v1/styles/streets',
   center: [13.04, 47.80], // Salzburg
   zoom: 12,
 });
@@ -20,4 +20,4 @@ map.addControl(new maplibregl.ScaleControl());
 
 ## Verwendete APIs
 
-- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/karte`
+- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/streets`

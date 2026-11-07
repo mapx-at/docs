@@ -35,7 +35,7 @@ Die Antwort enthält `suggestions`, je Eintrag `name`, `mapbox_id`, `feature_typ
 **GET https://api.mapx.at/v1/searchbox/category/{kategorie}**
 
 <ParamTable params={[
-  { name: "kategorie", type: "string", required: true, desc: "Kategorie-ID, mehrere kommagetrennt (<code>schule,kindergarten</code>)." },
+  { name: "kategorie", type: "string", required: true, desc: "Kategorie-ID, mehrere kommagetrennt (<code>school,kindergarten</code>)." },
   { name: "proximity", type: "string", desc: "<code>lon,lat</code>: nächste zuerst. Ohne <code>proximity</code> und <code>bbox</code> ist die Reihenfolge nach Wichtigkeit." },
   { name: "bbox", type: "string", desc: "<code>minLon,minLat,maxLon,maxLat</code>: nur dieses Gebiet." },
   { name: "limit", type: "integer", default: "10", desc: "1 bis 25." },
@@ -43,7 +43,7 @@ Die Antwort enthält `suggestions`, je Eintrag `name`, `mapbox_id`, `feature_typ
 
 Antwort: `FeatureCollection` wie bei `retrieve`.
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/searchbox/category/apotheke?proximity=15.33,48.22&limit=5"`} />
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=15.33,48.22&limit=5"`} />
 
 ## Kategorieliste
 
@@ -51,56 +51,57 @@ Antwort: `FeatureCollection` wie bei `retrieve`.
 
 Liefert `listItems` mit `canonical_id`, `name` und `icon` (Maki), `language=de` (Standard) oder `en`. Die IDs sind stabil, neue kommen nur dazu. Zuordnung der Quellen: Kirchen, Gipfel, Pässe, Schlösser und Denkmäler aus den Geonamen, Bahnhöfe und Haltestellen aus der GIP, alles Übrige aus den POIs (BEV DLM Bauten und Verkehr, in Wien zusätzlich Wien OGD). Nur benannte Orte sind durchsuchbar.
 
-| ID | Name |
-|---|---|
-| `bahnhof` | Bahnhof |
-| `haltestelle` | Haltestelle |
-| `kirche` | Kirche und Kapelle |
-| `religion` | Religiöse Stätte |
-| `schule` | Schule |
-| `kindergarten` | Kindergarten |
-| `universitaet` | Universität und Hochschule |
-| `krankenhaus` | Krankenhaus |
-| `ambulatorium` | Ambulatorium |
-| `apotheke` | Apotheke |
-| `arzt` | Arzt |
-| `rettung` | Rettungsstation |
-| `defibrillator` | Defibrillator |
-| `polizei` | Polizei |
-| `feuerwehr` | Feuerwehr |
-| `gemeindeamt` | Gemeindeamt und Bezirkshauptmannschaft |
-| `zoll` | Zoll |
-| `tankstelle` | Tankstelle |
-| `ladestation` | E-Ladestation |
-| `parkplatz` | Parkplatz |
-| `rastplatz` | Raststation und Rastplatz |
-| `faehre` | Fähre und Schiffsstation |
-| `hubschrauberlandeplatz` | Hubschrauberlandeplatz |
-| `mautstelle` | Mautstelle |
-| `huette` | Hütte und Biwak |
-| `gasthaus` | Gasthaus |
-| `unterkunft` | Unterkunft |
-| `campingplatz` | Campingplatz |
-| `gipfel` | Gipfel |
-| `pass` | Pass und Sattel |
-| `hoehle` | Höhle und Bergwerk |
-| `schwimmbad` | Schwimmbad und Badestelle |
-| `sportanlage` | Sportanlage |
-| `golfplatz` | Golfplatz |
-| `spielplatz` | Spielplatz |
-| `park` | Park |
-| `tiergarten` | Tierpark |
-| `friedhof` | Friedhof |
-| `museum` | Museum |
-| `bibliothek` | Bücherei |
-| `theater` | Theater |
-| `burg` | Burg, Schloss und Ruine |
-| `denkmal` | Denkmal und Gipfelkreuz |
-| `sehenswuerdigkeit` | Sehenswürdigkeit |
-| `markt` | Markt |
-| `forst` | Forst und Jagdhaus |
-| `toilette` | Toilette |
-| `trinkwasser` | Trinkwasser und Brunnen |
+| ID | Früher | Name |
+|---|---|---|
+| `train_station` | `bahnhof` | Bahnhof |
+| `bus_stop` | `haltestelle` | Haltestelle |
+| `place_of_worship_church` | `kirche` | Kirche und Kapelle |
+| `place_of_worship` | `religion` | Religiöse Stätte |
+| `school` | `schule` | Schule |
+| `kindergarten` | – | Kindergarten |
+| `university` | `universitaet` | Universität und Hochschule |
+| `hospital` | `krankenhaus` | Krankenhaus |
+| `clinic` | `ambulatorium` | Ambulatorium |
+| `pharmacy` | `apotheke` | Apotheke |
+| `doctor` | `arzt` | Arzt |
+| `ambulance_station` | `rettung` | Rettungsstation |
+| `defibrillator` | – | Defibrillator |
+| `police` | `polizei` | Polizei |
+| `fire_station` | `feuerwehr` | Feuerwehr |
+| `town_hall` | `gemeindeamt` | Gemeindeamt und Bezirkshauptmannschaft |
+| `customs` | `zoll` | Zoll |
+| `gas_station` | `tankstelle` | Tankstelle |
+| `charging_station` | `ladestation` | E-Ladestation |
+| `parking` | `parkplatz` | Parkplatz |
+| `rest_area` | `rastplatz` | Raststation und Rastplatz |
+| `ferry_terminal` | `faehre` | Fähre und Schiffsstation |
+| `heliport` | `hubschrauberlandeplatz` | Hubschrauberlandeplatz |
+| `toll_booth` | `mautstelle` | Mautstelle |
+| `alpine_hut` | `huette` | Hütte und Biwak |
+| `restaurant` | `gasthaus` | Gasthaus |
+| `lodging` | `unterkunft` | Unterkunft |
+| `campground` | `campingplatz` | Campingplatz |
+| `peak` | `gipfel` | Gipfel |
+| `mountain_pass` | `pass` | Pass und Sattel |
+| `cave` | `hoehle` | Höhle und Bergwerk |
+| `swimming_pool` | `schwimmbad` | Schwimmbad und Badestelle |
+| `sports_centre` | `sportanlage` | Sportanlage |
+| `golf_course` | `golfplatz` | Golfplatz |
+| `playground` | `spielplatz` | Spielplatz |
+| `park` | – | Park |
+| `zoo` | `tiergarten` | Tierpark |
+| `cemetery` | `friedhof` | Friedhof |
+| `museum` | – | Museum |
+| `library` | `bibliothek` | Bücherei |
+| `theatre` | `theater` | Theater |
+| `castle` | `burg` | Burg, Schloss und Ruine |
+| `monument` | `denkmal` | Denkmal und Gipfelkreuz |
+| `tourist_attraction` | `sehenswuerdigkeit` | Sehenswürdigkeit |
+| `marketplace` | `markt` | Markt |
+| `forest` | `forst` | Forst und Jagdhaus |
+| `toilets` | `toilette` | Toilette |
+| `drinking_water` | `trinkwasser` | Trinkwasser und Brunnen |
+| `vehicle_sharing` | `sharing` | Sharing-Station |
 
 ## Fehler
 

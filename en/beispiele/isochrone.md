@@ -8,7 +8,7 @@ A click sets the start point. The isochrone API returns one MultiPolygon per ste
 // Isochronen: Flächen, die man in 5, 10 und 15 Minuten erreicht.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [15.33, 48.23], zoom: 13 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 });
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {

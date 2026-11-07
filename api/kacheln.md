@@ -16,13 +16,13 @@ Alle Produkte gibt es auf zwei Wegen: als einzelne Kachel (XYZ, für jeden Karte
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Produkt.", values: [
-    { v: "dtm", d: "<a href=\"/daten/dtm/\">DTM</a>, Terrain-RGB, <code>.webp</code> (auch <code>relief-terrainrgb</code>)" },
+    { v: "dtm", d: "<a href=\"/daten/dtm/\">DTM</a>, Terrain-RGB, <code>.webp</code> (auch <code>terrain-rgb</code>, früher <code>relief</code>)" },
     { v: "dsm", d: "<a href=\"/daten/dsm/\">DSM</a>, Terrain-RGB, <code>.webp</code> (auch <code>relief-dsm-terrainrgb</code>)" },
-    { v: "dop-ortho", d: "<a href=\"/daten/orthophoto/\">Orthophoto</a>, Bild, <code>.webp</code>" },
-    { v: "mapx-basis", d: "<a href=\"/daten/basiskarte/\">Basiskarte</a>, Vektor, <code>.pbf</code>" },
-    { v: "hoehenlinien", d: "<a href=\"/daten/hoehenlinien/\">Höhenlinien</a>, Vektor, <code>.pbf</code>" },
-    { v: "mapx-kataster", d: "<a href=\"/daten/kataster/\">Kataster</a>, Vektor, <code>.pbf</code>" },
-    { v: "dop-flugblock", d: "<a href=\"/daten/flugbloecke/\">Flugblöcke</a>, Vektor, <code>.pbf</code>" }
+    { v: "orthophoto", d: "<a href=\"/daten/orthophoto/\">Orthophoto</a>, Bild, <code>.webp</code>" },
+    { v: "streets", d: "<a href=\"/daten/basiskarte/\">Basiskarte</a>, Vektor, <code>.pbf</code>" },
+    { v: "contours", d: "<a href=\"/daten/hoehenlinien/\">Höhenlinien</a>, Vektor, <code>.pbf</code>" },
+    { v: "cadastre", d: "<a href=\"/daten/kataster/\">Kataster</a>, Vektor, <code>.pbf</code>" },
+    { v: "orthophoto-flight-blocks", d: "<a href=\"/daten/flugbloecke/\">Flugblöcke</a>, Vektor, <code>.pbf</code>" }
   ] },
   { name: "z", type: "integer", required: true, desc: "Zoomstufe im Bereich des Produkts (siehe Kennwerte der Produktseite). Außerhalb antwortet der Dienst mit <code>404</code>." },
   { name: "x", type: "integer", required: true, desc: "Spalte, 0 bis 2<sup>z</sup>−1 von West nach Ost." },
@@ -38,17 +38,17 @@ Alle Produkte gibt es auf zwei Wegen: als einzelne Kachel (XYZ, für jeden Karte
 <Tabs syncKey="client">
   <TabItem label="curl">
 <Code lang="bash" code={`curl -s -o tile.webp https://tiles.mapx.at/v1/dtm/12/2192/1439.webp
-curl -s --compressed -o tile.pbf https://tiles.mapx.at/v1/mapx-basis/14/8860/5730.pbf`} />
+curl -s --compressed -o tile.pbf https://tiles.mapx.at/v1/streets/14/8860/5730.pbf`} />
   </TabItem>
   <TabItem label="Leaflet">
-<Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp", {
+<Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, maxNativeZoom: 18, maxZoom: 20,
   attribution: "Orthophoto: BEV, CC BY 4.0"
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="OpenLayers">
 <Code lang="js" code={`new ol.layer.Tile({ source: new ol.source.XYZ({
-  url: "https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp", tileSize: 512, maxZoom: 18
+  url: "https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp", tileSize: 512, maxZoom: 18
 }) });`} />
   </TabItem>
 </Tabs>

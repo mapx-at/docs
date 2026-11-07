@@ -8,7 +8,7 @@ Tilequery beantwortet „Was liegt an diesem Punkt?“, ohne Kacheln selbst zu l
 
 **GET https://api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json**
 
-`tileset` ist ein Name aus der [Kachel-Liste](/api/kacheln/) (zum Beispiel `mapx-basis`, `mapx-kataster`, `hoehenlinien`). Mehrere Tilesets gehen kommagetrennt (höchstens 15): `mapx-basis,mapx-kataster`. Alle Namen liefert `GET https://api.mapx.at/v1/tiles` ([Tileset-Liste](/api/tiles/#tileset-liste)).
+`tileset` ist ein Name aus der [Kachel-Liste](/api/kacheln/) (zum Beispiel `streets`, `cadastre`, `contours`; die früheren Namen `basis`, `kataster`, `hoehenlinien` gelten bis 31.05.2027 als Alias, siehe [Migration](/api/migration/)). Mehrere Tilesets gehen kommagetrennt (höchstens 15): `streets,cadastre`. Alle Namen liefert `GET https://api.mapx.at/v1/tiles` ([Tileset-Liste](/api/tiles/#tileset-liste)).
 
 <ParamTable params={[
   { name: "radius", type: "number", default: "0", desc: "Umkreis in Metern, 0 bis 2000. Bei 0 kommen nur Features, die den Punkt enthalten (Polygone)." },
@@ -30,13 +30,13 @@ Die Antwort ist eine `FeatureCollection`, das nächste Feature zuerst. Jedes Fea
 Die Geometrien sind wie in der Kachel auf den Kachelrand zugeschnitten. Mit `dtm` oder `dsm` als Tileset kommt die Höhe als Punkt-Feature (`properties.elevation`).
 
 <Code lang="bash" code={`# Gebäude und Wege im Umkreis von 30 m um den Melker Stiftsplatz
-curl "https://api.mapx.at/v1/tilequery/mapx-basis/15.3338,48.2279.json?radius=30&layers=building_a,road_l"`} />
+curl "https://api.mapx.at/v1/tilequery/streets/15.3338,48.2279.json?radius=30&layers=building_a,road_l"`} />
 
 ## Grundstück am Punkt
 
 **GET https://api.mapx.at/v1/parcel/{lon},{lat}.json**
 
-Liefert das Grundstück, das den Punkt enthält, als Polygon mit `gstnr` (Grundstücksnummer; Bauparzellen beginnen mit einem Punkt, zum Beispiel `.14`), `kgnr` (Katastralgemeinde-Nummer), `area_m2` (Fläche in m²) und `bauflaeche`. Quelle ist die DKM des BEV (Stand der Kachelebene `mapx-kataster`).
+Liefert das Grundstück, das den Punkt enthält, als Polygon mit `parcel_number` (Grundstücksnummer; Bauparzellen beginnen mit einem Punkt, zum Beispiel `.14`), `cadastral_municipality_id` (Katastralgemeinde-Nummer), `area_m2` (Fläche in m²), `is_building_land` und `source`. Quelle ist die DKM des BEV (Stand der Kachelebene `cadastre`). Die früheren Felder `gstnr`, `kgnr`, `bauflaeche` und `quelle` sind deprecated und bis 31.05.2027 zusätzlich enthalten ([Migration](/api/migration/)).
 
 - Die Katasterkacheln enthalten nur Grenzlinien. Polygon und Fläche werden daraus berechnet; die Fläche weicht um Promille vom Wert im Grundstücksverzeichnis ab.
 - Grundstücke, die über das Kachelfenster um den Punkt (etwa 2 km) hinausreichen, fehlen.
@@ -48,7 +48,7 @@ Liefert das Grundstück, das den Punkt enthält, als Polygon mit `gstnr` (Grunds
 
 **GET https://api.mapx.at/v1/elevation/{lon},{lat}.json**
 
-Ein `Feature` mit `properties.dtm` (Gelände), `properties.dsm` (Oberfläche), `resolution_m` und `stichtag`. Mehrere Punkte und Profile: [Höhe und Profil](/api/hoehe/).
+Ein `Feature` mit `properties.dtm` (Gelände), `properties.dsm` (Oberfläche), `resolution_m` und `reference_date` (früher `stichtag`, deprecated bis 31.05.2027). Mehrere Punkte und Profile: [Höhe und Profil](/api/hoehe/).
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation/15.3338,48.2279.json"`} />
 

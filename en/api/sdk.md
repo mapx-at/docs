@@ -8,13 +8,13 @@ Delivery: [https://map.mapx.at/sdk/v1/](https://map.mapx.at/sdk/v1/) (`mapx-gl.b
 
 <Code lang="js" code={`import mapx from 'mapx-gl'; // or https://map.mapx.at/sdk/v1/mapx-gl.bundle.js (everything included)
 
-const map = mapx.map({ container: 'map', style: 'karte', center: [15.33, 48.23], zoom: 12, terrain: false });
+const map = mapx.map({ container: 'map', style: 'streets', center: [15.33, 48.23], zoom: 12, terrain: false });
 map.addControl(new mapx.SearchControl(), 'top-left');
 map.addControl(new mapx.StyleSwitcherControl(), 'top-right');`} />
 
 ## Map
 
-`mapx.map(opts)` returns a MapLibre map. `style` is a short name (`karte`, `karte-morgen`, `karte-abend`, `karte-nacht`, `luftbild`, `gelaende`) and becomes `https://api.mapx.at/v1/styles/{id}` ([Styles](/en/api/styles/)). The SDK registers `pmtiles://` and optionally enables 3D terrain with `terrain`.
+`mapx.map(opts)` returns a MapLibre map. `style` is a short name (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) and becomes `https://api.mapx.at/v1/styles/{id}` ([Styles](/en/api/styles/)). The SDK registers `pmtiles://` and optionally enables 3D terrain with `terrain`.
 
 ## Controls
 

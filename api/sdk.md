@@ -8,13 +8,13 @@ Auslieferung: [https://map.mapx.at/sdk/v1/](https://map.mapx.at/sdk/v1/) (`mapx-
 
 <Code lang="js" code={`import mapx from 'mapx-gl'; // oder https://map.mapx.at/sdk/v1/mapx-gl.bundle.js (alles enthalten)
 
-const map = mapx.map({ container: 'map', style: 'karte', center: [15.33, 48.23], zoom: 12, terrain: false });
+const map = mapx.map({ container: 'map', style: 'streets', center: [15.33, 48.23], zoom: 12, terrain: false });
 map.addControl(new mapx.SearchControl(), 'top-left');
 map.addControl(new mapx.StyleSwitcherControl(), 'top-right');`} />
 
 ## Karte
 
-`mapx.map(opts)` liefert eine MapLibre-Karte. `style` ist ein Kurzname (`karte`, `karte-morgen`, `karte-abend`, `karte-nacht`, `luftbild`, `gelaende`) und wird zu `https://api.mapx.at/v1/styles/{id}` ([Styles](/api/styles/)). Das SDK registriert `pmtiles://` und schaltet mit `terrain` optional das 3D-Gelände ein.
+`mapx.map(opts)` liefert eine MapLibre-Karte. `style` ist ein Kurzname (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) und wird zu `https://api.mapx.at/v1/styles/{id}` ([Styles](/api/styles/)). Das SDK registriert `pmtiles://` und schaltet mit `terrain` optional das 3D-Gelände ein.
 
 ## Bedienelemente
 

@@ -63,7 +63,8 @@ A GeoJSON <code>FeatureCollection</code>, one <code>Point</code> feature per poi
   { name: "distance_m", type: "number", desc: "Only for <code>path</code>: distance from the start of the line in metres." },
   { name: "model", type: "string", desc: "Model used", values: [{ v: "dtm", d: "DTM" }, { v: "dsm", d: "DSM" }] },
   { name: "resolution_m", type: "number", desc: "Grid spacing of the source in metres (1)." },
-  { name: "stichtag", type: "string", desc: "Reference date of the model, ISO date." },
+  { name: "reference_date", type: "string", desc: "Reference date of the model, ISO date." },
+  { name: "stichtag", type: "string", desc: "Deprecated: same value as <code>reference_date</code>, removed on 2027-05-31." },
 ]} />
 
 <Code lang="json" code={`{
@@ -71,7 +72,7 @@ A GeoJSON <code>FeatureCollection</code>, one <code>Point</code> feature per poi
   "features": [{
     "type": "Feature",
     "geometry": { "type": "Point", "coordinates": [12.694, 47.074] },
-    "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "stichtag": "2025-09-15" }
+    "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "reference_date": "2025-09-15", "stichtag": "2025-09-15" }
   }]
 }`} />
 

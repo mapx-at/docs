@@ -12,7 +12,7 @@ TileJSON describes a product so that map clients can add it without further sett
   { name: "tileset", type: "string", required: true, desc: "Product, values as for <a href=\"/en/api/kacheln/\">Tiles</a>." },
 ]} />
 
-<Code lang="js" code={`map.addSource("ortho", { type: "raster", url: "https://tiles.mapx.at/v1/dop-ortho.json", tileSize: 512 });`} />
+<Code lang="js" code={`map.addSource("ortho", { type: "raster", url: "https://tiles.mapx.at/v1/orthophoto.json", tileSize: 512 });`} />
 
 ## Response
 
@@ -33,7 +33,7 @@ TileJSON describes a product so that map clients can add it without further sett
 <Code lang="json" code={`{
   "tilejson": "3.0.0",
   "name": "relief-terrainrgb",
-  "tiles": ["https://tiles.mapx.at/v1/tiles/relief-terrainrgb/{z}/{x}/{y}.webp"],
+  "tiles": ["https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp"],
   "minzoom": 5, "maxzoom": 16,
   "bounds": [9.5306, 46.3697, 17.1661, 49.0235],
   "scheme": "xyz", "tileSize": 512, "encoding": "mapbox",

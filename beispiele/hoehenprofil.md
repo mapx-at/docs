@@ -8,7 +8,7 @@ Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `sample
 // Höhenprofil: Linie in die Karte klicken, /v1/elevation/profile liefert die Höhen, ein Canvas zeichnet das Profil.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/gelaende', center: [12.70, 47.08], zoom: 12 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
 let punkte = [[12.67, 47.065], [12.71, 47.09]];
 

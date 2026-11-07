@@ -9,7 +9,7 @@ Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const API = 'https://api.mapx.at/v1';
-const map = new maplibregl.Map({ container: 'map', style: API + '/styles/karte', center: [13.3, 47.6], zoom: 6.5 });
+const map = new maplibregl.Map({ container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
 let times = [];
 

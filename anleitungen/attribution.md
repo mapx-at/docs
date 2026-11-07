@@ -21,7 +21,7 @@ sources: { dem: { type: "raster-dem", url: "https://tiles.mapx.at/v1/dtm.json" }
 Mehrere Quellen werden zusammengeführt. Haben Sie `attributionControl: false` gesetzt oder eine Quelle ohne TileJSON mit `tiles: [...]` angelegt, tragen Sie den Text selbst ein:
 
 ```js
-{ type: "raster", tiles: ["https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp"], tileSize: 512,
+{ type: "raster", tiles: ["https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp"], tileSize: 512,
   maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
 ```
 

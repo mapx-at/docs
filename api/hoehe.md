@@ -63,7 +63,8 @@ GeoJSON <code>FeatureCollection</code>, ein <code>Point</code>-Feature je Punkt 
   { name: "distance_m", type: "number", desc: "Nur bei <code>path</code>: Strecke vom Linienanfang in Metern." },
   { name: "model", type: "string", desc: "Verwendetes Modell", values: [{ v: "dtm", d: "DTM" }, { v: "dsm", d: "DSM" }] },
   { name: "resolution_m", type: "number", desc: "Rasterweite der Quelle in Metern (1)." },
-  { name: "stichtag", type: "string", desc: "Stand des Höhenmodells, ISO-Datum." },
+  { name: "reference_date", type: "string", desc: "Stand des Höhenmodells, ISO-Datum." },
+  { name: "stichtag", type: "string", desc: "Deprecated: gleicher Wert wie <code>reference_date</code>, entfällt am 31.05.2027." },
 ]} />
 
 <Code lang="json" code={`{
@@ -71,7 +72,7 @@ GeoJSON <code>FeatureCollection</code>, ein <code>Point</code>-Feature je Punkt 
   "features": [{
     "type": "Feature",
     "geometry": { "type": "Point", "coordinates": [12.694, 47.074] },
-    "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "stichtag": "2025-09-15" }
+    "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "reference_date": "2025-09-15", "stichtag": "2025-09-15" }
   }]
 }`} />
 

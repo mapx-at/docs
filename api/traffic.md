@@ -67,7 +67,7 @@ Autobahn- und Schnellstraßen-Kanten, auf denen ein Wechselverkehrszeichen mit P
 
 **GET https://api.mapx.at/v1/traffic/tiles.json**
 
-Die Kacheln `/v1/traffic/tiles/{z}/{x}/{y}.pbf` (Zoom 5 bis 14, 60 Sekunden Cache) enthalten die Ebenen `traffic` (`level`, `speed`, `free`) und `incidents` (`kind`, `text`, `road`, `planned`, `closed`). Die Stile `karte*` enthalten die Ebenen `verkehr-*` ausgeblendet (`visibility: none`); der Stil `karte-verkehr` zeigt sie. Zum Einblenden: `map.setLayoutProperty("verkehr-lage", "visibility", "visible")` für alle Ebenen mit Präfix `verkehr-`. Im Viewer auf mapx.at schaltet „Ebenen → Verkehr“ die Ebenen ein (standardmäßig aus).
+Die Kacheln `/v1/traffic/tiles/{z}/{x}/{y}.pbf` (Zoom 5 bis 14, 60 Sekunden Cache) enthalten die Ebenen `traffic` (`level`, `speed`, `free`) und `incidents` (`kind`, `text`, `road`, `planned`, `closed`). Die Stile `streets*` enthalten die Ebenen `verkehr-*` ausgeblendet (`visibility: none`); der Stil `traffic-day` zeigt sie. Zum Einblenden: `map.setLayoutProperty("verkehr-lage", "visibility", "visible")` für alle Ebenen mit Präfix `verkehr-`. Im Viewer auf mapx.at schaltet „Ebenen → Verkehr“ die Ebenen ein (standardmäßig aus).
 
 ## Routing mit Sperren
 

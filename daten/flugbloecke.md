@@ -25,18 +25,18 @@ Zu jedem Pixel des [Orthophotos](/daten/orthophoto/) die Fläche des Bildflugs (
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/dop-flugblock.json" } },
+    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/orthophoto-flight-blocks.json" } },
     layers: [{ id: "dop_flugblock", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
   }
 });`} />
     TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://${url}"` (Protokoll wie im [Schnellstart](/start/)).
   </TabItem>
   <TabItem label="QGIS">
-    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/dop-flugblock/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/orthophoto-flight-blocks/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/dop-flugblock.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/orthophoto-flight-blocks.json
+curl -s -o kachel.pbf https://tiles.mapx.at/v1/orthophoto-flight-blocks/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 

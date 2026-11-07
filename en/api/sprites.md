@@ -11,7 +11,7 @@ The map icons, in the shape of the Mapbox Sprites API. No key, CORS open.
 **GET https://api.mapx.at/v1/sprites**
 
 <ParamTable params={[
-  { name: "id", type: "string", required: true, desc: "Style from <a href=\"/en/api/styles/\">/v1/styles</a> (<code>karte</code>, <code>luftbild</code>, …). Unknown style: <code>404</code>." },
+  { name: "id", type: "string", required: true, desc: "Style from <a href=\"/en/api/styles/\">/v1/styles</a> (<code>streets</code>, <code>satellite</code>, …). Unknown style: <code>404</code>." },
   { name: "@2x", type: "suffix", desc: "Double resolution for high pixel density screens." },
   { name: "json / png", type: "suffix", required: true, desc: "<code>.json</code> is the index (name, position, size, <code>pixelRatio</code>), <code>.png</code> the atlas." },
 ]} />
@@ -25,8 +25,8 @@ The styles from <a href="/en/api/styles/">/v1/styles</a> point at these addresse
 ```json
 {
   "sprite": [
-    { "id": "default", "url": "https://api.mapx.at/v1/styles/karte/sprite" },
-    { "id": "sdf", "url": "https://api.mapx.at/v1/styles/karte/sprite-sdf" }
+    { "id": "default", "url": "https://api.mapx.at/v1/styles/streets/sprite" },
+    { "id": "sdf", "url": "https://api.mapx.at/v1/styles/streets/sprite-sdf" }
   ]
 }
 ```

@@ -14,7 +14,7 @@ Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile c
 2. Name `mapx Orthophoto`, URL:
 
    ```
-   https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp
+   https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp
    ```
 
 3. **Min. Zoom Level** 5, **Max. Zoom Level** 18, **Tile Resolution** 512 (Mapbox style, 512 px). Leave **Referer** and **Authentication** empty.
@@ -48,7 +48,7 @@ https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp
 2. Name `mapx Basemap`, URL:
 
    ```
-   https://tiles.mapx.at/v1/mapx-basis/{z}/{x}/{y}.pbf
+   https://tiles.mapx.at/v1/streets/{z}/{x}/{y}.pbf
    ```
 
 3. Enter **Min. Zoom Level** 0, **Max. Zoom Level** 16, OK.

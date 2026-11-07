@@ -16,13 +16,13 @@ Every product is available in two ways: as single tiles (XYZ, for any map client
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Product.", values: [
-    { v: "dtm", d: "<a href=\"/en/daten/dtm/\">DTM</a>, Terrain-RGB, <code>.webp</code> (also <code>relief-terrainrgb</code>)" },
+    { v: "dtm", d: "<a href=\"/en/daten/dtm/\">DTM</a>, Terrain-RGB, <code>.webp</code> (also <code>terrain-rgb</code>, formerly <code>relief</code>)" },
     { v: "dsm", d: "<a href=\"/en/daten/dsm/\">DSM</a>, Terrain-RGB, <code>.webp</code> (also <code>relief-dsm-terrainrgb</code>)" },
-    { v: "dop-ortho", d: "<a href=\"/en/daten/orthophoto/\">Orthophoto</a>, Image, <code>.webp</code>" },
-    { v: "mapx-basis", d: "<a href=\"/en/daten/basiskarte/\">Basemap</a>, Vector, <code>.pbf</code>" },
-    { v: "hoehenlinien", d: "<a href=\"/en/daten/hoehenlinien/\">Contours</a>, Vector, <code>.pbf</code>" },
-    { v: "mapx-kataster", d: "<a href=\"/en/daten/kataster/\">Cadastre</a>, Vector, <code>.pbf</code>" },
-    { v: "dop-flugblock", d: "<a href=\"/en/daten/flugbloecke/\">Flight blocks</a>, Vector, <code>.pbf</code>" }
+    { v: "orthophoto", d: "<a href=\"/en/daten/orthophoto/\">Orthophoto</a>, Image, <code>.webp</code>" },
+    { v: "streets", d: "<a href=\"/en/daten/basiskarte/\">Basemap</a>, Vector, <code>.pbf</code>" },
+    { v: "contours", d: "<a href=\"/en/daten/hoehenlinien/\">Contours</a>, Vector, <code>.pbf</code>" },
+    { v: "cadastre", d: "<a href=\"/en/daten/kataster/\">Cadastre</a>, Vector, <code>.pbf</code>" },
+    { v: "orthophoto-flight-blocks", d: "<a href=\"/en/daten/flugbloecke/\">Flight blocks</a>, Vector, <code>.pbf</code>" }
   ] },
   { name: "z", type: "integer", required: true, desc: "Zoom level within the product range (see the product page). Outside it the service answers <code>404</code>." },
   { name: "x", type: "integer", required: true, desc: "Column, 0 to 2<sup>z</sup>−1 from west to east." },
@@ -38,17 +38,17 @@ Every product is available in two ways: as single tiles (XYZ, for any map client
 <Tabs syncKey="client">
   <TabItem label="curl">
 <Code lang="bash" code={`curl -s -o tile.webp https://tiles.mapx.at/v1/dtm/12/2192/1439.webp
-curl -s --compressed -o tile.pbf https://tiles.mapx.at/v1/mapx-basis/14/8860/5730.pbf`} />
+curl -s --compressed -o tile.pbf https://tiles.mapx.at/v1/streets/14/8860/5730.pbf`} />
   </TabItem>
   <TabItem label="Leaflet">
-<Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp", {
+<Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, maxNativeZoom: 18, maxZoom: 20,
   attribution: "Orthophoto: BEV, CC BY 4.0"
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="OpenLayers">
 <Code lang="js" code={`new ol.layer.Tile({ source: new ol.source.XYZ({
-  url: "https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp", tileSize: 512, maxZoom: 18
+  url: "https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp", tileSize: 512, maxZoom: 18
 }) });`} />
   </TabItem>
 </Tabs>

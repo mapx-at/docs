@@ -20,7 +20,7 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
-     const quelle = { type: "vector", url: "https://tiles.mapx.at/v1/mapx-basis.json" };
+     const quelle = { type: "vector", url: "https://tiles.mapx.at/v1/streets.json" };
    ```
 
 2. **Hintergrund und Nutzung.** Jede Fläche in `landuse_a` hat ein Feld `kind` (zum Beispiel `forest`, `farmland`, `vineyard`, `alpine_meadow`, `glacier`, `rock`, `residential`). Eine Farbe je Gruppe über einen `match`-Ausdruck:

@@ -8,7 +8,7 @@ The routing API works on the GIP.at network for walking, cycling and driving. Th
 // Route: Start und Ziel in die Karte klicken, die Directions-API liefert eine GeoJSON-Linie.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [15.33, 48.23], zoom: 13 }); // Melk
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 }); // Melk
 map.addControl(new maplibregl.NavigationControl());
 let a = null, b = null, markerA, markerB;
 

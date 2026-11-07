@@ -26,7 +26,7 @@ This guide uses the [DTM](/en/daten/dtm/) (elevation, type `raster-dem`) and the
    ```js
    const sources = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/dtm.json", encoding: "mapbox" },
-     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/dop-ortho.json", tileSize: 512 }
+     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/orthophoto.json", tileSize: 512 }
    };
    ```
 

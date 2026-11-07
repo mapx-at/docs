@@ -27,24 +27,24 @@ Klick zeigt den Flugblock am Punkt (Operat, Flugzeitraum).
   container: "map",
   style: {
     version: 8,
-    sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/dop-ortho.json", tileSize: 512 } },
+    sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/orthophoto.json", tileSize: 512 } },
     layers: [{ id: "ortho", type: "raster", source: "ortho" }]
   }
 });`} />
     TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://${url}"` (Protokoll wie im [Schnellstart](/start/)).
   </TabItem>
   <TabItem label="Leaflet">
-    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp", {
+    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
   attribution: "BEV, CC BY 4.0"
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="QGIS">
-    XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+    XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/dop-ortho.json
-curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
+    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/orthophoto.json
+curl -s -o kachel.webp https://tiles.mapx.at/v1/orthophoto/14/8860/5730.webp`} />
   </TabItem>
 </Tabs>
 

@@ -18,7 +18,7 @@ The address `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` without `/tiles/` sta
 
 **GET https://api.mapx.at/v1/tiles**
 
-All available tilesets in `tilesets[]`: `name`, `aliases` (equivalent short names such as `dtm`, `basis`), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (data date) and `built` (build time). The names also work for [Tilequery](/en/api/tilequery/).
+All available tilesets in `tilesets[]`: `name`, `aliases` (equivalent names such as `dtm`; the former German names such as `basis` stay valid as aliases until 2027-05-31), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (data date) and `built` (build time). The names also work for [Tilequery](/en/api/tilequery/).
 
 ## TileJSON
 

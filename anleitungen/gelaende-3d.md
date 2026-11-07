@@ -26,7 +26,7 @@ Verwendet werden das [DTM](/daten/dtm/) (Höhe, Typ `raster-dem`) und das [Ortho
    ```js
    const quellen = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/dtm.json", encoding: "mapbox" },
-     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/dop-ortho.json", tileSize: 512 }
+     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/orthophoto.json", tileSize: 512 }
    };
    ```
 

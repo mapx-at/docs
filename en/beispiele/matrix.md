@@ -9,7 +9,7 @@ The matrix API takes sources (and optionally destinations) and returns duration 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [15.3, 48.25], zoom: 8 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.3, 48.25], zoom: 8 });
 map.addControl(new maplibregl.NavigationControl());
 for (const [name, p] of Object.entries(ORTE)) new maplibregl.Marker().setLngLat(p).setPopup(new maplibregl.Popup().setText(name)).addTo(map);
 

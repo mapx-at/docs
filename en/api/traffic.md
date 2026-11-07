@@ -67,7 +67,7 @@ Motorway and expressway links where a variable message sign with a position show
 
 **GET https://api.mapx.at/v1/traffic/tiles.json**
 
-The tiles `/v1/traffic/tiles/{z}/{x}/{y}.pbf` (zoom 5 to 14, 60 seconds cache) contain the layers `traffic` (`level`, `speed`, `free`) and `incidents` (`kind`, `text`, `road`, `planned`, `closed`). The `karte*` styles include the `verkehr-*` layers hidden (`visibility: none`); the style `karte-verkehr` shows them. To switch on: `map.setLayoutProperty("verkehr-lage", "visibility", "visible")` for every layer prefixed `verkehr-`. In the viewer on mapx.at, "Layers → Traffic" switches them on (off by default).
+The tiles `/v1/traffic/tiles/{z}/{x}/{y}.pbf` (zoom 5 to 14, 60 seconds cache) contain the layers `traffic` (`level`, `speed`, `free`) and `incidents` (`kind`, `text`, `road`, `planned`, `closed`). The `streets*` styles include the `verkehr-*` layers hidden (`visibility: none`); the style `traffic-day` shows them. To switch on: `map.setLayoutProperty("verkehr-lage", "visibility", "visible")` for every layer prefixed `verkehr-`. In the viewer on mapx.at, "Layers → Traffic" switches them on (off by default).
 
 ## Routing around closures
 

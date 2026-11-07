@@ -10,15 +10,15 @@ The endpoint renders a map view as an image, in the shape of the Mapbox Static I
 
 <ParamTable params={[
   { name: "style", type: "string", required: true, desc: "Base of the image", values: [
-    { v: "luftbild", d: "BEV orthophoto, z5 to z18" },
-    { v: "gelaende", d: "Elevation tints with hillshade from the DTM, z5 to z16" },
+    { v: "satellite", d: "BEV orthophoto, z5 to z18" },
+    { v: "outdoors", d: "Elevation tints with hillshade from the DTM, z5 to z16" },
   ] },
   { name: "overlay", type: "string", desc: "Comma-separated list of overlays (see below), at most 50 with 20000 vertices in total." },
   { name: "view", type: "string", required: true, desc: "<code>lon,lat,zoom[,bearing]</code> (rotation in degrees, pitch only 0) or <code>auto</code> (only with overlays, fits the view to them)." },
   { name: "size", type: "string", required: true, desc: "<code>{width}x{height}[@2x][.png|.webp]</code>, each 1 to 1280 pixels; with <code>@2x</code> up to 2560 pixels. Default is PNG." },
 ]} />
 
-> Styles: `luftbild`, `gelaende` and the vector map `karte`, `karte-morgen`, `karte-abend`, `karte-nacht` (areas, lines, hillshade, labels and icons from the style's sprite, icon and text collide together). `hybrid` draws the aerial image (BEV orthophoto, from z5) with the vector map's roads, boundaries, contours, names and icons on top (light lines, white text with a dark halo).
+> Styles: `satellite`, `outdoors` and the vector map `streets`, `streets-dawn`, `streets-dusk`, `streets-night` (areas, lines, hillshade, labels and icons from the style's sprite, icon and text collide together). `satellite-streets` draws the aerial image (BEV orthophoto, from z5) with the vector map's roads, boundaries, contours, names and icons on top (light lines, white text with a dark halo).
 
 ## Overlays
 
@@ -31,17 +31,17 @@ The endpoint renders a map view as an image, in the shape of the Mapbox Static I
 ## Examples
 
 <Code lang="bash" code={`# Aerial imagery with a red pin, 600 x 400, PNG
-curl -o map.png "https://api.mapx.at/v1/static/luftbild/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png"
+curl -o map.png "https://api.mapx.at/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png"
 
 # Terrain image, WebP at double resolution
-curl -o terrain.webp "https://api.mapx.at/v1/static/gelaende/12.69,47.07,12/800x600@2x.webp"
+curl -o terrain.webp "https://api.mapx.at/v1/static/outdoors/12.69,47.07,12/800x600@2x.webp"
 
 # View fitted automatically around two pins
-curl -o auto.png "https://api.mapx.at/v1/static/luftbild/pin-m+0000ff(15.33,48.22),pin-m+0000ff(15.35,48.24)/auto/600x400.png"`} />
+curl -o auto.png "https://api.mapx.at/v1/static/satellite/pin-m+0000ff(15.33,48.22),pin-m+0000ff(15.35,48.24)/auto/600x400.png"`} />
 
 In HTML an `img` element is enough:
 
-<Code lang="html" code={`<img src="https://api.mapx.at/v1/static/luftbild/15.33,48.22,15/600x400.webp" alt="Aerial view of Krummnußbaum" width="600" height="400">`} />
+<Code lang="html" code={`<img src="https://api.mapx.at/v1/static/satellite/15.33,48.22,15/600x400.webp" alt="Aerial view of Krummnußbaum" width="600" height="400">`} />
 
 ## Response and caching
 

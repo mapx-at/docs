@@ -7,7 +7,7 @@ The endpoint serves pre-rendered raster tiles of a style, in the shape of the Ma
 **GET https://api.mapx.at/v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}[@2x][.png|.webp]**
 
 <ParamTable params={[
-  { name: "id", type: "string", required: true, desc: "Style: <code>karte</code>, <code>karte-morgen</code>, <code>karte-abend</code>, <code>karte-nacht</code>, <code>luftbild</code>, <code>hybrid</code> or <code>gelaende</code>." },
+  { name: "id", type: "string", required: true, desc: "Style: <code>streets</code>, <code>streets-dawn</code>, <code>streets-dusk</code>, <code>streets-night</code>, <code>satellite</code>, <code>satellite-streets</code> or <code>outdoors</code>." },
   { name: "tilesize", type: "integer", required: true, desc: "<code>256</code> (standard XYZ, map zoom <code>z-1</code>) or <code>512</code> (map zoom <code>z</code>, labels look smaller)." },
   { name: "z, x, y", type: "integer", required: true, desc: "Tile in the XYZ scheme (origin top left)." },
   { name: "@2x", type: "suffix", desc: "Double pixel count (512 or 1024 px) for the same area." },
@@ -20,12 +20,12 @@ The area is rendered with a 96 pixel margin and cropped to the tile. Lines, area
 
 ## Responses and limits
 
-`404` for tiles without data (outside Austria) and below the minimum zoom (`luftbild`, `hybrid` and `gelaende` from map zoom 5), invalid size, extension or tile number and unknown styles. `ETag` and `Cache-Control: public, max-age=86400`, `If-None-Match` gives `304`. Rendering is expensive and counts several times against the rate limit (<a href="/en/api/fehler/">Errors and limits</a>); repeated requests are served from the cache.
+`404` for tiles without data (outside Austria) and below the minimum zoom (`satellite`, `satellite-streets` and `outdoors` from map zoom 5), invalid size, extension or tile number and unknown styles. `ETag` and `Cache-Control: public, max-age=86400`, `If-None-Match` gives `304`. Rendering is expensive and counts several times against the rate limit (<a href="/en/api/fehler/">Errors and limits</a>); repeated requests are served from the cache.
 
 ## Leaflet
 
 ```js
-L.tileLayer('https://api.mapx.at/v1/styles/karte/tiles/256/{z}/{x}/{y}@2x', {
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/256/{z}/{x}/{y}@2x', {
   tileSize: 256,
   detectRetina: false, // @2x ist schon in der URL / @2x is already in the URL
   maxZoom: 22,
@@ -42,13 +42,13 @@ Browser, right-click **XYZ Tiles**, **New Connection**:
 | | |
 |---|---|
 | Name | mapx Karte |
-| URL | `https://api.mapx.at/v1/styles/karte/tiles/256/{z}/{x}/{y}` |
+| URL | `https://api.mapx.at/v1/styles/streets/tiles/256/{z}/{x}/{y}` |
 | Max. zoom | 22 |
 
-For `luftbild` and `gelaende` enter min. zoom 5. The layer works like any raster layer in layouts and reports.
+For `satellite` and `outdoors` enter min. zoom 5. The layer works like any raster layer in layouts and reports.
 
 ## Single tile
 
 ```sh
-curl -o kachel.png 'https://api.mapx.at/v1/styles/luftbild/tiles/256/15/17767/11367'
+curl -o kachel.png 'https://api.mapx.at/v1/styles/satellite/tiles/256/15/17767/11367'
 ```

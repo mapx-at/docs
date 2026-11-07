@@ -20,7 +20,7 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
-     const source = { type: "vector", url: "https://tiles.mapx.at/v1/mapx-basis.json" };
+     const source = { type: "vector", url: "https://tiles.mapx.at/v1/streets.json" };
    ```
 
 2. **Background and land use.** Every polygon in `landuse_a` has a `kind` field (for example `forest`, `farmland`, `vineyard`, `alpine_meadow`, `glacier`, `rock`, `residential`). One colour per group via a `match` expression:

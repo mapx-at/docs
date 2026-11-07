@@ -8,7 +8,7 @@ The elevation API returns GeoJSON with `elevation` in metres. The DTM shows the 
 // Höhe abfragen: ein Klick fragt /v1/elevation (DTM oder DSM) für den Punkt.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/gelaende', center: [12.694, 47.074], zoom: 12 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.694, 47.074], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
 const popup = new maplibregl.Popup({ closeButton: false });
 

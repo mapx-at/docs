@@ -21,7 +21,7 @@ sources: { dem: { type: "raster-dem", url: "https://tiles.mapx.at/v1/dtm.json" }
 Several sources are merged. If you set `attributionControl: false` or defined a source without TileJSON using `tiles: [...]`, add the text yourself:
 
 ```js
-{ type: "raster", tiles: ["https://tiles.mapx.at/v1/dop-ortho/{z}/{x}/{y}.webp"], tileSize: 512,
+{ type: "raster", tiles: ["https://tiles.mapx.at/v1/orthophoto/{z}/{x}/{y}.webp"], tileSize: 512,
   maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
 ```
 

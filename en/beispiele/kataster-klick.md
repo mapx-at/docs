@@ -8,7 +8,7 @@ The cadastre tileset contains boundary lines from zoom 16 with parcel number and
 // Kataster: Ein Klick auf eine Grundstücksgrenze zeigt Grundstücksnummer und Katastralgemeinde.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/luftbild', center: [15.3306, 48.2275], zoom: 18 }); // Melk
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/satellite', center: [15.3306, 48.2275], zoom: 18 }); // Melk
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {
@@ -25,4 +25,4 @@ map.on('click', (e) => {
 
 ## APIs used
 
-- [Cadastre](/en/daten/kataster/) (vector tiles in the `luftbild` style)
+- [Cadastre](/en/daten/kataster/) (vector tiles in the `satellite` style)

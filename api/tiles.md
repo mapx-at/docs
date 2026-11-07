@@ -18,7 +18,7 @@ Die Adresse `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` ohne `/tiles/` bleibt
 
 **GET https://api.mapx.at/v1/tiles**
 
-Alle verfügbaren Kachelsätze in `tilesets[]`: `name`, `aliases` (gleichwertige Kurznamen wie `dtm`, `basis`), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (Datenstand) und `built` (Bauzeit). Die Namen gelten auch für [Tilequery](/api/tilequery/).
+Alle verfügbaren Kachelsätze in `tilesets[]`: `name`, `aliases` (gleichwertige Namen wie `dtm`; die früheren deutschen Namen wie `basis` bleiben bis 31.05.2027 Alias), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (Datenstand) und `built` (Bauzeit). Die Namen gelten auch für [Tilequery](/api/tilequery/).
 
 ## TileJSON
 

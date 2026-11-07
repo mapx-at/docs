@@ -21,8 +21,8 @@ The [contour lines](/en/daten/hoehenlinien/) tileset has a layer `contour_l` wit
    <div id="map"></div>
    <script>
      const sources = {
-       ortho: { type: "raster", url: "https://tiles.mapx.at/v1/dop-ortho.json", tileSize: 512 },
-       contours: { type: "vector", url: "https://tiles.mapx.at/v1/hoehenlinien.json" }
+       ortho: { type: "raster", url: "https://tiles.mapx.at/v1/orthophoto.json", tileSize: 512 },
+       contours: { type: "vector", url: "https://tiles.mapx.at/v1/contours.json" }
      };
    ```
 
