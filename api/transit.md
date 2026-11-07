@@ -22,7 +22,7 @@ Profile: `transit` (zu Fuß bis 20 Minuten zur Haltestelle) und `bike_transit` (
 Antwort: `code`, `routes[]`, `waypoints[]`, `query` und `attribution`. Jede Route hat `duration` (Sekunden), `distance` (Meter), `departure`, `arrival` (ISO 8601), `transfers`, `summary`, `geometry` (GeoJSON) und `legs[]`. Jeder Abschnitt hat `mode`:
 
 - `walking` oder `cycling`: `duration`, `distance`, `from`, `to`, `geometry`. Der erste Abschnitt endet mit der Abfahrt, der letzte beginnt mit der Ankunft.
-- `transit`: `line` (`name` wie „RJX 61“, `long_name`, `type` wie `rail` oder `bus`, `agency`, `headsign`), `from`, `to`, `stops[]` (mit Ankunft und Abfahrt je Halt) und `geometry` als Linie durch die Halte. Die Linie folgt den Haltestellen, nicht dem Gleis.
+- `transit`: `line` (`name` wie „RJX 61“, `long_name`, `type` wie `rail` oder `bus`, `agency`, `headsign`), `from`, `to`, `stops[]` (mit Ankunft und Abfahrt je Halt) und `geometry` als Linie durch die Halte. Die Linie folgt dem Linienverlauf aus dem Liniennetz der Mobilitätsverbünde, wo es einen kennt, sonst den Haltestellen.
 
 Liegt das Ziel nahe, enthält `routes[]` auch den reinen Fußweg (bzw. Radweg).
 
