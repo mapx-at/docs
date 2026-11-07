@@ -18,7 +18,7 @@ Der Endpunkt rendert einen Kartenausschnitt als Bild, in der Form der Mapbox Sta
   { name: "size", type: "string", required: true, desc: "<code>{breite}x{höhe}[@2x][.png|.webp]</code>, je 1 bis 1280 Pixel; mit <code>@2x</code> bis 2560 Pixel. Standard ist PNG." },
 ]} />
 
-> Stile: `luftbild`, `gelaende` sowie die Vektorkarte `karte`, `karte-morgen`, `karte-abend`, `karte-nacht` (Flächen, Linien, Schummerung, Beschriftung; Symbole/Icons fehlen noch). `hybrid` liefert `400`.
+> Stile: `luftbild`, `gelaende` sowie die Vektorkarte `karte`, `karte-morgen`, `karte-abend`, `karte-nacht` (Flächen, Linien, Schummerung, Beschriftung und Icons aus dem Sprite des Stils, Icon und Text kollidieren gemeinsam). `hybrid` zeichnet das Luftbild (BEV-Orthophoto, ab z5) mit Straßen, Grenzen, Höhenlinien, Namen und Icons der Vektorkarte darüber (helle Linien, weißer Text mit dunklem Halo).
 
 ## Overlays
 
@@ -49,6 +49,6 @@ In HTML genügt ein `img`-Element:
 
 ## Fehler
 
-Fehler kommen als `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)): `400` ungültige Eingabe (zum Beispiel Stil `hybrid`, Größe über 1280, ungültiges Overlay), `404` unbekannter Pfad, `429` Limit überschritten (`Retry-After` beachten), `503` vorübergehend nicht verfügbar. Allgemeines: [Fehler und Limits](/api/fehler/). Maschinenlesbar: [openapi.json](https://api.mapx.at/v1/openapi.json).
+Fehler kommen als `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)): `400` ungültige Eingabe (zum Beispiel Größe über 1280, ungültiges Overlay), `404` unbekannter Pfad, `429` Limit überschritten (`Retry-After` beachten), `503` vorübergehend nicht verfügbar. Allgemeines: [Fehler und Limits](/api/fehler/). Maschinenlesbar: [openapi.json](https://api.mapx.at/v1/openapi.json).
 
 Für Attribution gilt [Lizenz](/lizenz/): Bilder mit Orthophoto brauchen den BEV-Hinweis.
