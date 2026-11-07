@@ -2,83 +2,82 @@
 
 Directions, Isochrone, Matrix und Map Matching auf dem GIP.at-Netz für Fuß, Rad und Auto.
 
-> Die vereinheitlichten Pfade `/v1/directions`, `/v1/isochrone`, `/v1/matrix` und `/v1/matching` werden gerade ausgerollt. Der Routing-Dienst selbst läuft unter `https://routing.mapx.at` mit `/route`, `/isochrone`, `/matrix` und `/match`; die Parameter unten gelten für beide Pfade. Anfragen von `docs.mapx.at` und eigenen Seiten brauchen eine CORS-Freigabe der Herkunft.
-
-Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC BY 4.0). Profile: `foot`, `bike`, `car`.
+Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC BY 4.0). Die Endpunkte folgen der Mapbox-Form, `/v1/...` mit dem Profil im Pfad, und brauchen kein Zugangstoken. Profile: `walking`, `cycling`, `driving` (ein Präfix `mapbox/` wird akzeptiert). Koordinaten stehen als `lon,lat` im Pfad, mehrere Punkte mit `;` getrennt.
 
 ## Directions
 
-**GET https://api.mapx.at/v1/directions**
+**GET https://api.mapx.at/v1/directions/{profile}/{coordinates}**
 
-Aktuell: `GET https://routing.mapx.at/route`.
+Gleichwertig: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "foot", d: "zu Fuß" }, { v: "bike", d: "Rad" }, { v: "car", d: "Auto" }] },
-  { name: "from", type: "string", required: true, desc: "Start als <code>lon,lat</code>." },
-  { name: "to", type: "string", required: true, desc: "Ziel als <code>lon,lat</code>." },
-  { name: "steps", type: "boolean", default: "false", desc: "Mit <code>true</code> Abbiegehinweise in <code>properties.steps</code>." },
-  { name: "lang", type: "string", default: "de", desc: "Sprache der Hinweise, <code>de</code> oder <code>en</code>." },
-  { name: "radius", type: "number", desc: "Suchradius in Metern, um Start und Ziel ans Netz zu binden." },
+  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "walking", d: "zu Fuß" }, { v: "cycling", d: "Rad" }, { v: "driving", d: "Auto" }] },
+  { name: "coordinates", type: "string", required: true, desc: "Start, optionale Zwischenpunkte und Ziel als <code>lon,lat;lon,lat;…</code>." },
+  { name: "geometries", type: "string", desc: "Format der Geometrie, <code>geojson</code> liefert eine GeoJSON-Linie." },
+  { name: "overview", type: "string", desc: "Detailgrad der Geometrie, zum Beispiel <code>full</code>." },
+  { name: "steps", type: "boolean", default: "false", desc: "Mit <code>true</code> Abbiegehinweise in <code>legs[].steps</code>." },
+  { name: "language", type: "string", desc: "Sprache der Hinweise, zum Beispiel <code>de</code>." },
 ]} />
 
-Antwort: GeoJSON-`Feature` mit `LineString` und den Eigenschaften `distance_m`, `duration_s`, `from`/`to` (gebundener Punkt mit Abstand) sowie optional `steps`.
+Antwort: `code` (`Ok`) und `routes[]` mit `distance` (Meter), `duration` (Sekunden), `legs` und `geometry`.
 
-<Code lang="bash" code={`curl "https://routing.mapx.at/route?profile=bike&from=15.33,48.23&to=15.34,48.24"`} />
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
 Live: [Route](/beispiele/route/).
 
 ## Isochrone
 
-**GET https://api.mapx.at/v1/isochrone**
-
-Aktuell: `GET` oder `POST https://routing.mapx.at/isochrone`.
+**GET https://api.mapx.at/v1/isochrone/{profile}/{coordinate}**
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "<code>foot</code>, <code>bike</code> oder <code>car</code>." },
-  { name: "location", type: "string", required: true, desc: "Startpunkt <code>lon,lat</code> (bei POST ein Array <code>[lon,lat]</code>)." },
-  { name: "contours", type: "string", desc: "Fahr- oder Gehzeiten in Minuten, kommagetrennt, höchstens 10 Stufen und 120 Minuten. Entweder <code>contours</code> oder <code>distances</code>." },
-  { name: "distances", type: "string", desc: "Distanzen in Metern, kommagetrennt, bis 150 km." },
-  { name: "simplify, buffer, resolution", type: "number", desc: "Glättung der Ränder in Metern, optional." },
+  { name: "profile", type: "string", required: true, desc: "<code>walking</code>, <code>cycling</code> oder <code>driving</code>." },
+  { name: "coordinate", type: "string", required: true, desc: "Startpunkt <code>lon,lat</code>." },
+  { name: "contours_minutes", type: "string", default: "5,10,15", desc: "Zeitstufen in Minuten, kommagetrennt, bis zu vier Werte." },
+  { name: "contours_meters", type: "string", desc: "Alternativ Distanzstufen in Metern." },
 ]} />
 
 Antwort: `FeatureCollection`, je Stufe ein `MultiPolygon` (größte zuerst) mit `contour`, `unit`, `metric` und `area_km2`.
 
-<Code lang="bash" code={`curl "https://routing.mapx.at/isochrone?profile=foot&location=15.33,48.23&contours=5,10,15"`} />
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/isochrone/walking/15.33,48.23?contours_minutes=5,10,15"`} />
 
 Live: [Erreichbarkeit](/beispiele/isochrone/).
 
 ## Matrix
 
-**POST https://api.mapx.at/v1/matrix**
-
-Aktuell: `POST https://routing.mapx.at/matrix`, JSON-Body.
+**GET https://api.mapx.at/v1/matrix/{profile}/{coordinates}**
 
 <ParamTable params={[
-  { name: "profile", type: "string", desc: "Wie oben, Standard <code>car</code>." },
-  { name: "sources", type: "number[][]", required: true, desc: "Liste von <code>[lon,lat]</code>, höchstens 1000." },
-  { name: "destinations", type: "number[][]", desc: "Ziele; ohne Angabe gelten die Quellen auch als Ziele. Höchstens 250.000 Paare." },
+  { name: "profile", type: "string", required: true, desc: "Wie oben." },
+  { name: "coordinates", type: "string", required: true, desc: "Alle Orte als <code>lon,lat;lon,lat;…</code>." },
+  { name: "sources", type: "string", desc: "Indizes der Quellen, mit <code>;</code> getrennt; ohne Angabe alle." },
+  { name: "destinations", type: "string", desc: "Indizes der Ziele, mit <code>;</code> getrennt; ohne Angabe alle." },
+  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code> oder beides, kommagetrennt." },
 ]} />
 
-Antwort: `durations` (Sekunden) und `distances` (Meter) als Matrix, `null` heißt nicht routbar; dazu `sources` und `destinations` mit gebundenem Punkt.
+Antwort: `durations` (Sekunden) und bei Bedarf `distances` (Meter) als Matrix, `null` heißt nicht routbar; dazu `sources` und `destinations` mit gebundenem Punkt.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/matrix/driving/15.33,48.23;15.34,48.24;15.3,48.2"`} />
 
 Live: [Fahrzeitmatrix](/beispiele/matrix/).
 
 ## Map Matching
 
-**POST https://api.mapx.at/v1/matching**
+**GET https://api.mapx.at/v1/matching/{profile}/{coordinates}**
 
-Aktuell: `POST https://routing.mapx.at/match`, JSON-Body. Ordnet eine GPS-Spur dem Wegenetz zu.
+Ordnet eine GPS-Spur dem Wegenetz zu.
 
 <ParamTable params={[
-  { name: "coordinates", type: "number[][]", required: true, desc: "Spur als <code>[lon,lat]</code>, mindestens 2, höchstens 10.000 Punkte." },
-  { name: "profile", type: "string", desc: "Wie oben." },
-  { name: "timestamps", type: "number[]", desc: "Sekunden je Punkt, verbessert die Zuordnung." },
-  { name: "radius", type: "number", desc: "Suchradius je Punkt in Metern, höchstens 500." },
-  { name: "sigma", type: "number", desc: "Messrauschen der Spur in Metern, höchstens 100." },
+  { name: "profile", type: "string", required: true, desc: "Wie oben." },
+  { name: "coordinates", type: "string", required: true, desc: "Spur als <code>lon,lat;lon,lat;…</code>." },
+  { name: "timestamps", type: "string", desc: "Sekunden je Punkt, mit <code>;</code> getrennt; verbessert die Zuordnung." },
+  { name: "radiuses", type: "string", desc: "Suchradius je Punkt in Metern, mit <code>;</code> getrennt." },
+  { name: "geometries", type: "string", desc: "Format der Geometrie, <code>geojson</code> für GeoJSON." },
 ]} />
 
-Antwort: `FeatureCollection` mit je einem `LineString` je zusammenhängendem Teilstück und `tracepoints` (gebundener Punkt mit Konfidenz, oder `null`).
+Antwort: `matchings[]` mit `geometry`, `distance`, `duration` und `confidence` sowie `tracepoints` (gebundener Punkt oder `null`).
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/matching/driving/15.33019,48.2299;15.3295,48.229?geometries=geojson"`} />
 
 ## Fehler und Limits
 
-Fehler kommen als Text oder JSON mit passendem HTTP-Status (`400` ungültige Eingabe, `404`/`422` keine Route, `429` Limit). Die Rechenlast begrenzt der Dienst je IP; Isochrone und Matrix haben enge Limits. Allgemeines: [Fehler und Limits](/api/fehler/).
+Fehler kommen als `application/problem+json` mit passendem HTTP-Status (`400` ungültige Eingabe, `404` keine Route oder kein Netz in der Nähe, `429` Limit). Isochrone und Matrix haben enge Limits. Allgemeines: [Fehler und Limits](/api/fehler/).

@@ -8,7 +8,8 @@ Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dun
 // Tageszeit und Nachtmodus: die Standard-Stile gibt es für vier Lichtstimmungen.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const stil = (licht) => `https://mapx.at/styles/standard-${licht}-normal.json`; // licht: morgen, tag, abend, nacht
+const STIL = { morgen: 'karte-morgen', tag: 'karte', abend: 'karte-abend', nacht: 'karte-nacht' };
+const stil = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}`;
 const map = new maplibregl.Map({ container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
 map.addControl(new maplibregl.NavigationControl());
 
@@ -22,6 +23,4 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 
 ## Verwendete APIs
 
-- Stil `karte` (Lichtvarianten)
-
-> Lichtvarianten gibt es derzeit nur als Dateien unter `https://mapx.at/styles/standard-<licht>-normal.json`. Ob `/v1/styles/karte` sie als Parameter anbietet, steht noch nicht fest.
+- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{karte-morgen|karte|karte-abend|karte-nacht}`

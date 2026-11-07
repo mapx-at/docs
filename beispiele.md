@@ -9,4 +9,4 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 ## Hinweise
 
 - Alle Daten stammen aus amtlichen Quellen, keine OSM-Daten. Attribution: [Lizenz](/lizenz/).
-- Beispiele, die Endpunkte unter `/v1/` ansprechen, die noch ausgerollt werden, verwenden bis dahin die bestehenden Dienste. Das steht jeweils auf der Beispielseite unter *Stand der Endpunkte*.
+- Alle Beispiele sprechen die Endpunkte unter `https://api.mapx.at/v1/` an, ohne Zugangstoken.

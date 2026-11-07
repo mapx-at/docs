@@ -2,17 +2,13 @@
 
 Orte, Adressen und Gipfel suchen und anspringen.
 
-Die Such-API ist ein schreibgeschützter Meilisearch-Index mit einem öffentlichen Search-only-Key. Treffer enthalten Koordinate und Umhüllende zum Zoomen.
-
-> Such- und Routing-Dienst antworten nur auf freigegebene Herkünfte (CORS). Die Beispiele laufen hier, sobald `docs.mapx.at` freigegeben ist; auf eigenen Seiten braucht es ebenfalls eine Freigabe der Herkunft.
+Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen. Kein Zugangstoken nötig.
 
 ```js
-// Suche: Orte, Adressen, Gipfel und Grundstücke über die Such-API (Meilisearch, nur lesend).
+// Suche: Orte, Adressen, Gipfel und Grundstücke über /v1/geocode (GeoJSON im Mapbox-Stil).
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const SUCHE = 'https://search.mapx.at/indexes/places/search';
-const KEY = '<SEARCH_KEY>'; // öffentlicher Search-only-Key, darf im Browser stehen
-const map = new maplibregl.Map({ container: 'map', style: 'https://mapx.at/styles/standard-tag-normal.json', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
 let marker;
 
@@ -22,18 +18,15 @@ eingabe.addEventListener('input', async () => {
   liste.replaceChildren();
   if (q.length < 2) return;
   try {
-    const r = await fetch(SUCHE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + KEY },
-      body: JSON.stringify({ q, limit: 6, filter: 'type != parcel' }),
-    });
-    for (const h of (await r.json()).hits) {
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    for (const f of (await r.json()).features) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = h.label + (h.context ? ' – ' + h.context : '');
+      b.type = 'button'; b.textContent = f.place_name;
       b.addEventListener('click', () => {
         marker?.remove();
-        marker = new maplibregl.Marker().setLngLat([h._geo.lng, h._geo.lat]).addTo(map);
-        h.bbox ? map.fitBounds([[h.bbox[0], h.bbox[1]], [h.bbox[2], h.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: [h._geo.lng, h._geo.lat], zoom: h.zoom ?? 14 });
+        marker = new maplibregl.Marker().setLngLat(f.center).addTo(map);
+        f.bbox ? map.fitBounds([[f.bbox[0], f.bbox[1]], [f.bbox[2], f.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: f.center, zoom: f.properties.zoom ?? 14 });
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
@@ -44,6 +37,4 @@ eingabe.addEventListener('input', async () => {
 
 ## Verwendete APIs
 
-- Suche `POST search.mapx.at/indexes/places/search`
-
-> Das Beispiel nutzt direkt den Suchindex. `GET /v1/geocode` und `/v1/reverse` (Mapbox-ähnliche GeoJSON-Antwort) sind geplant, die Einbindung wechselt dann nur die URL.
+- [Geocoding](/api/geocoding/) `GET api.mapx.at/v1/geocode`

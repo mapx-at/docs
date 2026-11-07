@@ -8,7 +8,7 @@ Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer 
 // Kataster: Ein Klick auf eine Grundstücksgrenze zeigt Grundstücksnummer und Katastralgemeinde.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://mapx.at/styles/hybrid.json', center: [15.3306, 48.2275], zoom: 18 }); // Melk
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/luftbild', center: [15.3306, 48.2275], zoom: 18 }); // Melk
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {

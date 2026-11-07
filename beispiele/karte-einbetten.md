@@ -10,7 +10,7 @@ maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: 'https://mapx.at/styles/standard-tag-normal.json', // künftig: https://api.mapx.at/v1/styles/karte
+  style: 'https://api.mapx.at/v1/styles/karte',
   center: [13.04, 47.80], // Salzburg
   zoom: 12,
 });
@@ -20,6 +20,4 @@ map.addControl(new maplibregl.ScaleControl());
 
 ## Verwendete APIs
 
-- Stil `karte`
-
-> Der Stil kommt aktuell von `https://mapx.at/styles/`. Sobald `/v1/styles/karte` live ist, genügt es, die URL zu tauschen.
+- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/karte`

@@ -22,20 +22,20 @@ Alle APIs folgen denselben Regeln:
 
 | API | Endpunkt | Zweck |
 |---|---|---|
-| [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation` | Höhe für Punkte oder entlang einer Linie |
+| [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation`, `/v1/elevation/profile` | Höhe für Punkte, Höhenprofil entlang einer Linie |
 
 ## Stile, Suche und Routing
 
 | API | Endpunkt | Zweck |
 |---|---|---|
-| [Styles](/api/styles/) | `GET api.mapx.at/v1/styles/{karte\|luftbild\|gelaende}` | fertige MapLibre-Stile |
+| [Styles](/api/styles/) | `GET api.mapx.at/v1/styles/{id}` | fertige MapLibre-Stile |
 | [Geocoding](/api/geocoding/) | `GET api.mapx.at/v1/geocode`, `/v1/reverse` | Suche und Adresse zum Punkt |
-| [Directions](/api/routing/#directions) | `GET api.mapx.at/v1/directions` | Route für Fuß, Rad, Auto |
-| [Isochrone](/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone` | Erreichbarkeitsflächen |
-| [Matrix](/api/routing/#matrix) | `POST api.mapx.at/v1/matrix` | Fahrzeiten zwischen vielen Orten |
-| [Map Matching](/api/routing/#map-matching) | `POST api.mapx.at/v1/matching` | GPS-Spur auf das Wegenetz |
+| [Directions](/api/routing/#directions) | `GET api.mapx.at/v1/directions/{profile}/{coordinates}` | Route für Fuß, Rad, Auto |
+| [Isochrone](/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | Erreichbarkeitsflächen |
+| [Matrix](/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | Fahrzeiten zwischen vielen Orten |
+| [Map Matching](/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS-Spur auf das Wegenetz |
 
-Diese Endpunkte werden gerade ausgerollt; die jeweilige Seite nennt den heute verfügbaren Dienst. [Beispiele](/beispiele/) zeigen jeden Weg live.
+Alle Endpunkte laufen unter `https://api.mapx.at/v1/` ohne Zugangstoken. [Beispiele](/beispiele/) zeigen jeden Weg live.
 
 ## Betrieb
 

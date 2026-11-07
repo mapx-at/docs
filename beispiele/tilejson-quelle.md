@@ -11,8 +11,8 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: {
-      ortho: { type: 'raster', url: 'https://tiles.mapx.at/v1/dop-ortho.json', tileSize: 512 },
-      linien: { type: 'vector', url: 'https://tiles.mapx.at/v1/hoehenlinien.json' },
+      ortho: { type: 'raster', url: 'https://api.mapx.at/v1/tiles/dop-ortho.json', tileSize: 512 },
+      linien: { type: 'vector', url: 'https://api.mapx.at/v1/tiles/hoehenlinien.json' },
     },
     layers: [
       { id: 'ortho', type: 'raster', source: 'ortho' },

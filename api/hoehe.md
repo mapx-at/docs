@@ -77,7 +77,19 @@ GeoJSON <code>FeatureCollection</code>, ein <code>Point</code>-Feature je Punkt 
 
 ## Profil-Endpunkt
 
-> Ein eigener Endpunkt `GET /v1/elevation/profile` (Linie rein, Profil mit Auf- und Abstieg raus) wird gerade ausgerollt. Bis dahin liefert `/v1/elevation?path=` dieselben Höhenwerte. Live: [Höhenprofil](/beispiele/hoehenprofil/), [Höhe per Klick](/beispiele/hoehe-abfragen/).
+**GET https://api.mapx.at/v1/elevation/profile**
+
+<ParamTable params={[
+  { name: "coordinates", type: "string", required: true, desc: "Linie als <code>lon,lat;lon,lat;…</code>, 2 bis 512 Stützpunkte." },
+  { name: "samples", type: "integer", default: "100", desc: "Anzahl gleichmäßig nach Strecke verteilter Messpunkte, 2 bis 1024." },
+  { name: "model", type: "string", default: "dtm", desc: "<code>dtm</code> (Gelände) oder <code>dsm</code> (Oberfläche)." },
+]} />
+
+Die Antwort ist ein GeoJSON-`Feature` mit `LineString` (Koordinaten mit Höhe als dritter Wert). In `properties` stehen `distances` (Meter ab Linienanfang) und `elevations` je Messpunkt sowie `distance_m`, `ascent_m`, `descent_m`, `min_m`, `max_m`, `model`, `stichtag` und `resolution_m`.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.70,47.08&samples=50"`} />
+
+Live: [Höhenprofil](/beispiele/hoehenprofil/), [Höhe per Klick](/beispiele/hoehe-abfragen/).
 
 ## Fehler
 

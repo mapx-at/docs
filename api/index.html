@@ -122,8 +122,8 @@
 <tbody>
 <tr>
 <td><a href="/api/hoehe/">Höhe und Profil</a></td>
-<td><code dir="auto">GET api.mapx.at/v1/elevation</code></td>
-<td>Höhe für Punkte oder entlang einer Linie</td>
+<td><code dir="auto">GET api.mapx.at/v1/elevation</code>, <code dir="auto">/v1/elevation/profile</code></td>
+<td>Höhe für Punkte, Höhenprofil entlang einer Linie</td>
 </tr>
 </tbody>
 </table>
@@ -139,7 +139,7 @@
 <tbody>
 <tr>
 <td><a href="/api/styles/">Styles</a></td>
-<td><code dir="auto">GET api.mapx.at/v1/styles/{karte|luftbild|gelaende}</code></td>
+<td><code dir="auto">GET api.mapx.at/v1/styles/{id}</code></td>
 <td>fertige MapLibre-Stile</td>
 </tr>
 <tr>
@@ -149,27 +149,27 @@
 </tr>
 <tr>
 <td><a href="/api/routing/#directions">Directions</a></td>
-<td><code dir="auto">GET api.mapx.at/v1/directions</code></td>
+<td><code dir="auto">GET api.mapx.at/v1/directions/{profile}/{coordinates}</code></td>
 <td>Route für Fuß, Rad, Auto</td>
 </tr>
 <tr>
 <td><a href="/api/routing/#isochrone">Isochrone</a></td>
-<td><code dir="auto">GET api.mapx.at/v1/isochrone</code></td>
+<td><code dir="auto">GET api.mapx.at/v1/isochrone/{profile}/{coordinate}</code></td>
 <td>Erreichbarkeitsflächen</td>
 </tr>
 <tr>
 <td><a href="/api/routing/#matrix">Matrix</a></td>
-<td><code dir="auto">POST api.mapx.at/v1/matrix</code></td>
+<td><code dir="auto">GET api.mapx.at/v1/matrix/{profile}/{coordinates}</code></td>
 <td>Fahrzeiten zwischen vielen Orten</td>
 </tr>
 <tr>
 <td><a href="/api/routing/#map-matching">Map Matching</a></td>
-<td><code dir="auto">POST api.mapx.at/v1/matching</code></td>
+<td><code dir="auto">GET api.mapx.at/v1/matching/{profile}/{coordinates}</code></td>
 <td>GPS-Spur auf das Wegenetz</td>
 </tr>
 </tbody>
 </table>
-<p>Diese Endpunkte werden gerade ausgerollt; die jeweilige Seite nennt den heute verfügbaren Dienst. <a href="/beispiele/">Beispiele</a> zeigen jeden Weg live.</p>
+<p>Alle Endpunkte laufen unter <code dir="auto">https://api.mapx.at/v1/</code> ohne Zugangstoken. <a href="/beispiele/">Beispiele</a> zeigen jeden Weg live.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="betrieb">Betrieb</h2><a class="sl-anchor-link" href="#betrieb"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Abschnitt betitelt „Betrieb“</span></a></div>
 <table>
 <thead>

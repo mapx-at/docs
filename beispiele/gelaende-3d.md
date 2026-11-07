@@ -10,14 +10,14 @@ maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: 'https://mapx.at/styles/hybrid.json', // Luftbild, wird über das Gelände gelegt
+  style: 'https://api.mapx.at/v1/styles/luftbild', // Luftbild, wird über das Gelände gelegt
   center: [12.694, 47.074], // Großglockner
   zoom: 12.5, pitch: 70, bearing: 20, maxPitch: 80,
 });
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
 
 map.on('load', () => {
-  map.addSource('hoehe', { type: 'raster-dem', url: 'https://tiles.mapx.at/v1/dtm.json', tileSize: 512, encoding: 'mapbox' });
+  map.addSource('hoehe', { type: 'raster-dem', url: 'https://api.mapx.at/v1/tiles/dtm.json', tileSize: 512, encoding: 'mapbox' });
   map.setTerrain({ source: 'hoehe', exaggeration: 1.4 });
 });
 

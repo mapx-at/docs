@@ -4,13 +4,11 @@ Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 
 Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPolygon, die größte Fläche zuerst.
 
-> Such- und Routing-Dienst antworten nur auf freigegebene Herkünfte (CORS). Die Beispiele laufen hier, sobald `docs.mapx.at` freigegeben ist; auf eigenen Seiten braucht es ebenfalls eine Freigabe der Herkunft.
-
 ```js
 // Isochronen: Flächen, die man in 5, 10 und 15 Minuten erreicht.
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://mapx.at/styles/standard-tag-normal.json', center: [15.33, 48.23], zoom: 13 });
+const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/karte', center: [15.33, 48.23], zoom: 13 });
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {
@@ -22,8 +20,8 @@ map.on('load', () => {
 map.on('click', (e) => abfragen([e.lngLat.lng, e.lngLat.lat]));
 
 async function abfragen(ort) {
-  const profil = document.getElementById('profil').value; // foot, bike oder car
-  const url = `https://routing.mapx.at/isochrone?profile=${profil}&location=${ort.join(',')}&contours=5,10,15`; // künftig /v1/isochrone
+  const profil = document.getElementById('profil').value; // walking, cycling oder driving
+  const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
     const r = await fetch(url);
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -34,6 +32,4 @@ async function abfragen(ort) {
 
 ## Verwendete APIs
 
-- Routing `GET routing.mapx.at/isochrone`
-
-> Aktuell `routing.mapx.at/isochrone`; `GET /v1/isochrone` ist geplant.
+- [Routing](/api/routing/#isochrone) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`

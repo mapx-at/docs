@@ -4,7 +4,7 @@
 
 ## 07.11.2026
 
-- Neu: Bereich [Beispiele](/beispiele/) mit zwölf lauffähigen Live-Beispielen; API-Seiten für [Styles](/api/styles/), [Geocoding](/api/geocoding/) und [Routing](/api/routing/) (Endpunkte unter `/v1/` werden ausgerollt).
+- Neu: Bereich [Beispiele](/beispiele/) mit zwölf lauffähigen Live-Beispielen; API-Seiten für [Styles](/api/styles/), [Geocoding](/api/geocoding/) und [Routing](/api/routing/) (alle Endpunkte unter `https://api.mapx.at/v1/` live).
 
 - Neue Produktseiten: DSM, Höhenlinien, Basiskarte, Kataster, Orthophoto und Flugblöcke, jeweils mit Live-Karte und Layer-Tabelle.
 - API-Endpunkte in Betrieb: Kacheln (PMTiles und XYZ), TileJSON, Höhe und Profil.
