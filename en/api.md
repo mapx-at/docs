@@ -40,6 +40,7 @@ All APIs follow the same rules:
 | [Search Box](/en/api/searchbox/) | `GET api.mapx.at/v1/searchbox/suggest`, `/retrieve/{id}`, `/category/{category}` | suggestions, details, places by category |
 | [Tilequery](/en/api/tilequery/) | `GET api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json`, `/v1/parcel/{lon},{lat}.json` | features, parcel and elevation at a point |
 | [Directions](/en/api/routing/#directions) | `GET api.mapx.at/v1/directions/{profile}/{coordinates}` | route for walking, cycling, driving |
+| [Public transport](/en/api/transit/) | `GET api.mapx.at/v1/directions/transit/{coordinates}` | journeys with transit, walking and cycling |
 | [Isochrone](/en/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | reachability areas |
 | [Matrix](/en/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | travel times between many places |
 | [Map Matching](/en/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS trace onto the road network |
