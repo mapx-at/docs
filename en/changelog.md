@@ -4,6 +4,8 @@ Changes to data products, APIs and these docs.
 
 ## 07.11.2026
 
+- New: [Static Images](/en/api/static/) (`/v1/static`, aerial imagery and terrain as PNG or WebP with overlays), [SDK mapx-gl](/en/api/sdk/); English docs brought up to date with the German ones. Also: [Examples](/en/beispiele/) with twelve live examples, and API pages for [Styles](/en/api/styles/), [Geocoding](/en/api/geocoding/) and [Routing](/en/api/routing/).
+
 - New: data products DTM, DSM, contour lines, base map, cadastre, orthophoto and flight blocks, each with a live map and layer table.
 - New: API with tiles (PMTiles and XYZ), TileJSON, elevation and profile, and a test console.
 - New: documentation in German and English.

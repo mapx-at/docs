@@ -75,6 +75,22 @@ A GeoJSON <code>FeatureCollection</code>, one <code>Point</code> feature per poi
   }]
 }`} />
 
+## Profile endpoint
+
+**GET https://api.mapx.at/v1/elevation/profile**
+
+<ParamTable params={[
+  { name: "coordinates", type: "string", required: true, desc: "Line as <code>lon,lat;lon,lat;…</code>, 2 to 512 vertices." },
+  { name: "samples", type: "integer", default: "100", desc: "Number of points spaced evenly by distance, 2 to 1024." },
+  { name: "model", type: "string", default: "dtm", desc: "<code>dtm</code> (terrain) or <code>dsm</code> (surface)." },
+]} />
+
+The response is a GeoJSON `Feature` with a `LineString` (coordinates with elevation as third value). `properties` holds `distances` (metres from the start of the line) and `elevations` per point, as well as `distance_m`, `ascent_m`, `descent_m`, `min_m`, `max_m`, `model`, `stichtag` and `resolution_m`.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.70,47.08&samples=50"`} />
+
+Live: [Elevation profile](/en/beispiele/hoehenprofil/), [Elevation on click](/en/beispiele/hoehe-abfragen/).
+
 ## Errors
 
 Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)).

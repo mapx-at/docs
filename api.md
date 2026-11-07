@@ -24,6 +24,13 @@ Alle APIs folgen denselben Regeln:
 |---|---|---|
 | [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation`, `/v1/elevation/profile` | Höhe für Punkte, Höhenprofil entlang einer Linie |
 
+## Bilder
+
+| API | Endpunkt | Zweck |
+|---|---|---|
+| [Static Images](/api/static/) | `GET api.mapx.at/v1/static/{style}/{view}/{size}` | Kartenbild als PNG oder WebP, mit Overlays |
+| [SDK mapx-gl](/api/sdk/) | `map.mapx.at/sdk/v1/` | MapLibre-Aufsatz mit Suche, Stilwechsel, Profil |
+
 ## Stile, Suche und Routing
 
 | API | Endpunkt | Zweck |

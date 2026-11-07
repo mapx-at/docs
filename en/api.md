@@ -1,6 +1,6 @@
 # API overview
 
-All mapx APIs: tiles, TileJSON and elevation. No key, open CORS, errors as RFC 9457.
+All mapx APIs: tiles, TileJSON, elevation, styles, search, routing and images. No key, open CORS, errors as RFC 9457.
 
 All APIs follow the same rules:
 
@@ -22,7 +22,27 @@ All APIs follow the same rules:
 
 | API | Endpoint | Purpose |
 |---|---|---|
-| [Elevation and profile](/en/api/hoehe/) | `GET api.mapx.at/v1/elevation` | elevation for points or along a line |
+| [Elevation and profile](/en/api/hoehe/) | `GET api.mapx.at/v1/elevation`, `/v1/elevation/profile` | elevation for points or along a line |
+
+## Images and SDK
+
+| API | Endpoint | Purpose |
+|---|---|---|
+| [Static Images](/en/api/static/) | `GET api.mapx.at/v1/static/{style}/{view}/{size}` | map image as PNG or WebP, with overlays |
+| [SDK mapx-gl](/en/api/sdk/) | `map.mapx.at/sdk/v1/` | MapLibre add-on with search, style switcher, profile |
+
+## Styles, search and routing
+
+| API | Endpoint | Purpose |
+|---|---|---|
+| [Styles](/en/api/styles/) | `GET api.mapx.at/v1/styles/{id}` | ready-made MapLibre styles |
+| [Geocoding](/en/api/geocoding/) | `GET api.mapx.at/v1/geocode`, `/v1/reverse` | search and address for a point |
+| [Directions](/en/api/routing/#directions) | `GET api.mapx.at/v1/directions/{profile}/{coordinates}` | route for walking, cycling, driving |
+| [Isochrone](/en/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | reachability areas |
+| [Matrix](/en/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | travel times between many places |
+| [Map Matching](/en/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS trace onto the road network |
+
+All endpoints run under `https://api.mapx.at/v1/` without an access token. [Examples](/en/beispiele/) show each one live.
 
 ## Operations
 
