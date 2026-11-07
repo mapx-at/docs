@@ -9,7 +9,7 @@ Orte, Adressen, Gipfel und Grundstücke suchen (Vorwärts) und Koordinaten in Ad
 <ParamTable params={[
   { name: "q", type: "string", required: true, desc: "Suchtext: Ort, Adresse, Gipfel, Grundstück (zum Beispiel <code>Melk .111/1</code>)." },
   { name: "proximity", type: "string", desc: "<code>lon,lat</code>: Treffer in der Nähe bevorzugen." },
-  { name: "types", type: "string", desc: "Kommagetrennt: <code>address</code>, <code>street</code>, <code>locality</code>, <code>place</code>, <code>district</code>, <code>region</code>, <code>postcode</code>, <code>poi</code>." },
+  { name: "types", type: "string", desc: "Kommagetrennt: <code>address</code>, <code>street</code>, <code>locality</code>, <code>place</code>, <code>district</code>, <code>region</code>, <code>postcode</code>, <code>poi</code> (Orte, Bahnhöfe/Haltestellen, Grundstücke)." },
   { name: "bbox", type: "string", desc: "<code>minLon,minLat,maxLon,maxLat</code>: Treffer auf ein Gebiet beschränken." },
   { name: "limit", type: "integer", default: "5", desc: "Anzahl Treffer, 1 bis 10." },
 ]} />
