@@ -12,7 +12,13 @@ Jeder Kachelsatz (Basiskarte, Kataster, Höhenlinien, DTM, DSM, Orthophoto, Flug
   { name: "ext", type: "string", required: true, desc: "Passend zum Kachelsatz: <code>pbf</code> (Alias <code>mvt</code>) für Vektor, <code>webp</code> oder <code>png</code> für Raster. Eine andere Endung ergibt <code>404</code>." },
 ]} />
 
-Die Adresse `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` ohne `/tiles/` bleibt gültig.
+Die Adresse `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` ohne `/tiles/` bleibt gültig, ist aber veraltet (in der OpenAPI als `deprecated` markiert); neue Clients verwenden `/v1/tiles/…`.
+
+## Tileset-Liste
+
+**GET https://api.mapx.at/v1/tiles**
+
+Alle verfügbaren Kachelsätze in `tilesets[]`: `name`, `aliases` (gleichwertige Kurznamen wie `dtm`, `basis`), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (Datenstand) und `built` (Bauzeit). Die Namen gelten auch für [Tilequery](/api/tilequery/).
 
 ## TileJSON
 

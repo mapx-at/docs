@@ -12,7 +12,13 @@ Every tile set (base map, cadastre, contours, DTM, DSM, orthophoto, flight block
   { name: "ext", type: "string", required: true, desc: "Matches the tile set: <code>pbf</code> (alias <code>mvt</code>) for vector, <code>webp</code> or <code>png</code> for raster. Any other extension gives <code>404</code>." },
 ]} />
 
-The address `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` without `/tiles/` stays valid.
+The address `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` without `/tiles/` stays valid but is deprecated (marked `deprecated` in the OpenAPI); new clients use `/v1/tiles/…`.
+
+## Tileset list
+
+**GET https://api.mapx.at/v1/tiles**
+
+All available tilesets in `tilesets[]`: `name`, `aliases` (equivalent short names such as `dtm`, `basis`), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (data date) and `built` (build time). The names also work for [Tilequery](/en/api/tilequery/).
 
 ## TileJSON
 

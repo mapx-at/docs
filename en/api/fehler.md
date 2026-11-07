@@ -42,10 +42,14 @@ For heavier loads (batch processing, whole regions) use the PMTiles file: downlo
 
 | Header | Value |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON) |
+| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON, elevation, parcel), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
 | `ETag` | version; with `If-None-Match` → `304` |
 
 PMTiles files carry the release date in their name and never change; they may be cached indefinitely.
+
+## Attribution
+
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: BEV – DKM, CC BY 4.0` for parcels or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](/en/anleitungen/attribution/).
 
 ## Operations
 

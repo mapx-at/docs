@@ -26,12 +26,12 @@ Live: [Search](/en/beispiele/suche/).
 
 <ParamTable params={[
   { name: "lng, lat", type: "number", required: true, desc: "Point in WGS84." },
-  { name: "radius", type: "number", desc: "Search radius in metres." },
-  { name: "limit", type: "integer", desc: "Number of hits." },
+  { name: "radius", type: "number", desc: "Search radius in metres, 1 to 5000, default 500." },
+  { name: "limit", type: "integer", desc: "Number of hits, 1 to 10, default 1." },
   { name: "types", type: "string", desc: "As for <code>/v1/geocode</code>." },
 ]} />
 
-Returns the nearest address (or other matching places) as a `FeatureCollection` in the same shape as the forward search.
+Returns the nearest address (or other matching places) as a `FeatureCollection` in the same shape as the forward search, nearest hit first. Without `types`, parcels and POIs are not searched. Typical response time below 50 ms.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/reverse?lng=15.33&lat=48.23"`} />
 

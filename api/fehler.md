@@ -42,10 +42,14 @@ Für mehr Last (Batch-Verarbeitung, ganze Gebiete) ist die PMTiles-Datei der ric
 
 | Header | Wert |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON) |
+| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe, Grundstück), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
 | `ETag` | Version; mit `If-None-Match` → `304` |
 
 PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen unbegrenzt gecacht werden.
+
+## Attribution
+
+JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](/anleitungen/attribution/).
 
 ## Betrieb
 

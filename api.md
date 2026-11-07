@@ -16,6 +16,7 @@ Alle APIs folgen denselben Regeln:
 |---|---|---|
 | [Kacheln](/api/kacheln/) | `GET tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` | Raster-, Höhen- und Vektorkacheln |
 | [PMTiles](/api/kacheln/#pmtiles-datei) | `GET tiles.mapx.at/<datei>.pmtiles` | ganzes Produkt als Datei, per HTTP-Range |
+| [Tileset-Liste](/api/tiles/#tileset-liste) | `GET api.mapx.at/v1/tiles` | alle Kachelsätze mit Namen, TileJSON-URL, Attribution, Stand |
 | [TileJSON](/api/tilejson/) | `GET tiles.mapx.at/v1/{tileset}.json` | Beschreibung eines Produkts für Kartenclients |
 
 ## Höhe

@@ -8,7 +8,7 @@ Tilequery beantwortet „Was liegt an diesem Punkt?“, ohne Kacheln selbst zu l
 
 **GET https://api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json**
 
-`tileset` ist ein Name aus der [Kachel-Liste](/api/kacheln/) (zum Beispiel `mapx-basis`, `mapx-kataster`, `hoehenlinien`). Mehrere Tilesets gehen kommagetrennt (höchstens 15): `mapx-basis,mapx-kataster`.
+`tileset` ist ein Name aus der [Kachel-Liste](/api/kacheln/) (zum Beispiel `mapx-basis`, `mapx-kataster`, `hoehenlinien`). Mehrere Tilesets gehen kommagetrennt (höchstens 15): `mapx-basis,mapx-kataster`. Alle Namen liefert `GET https://api.mapx.at/v1/tiles` ([Tileset-Liste](/api/tiles/#tileset-liste)).
 
 <ParamTable params={[
   { name: "radius", type: "number", default: "0", desc: "Umkreis in Metern, 0 bis 2000. Bei 0 kommen nur Features, die den Punkt enthalten (Polygone)." },

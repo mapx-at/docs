@@ -8,7 +8,7 @@ Tilequery answers "what is at this point?" without fetching and decoding tiles y
 
 **GET https://api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json**
 
-`tileset` is a name from the [tile list](/en/api/kacheln/) (for example `mapx-basis`, `mapx-kataster`, `hoehenlinien`). Several tilesets are comma-separated (at most 15): `mapx-basis,mapx-kataster`.
+`tileset` is a name from the [tile list](/en/api/kacheln/) (for example `mapx-basis`, `mapx-kataster`, `hoehenlinien`). Several tilesets are comma-separated (at most 15): `mapx-basis,mapx-kataster`. All names via `GET https://api.mapx.at/v1/tiles` ([tileset list](/en/api/tiles/#tileset-list)).
 
 <ParamTable params={[
   { name: "radius", type: "number", default: "0", desc: "Radius in metres, 0 to 2000. With 0 only features containing the point (polygons) are returned." },
