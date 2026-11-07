@@ -78,9 +78,7 @@ With `path` and `samples`, the [`/v1/elevation`](/en/api/hoehe/) endpoint return
 
 An SVG chart with area and line of elevation over distance, with length, ascent and descent below.
 
-<Aside>
-More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](/en/wissen/faq/#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
-</Aside>
+> More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](/en/wissen/faq/#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
 
 ## Next steps
 

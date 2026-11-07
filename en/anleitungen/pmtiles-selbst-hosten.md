@@ -68,9 +68,7 @@ Because file names are immutable, set `Cache-Control: public, max-age=31536000, 
 
 A file or subset is served independently of mapx, with the same look and accuracy as the original tiles.
 
-<Aside>
-An alternative without your own files: the [TileJSON address](/en/api/tilejson/) `https://tiles.mapx.at/v1/{tileset}.json`. It always points to the current release.
-</Aside>
+> An alternative without your own files: the [TileJSON address](/en/api/tilejson/) `https://tiles.mapx.at/v1/{tileset}.json`. It always points to the current release.
 
 ## Next steps
 

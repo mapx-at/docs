@@ -8,7 +8,7 @@ The elevation API returns terrain height ([DTM](/en/daten/dtm/)) or surface heig
 
 ## Retrieve elevation
 
-<Endpoint url="https://api.mapx.at/v1/elevation" />
+**GET https://api.mapx.at/v1/elevation**
 
 ### Parameters
 

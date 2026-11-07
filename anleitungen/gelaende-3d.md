@@ -69,9 +69,7 @@ Verwendet werden das [DTM](/daten/dtm/) (Höhe, Typ `raster-dem`) und das [Ortho
 
 Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusätzlich schattiert. Das Orthophoto reicht bis z18 (20 cm), das DTM bis z16 (Rasterweite 1 m); MapLibre vergrößert darüber hinaus automatisch.
 
-<Aside type="tip">
-Mit `exaggeration` überhöhen Sie das Relief. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
-</Aside>
+> Mit `exaggeration` überhöhen Sie das Relief. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
 
 ## Nächste Schritte
 

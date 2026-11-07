@@ -24,6 +24,19 @@ Alle APIs folgen denselben Regeln:
 |---|---|---|
 | [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation` | Höhe für Punkte oder entlang einer Linie |
 
+## Stile, Suche und Routing
+
+| API | Endpunkt | Zweck |
+|---|---|---|
+| [Styles](/api/styles/) | `GET api.mapx.at/v1/styles/{karte\|luftbild\|gelaende}` | fertige MapLibre-Stile |
+| [Geocoding](/api/geocoding/) | `GET api.mapx.at/v1/geocode`, `/v1/reverse` | Suche und Adresse zum Punkt |
+| [Directions](/api/routing/#directions) | `GET api.mapx.at/v1/directions` | Route für Fuß, Rad, Auto |
+| [Isochrone](/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone` | Erreichbarkeitsflächen |
+| [Matrix](/api/routing/#matrix) | `POST api.mapx.at/v1/matrix` | Fahrzeiten zwischen vielen Orten |
+| [Map Matching](/api/routing/#map-matching) | `POST api.mapx.at/v1/matching` | GPS-Spur auf das Wegenetz |
+
+Diese Endpunkte werden gerade ausgerollt; die jeweilige Seite nennt den heute verfügbaren Dienst. [Beispiele](/beispiele/) zeigen jeden Weg live.
+
 ## Betrieb
 
 | Endpunkt | Zweck |
@@ -31,9 +44,4 @@ Alle APIs folgen denselben Regeln:
 | `GET api.mapx.at/v1/openapi.json` | OpenAPI-Beschreibung aller Endpunkte |
 | `GET api.mapx.at/health` | Lebenszeichen für Monitoring |
 
-<CardGrid>
-  <LinkCard title="Kacheln" href="/api/kacheln/" description="XYZ und PMTiles für alle Produkte." />
-  <LinkCard title="TileJSON" href="/api/tilejson/" description="Ein Produkt per URL einbinden." />
-  <LinkCard title="Höhe und Profil" href="/api/hoehe/" description="Punkte und Profile, mit Testkonsole." />
-  <LinkCard title="Fehler und Limits" href="/api/fehler/" description="Fehlerformat, Limits, Caching." />
-</CardGrid>
+        

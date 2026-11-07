@@ -46,9 +46,7 @@ One level deeper halves the pixel size. The elevation models exist up to z16, th
 
 If a level is higher than the stored one, the **client scales up** the tiles of the highest level (overzoom). The image does not get sharper, but the map stays usable. In MapLibre set `maxzoom` of the source to the highest existing level (automatic from TileJSON); the map itself may zoom further. Requests outside the zoom range return `404`, see [Errors and limits](/en/api/fehler/).
 
-<Aside>
-Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched. For the cadastre (z16 only) set `minzoom: 16` in the style.
-</Aside>
+> Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched. For the cadastre (z16 only) set `minzoom: 16` in the style.
 
 ## Further reading
 

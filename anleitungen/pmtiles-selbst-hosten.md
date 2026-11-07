@@ -68,9 +68,7 @@ Weil Dateinamen unveränderlich sind, setzen Sie `Cache-Control: public, max-age
 
 Eine Datei oder ein Ausschnitt wird unabhängig von mapx ausgeliefert, mit demselben Aussehen und derselben Genauigkeit wie die Originalkacheln.
 
-<Aside>
-Eine Alternative ohne eigene Dateien: die [TileJSON-Adresse](/api/tilejson/) `https://tiles.mapx.at/v1/{tileset}.json`. Sie zeigt immer auf den aktuellen Stand.
-</Aside>
+> Eine Alternative ohne eigene Dateien: die [TileJSON-Adresse](/api/tilejson/) `https://tiles.mapx.at/v1/{tileset}.json`. Sie zeigt immer auf den aktuellen Stand.
 
 ## Nächste Schritte
 

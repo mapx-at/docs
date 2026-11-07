@@ -98,9 +98,7 @@ Das Tileset [Höhenlinien](/daten/hoehenlinien/) hat einen Layer `contour_l` mit
 
 Für eine Karte statt Luftbild ersetzen Sie die Orthophoto-Ebene durch die Ebenen aus [Basiskarte stylen](/anleitungen/basiskarte-stylen/); die Höhenlinien kommen danach darüber.
 
-<Aside>
-Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](/anleitungen/gelaende-3d/).
-</Aside>
+> Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](/anleitungen/gelaende-3d/).
 
 ## Nächste Schritte
 

@@ -7,6 +7,10 @@
 - [DTM (English)](https://docs.mapx.at/en/daten/dtm/)
 - [Terrain-RGB](https://docs.mapx.at/konzepte/terrain-rgb/): Formel -10000 + (R*65536+G*256+B)*0.1
 - [API](https://docs.mapx.at/api/): tiles, tilejson, xyz, elevation (Spezifikation)
+- [Styles](https://docs.mapx.at/api/styles/): fertige MapLibre-Stile karte, luftbild, gelaende
+- [Suche und Geocoding](https://docs.mapx.at/api/geocoding/): /v1/geocode, /v1/reverse, Suchindex
+- [Routing](https://docs.mapx.at/api/routing/): directions, isochrone, matrix, matching (GIP.at)
+- [Beispiele](https://docs.mapx.at/beispiele/): 12 lauffähige MapLibre-Beispiele mit Code und HTML-Datei
 - [OpenAPI Elevation](https://docs.mapx.at/openapi.yaml)
 - [Lizenz und Attribution](https://docs.mapx.at/lizenz/)
 - [Changelog](https://docs.mapx.at/changelog/)
@@ -16,3 +20,24 @@
 - Kacheln: https://tiles.mapx.at/<datei>.pmtiles, HTTP-Range, CORS offen, kein Schlüssel. Dateinamen enthalten Stichtag und Hash.
 - Terrain-RGB: WebP verlustfrei, 512 px ohne Rand, encoding "mapbox", maxzoom 16, darüber Overzoom.
 - Fehlende Quelldaten sind keine Nodata-Pixel, sondern glatt fortgesetztes Gelände (keine Messung).
+
+## Beispiele (jede Seite auch als .md, zum Beispiel /beispiele/route.md)
+
+- [Karte einbetten](https://docs.mapx.at/beispiele/karte-einbetten/): Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
+- [Basiskarte wechseln](https://docs.mapx.at/beispiele/basiskarte-wechseln/): Zwischen Karte, Luftbild und Gelände umschalten.
+- [Tageszeit und Nachtmodus](https://docs.mapx.at/beispiele/licht/): Den Standardstil in vier Lichtstimmungen.
+- [3D-Gelände](https://docs.mapx.at/beispiele/gelaende-3d/): Luftbild über dem Geländemodell, geneigt und überhöht.
+- [Höhe per Klick](https://docs.mapx.at/beispiele/hoehe-abfragen/): Ein Klick fragt die Höhe an einem Punkt, wahlweise Gelände oder Oberfläche.
+- [Höhenprofil](https://docs.mapx.at/beispiele/hoehenprofil/): Linie klicken, Profil sehen.
+- [Suche](https://docs.mapx.at/beispiele/suche/): Orte, Adressen und Gipfel suchen und anspringen.
+- [Route](https://docs.mapx.at/beispiele/route/): Start und Ziel klicken, Weg samt Länge und Dauer erhalten.
+- [Erreichbarkeit (Isochronen)](https://docs.mapx.at/beispiele/isochrone/): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
+- [Fahrzeitmatrix](https://docs.mapx.at/beispiele/matrix/): Fahrzeiten zwischen mehreren Orten in einer Anfrage.
+- [Kataster: Grundstück per Klick](https://docs.mapx.at/beispiele/kataster-klick/): Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.
+- [TileJSON-Quellen](https://docs.mapx.at/beispiele/tilejson-quelle/): Orthophoto und Höhenlinien ohne fertigen Stil einbinden.
+
+## Hinweise für Werkzeuge
+
+- Beispielcode nutzt MapLibre GL JS 4.7.1 und pmtiles 3.2.1 (CDN), das Protokoll `pmtiles://` muss registriert sein.
+- Stile: https://mapx.at/styles/ (künftig /v1/styles/{karte|luftbild|gelaende}). Keine OSM-Daten, nur amtliche Quellen.
+- Such- und Routing-Dienst antworten nur auf freigegebene Herkünfte (CORS).

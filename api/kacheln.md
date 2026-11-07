@@ -12,7 +12,7 @@ Alle Produkte gibt es auf zwei Wegen: als einzelne Kachel (XYZ, für jeden Karte
 
 ## Kachel abrufen
 
-<Endpoint url="https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}" />
+**GET https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Produkt.", values: [
@@ -65,7 +65,7 @@ Gibt es an dieser Stelle keine Daten, antwortet der Dienst mit <code>404</code> 
 
 ## PMTiles-Datei
 
-<Endpoint url="https://tiles.mapx.at/<datei>.pmtiles" />
+**GET https://tiles.mapx.at/<datei>.pmtiles**
 
 Die Datei unterstützt HTTP-Range-Requests. MapLibre liest sie mit dem [pmtiles](https://docs.protomaps.com/pmtiles/maplibre)-Protokoll direkt aus dem Browser; der aktuelle Dateiname steht auf jeder Produktseite. Weil sich eine Datei nie ändert, kann sie unbegrenzt gecacht oder gespiegelt werden.
 

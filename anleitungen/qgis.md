@@ -72,9 +72,7 @@ Vektor-Tilesets lassen sich ab QGIS 3.32 auch direkt als PMTiles-Datei öffnen, 
 
 Bild- und Höhenkacheln (Orthophoto, DTM, DSM) binden Sie über die XYZ-Verbindung oben ein.
 
-<Aside>
-Bietet Ihre QGIS-Version den PMTiles-Diensttyp nicht an, nehmen Sie die Vektorkachel-Verbindung oben; sie liefert dieselben Kacheln.
-</Aside>
+> Bietet Ihre QGIS-Version den PMTiles-Diensttyp nicht an, nehmen Sie die Vektorkachel-Verbindung oben; sie liefert dieselben Kacheln.
 
 ## Nächste Schritte
 

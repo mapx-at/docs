@@ -6,7 +6,7 @@ TileJSON beschreibt ein Produkt so, dass Kartenclients es ohne weitere Angaben e
 
 ## TileJSON abrufen
 
-<Endpoint url="https://tiles.mapx.at/v1/{tileset}.json" />
+**GET https://tiles.mapx.at/v1/{tileset}.json**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Produkt, Werte wie bei <a href=\"/api/kacheln/\">Kacheln</a>." },

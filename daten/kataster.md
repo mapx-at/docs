@@ -58,7 +58,7 @@ Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und lie
 
 ## Hinweise
 
-<Aside type="caution">Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.</Aside>
+> Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.
 
 - Die Abbildung der Grenzen ist nicht rechtsverbindlich, maßgeblich ist der Kataster beim Vermessungsamt.
 - Unter z16 gibt es keine Kacheln.

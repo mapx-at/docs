@@ -57,7 +57,7 @@ The lines are boundaries, not areas: a click hits the boundary line and returns 
 
 ## Notes
 
-<Aside type="caution">The display is not legally binding. For boundary questions the cadastre at the survey office applies.</Aside>
+> The display is not legally binding. For boundary questions the cadastre at the survey office applies.
 
 - The display is not legally binding; the depiction follows the digital cadastral map.
 - There are no tiles below z16.

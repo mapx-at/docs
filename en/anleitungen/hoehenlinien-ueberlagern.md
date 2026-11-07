@@ -98,9 +98,7 @@ Fine contour lines lie over the aerial imagery, their interval follows the zoom 
 
 For a map instead of imagery, replace the orthophoto layer with the layers from [Style the basemap](/en/anleitungen/basiskarte-stylen/); put the contours on top.
 
-<Aside>
-Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](/en/anleitungen/gelaende-3d/).
-</Aside>
+> Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](/en/anleitungen/gelaende-3d/).
 
 ## Next steps
 

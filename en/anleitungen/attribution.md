@@ -51,9 +51,7 @@ If you combine several products, list them all, separated by semicolons. In a re
 
 The texts are also stored in the TileJSON and PMTiles metadata. The version with an HTML link to the source is on the product pages under "Attribution".
 
-<Aside type="tip">
-Show the credit in the map itself and additionally in your terms of use. The full licence text is under [License](/en/lizenz/).
-</Aside>
+> Show the credit in the map itself and additionally in your terms of use. The full licence text is under [License](/en/lizenz/).
 
 ## Next steps
 

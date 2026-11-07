@@ -72,9 +72,7 @@ Vector tilesets can also be opened directly as a PMTiles file from QGIS 3.32, lo
 
 Imagery and elevation tiles (orthophoto, DTM, DSM) are added through the XYZ connection above.
 
-<Aside>
-If your QGIS version does not offer the PMTiles service type, use the vector tile connection above; it delivers the same tiles.
-</Aside>
+> If your QGIS version does not offer the PMTiles service type, use the vector tile connection above; it delivers the same tiles.
 
 ## Next steps
 

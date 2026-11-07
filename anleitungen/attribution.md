@@ -51,9 +51,7 @@ Werden mehrere Produkte kombiniert, listen Sie alle auf, getrennt durch Strichpu
 
 Die Texte sind auch in den TileJSON- und PMTiles-Metadaten hinterlegt. Mit HTML-Link zur Quelle finden Sie sie auf den Produktseiten unter „Attribution“.
 
-<Aside type="tip">
-Zeigen Sie die Angabe in der Karte selbst und zusätzlich in Ihren Nutzungshinweisen. Den kompletten Lizenztext finden Sie unter [Lizenz](/lizenz/).
-</Aside>
+> Zeigen Sie die Angabe in der Karte selbst und zusätzlich in Ihren Nutzungshinweisen. Den kompletten Lizenztext finden Sie unter [Lizenz](/lizenz/).
 
 ## Nächste Schritte
 

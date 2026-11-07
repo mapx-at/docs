@@ -31,9 +31,4 @@ All APIs follow the same rules:
 | `GET api.mapx.at/v1/openapi.json` | OpenAPI description of all endpoints |
 | `GET api.mapx.at/health` | health check for monitoring |
 
-<CardGrid>
-  <LinkCard title="Tiles" href="/en/api/kacheln/" description="XYZ and PMTiles for all products." />
-  <LinkCard title="TileJSON" href="/en/api/tilejson/" description="Add a product by URL." />
-  <LinkCard title="Elevation and profile" href="/en/api/hoehe/" description="Points and profiles, with a live console." />
-  <LinkCard title="Errors and limits" href="/en/api/fehler/" description="Error format, limits, caching." />
-</CardGrid>
+        

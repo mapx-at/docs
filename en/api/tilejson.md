@@ -6,7 +6,7 @@ TileJSON describes a product so that map clients can add it without further sett
 
 ## Retrieve TileJSON
 
-<Endpoint url="https://tiles.mapx.at/v1/{tileset}.json" />
+**GET https://tiles.mapx.at/v1/{tileset}.json**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Product, values as for <a href=\"/en/api/kacheln/\">Tiles</a>." },

@@ -12,7 +12,7 @@ Every product is available in two ways: as single tiles (XYZ, for any map client
 
 ## Retrieve a tile
 
-<Endpoint url="https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}" />
+**GET https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Product.", values: [
@@ -65,7 +65,7 @@ If there is no data at this position the service answers <code>404</code> as <co
 
 ## PMTiles file
 
-<Endpoint url="https://tiles.mapx.at/<file>.pmtiles" />
+**GET https://tiles.mapx.at/<file>.pmtiles**
 
 The file supports HTTP range requests. MapLibre reads it with the [pmtiles](https://docs.protomaps.com/pmtiles/maplibre) protocol directly from the browser; the current file name is on every product page. Because a file never changes it can be cached or mirrored indefinitely.
 

@@ -69,9 +69,7 @@ This guide uses the [DTM](/en/daten/dtm/) (elevation, type `raster-dem`) and the
 
 The aerial imagery lies on the terrain around the Großglockner, slopes are additionally shaded. The orthophoto reaches z18 (20 cm), the DTM z16 (1 m raster); MapLibre scales up automatically beyond that.
 
-<Aside type="tip">
-`exaggeration` exaggerates the relief. `1.0` is natural; for flat terrain `1.5` to `2` looks more plastic.
-</Aside>
+> `exaggeration` exaggerates the relief. `1.0` is natural; for flat terrain `1.5` to `2` looks more plastic.
 
 ## Next steps
 

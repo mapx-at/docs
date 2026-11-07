@@ -8,7 +8,7 @@ Die Höhen-API liefert die Geländehöhe ([DTM](/daten/dtm/)) oder die Oberfläc
 
 ## Höhe abfragen
 
-<Endpoint url="https://api.mapx.at/v1/elevation" />
+**GET https://api.mapx.at/v1/elevation**
 
 ### Parameter
 
@@ -74,6 +74,10 @@ GeoJSON <code>FeatureCollection</code>, ein <code>Point</code>-Feature je Punkt 
     "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "stichtag": "2025-09-15" }
   }]
 }`} />
+
+## Profil-Endpunkt
+
+> Ein eigener Endpunkt `GET /v1/elevation/profile` (Linie rein, Profil mit Auf- und Abstieg raus) wird gerade ausgerollt. Bis dahin liefert `/v1/elevation?path=` dieselben Höhenwerte. Live: [Höhenprofil](/beispiele/hoehenprofil/), [Höhe per Klick](/beispiele/hoehe-abfragen/).
 
 ## Fehler
 

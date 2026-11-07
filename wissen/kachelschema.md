@@ -46,9 +46,7 @@ Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vo
 
 Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre setzen Sie dazu `maxzoom` an der Quelle auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](/api/fehler/).
 
-<Aside>
-Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) setzen Sie im Style `minzoom: 16`.
-</Aside>
+> Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) setzen Sie im Style `minzoom: 16`.
 
 ## Weiter
 
