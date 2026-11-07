@@ -34,3 +34,23 @@ Live: [Search](/en/beispiele/suche/).
 Returns the nearest address (or other matching places) as a `FeatureCollection` in the same shape as the forward search.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/reverse?lng=15.33&lat=48.23"`} />
+
+## Batch geocoding
+
+**POST https://api.mapx.at/v1/geocode/batch**
+
+Up to 1000 requests per call. The body is a JSON array (`Content-Type: application/json`, at most 512 KB); the response is an array of `FeatureCollection`s in the same order. One call counts as ten simple requests against the rate limit (plus one point per 32 KB of body). Each request:
+
+<ParamTable params={[
+  { name: "q", type: "string", desc: "Search text. Either <code>q</code> or the structured fields." },
+  { name: "street, housenumber, postcode, place", type: "string", desc: "Structured address (<code>street</code> is required). With <code>housenumber</code> and no <code>types</code> only addresses are searched." },
+  { name: "types", type: "string | array", desc: "As for <code>/v1/geocode</code>, also as a list." },
+  { name: "limit", type: "integer", default: "5", desc: "1 bis 10." },
+  { name: "proximity", type: "array", desc: "<code>[lon, lat]</code> (or text <code>lon,lat</code>)." },
+  { name: "bbox", type: "array", desc: "<code>[minLon, minLat, maxLon, maxLat]</code>." },
+]} />
+
+One invalid entry rejects the whole call with `400`; the error message names the entry number.
+
+<Code lang="bash" code={`curl -X POST https://api.mapx.at/v1/geocode/batch -H 'Content-Type: application/json' \\
+  -d '[{"q":"Hauptplatz Melk","limit":1},{"street":"Hauptplatz","housenumber":"3","postcode":"3390"}]'`} />

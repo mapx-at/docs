@@ -24,6 +24,12 @@ Alle APIs folgen denselben Regeln:
 |---|---|---|
 | [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation`, `/v1/elevation/profile` | Höhe für Punkte, Höhenprofil entlang einer Linie |
 
+## Wetter
+
+| API | Endpunkt | Zweck |
+|---|---|---|
+| [Wetter](/api/weather/) | `GET api.mapx.at/v1/weather/current`, `/v1/weather/forecast`, `/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png` | Messwerte, Stundenprognose, Wetterkacheln (GeoSphere Austria, CC BY 4.0) |
+
 ## Bilder
 
 | API | Endpunkt | Zweck |
@@ -46,6 +52,9 @@ Alle APIs folgen denselben Regeln:
 | [Map Matching](/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS-Spur auf das Wegenetz |
 | [Optimierte Reihenfolge](/api/routing/#optimierte-reihenfolge) | `GET api.mapx.at/v1/optimized-trips/{profile}/{coordinates}` | beste Reihenfolge für bis zu 25 Stopps |
 | [Tourenplanung](/api/optimization/) | `POST api.mapx.at/v1/optimization` | Touren für mehrere Fahrzeuge mit Kapazität und Zeitfenstern |
+| [Batch-Geocoding](/api/geocoding/#batch-geocoding) | `POST api.mapx.at/v1/geocode/batch` | bis zu 1000 Adressen in einem Aufruf |
+| [Adress-Autofill](/api/autofill/) | `GET api.mapx.at/v1/autofill/suggest` | Adressen beim Tippen vervollständigen |
+| [Adressvalidierung](/api/validation/) | `GET/POST api.mapx.at/v1/address/validate` | Adresse gegen das Adressregister prüfen |
 
 Alle Endpunkte laufen unter `https://api.mapx.at/v1/` ohne Zugangstoken. [Beispiele](/beispiele/) zeigen jeden Weg live.
 

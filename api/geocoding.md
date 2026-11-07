@@ -34,3 +34,23 @@ Live: [Suche](/beispiele/suche/).
 Liefert die nächstgelegene Adresse (oder andere passende Orte) als `FeatureCollection` in derselben Form wie die Vorwärtssuche.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/reverse?lng=15.33&lat=48.23"`} />
+
+## Batch-Geocoding
+
+**POST https://api.mapx.at/v1/geocode/batch**
+
+Bis zu 1000 Anfragen in einem Aufruf. Der Rumpf ist ein JSON-Array (`Content-Type: application/json`, höchstens 512 KB), die Antwort ein Array von `FeatureCollection`s in derselben Reihenfolge. Ein Aufruf zählt im Rate-Limit wie zehn einfache Anfragen (plus ein Punkt je 32 KB Rumpf). Jede Anfrage:
+
+<ParamTable params={[
+  { name: "q", type: "string", desc: "Suchtext. Entweder <code>q</code> oder die strukturierten Felder." },
+  { name: "street, housenumber, postcode, place", type: "string", desc: "Strukturierte Adresse (<code>street</code> ist Pflicht). Mit <code>housenumber</code> werden ohne <code>types</code> nur Adressen gesucht." },
+  { name: "types", type: "string | array", desc: "Wie bei <code>/v1/geocode</code>, auch als Liste." },
+  { name: "limit", type: "integer", default: "5", desc: "1 bis 10." },
+  { name: "proximity", type: "array", desc: "<code>[lon, lat]</code> (auch Text <code>lon,lat</code>)." },
+  { name: "bbox", type: "array", desc: "<code>[minLon, minLat, maxLon, maxLat]</code>." },
+]} />
+
+Ein ungültiger Eintrag lehnt den ganzen Aufruf mit `400` ab; die Fehlermeldung nennt die Nummer des Eintrags.
+
+<Code lang="bash" code={`curl -X POST https://api.mapx.at/v1/geocode/batch -H 'Content-Type: application/json' \\
+  -d '[{"q":"Hauptplatz Melk","limit":1},{"street":"Hauptplatz","housenumber":"3","postcode":"3390"}]'`} />

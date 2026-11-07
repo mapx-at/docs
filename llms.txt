@@ -9,6 +9,7 @@
 - [API](https://docs.mapx.at/api/): tiles, tilejson, xyz, elevation (Spezifikation)
 - [Styles](https://docs.mapx.at/api/styles/): fertige MapLibre-Stile karte, luftbild, gelaende
 - [Suche und Geocoding](https://docs.mapx.at/api/geocoding/): /v1/geocode, /v1/reverse, Suchindex
+- [Weather](https://docs.mapx.at/api/weather/): current observations, hourly forecast, weather tiles (GeoSphere Austria, CC BY 4.0)
 - [Routing](https://docs.mapx.at/api/routing/): directions, isochrone, matrix, matching (GIP.at)
 - [Static Images](https://docs.mapx.at/api/static/): /v1/static, Luftbild und Gelände als PNG/WebP mit Pin-, Linien- und GeoJSON-Overlays
 - [SDK mapx-gl](https://docs.mapx.at/api/sdk/): MapLibre-Aufsatz, https://map.mapx.at/sdk/v1/
@@ -33,6 +34,7 @@
 - [Höhenprofil](https://docs.mapx.at/beispiele/hoehenprofil/): Linie klicken, Profil sehen.
 - [Suche](https://docs.mapx.at/beispiele/suche/): Orte, Adressen und Gipfel suchen und anspringen.
 - [Route](https://docs.mapx.at/beispiele/route/): Start und Ziel klicken, Weg samt Länge und Dauer erhalten.
+- [Wetter-Overlay](https://docs.mapx.at/beispiele/wetter-overlay/): Temperatur, Niederschlag oder Wind als Overlay, Stunde per Regler.
 - [Erreichbarkeit (Isochronen)](https://docs.mapx.at/beispiele/isochrone/): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 - [Fahrzeitmatrix](https://docs.mapx.at/beispiele/matrix/): Fahrzeiten zwischen mehreren Orten in einer Anfrage.
 - [Kataster: Grundstück per Klick](https://docs.mapx.at/beispiele/kataster-klick/): Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.

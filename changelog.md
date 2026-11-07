@@ -4,6 +4,8 @@
 
 ## 07.11.2026
 
+- Neu: [Wetter](/api/weather/) (`/v1/weather/current`, `/v1/weather/forecast`, Wetterkacheln mit TileJSON und Zeitdimension) aus offenen Daten der GeoSphere Austria, CC BY 4.0; Beispiel [Wetter-Overlay](/beispiele/wetter-overlay/).
+
 - Neu: [Static Images](/api/static/) (`/v1/static`, Luftbild und Gelände als PNG oder WebP mit Overlays), [SDK mapx-gl](/api/sdk/); englische Doku auf Stand der deutschen.
 
 - Neu: Bereich [Beispiele](/beispiele/) mit zwölf lauffähigen Live-Beispielen; API-Seiten für [Styles](/api/styles/), [Geocoding](/api/geocoding/) und [Routing](/api/routing/) (alle Endpunkte unter `https://api.mapx.at/v1/` live).
