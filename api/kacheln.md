@@ -1,18 +1,18 @@
 # Kacheln
 
-Einzelne Kacheln über /v1/{tileset}/{z}/{x}/{y}.{ext} oder die ganze PMTiles-Datei per HTTP-Range.
+Einzelne Kacheln über /v1/tiles/{tileset}/{z}/{x}/{y}.{ext} oder die ganze PMTiles-Datei per HTTP-Range.
 
 Alle Produkte gibt es auf zwei Wegen: als einzelne Kachel (XYZ, für jeden Kartenclient) und als PMTiles-Datei (eine Datei, der Client liest per HTTP-Range nur die nötigen Kacheln). Inhalt und Qualität sind gleich.
 
 | | XYZ | PMTiles |
 |---|---|---|
 | Geeignet für | Leaflet, OpenLayers, QGIS, Apps, Server | MapLibre, eigenes Hosting, offline |
-| Adresse | `/v1/{tileset}/{z}/{x}/{y}.{ext}` | `<datei>.pmtiles` |
+| Adresse | `/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}` | `<datei>.pmtiles` |
 | Stabilität | Tileset-Name zeigt immer auf den aktuellen Stand | Datei mit Stichtag im Namen, ändert sich nie |
 
 ## Kachel abrufen
 
-**GET https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}**
+**GET https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Produkt.", values: [

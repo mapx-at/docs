@@ -33,7 +33,7 @@ TileJSON beschreibt ein Produkt so, dass Kartenclients es ohne weitere Angaben e
 <Code lang="json" code={`{
   "tilejson": "3.0.0",
   "name": "relief-terrainrgb",
-  "tiles": ["https://tiles.mapx.at/v1/relief-terrainrgb/{z}/{x}/{y}.webp"],
+  "tiles": ["https://tiles.mapx.at/v1/tiles/relief-terrainrgb/{z}/{x}/{y}.webp"],
   "minzoom": 5, "maxzoom": 16,
   "bounds": [9.5306, 46.3697, 17.1661, 49.0235],
   "scheme": "xyz", "tileSize": 512, "encoding": "mapbox",

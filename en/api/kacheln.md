@@ -1,18 +1,18 @@
 # Tiles
 
-Single tiles via /v1/{tileset}/{z}/{x}/{y}.{ext} or the whole PMTiles file via HTTP range requests.
+Single tiles via /v1/tiles/{tileset}/{z}/{x}/{y}.{ext} or the whole PMTiles file via HTTP range requests.
 
 Every product is available in two ways: as single tiles (XYZ, for any map client) and as a PMTiles file (one file, the client reads only the tiles it needs via HTTP range requests). Content and quality are identical.
 
 | | XYZ | PMTiles |
 |---|---|---|
 | Best for | Leaflet, OpenLayers, QGIS, apps, servers | MapLibre, self-hosting, offline |
-| Address | `/v1/{tileset}/{z}/{x}/{y}.{ext}` | `<file>.pmtiles` |
+| Address | `/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}` | `<file>.pmtiles` |
 | Stability | tileset name always points to the latest release | file with the release date in its name, never changes |
 
 ## Retrieve a tile
 
-**GET https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}**
+**GET https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Product.", values: [
