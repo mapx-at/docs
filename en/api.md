@@ -37,6 +37,8 @@ All APIs follow the same rules:
 |---|---|---|
 | [Styles](/en/api/styles/) | `GET api.mapx.at/v1/styles/{id}` | ready-made MapLibre styles |
 | [Geocoding](/en/api/geocoding/) | `GET api.mapx.at/v1/geocode`, `/v1/reverse` | search and address for a point |
+| [Search Box](/en/api/searchbox/) | `GET api.mapx.at/v1/searchbox/suggest`, `/retrieve/{id}`, `/category/{category}` | suggestions, details, places by category |
+| [Tilequery](/en/api/tilequery/) | `GET api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json`, `/v1/parcel/{lon},{lat}.json` | features, parcel and elevation at a point |
 | [Directions](/en/api/routing/#directions) | `GET api.mapx.at/v1/directions/{profile}/{coordinates}` | route for walking, cycling, driving |
 | [Isochrone](/en/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | reachability areas |
 | [Matrix](/en/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | travel times between many places |
