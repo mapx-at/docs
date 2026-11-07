@@ -2,7 +2,7 @@
 
 Directions, isochrones, matrix and map matching on the GIP.at network for walking, cycling and driving.
 
-The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 4.0). The endpoints follow the Mapbox shape, `/v1/...` with the profile in the path, and need no access token. Profiles: `walking`, `cycling`, `driving`, `driving-traffic` (car with current traffic and closures, see [Traffic](/en/api/traffic/)) (a `mapbox/` prefix is accepted). Coordinates appear in the path as `lon,lat`, several points separated by `;`.
+The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 4.0). The endpoints follow the Mapbox shape, `/v1/...` with the profile in the path, and need no access token. Profiles: `walking`, `cycling`, `driving`, `driving-traffic` (car with current traffic and closures, see [Traffic](/en/api/traffic/)), `driving-truck` (trucks over 3.5 t, see [Truck routing](#truck-routing)) (a `mapbox/` prefix is accepted). Coordinates appear in the path as `lon,lat`, several points separated by `;`.
 
 ## Directions
 
@@ -11,21 +11,28 @@ The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 
 Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }] },
+  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }, { v: "driving-truck", d: "truck over 3.5 t" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optional intermediate points and destination as <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Geometry format, <code>geojson</code> returns a GeoJSON line." },
   { name: "overview", type: "string", desc: "Level of detail of the geometry, for example <code>full</code>." },
   { name: "steps", type: "boolean", default: "false", desc: "With <code>true</code>, turn instructions in <code>legs[].steps</code>." },
   { name: "language", type: "string", desc: "Language of the instructions, for example <code>de</code>." },
   { name: "alternatives", type: "boolean | integer", default: "false", desc: "<code>true</code> returns up to two more routes in <code>routes[]</code>, a number from 0 to 3 limits the count. Only with exactly two coordinates." },
-  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, comma-separated. Returns <code>legs[].annotation</code> with one value per geometry segment (seconds, metres, metres per second)." },
+  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, <code>maxspeed</code>, <code>elevation</code>, comma-separated. Returns <code>legs[].annotation</code> with one value per geometry segment (seconds, metres, metres per second). <code>maxspeed</code>: <code>{speed, unit: \"km/h\"}</code> or <code>{unknown: true}</code> (car only, where GIP has a limit). <code>elevation</code>: mean segment height in metres, <code>null</code> if unknown." },
   { name: "incidents", type: "boolean", default: "true for driving-traffic", desc: "Traffic reports along the route in <code>legs[].incidents</code> (car only), see <a href=\"/en/api/traffic/\">Traffic</a>." },
   { name: "radiuses", type: "string", desc: "Search radius for snapping to the network per coordinate in metres, separated by <code>;</code>, or <code>unlimited</code>." },
   { name: "approaches", type: "string", desc: "<code>unrestricted</code> or <code>curb</code> per coordinate. Validated, but not yet used by the router." },
   { name: "bearings", type: "string", desc: "<code>degrees,tolerance</code> per coordinate, separated by <code>;</code> (empty leaves a point free). Validated, but not yet used by the router." },
+  { name: "weight", type: "number", default: "40", desc: "<code>driving-truck</code> only: gross weight in tonnes (0.5 to 60)." },
+  { name: "height", type: "number", default: "4", desc: "<code>driving-truck</code> only: vehicle height in metres (1.5 to 5)." },
+  { name: "width", type: "number", default: "2.55", desc: "<code>driving-truck</code> only: vehicle width in metres (1 to 3.5)." },
+  { name: "length", type: "number", desc: "<code>driving-truck</code> only: vehicle length in metres (2 to 40). Without it, length limits are not checked." },
+  { name: "truck_type", type: "string", default: "semi", desc: "<code>driving-truck</code> only: <code>semi</code> (semi-trailer), <code>rigid</code> (no trailer) or <code>trailer</code> (truck with trailer)." },
 ]} />
 
 Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (seconds), `legs` and `geometry`.
+
+**GIP attributes in steps:** `steps[].ref` (for example `A1`, `B83`), `steps[].destinations` (real signposted destinations from GIP, far destinations first), `steps[].milestone` (`{ref, km}`, road kilometre at the start of the step, numbered roads with kilometrage only), `steps[].maxspeed` (car only), `ascent_m`/`descent_m` and, for `cycling`/`walking`, `grade_pct` (mean grade). `routes[].summary` holds `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; heights come from GIP and are smoothed over 200 m.
 
 **Alternatives** come from laterally offset via points: the router computes start → via point → destination for ten points along the fastest route and keeps paths that take at most 1.4 times as long, contain no U-turn and share at most 70 percent with the main route and with each other. `routes[0]` is always the fastest route, the others follow by duration. The request costs several times a plain route against the rate limit.
 
@@ -36,6 +43,20 @@ Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (sec
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
 Live: [Route](/en/beispiele/route/).
+
+## Truck routing
+
+Profile `driving-truck` (`/v1/directions/driving-truck/{coordinates}`, also `isochrone` and `matrix`) routes vehicles over 3.5 t on the GIP truck data (`LINK_2_TRUCK` and the `max_*` columns of the GeoPackage; where both disagree, the stricter value applies). Defaults without parameters: 40 t, 4 m high, 2.55 m wide, semi-trailer, length unchecked.
+
+- **Blocked** for the given vehicle: weight-class bans (over 3.5 / 7.5 / 16 t, by direction), semi-trailer and truck-with-trailer bans, and limits for height, width, weight and length. Roads marked "no through traffic for trucks, access only" stay open at a strong penalty and appear as notice `destination_only`.
+- **District truck bans** (958 ordinances, free text with times and exceptions) are not routed. Where the route uses a road they apply to, `steps[].notices[]` holds `{type: "truck_restriction", id, text}` with the ordinance wording; check times and exceptions there.
+- **Speed:** at most 80 km/h on motorways, 70 km/h on rural roads, 50 km/h in built-up areas (or the GIP speed if lower).
+- **Toll:** the GO toll applies on all motorways and expressways for vehicles over 3.5 t. `routes[].toll.truck_go_km` gives the kilometres, and each step has `truck_go_m`. The tariff (axles, emission class) is not calculated; special-toll roads (Brenner, Tauern, Arlberg and others) come on top.
+- `routes[].truck` echoes the vehicle that was used.
+- **Limits:** the standard vehicle runs on Contraction Hierarchies (milliseconds). Other dimensions need a computed overlay (about 50 ms once, then cached) and a search without Contraction Hierarchies, so a request takes about 0.1 to 0.5 s. The same holds for `isochrone` and `matrix`. Axle load is not offered, GIP OGD has no data for it. Start and destination snap to the network of the standard vehicle; a spot only a lighter truck can reach finds no route.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-truck/14.29,48.30;16.37,48.21?steps=true&weight=26&height=3.6&width=2.55&length=16.5"`} />
+
 
 ## EV routing
 

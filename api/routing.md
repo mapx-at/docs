@@ -18,14 +18,21 @@ Gleichwertig: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "steps", type: "boolean", default: "false", desc: "Mit <code>true</code> Abbiegehinweise in <code>legs[].steps</code>." },
   { name: "language", type: "string", desc: "Sprache der Hinweise, zum Beispiel <code>de</code>." },
   { name: "alternatives", type: "boolean | integer", default: "false", desc: "<code>true</code> liefert bis zu zwei weitere Routen in <code>routes[]</code>, eine Zahl von 0 bis 3 begrenzt die Anzahl. Nur mit genau zwei Koordinaten." },
-  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, kommagetrennt. Liefert <code>legs[].annotation</code> mit einem Wert je Segment der Geometrie (Sekunden, Meter, Meter pro Sekunde)." },
+  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, <code>maxspeed</code>, <code>elevation</code>, kommagetrennt. Liefert <code>legs[].annotation</code> mit einem Wert je Segment der Geometrie (Sekunden, Meter, Meter pro Sekunde). <code>maxspeed</code>: <code>{speed, unit: \"km/h\"}</code> oder <code>{unknown: true}</code> (nur Pkw, wo die GIP ein Limit führt). <code>elevation</code>: mittlere Höhe des Segments in Metern, <code>null</code> wo unbekannt." },
   { name: "incidents", type: "boolean", default: "true bei driving-traffic", desc: "Verkehrsmeldungen entlang der Route in <code>legs[].incidents</code> (nur Pkw), siehe <a href=\"/api/traffic/\">Verkehr</a>." },
   { name: "radiuses", type: "string", desc: "Suchradius für die Bindung ans Netz je Koordinate in Metern, mit <code>;</code> getrennt, oder <code>unlimited</code>." },
   { name: "approaches", type: "string", desc: "<code>unrestricted</code> oder <code>curb</code> je Koordinate. Wird geprüft, vom Router aber noch nicht ausgewertet." },
   { name: "bearings", type: "string", desc: "<code>Grad,Toleranz</code> je Koordinate, mit <code>;</code> getrennt (leer lässt einen Punkt frei). Wird geprüft, vom Router aber noch nicht ausgewertet." },
+  { name: "weight", type: "number", default: "40", desc: "Nur <code>driving-truck</code>: Gesamtgewicht in Tonnen (0,5 bis 60)." },
+  { name: "height", type: "number", default: "4", desc: "Nur <code>driving-truck</code>: Fahrzeughöhe in Metern (1,5 bis 5)." },
+  { name: "width", type: "number", default: "2,55", desc: "Nur <code>driving-truck</code>: Fahrzeugbreite in Metern (1 bis 3,5)." },
+  { name: "length", type: "number", desc: "Nur <code>driving-truck</code>: Fahrzeuglänge in Metern (2 bis 40). Ohne Angabe werden Längenbeschränkungen nicht geprüft." },
+  { name: "truck_type", type: "string", default: "semi", desc: "Nur <code>driving-truck</code>: <code>semi</code> (Sattelzug), <code>rigid</code> (Lkw ohne Anhänger) oder <code>trailer</code> (Lkw-Zug)." },
 ]} />
 
 Antwort: `code` (`Ok`) und `routes[]` mit `distance` (Meter), `duration` (Sekunden), `legs` und `geometry`.
+
+**GIP-Attribute in den Schritten:** `steps[].ref` (zum Beispiel `A1`, `B83`), `steps[].destinations` (echte Wegweiserziele der GIP, Fernziele zuerst), `steps[].milestone` (`{ref, km}`, Straßenkilometer am Schrittbeginn, nur kilometrierte Straßen mit Nummer), `steps[].maxspeed` (nur Pkw), `ascent_m`/`descent_m` und für `cycling`/`walking` `grade_pct` (mittlere Steigung). `routes[].summary` enthält `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; Höhen stammen aus der GIP und werden über 200 m geglättet.
 
 **Alternativen** entstehen über seitlich versetzte Zwischenpunkte: Der Router rechnet Start → Zwischenpunkt → Ziel für zehn Punkte entlang der schnellsten Route und behält Wege, die höchstens 1,4-mal so lange dauern, keine Wende enthalten und sich zu höchstens 70 Prozent mit der Hauptroute und untereinander decken. `routes[0]` ist immer die schnellste Route, die übrigen folgen nach Dauer. Die Anfrage kostet ein Mehrfaches einer einfachen Route im Rate-Limit.
 
@@ -36,6 +43,20 @@ Antwort: `code` (`Ok`) und `routes[]` mit `distance` (Meter), `duration` (Sekund
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
 Live: [Route](/beispiele/route/).
+
+## Lkw-Routing
+
+Das Profil `driving-truck` (`/v1/directions/driving-truck/{coordinates}`, ebenso `isochrone` und `matrix`) routet Fahrzeuge über 3,5 t auf den GIP-Lkw-Daten (`LINK_2_TRUCK` und die `max_*`-Spalten des GeoPackage; bei Abweichung gilt die strengere Angabe). Ohne Parameter gilt: 40 t, 4 m hoch, 2,55 m breit, Sattelzug, Länge ungeprüft.
+
+- **Gesperrt** wird nach Fahrzeug: Gewichtsklassen-Verbote (über 3,5 / 7,5 / 16 t, je Richtung), Sattelzug- und Lkw-Zug-Verbote sowie Beschränkungen für Höhe, Breite, Gewicht und Länge. Straßen mit „Durchfahrt für Lkw verboten, Anlieger frei“ bleiben mit hohem Aufschlag offen und erscheinen als Hinweis `destination_only`.
+- **Bezirks-Fahrverbote** (958 Verordnungen als Freitext mit Zeiten und Ausnahmen) werden nicht geroutet. Führt die Route über eine betroffene Straße, steht in `steps[].notices[]` ein Eintrag `{type: "truck_restriction", id, text}` mit dem Verordnungstext; Zeiten und Ausnahmen sind dort nachzulesen.
+- **Tempo:** höchstens 80 km/h auf Autobahnen, 70 km/h auf Freilandstraßen, 50 km/h im Ortsgebiet (oder die GIP-Geschwindigkeit, wenn sie niedriger ist).
+- **Maut:** Die GO-Maut gilt auf allen Autobahnen und Schnellstraßen für Fahrzeuge über 3,5 t. `routes[].toll.truck_go_km` nennt die Kilometer, je Schritt steht `truck_go_m`. Der Tarif (Achszahl, Emissionsklasse) wird nicht berechnet; Sondermautstrecken (Brenner, Tauern, Arlberg u. a.) kommen hinzu.
+- `routes[].truck` gibt das verwendete Fahrzeug zurück.
+- **Grenzen:** Das Standardfahrzeug läuft auf Contraction Hierarchies (Millisekunden). Andere Maße brauchen eine berechnete Überlagerung (einmalig etwa 50 ms, danach im Zwischenspeicher) und eine Suche ohne Contraction Hierarchies, eine Anfrage dauert dann etwa 0,1 bis 0,5 s. Das gilt auch für `isochrone` und `matrix`. Achslast gibt es nicht, die GIP-OGD enthält dazu keine Daten. Start und Ziel rasten im Netz des Standardfahrzeugs ein; ein Ort, den nur ein leichterer Lkw erreicht, findet keine Route.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-truck/14.29,48.30;16.37,48.21?steps=true&weight=26&height=3.6&width=2.55&length=16.5"`} />
+
 
 ## E-Auto-Routing
 
