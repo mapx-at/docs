@@ -28,11 +28,36 @@ Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (sec
 
 **Alternatives** come from laterally offset via points: the router computes start → via point → destination for ten points along the fastest route and keeps paths that take at most 1.4 times as long, contain no U-turn and share at most 70 percent with the main route and with each other. `routes[0]` is always the fastest route, the others follow by duration. The request costs several times a plain route against the rate limit.
 
-**Exclusions** (`exclude=motorway|toll|…`) are not available yet because the router has none; the request is rejected with `400`.
+**Exclusions:** `exclude=motorway` and `exclude=toll` (also comma separated, profile `driving` only). `motorway` blocks motorways (GIP category A); expressways stay allowed. `toll` blocks the special-toll sections (A9 Gleinalm and Bosruck, A10 Tauern and Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); vignette roads stay allowed, use `motorway` for those. Other values give `400`. If start or destination lies on a blocked section the router finds no route.
+
+**Tolls in the response:** Every car route (`driving`, also `driving-ev`) contains `routes[].toll`: `vignette_required` (at least 300 m on vignette roads), `vignette_m` (metres on vignette roads), `vignette_products[]` (car vignettes with `name` and `amount` in euro), `special_toll[]` (special-toll stations on the way with `name`, `amount`, `location`), `special_toll_total` and `currency`. A toll station counts once per trip even if the data lists several directional sections. Source: ASFINAG, toll information, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The figures apply to cars without trailer; prices are those of the data set for 2026.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
 Live: [Route](/en/beispiele/route/).
+
+## EV routing
+
+> Until the terms of use of the E-Control charging data are settled the endpoint answers `404`.
+
+
+**GET https://api.mapx.at/v1/directions/driving-ev/{coordinates}**
+
+Exactly start and destination. The car route is computed; if the range is too short the service picks charging stations along the route ([data](/en/daten/ladestationen/)) and routes via them. Linear range model: constant consumption per kilometre, start with a full battery, charge up to `ev_charge_to`, never arrive below `ev_reserve`.
+
+<ParamTable params={[
+  { name: "ev_range_km", type: "number", desc: "Required. Range on a full battery in km (1 to 1500)." },
+  { name: "ev_charge_kw_min", type: "number", default: "50", desc: "Minimum charging power of stations in kW." },
+  { name: "ev_battery_kwh", type: "number", default: "60", desc: "Battery size, used for charging time." },
+  { name: "ev_charge_kw_max", type: "number", default: "100", desc: "Highest charging power of the vehicle in kW." },
+  { name: "ev_charge_to", type: "number", default: "0.8", desc: "Charge target as share of the battery." },
+  { name: "ev_reserve", type: "number", default: "0.1", desc: "Reserve on arrival as share of the battery." },
+  { name: "steps, language", type: "", desc: "as for Directions." },
+]} />
+
+The response is a Directions response, each entry of `legs[]` ends at a charging station. `routes[0].ev` holds `stops[]` (`id`, `name`, `location`, `max_kw`, `along_m`, `offset_m`, `soc_arrival`, `soc_departure`, `charge_s`), `drive_s`, `charge_s` and `total_s`. The route `duration` is driving time only, `ev.total_s` includes charging. If a stage has no station the service answers `400` and names the section. Stations more than 3 km from the route are not used. Data source: E-Control charging station directory.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-ev/16.37,48.21;11.40,47.27?ev_range_km=300&ev_charge_kw_min=100"`} />
 
 ## Isochrone
 
