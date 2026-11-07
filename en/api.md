@@ -1,21 +1,39 @@
 # API overview
 
-Tile, TileJSON, XYZ and elevation endpoints of mapx. Open, no key, errors as RFC 9457.
+All mapx APIs: tiles, TileJSON and elevation. No key, open CORS, errors as RFC 9457.
 
-Common to all endpoints: no API key, open CORS (`Access-Control-Allow-Origin: *`), errors as `application/problem+json` per
-[RFC 9457](https://www.rfc-editor.org/rfc/rfc9457), version in the path (`/v1/`).
+All APIs follow the same rules:
+
+- **No key** – no sign-up, no token, CORS open for every website.
+- **Version in the path** – `/v1/`; existing fields do not change within a version, new ones are only added.
+- **Coordinates** – always `lon,lat` (WGS84), several separated by `;`. More: [Coordinates](/en/wissen/koordinaten/).
+- **Errors** – `application/problem+json` per [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457).
+- **Limits** – per IP address, above that `429` with `Retry-After`.
+
+## Maps
+
+| API | Endpoint | Purpose |
+|---|---|---|
+| [Tiles](/en/api/kacheln/) | `GET tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` | raster, elevation and vector tiles |
+| [PMTiles](/en/api/kacheln/#pmtiles-file) | `GET tiles.mapx.at/<file>.pmtiles` | whole product as one file, via HTTP range |
+| [TileJSON](/en/api/tilejson/) | `GET tiles.mapx.at/v1/{tileset}.json` | product description for map clients |
+
+## Elevation
+
+| API | Endpoint | Purpose |
+|---|---|---|
+| [Elevation and profile](/en/api/hoehe/) | `GET api.mapx.at/v1/elevation` | elevation for points or along a line |
+
+## Operations
 
 | Endpoint | Purpose |
 |---|---|
-| `https://tiles.mapx.at/<file>.pmtiles` | whole file via HTTP range ([Tiles](/en/api/kacheln/#pmtiles)) |
-| `https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` | single tile ([Tiles](/en/api/kacheln/#xyz)) |
-| `https://tiles.mapx.at/v1/{tileset}.json` | [TileJSON](/en/api/tilejson/) |
-| `https://api.mapx.at/v1/elevation` | [Elevation and profile](/en/api/hoehe/) |
-| `https://api.mapx.at/v1/openapi.json`, `/health` | [Operations](/en/api/fehler/#health-and-openapi) |
+| `GET api.mapx.at/v1/openapi.json` | OpenAPI description of all endpoints |
+| `GET api.mapx.at/health` | health check for monitoring |
 
 <CardGrid>
-  <LinkCard title="Tiles" href="/en/api/kacheln/" description="PMTiles and XYZ, all tilesets." />
-  <LinkCard title="TileJSON" href="/en/api/tilejson/" description="Add a tileset by URL." />
-  <LinkCard title="Elevation and profile" href="/en/api/hoehe/" description="Points and profiles, with test console." />
-  <LinkCard title="Errors and limits" href="/en/api/fehler/" description="problem+json, 429, caching, health." />
+  <LinkCard title="Tiles" href="/en/api/kacheln/" description="XYZ and PMTiles for all products." />
+  <LinkCard title="TileJSON" href="/en/api/tilejson/" description="Add a product by URL." />
+  <LinkCard title="Elevation and profile" href="/en/api/hoehe/" description="Points and profiles, with a live console." />
+  <LinkCard title="Errors and limits" href="/en/api/fehler/" description="Error format, limits, caching." />
 </CardGrid>

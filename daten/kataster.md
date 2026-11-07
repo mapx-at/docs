@@ -5,9 +5,9 @@ Grundstücksgrenzen aus der Digitalen Katastralmappe des BEV als Vektorkacheln, 
 export const t = data.tilesets.kataster;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grundstücksnummer. Das Tileset hat nur z16; Clients zoomen darüber auf.
+Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grundstücksnummer, aus der Digitalen Katastralmappe des BEV. Das Tileset hat nur z16; Clients zoomen darüber auf.
 
-<Aside type="caution">Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.</Aside>
+<Nutzungen items={[{t:"Grundstückssuche",d:"Grenzen und Nummern auf der Karte"},{t:"Planung und Vorprüfung",d:"Grundstücksgrenzen über Orthophoto legen"},{t:"Immobilien- und Standortkarten",d:"Parzellen als Kartenebene"},{t:"Überlagerung",d:"Kataster über Basiskarte oder Luftbild",href:"/anleitungen/basiskarte-stylen/"},{t:"QGIS",d:"Vektorkacheln im Desktop-GIS",href:"/anleitungen/qgis/"}]} />
 
 ## Kennwerte
 
@@ -16,12 +16,6 @@ Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grun
 ## Live-Karte
 
 <ProduktKarte id="kataster" center={[15.334, 48.227]} zoom={16.5} />
-
-## Layer
-
-<LayerTabelle id="kataster" info={{ parcel_l: "<code>kgnr</code> Katastralgemeinde-Nummer, <code>gstnr</code> Grundstücksnummer (Bauflächen mit Punkt, z. B. <code>.211</code>)" }} />
-
-Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und liefert das Grundstück, zu dem sie gehört. Eigentümer und Fläche sind nicht enthalten.
 
 ## Einbinden
 
@@ -48,7 +42,15 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/mapx-kataster/14/8860/5730.pbf`} 
 
 Weil es nur z16 gibt, im Style `minzoom: 16` setzen; die Quelle mit `maxzoom: 16` überzoomt automatisch.
 
-## Datenherkunft
+## Layer-Referenz
+
+Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und liefert das Grundstück, zu dem sie gehört. Eigentümer und Fläche sind nicht enthalten.
+
+### parcel_l
+
+<FeldReferenz ts="kataster" layer="parcel_l" />
+
+## Quelle und Aktualität
 
 - Quelle: BEV **Digitale Katastralmappe (DKM)**, Stichtag 01.04.2026.
 - Die Lage ist über das amtliche Transformationsgitter nach ETRS89 umgerechnet.
@@ -56,18 +58,10 @@ Weil es nur z16 gibt, im Style `minzoom: 16` setzen; die Quelle mit `maxzoom: 16
 
 ## Hinweise
 
+<Aside type="caution">Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.</Aside>
+
 - Die Abbildung der Grenzen ist nicht rechtsverbindlich, maßgeblich ist der Kataster beim Vermessungsamt.
 - Unter z16 gibt es keine Kacheln.
-
-## Versionen
-
-Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
-
-| Stand | Datei |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-Alle Änderungen: [Changelog](/changelog/).
 
 ## Attribution
 

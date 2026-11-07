@@ -6,23 +6,22 @@ export const t = data.tilesets.relief;
 export const dsm = data.tilesets.dsm;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-The DTM is an elevation tile set for all of Austria: ground height without buildings and vegetation, encoded as color (Terrain-RGB) and
-therefore directly usable for `raster-dem`, hillshading and 3D terrain in MapLibre, Mapbox GL and compatible clients.
+The DTM is an elevation tile set for all of Austria: ground height without buildings and vegetation, encoded as color (Terrain-RGB). It works directly as `raster-dem` for hillshading and 3D terrain in MapLibre, Mapbox GL and compatible clients.
 
-Use cases: hiking and outdoor maps with hillshade, 3D terrain and flight views, slope and aspect analysis, route profiles.
+<Nutzungen items={[{t:"Hiking and outdoor maps",d:"Hillshade as a map background up to z16"},{t:"3D terrain",d:"Terrain and flight views with orthophoto",href:"/en/anleitungen/gelaende-3d/"},{t:"Elevation profiles",d:"Ascent and descent along a route",href:"/en/anleitungen/hoehenprofil/"},{t:"Slope and aspect analysis",d:"Gradient and orientation from the elevation values"},{t:"QGIS and analysis",d:"Elevation as raster in desktop GIS",href:"/en/anleitungen/qgis/"}]} />
 
-## 1. Key figures
+## Specifications
 
 <Kennwerte id="relief" lang="en" />
 
-## 2. Live map
+## Live map
 
 <DtmMap id="relief" lang="en" />
 
 Clicking reads the tile of the current zoom level (z16 at most) via range request, decodes the pixel at the click point with the
-formula from section 4 and shows elevation and RGB value. With 3D enabled, the value of `queryTerrainElevation` is shown as well.
+formula under “Encoding” and shows elevation and RGB value. With 3D enabled, the value of `queryTerrainElevation` is shown as well.
 
-## 3. Usage
+## Add to your map
 
 <Tabs syncKey="client">
   <TabItem label="MapLibre">
@@ -42,8 +41,8 @@ const map = new maplibregl.Map({
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));`} />
   </TabItem>
   <TabItem label="Leaflet">
-    Leaflet has no `raster-dem`. The XYZ endpoint ([API](/en/api/kacheln/#xyz)) delivers the raw tiles; they show the encoded color, not
-    a map. For elevation values, decode the pixels yourself (section 4).
+    Leaflet has no `raster-dem`. The XYZ endpoint ([API](/en/api/kacheln/)) delivers the raw tiles; they show the encoded color, not
+    a map. For elevation values, decode the pixels yourself (see “Encoding”).
     <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 16, maxZoom: 20,
   crossOrigin: true,
@@ -69,7 +68,7 @@ new TileLayer({
   <TabItem label="QGIS">
     1. In the Browser panel, right-click **XYZ Tiles**, **New Connection**.
     2. URL `https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, tile resolution 512.
-    3. The layer shows the raw tiles (encoded color). Elevations follow from the formula in section 4 (`(R*65536 + G*256 + B)*0.1 - 10000`), for example in the Raster Calculator on the three bands.
+    3. The layer shows the raw tiles (encoded color). Elevations follow from the formula in “Encoding” (`(R*65536 + G*256 + B)*0.1 - 10000`), for example in the Raster Calculator on the three bands.
   </TabItem>
   <TabItem label="Python">
     <Code lang="python" code={`# pip install pmtiles pillow numpy requests
@@ -109,7 +108,7 @@ fn rgb(h: f64) -> [u8; 3] {
   </TabItem>
 </Tabs>
 
-## 4. Encoding
+## Encoding
 
 ```
 height_m = -10000 + (R · 65536 + G · 256 + B) · 0.1
@@ -122,7 +121,7 @@ height_m = -10000 + (R · 65536 + G · 256 + B) · 0.1
 
 In detail: [Terrain-RGB](/en/konzepte/terrain-rgb/).
 
-## 5. Resolution per zoom
+## Resolution by zoom
 
 At 47.5° N, 512 px tiles, Web Mercator:
 
@@ -132,40 +131,23 @@ The data come from a 1 m raster. z16 (about 0.8 m per pixel) is the finest level
 There are no tiles above z16: from z17 MapLibre scales up the z16 tile (set `maxzoom: 16`).
 Levels z15 to z5 are averaged in elevation space (decode, average, re-encode), not resized as images.
 
-## 6. Data origin
+## Source and currency
 
-- Source: BEV (Federal Office of Metrology and Surveying), **ALS-DTM 1 m**, airborne laser scanning, terrain only, reference date **15 Sep 2025**.
-- Reprojection to Web Mercator (EPSG:3857) with bilinear resampling, which preserves the elevations on steep cliffs.
+The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain only). The reference date is in the specifications and the file name; a file never changes, a new release is a new file.
 
-## 7. Accuracy and notes
+- Source: BEV (Austrian Federal Office of Metrology and Surveying), reference date 15 Sep 2025.
+- The source is in EPSG:3035 and is resampled bilinearly to Web Mercator, which avoids overshoot on steep cliffs.
+- Overview levels z15 to z5 are averaged in elevation space.
+
+## Notes
 
 - Quantization 0.1 m. The deviation from the source is within the rounding range.
 - Position via the official transformation grid.
 - The vertical and positional accuracy corresponds to the official BEV model.
-- The DTM shows the terrain without buildings, trees and bridges. For the surface there is the [DSM](#8-variants-and-related).
+- The DTM shows the terrain without buildings, trees and bridges. For the surface there is the [DSM](/en/daten/dsm/).
 - Coverage is the rectangle 9.53–17.17° E, 46.37–49.02° N. Outside Austria and in gaps the value is a smooth continuation of the terrain, not a measurement.
 
-## 8. Variants and related
-
-| Product | Content | File |
-|---|---|---|
-| DTM (this page) | Terrain | <code>{t.datei}</code> |
-| [DSM](/en/daten/dsm/) | Surface (incl. buildings, vegetation), same encoding, BEV ALS-DOM 1 m | <code>{dsm.datei}</code> |
-| [Contour lines](/en/daten/hoehenlinien/) | Vector, z10–z16 | see product page |
-
-Building and vegetation height (DSM minus DTM) can be computed in the client from both tile sets.
-
-## 9. Versions and changelog
-
-Each file carries the reference date and hash in its name and never changes; a new version is a new file.
-
-| Reference date | File |
-|---|---|
-| 15 Sep 2025 | <code>{t.datei}</code> |
-
-All changes: [Changelog](/en/changelog/).
-
-## 10. Attribution
+## Attribution
 
 Required under CC BY 4.0. Text:
 
@@ -178,13 +160,3 @@ HTML (as in the PMTiles metadata; MapLibre picks it up automatically from the ti
 <Code lang="html" code={data.tilesets.relief.metadata.attribution} />
 
 More: [License](/en/lizenz/).
-
-## 11. FAQ
-
-**Why lossless WebP?** Because any change in color means a different elevation. Lossless is the only choice that preserves the 0.1 m encoding.
-
-**Why no nodata?** A nodata value (for example elevation 0) would appear as a hole or trench in hillshade and 3D. Missing pixels are therefore filled smoothly before encoding. Tiles with no source data at all do not exist. A value outside the data is therefore not a measurement, see section 7.
-
-**How does it differ from Mapbox and MapTiler?** Same encoding as `mapbox-terrain-dem-v1` (Mapbox formula, 512 px, without the 1 px border). mapx goes up to z16, is limited to Austria, lossless, keyless and usable as a whole file.
-
-**Why do I see seams in the hillshade?** Tiles with a 1 px border (514 px) produce seams with `tileSize: 512`. These tiles are borderless 512 × 512, so `tileSize: 512` is correct.

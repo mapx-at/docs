@@ -5,12 +5,11 @@ Digital surface model of Austria including buildings and vegetation as Terrain-R
 export const t = data.tilesets.dsm;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-The DSM is the counterpart to the [DTM](/en/daten/dtm/): it shows the **surface** with buildings, trees and bridges. Encoding, tile size and zoom levels are identical,
-so all DTM clients and formulas apply unchanged.
+The DSM is the counterpart to the [DTM](/en/daten/dtm/): it shows the surface including buildings, trees and bridges. Encoding, tile size and zoom levels are identical; all clients and formulas of the DTM apply unchanged.
 
-Use cases: building and vegetation heights (together with the DTM), line-of-sight and visibility analysis, solar and shading planning, 3D city and landscape models.
+<Nutzungen items={[{t:"Building and vegetation height",d:"nDSM as DSM minus DTM in the client"},{t:"Solar planning",d:"Roof and shading heights as a basis"},{t:"Visibility and shading",d:"Surface including buildings and forest"},{t:"3D city and landscape views",d:"Surface as terrain in the browser",href:"/en/anleitungen/gelaende-3d/"},{t:"Elevation profiles",d:"Profile over the surface",href:"/en/anleitungen/hoehenprofil/"}]} />
 
-## Key figures
+## Specifications
 
 <Kennwerte id="dsm" lang="en" />
 
@@ -20,7 +19,7 @@ Use cases: building and vegetation heights (together with the DTM), line-of-sigh
 
 Clicking decodes the tile pixel (formula under [Terrain-RGB](/en/konzepte/terrain-rgb/)).
 
-## Usage
+## Add to your map
 
 <Tabs syncKey="client">
   <TabItem label="MapLibre">
@@ -52,29 +51,21 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dsm/14/8860/5730.webp`} />
 
 Elevation over HTTP: [Elevation and profile](/en/api/hoehe/) with `model=dsm`.
 
-## Data origin
+## Source and currency
 
-- Source: BEV **ALS-DOM 1 m** (airborne laser scanning, surface), reference date **15 Sep 2025**.
-- Encoding 0.1 m (Mapbox), 512 px, lossless WebP, in Web Mercator.
+The DSM is derived from the BEV ALS-DOM 1 m (airborne laser scanning, surface). The reference date is in the specifications and the file name; a file never changes, a new release is a new file.
+
+- Source: BEV ALS-DOM 1 m, reference date 15 Sep 2025.
+- Same encoding as the DTM: Mapbox Terrain-RGB with 0.1 m quantization, 512 px, lossless WebP.
 - Overview levels z15 to z5 are averaged in elevation space.
 
-## Accuracy and notes
+## Notes
 
 - Quantization 0.1 m. The finest level is z16 (about 0.8 m per pixel at 48° N); beyond that the client scales up.
 - Accuracy corresponds to the official BEV source.
 - Buildings and vegetation reflect the time of the survey flight, not the reference date.
 - Outside the data the value is a smooth continuation, not a measurement (as with the DTM).
 - Building and vegetation height (nDSM = DSM − DTM) can be computed in the client from both tile sets.
-
-## Versions
-
-The file name carries the reference date and hash and never changes; a new version is a new file.
-
-| Version | File |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-All changes: [Changelog](/en/changelog/).
 
 ## Attribution
 

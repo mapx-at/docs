@@ -5,11 +5,11 @@ Aerial imagery of Austria from the BEV as WebP tiles, z5 to z18, 20 cm, with an 
 export const t = data.tilesets.dop;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolution of the source). Which flight supplies a pixel is described by the [Flight blocks](/en/daten/flugbloecke/) tileset.
+The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolution of the source). Which flight supplies a pixel is shown by the [Flight blocks](/en/daten/flugbloecke/) tileset.
 
-Use cases: background for hiking and planning maps, visual site assessment, 3D terrain with the [DTM](/en/daten/dtm/).
+<Nutzungen items={[{t:"Aerial imagery background",d:"Satellite-map alternative for web and apps"},{t:"3D terrain",d:"Orthophoto on the DTM",href:"/en/anleitungen/gelaende-3d/"},{t:"Planning and documentation",d:"Situation on site at 20 cm"},{t:"Checking parcels",d:"Cadastre over the aerial image"},{t:"QGIS",d:"Aerial imagery as XYZ or PMTiles layer",href:"/en/anleitungen/qgis/"}]} />
 
-## Key figures
+## Specifications
 
 <Kennwerte id="dop" lang="en" />
 
@@ -19,7 +19,7 @@ Use cases: background for hiking and planning maps, visual site assessment, 3D t
 
 Clicking shows the flight block at the point (survey, flight period).
 
-## Usage
+## Add to your map
 
 <Tabs syncKey="client">
   <TabItem label="MapLibre">
@@ -48,7 +48,7 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
   </TabItem>
 </Tabs>
 
-## Data origin
+## Source and currency
 
 - Source: BEV **Digital Orthophoto (DOP) RGB**, 20 cm, captured 2022 to 2025.
 - Georeferencing via the official transformation grid (ETRS89 ↔ MGI).
@@ -61,16 +61,6 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
 - Color seams between surveys are visible; there is no color matching.
 - At the borders to DE, CH, LI, IT, SI, CZ and SK the imagery partly extends abroad; at the border to Hungary it ends at the border.
 - Below z18, pixels of both surveys mix at block boundaries; the assignment is unambiguous at z18.
-
-## Versions
-
-The file name carries the reference date and hash and never changes; a new version is a new file.
-
-| Version | File |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-All changes: [Changelog](/en/changelog/).
 
 ## Attribution
 

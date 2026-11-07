@@ -5,8 +5,9 @@ Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Str
 export const t = data.tilesets.basis;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in **18 Layern**. Sie enthält keine OpenStreetMap-Daten.
-Kataster, Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
+Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Kataster, Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
+
+<Nutzungen items={[{t:"Eigener Kartenstil",d:"Die Layer nach Wunsch stylen",href:"/anleitungen/basiskarte-stylen/"},{t:"Web-Karten und Apps",d:"Vektorkarte mit eigener Gestaltung bis z16"},{t:"Planungs- und Navigationshintergrund",d:"Straßen, Bahn, Gewässer, Grenzen"},{t:"Hausnummern und Namen",d:"Adressen, Orte, Berge und Gewässernamen"},{t:"Überlagerung",d:"Kataster, Höhenlinien und Relief darüber",href:"/anleitungen/hoehenlinien-ueberlagern/"}]} />
 
 ## Kennwerte
 
@@ -17,12 +18,6 @@ Kataster, Höhenlinien und Relief sind eigene Produkte und lassen sich darüberl
 <ProduktKarte id="basis" center={[15.334, 48.227]} zoom={14} />
 
 Die Farben der Live-Karte sind automatisch vergeben (Fläche, Linie, Punkt je Layer), kein fertiger Kartenstil. Klick zeigt die Attribute.
-
-## Layer
-
-Layername endet auf `_a` (Fläche), `_l` (Linie) oder `_p` (Punkt). `min_zoom` am Objekt sagt, ab welcher Stufe es gedacht ist; `sort_rank` ordnet innerhalb des Layers.
-
-<LayerTabelle id="basis" info={{'landuse_a': 'Bodennutzung aus der DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation', 'building_a': 'Gebäude (DKM) mit Höhe aus dem DLM; <code>kind</code> building oder church, school, hospital, station, castle, hut …; z12–14 zusammengefasst', 'road_l': 'Straßen und Wege (GIP): highway, major_road, minor_road, service, track, path; <code>structure</code> bridge/tunnel', 'rail_l': 'Bahn (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry', 'aerialway_l': 'Seilbahnen und Lifte (DLM): cable_car, gondola, chair_lift, drag_lift …', 'transit_p': 'Bahnhöfe, Halte, Liftstationen', 'airport_p': 'Flugplätze (Wikidata): airport, airfield, heliport, military', 'ski_a': 'Skigebiete (Umweltbundesamt, Stand 2017)', 'boundary_l': 'Grenzen (BEV VGD): country, state, district, municipality; <code>left</code>/<code>right</code> Gebiet links/rechts', 'boundary_label_p': 'Namen von Bundesland, Bezirk, Gemeinde; <code>code</code> Kennzahl', 'place_p': 'Orte (BEV Geographische Namen): city, town, village, hamlet, suburb, locality; <code>capital</code>', 'natural_p': 'Berge, Sättel, Täler, Flurnamen, Burgen, Ruinen …', 'poi_p': 'Kirchen, Gipfelkreuze und Einrichtungen (BEV DLM, in Wien zusätzlich Wien-OGD): Schulen, Spitäler, Hütten, Tankstellen, Museen …', 'housenumber_p': 'Hausnummern (BEV Adressregister): <code>kind</code> building = Gebäudekoordinate, parcel = Grundstücksadresse', 'water_l': 'Fließgewässer (GGN): river, stream, canal, ditch', 'water_a': 'Stehgewässer (GGN): lake, reservoir, pond', 'water_label_l': 'Gewässernamen entlang der Linie', 'water_label_p': 'Seenamen, ein Punkt je See'}} />
 
 ## Einbinden
 
@@ -47,7 +42,15 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/mapx-basis/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 
-## Datenherkunft
+## Layer-Referenz
+
+Layername endet auf `_a` (Fläche), `_l` (Linie) oder `_p` (Punkt). `min_zoom` am Objekt sagt, ab welcher Stufe es gedacht ist; `sort_rank` ordnet innerhalb des Layers.
+
+<LayerTabelle id="basis" info={{'landuse_a': 'Bodennutzung aus der DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation', 'building_a': 'Gebäude (DKM) mit Höhe aus dem DLM; <code>kind</code> building oder church, school, hospital, station, castle, hut …; z12–14 zusammengefasst', 'road_l': 'Straßen und Wege (GIP): highway, major_road, minor_road, service, track, path; <code>structure</code> bridge/tunnel', 'rail_l': 'Bahn (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry', 'aerialway_l': 'Seilbahnen und Lifte (DLM): cable_car, gondola, chair_lift, drag_lift …', 'transit_p': 'Bahnhöfe, Halte, Liftstationen', 'airport_p': 'Flugplätze (Wikidata): airport, airfield, heliport, military', 'ski_a': 'Skigebiete (Umweltbundesamt, Stand 2017)', 'boundary_l': 'Grenzen (BEV VGD): country, state, district, municipality; <code>left</code>/<code>right</code> Gebiet links/rechts', 'boundary_label_p': 'Namen von Bundesland, Bezirk, Gemeinde; <code>code</code> Kennzahl', 'place_p': 'Orte (BEV Geographische Namen): city, town, village, hamlet, suburb, locality; <code>capital</code>', 'natural_p': 'Berge, Sättel, Täler, Flurnamen, Burgen, Ruinen …', 'poi_p': 'Kirchen, Gipfelkreuze und Einrichtungen (BEV DLM, in Wien zusätzlich Wien-OGD): Schulen, Spitäler, Hütten, Tankstellen, Museen …', 'housenumber_p': 'Hausnummern (BEV Adressregister): <code>kind</code> building = Gebäudekoordinate, parcel = Grundstücksadresse', 'water_l': 'Fließgewässer (GGN): river, stream, canal, ditch', 'water_a': 'Stehgewässer (GGN): lake, reservoir, pond', 'water_label_l': 'Gewässernamen entlang der Linie', 'water_label_p': 'Seenamen, ein Punkt je See'}} />
+
+Alle Felder und Werte jedes Layers: [Basiskarte: Layer-Referenz](/daten/basiskarte-layer/).
+
+## Quelle und Aktualität
 
 | Thema | Quelle | Stand |
 |---|---|---|
@@ -63,7 +66,7 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/mapx-basis/14/8860/5730.pbf`} />
 
 Die Lage ist über das amtliche Transformationsgitter (AT_GIS_GRID) nach ETRS89 umgerechnet.
 
-## Generalisierung
+### Generalisierung
 
 - Nutzungsflächen werden zu kleineren Zoomstufen hin zusammengefasst und vereinfacht.
 - Straßen und Bahn zeigen in z8–9 nur das Hauptnetz, Gebäude sind in z12–13 gröber.
@@ -75,16 +78,6 @@ Die Lage ist über das amtliche Transformationsgitter (AT_GIS_GRID) nach ETRS89 
 - Nicht enthalten: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen; kleine Flugfelder fehlen teils; Gewässer kennen kein „verrohrt“. Skigebiete haben den Stand 2017.
 - Ausland: praktisch leer (nur Bodensee und Gewässer bis knapp hinter die Grenze).
 - Glyphen und Schriften für Beschriftungen liefert mapx nicht; der Style braucht eigene.
-
-## Versionen
-
-Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
-
-| Stand | Datei |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-Alle Änderungen: [Changelog](/changelog/).
 
 ## Attribution
 

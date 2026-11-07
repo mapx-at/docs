@@ -7,6 +7,8 @@ export const url = `https://tiles.mapx.at/${t.datei}`;
 
 Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](/daten/flugbloecke/).
 
+<Nutzungen items={[{t:"Luftbild-Hintergrund",d:"Satellitenkarten-Ersatz für Web und Apps"},{t:"3D-Gelände",d:"Orthophoto auf dem DTM",href:"/anleitungen/gelaende-3d/"},{t:"Planung und Dokumentation",d:"Zustand vor Ort in 20 cm"},{t:"Grundstücke prüfen",d:"Kataster über dem Luftbild"},{t:"QGIS",d:"Luftbild als XYZ- oder PMTiles-Layer",href:"/anleitungen/qgis/"}]} />
+
 ## Kennwerte
 
 <Kennwerte id="dop" />
@@ -46,7 +48,7 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
   </TabItem>
 </Tabs>
 
-## Datenherkunft
+## Quelle und Aktualität
 
 - Quelle: BEV **Digitales Orthophoto (DOP) RGB**, 20 cm, Aufnahmen 2022 bis 2025.
 - z18 ist über das amtliche Transformationsgitter (ETRS89 ↔ MGI) entzerrt; die Stufen z17 bis z5 sind daraus abgeleitet.
@@ -58,16 +60,6 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/dop-ortho/14/8860/5730.webp`} />
 - Zwischen Bildflügen sind Farbnähte sichtbar, es gibt keine Farbangleichung.
 - An den Grenzen zu DE, CH, LI, IT, SI, CZ und SK reicht das Bild teils mehr als 3 km ins Ausland; an der Grenze zu Ungarn endet es an der Grenze.
 - Unter z18 mischen sich an Blockgrenzen Pixel beider Flüge; eindeutig ist die Zuordnung nur in z18.
-
-## Versionen
-
-Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
-
-| Stand | Datei |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-Alle Änderungen: [Changelog](/changelog/).
 
 ## Attribution
 

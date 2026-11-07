@@ -1,59 +1,94 @@
 # Elevation and profile
 
-Elevation for points or along a path from DTM or DSM, GeoJSON response, with test console.
+Elevation for points or along a path from the DTM or DSM, GeoJSON response.
 
-Elevation for one point, several points or a path. Machine-readable: [openapi.yaml](/openapi.yaml), live [/v1/openapi.json](https://api.mapx.at/v1/openapi.json).
+The elevation API returns terrain height ([DTM](/en/daten/dtm/)) or surface height ([DSM](/en/daten/dsm/)) for single points or as a profile along a line. No key, open CORS.
 
-<Endpoint url="https://api.mapx.at/v1/elevation" lang="en" />
+**Use cases:** elevation profile of a hiking or cycling route, height of a site (construction, radio, solar), building and tree height as DSM minus DTM, checking GPS altitudes.
 
-<ParamTable lang="en" params={[
-  { name: "points", type: "string", desc: "<code>lon,lat;lon,lat;...</code> (WGS84, longitude before latitude)" },
-  { name: "path", type: "string", desc: "<code>lon,lat;lon,lat;...</code>, polyline (2 to 512 vertices); together with <code>samples</code> a profile along the path" },
-  { name: "samples", type: "integer", desc: "Number of sample points evenly spaced by length (great circle on the sphere) along <code>path</code>, 2 to 1024, default 100" },
-  { name: "model", type: "string", desc: "<code>dtm</code> (default) or <code>dsm</code>" },
+## Retrieve elevation
+
+<Endpoint url="https://api.mapx.at/v1/elevation" />
+
+### Parameters
+
+Exactly one of `points` or `path` is required.
+
+<ParamTable params={[
+  { name: "points", type: "string", desc: "Points as <code>lon,lat;lon,lat;…</code> (WGS84, longitude first), up to 512." },
+  { name: "path", type: "string", desc: "Line as <code>lon,lat;lon,lat;…</code>, 2 to 512 vertices. The response is a profile with <code>samples</code> points." },
+  { name: "samples", type: "integer", default: "100", desc: "Only with <code>path</code>: number of points spaced evenly by distance, 2 to 1024." },
+  { name: "model", type: "string", default: "dtm", desc: "Elevation model.", values: [
+    { v: "dtm", d: "Bare ground without buildings and vegetation" },
+    { v: "dsm", d: "Surface incl. buildings, trees, bridges" },
+  ] },
 ]} />
 
-`points` and `path` are mutually exclusive; `points` accepts at most 512 points. Elevation is interpolated bilinearly from the z16 tiles (0.1 m grid).
+Heights are bilinearly interpolated from the 1 m grid, resolution 0.1 m.
 
 ### Try it
 
-The console sends a real request to the service.
+<Testkonsole />
 
-<Testkonsole lang="en" />
+### Example requests
 
-### Example: point
+<Tabs syncKey="lang">
+  <TabItem label="curl">
+<Code lang="bash" code={`# Grossglockner and Melk, terrain
+curl "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.334,48.227"
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation?points=12.694,47.074&model=dtm"`} />
+# Profile with 50 points, surface
+curl "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50&model=dsm"`} />
+  </TabItem>
+  <TabItem label="JavaScript">
+<Code lang="js" code={`const r = await fetch("https://api.mapx.at/v1/elevation?points=12.694,47.074");
+const { features } = await r.json();
+console.log(features[0].properties.elevation); // 3726.3`} />
+  </TabItem>
+  <TabItem label="Python">
+<Code lang="python" code={`import requests
+r = requests.get("https://api.mapx.at/v1/elevation",
+                 params={"path": "12.69,47.07;12.70,47.08", "samples": 50})
+for f in r.json()["features"]:
+    print(f["properties"]["distance_m"], f["properties"]["elevation"])`} />
+  </TabItem>
+</Tabs>
 
-Response: GeoJSON `FeatureCollection`. Each feature is a point (coordinates `[lon, lat]`) with the properties `elevation` (m), `resolution_m` (grid spacing of the source, 1 m), `model` and `stichtag` (reference date); with `path` also `distance_m` (distance from the start of the path). Outside the data, `elevation` is `null` (the response stays `200`).
+## Response
+
+A GeoJSON <code>FeatureCollection</code>, one <code>Point</code> feature per point in request order (for <code>path</code>, along the line).
+
+<ParamTable kind="response" params={[
+  { name: "elevation", type: "number | null", desc: "Height in metres above the Adriatic datum, one decimal. <code>null</code> outside the data area." },
+  { name: "distance_m", type: "number", desc: "Only for <code>path</code>: distance from the start of the line in metres." },
+  { name: "model", type: "string", desc: "Model used", values: [{ v: "dtm", d: "DTM" }, { v: "dsm", d: "DSM" }] },
+  { name: "resolution_m", type: "number", desc: "Grid spacing of the source in metres (1)." },
+  { name: "stichtag", type: "string", desc: "Reference date of the model, ISO date." },
+]} />
 
 <Code lang="json" code={`{
   "type": "FeatureCollection",
   "features": [{
     "type": "Feature",
     "geometry": { "type": "Point", "coordinates": [12.694, 47.074] },
-    "properties": { "elevation": 0.0, "resolution_m": 1.0, "model": "dtm", "stichtag": "2025-09-15" }
+    "properties": { "elevation": 3726.3, "resolution_m": 1.0, "model": "dtm", "stichtag": "2025-09-15" }
   }]
 }`} />
 
-### Example: profile
-
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"`} />
-
-Response as above, one feature per sample point in path order.
-
 ## Errors
 
-`application/problem+json` with `type`, `title`, `status` and `detail`:
+Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)).
 
-<Code lang="json" code={`{
-  "type": "about:blank",
-  "title": "Bad Request",
-  "status": 400,
-  "detail": "'12.5': expected lon,lat"
-}`} />
+| Status | Cause |
+|---|---|
+| `400` | neither or both of <code>points</code>/<code>path</code>, coordinate not <code>lon,lat</code>, too many points, invalid <code>samples</code> or <code>model</code> |
+| `429` | rate limit exceeded, honour <code>Retry-After</code> |
+| `503` | temporarily unavailable |
 
-Typical cases: `400` (parameters missing or malformed), `404` (tileset or tile unknown), `429` (too many requests, with `Retry-After`), `503` (service temporarily unavailable).
-`type` is `about:blank`; `title` is the status text, `detail` the explanation.
+<Code lang="json" code={`{ "type": "about:blank", "title": "Bad Request", "status": 400, "detail": "model: dtm oder dsm" }`} />
 
-More: [Errors, limits and operations](/en/api/fehler/).
+## Limits
+
+- Up to 512 points per request (<code>points</code> or vertices of <code>path</code>), up to 1024 profile samples.
+- Rate limit per IP address; large requests count more. Details: [Errors and limits](/en/api/fehler/).
+- Machine-readable: [openapi.json](https://api.mapx.at/v1/openapi.json).

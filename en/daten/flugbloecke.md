@@ -5,10 +5,11 @@ Which flight supplies which orthophoto pixel: winning areas of the BEV surveys w
 export const t = data.tilesets.dop_flugblock;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-For every pixel of the [Orthophoto](/en/daten/orthophoto/), the area of the flight (survey) it comes from, with flight period and source mosaic.
-This lets you show, for example, "captured on" in a map. Use cases: capture date of imagery, quality and currency checks, change detection between surveys.
+For each pixel of the [orthophoto](/en/daten/orthophoto/), the area of the survey flight (operat) it comes from, with flight period.
 
-## Key figures
+<Nutzungen items={[{t:"Show capture date",d:"\"Imagery from\" in the map"},{t:"Judge currency",d:"Age of the aerial image at a location"},{t:"Explain image changes",d:"Understand color seams between flights"},{t:"Quality checks",d:"Which flight covers which area"}]} />
+
+## Specifications
 
 <Kennwerte id="dop_flugblock" lang="en" />
 
@@ -16,23 +17,7 @@ This lets you show, for example, "captured on" in a map. Use cases: capture date
 
 <ProduktKarte id="dop_flugblock" center={[14.3, 47.6]} zoom={7} lang="en" />
 
-## Layers
-
-<LayerTabelle id="dop_flugblock" lang="en" info={{ dop_flugblock: "Winning areas per survey" }} />
-
-| Field | Meaning |
-|---|---|
-| `operat` | Name of the survey (e.g. Zillertal, Linz) |
-| `flugblock_id`, `archivnr` | Archive number of the survey (text and number respectively) |
-| `flug_von`, `flug_bis` | Start and end of the flight period |
-| `flugdatum` | End of the period, determines precedence |
-| `flugjahr` | Year from the date |
-| `rang` | Precedence, 0 = highest |
-| `fid` | Sequential number |
-
-A flight block is a **survey** (Operat), not a single flight day: a survey can take up to three months.
-
-## Usage
+## Add to your map
 
 <Tabs syncKey="client">
   <TabItem label="MapLibre">
@@ -55,7 +40,13 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} 
   </TabItem>
 </Tabs>
 
-## Data origin
+## Layer reference
+
+### dop_flugblock
+
+<FeldReferenz ts="dop_flugblock" layer="dop_flugblock" />
+
+## Source and currency
 
 - Source: BEV "Currency of orthophoto surveys, color and infrared" (Aktualität Orthophoto Operate Farbe und Infrarot).
 - The areas show where a survey is actually visible in the orthophoto. A survey can have several areas.
@@ -64,16 +55,8 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} 
 
 - Date information is the period of the survey, not a daily date.
 - Precedence follows the end of the period and can differ from the order of the survey start.
+- A flight block is an operat, not a single flight day: there is no daily date, only the period of the operat; an operat can last up to three months.
 
-## Versions
-
-The file name carries the reference date and hash and never changes; a new version is a new file.
-
-| Version | File |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-All changes: [Changelog](/en/changelog/).
 
 ## Attribution
 

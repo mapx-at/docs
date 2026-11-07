@@ -6,21 +6,22 @@ export const t = data.tilesets.relief;
 export const dsm = data.tilesets.dsm;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
-Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebäude und Bewuchs, kodiert als Farbe (Terrain-RGB) und
-damit direkt für `raster-dem`, Schummerung und 3D-Gelände in MapLibre, Mapbox GL und kompatiblen Clients verwendbar.
+Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebäude und Bewuchs, kodiert als Farbe (Terrain-RGB). Es ist direkt für `raster-dem`, Schummerung und 3D-Gelände in MapLibre, Mapbox GL und kompatiblen Clients verwendbar.
 
-## 1. Kennwerte
+<Nutzungen items={[{t:"Wander- und Outdoorkarten",d:"Schummerung als Kartenhintergrund bis z16"},{t:"3D-Gelände",d:"Gelände und Flugansichten mit Orthophoto",href:"/anleitungen/gelaende-3d/"},{t:"Höhenprofile",d:"Aufstieg und Gefälle entlang einer Route",href:"/anleitungen/hoehenprofil/"},{t:"Hang- und Expositionsanalyse",d:"Neigung und Ausrichtung aus den Höhenwerten"},{t:"QGIS und Analyse",d:"Höhen als Raster im Desktop-GIS",href:"/anleitungen/qgis/"}]} />
+
+## Kennwerte
 
 <Kennwerte id="relief" />
 
-## 2. Live-Karte
+## Live-Karte
 
 <DtmMap id="relief" />
 
 Der Klick liest die Kachel der aktuellen Zoomstufe (maximal z16) per Range-Request, dekodiert das Pixel am Klickpunkt mit der
-Formel aus Abschnitt 4 und zeigt Höhe und RGB-Wert. Bei eingeschaltetem 3D steht zusätzlich der Wert von `queryTerrainElevation` dabei.
+Formel unter „Kodierung“ und zeigt Höhe und RGB-Wert. Bei eingeschaltetem 3D steht zusätzlich der Wert von `queryTerrainElevation` dabei.
 
-## 3. Einbinden
+## Einbinden
 
 <Tabs syncKey="client">
   <TabItem label="MapLibre">
@@ -40,8 +41,8 @@ const map = new maplibregl.Map({
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));`} />
   </TabItem>
   <TabItem label="Leaflet">
-    Leaflet kennt kein `raster-dem`. Über den XYZ-Endpunkt ([API](/api/kacheln/#xyz)) kommen die Rohkacheln; sie zeigen die kodierte Farbe, nicht
-    eine Karte. Für Höhenwerte die Pixel selbst dekodieren (Abschnitt 4).
+    Leaflet kennt kein `raster-dem`. Über den XYZ-Endpunkt ([API](/api/kacheln/)) kommen die Rohkacheln; sie zeigen die kodierte Farbe, nicht
+    eine Karte. Für Höhenwerte die Pixel selbst dekodieren (siehe „Kodierung“).
     <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 16, maxZoom: 20,
   crossOrigin: true,
@@ -67,7 +68,7 @@ new TileLayer({
   <TabItem label="QGIS">
     1. Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
     2. URL `https://tiles.mapx.at/v1/dtm/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
-    3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in Abschnitt 4 (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
+    3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
   </TabItem>
   <TabItem label="Python">
     <Code lang="python" code={`# pip install pmtiles pillow numpy requests
@@ -107,7 +108,7 @@ fn rgb(h: f64) -> [u8; 3] {
   </TabItem>
 </Tabs>
 
-## 4. Kodierung
+## Kodierung
 
 ```
 höhe_m = -10000 + (R · 65536 + G · 256 + B) · 0,1
@@ -120,7 +121,7 @@ höhe_m = -10000 + (R · 65536 + G · 256 + B) · 0,1
 
 Ausführlich: [Terrain-RGB](/konzepte/terrain-rgb/).
 
-## 5. Auflösung je Zoom
+## Auflösung je Zoom
 
 Bei 47,5° N, 512-px-Kacheln, Web-Mercator:
 
@@ -130,40 +131,23 @@ Die Daten stammen aus einem 1-m-Raster. z16 (≈ 0,8 m pro Pixel) ist die erste 
 Über z16 gibt es keine Kacheln: MapLibre zoomt ab z17 die z16-Kachel auf (`maxzoom: 16` setzen), es entsteht keine zusätzliche Information.
 Die Stufen z15 bis z5 sind 2×2-Mittel im Höhenraum (Dekodieren, mitteln, neu kodieren), kein Bild-Resize.
 
-## 6. Datenherkunft
+## Quelle und Aktualität
 
-- Quelle: BEV (Bundesamt für Eich- und Vermessungswesen), **ALS-DTM 1 m**, Airborne Laserscanning, nur Gelände, Stichtag **15.09.2025**.
-- Die Quelle liegt in EPSG:3035 (ETRS89-LAEA) und ist bilinear nach EPSG:3857 umgerechnet; das vermeidet Überschwinger an steilen Klippen.
+Das DTM entsteht aus dem ALS-DTM 1 m des BEV (Airborne Laserscanning, nur Gelände). Der Stichtag steht in den Kennwerten und im Dateinamen; eine Datei ändert sich nie, ein neuer Stand ist eine neue Datei.
 
-## 7. Genauigkeit und Hinweise
+- Quelle: BEV (Bundesamt für Eich- und Vermessungswesen), Stichtag 15.09.2025.
+- Die Quelle liegt in EPSG:3035 (ETRS89-LAEA) und ist bilinear nach Web-Mercator umgerechnet; das vermeidet Überschwinger an steilen Klippen.
+- Die Übersichtsstufen z15 bis z5 sind im Höhenraum gemittelt.
+
+## Hinweise
 
 - Quantisierung 0,1 m. Die Abweichung zur Quelle liegt im Rundungsbereich (höchstens 0,05 m).
 - Die Lage- und Höhengenauigkeit entspricht der amtlichen Quelle des BEV.
-- Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](#8-varianten-und-verwandte).
+- Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](/daten/dsm/).
 - **Kein Messwert außerhalb der Daten.** Das Gebiet des Kachelsatzes ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
 - Die Übersichtsstufen z15 bis z5 sind im Höhenraum gemittelt.
 
-## 8. Varianten und Verwandte
-
-| Produkt | Inhalt | Datei |
-|---|---|---|
-| DTM (diese Seite) | Gelände | <code>{t.datei}</code> |
-| [DSM](/daten/dsm/) | Oberfläche (inkl. Gebäude, Bewuchs), gleiche Kodierung, BEV ALS-DOM 1 m | <code>{dsm.datei}</code> |
-| [Höhenlinien](/daten/hoehenlinien/) | Vektor, z10–z16 | siehe Produktseite |
-
-Gebäude- und Bewuchshöhe (nDSM) ergeben sich im Client aus DSM minus DTM.
-
-## 9. Versionen und Changelog
-
-Jede Datei trägt den Stichtag im Namen und ändert sich nie; ein neuer Stand ist eine neue Datei.
-
-| Stichtag | Datei |
-|---|---|
-| 15.09.2025 | <code>{t.datei}</code> |
-
-Alle Änderungen: [Changelog](/changelog/).
-
-## 10. Attribution
+## Attribution
 
 Pflicht nach CC BY 4.0. Text:
 
@@ -176,13 +160,3 @@ HTML (wie in den PMTiles-Metadaten, MapLibre übernimmt es automatisch aus dem T
 <Code lang="html" code={data.tilesets.relief.metadata.attribution} />
 
 Mehr: [Lizenz](/lizenz/).
-
-## 11. FAQ
-
-**Warum WebP verlustfrei?** Weil jede Veränderung der Farbe eine andere Höhe bedeutet. Verlustfrei ist die einzige Wahl, die die 0,1-m-Kodierung erhält.
-
-**Warum kein Nodata?** Ein Nodata-Wert (zum Beispiel Höhe 0) würde in Hillshade und 3D als Loch oder Graben erscheinen. Fehlende Pixel werden deshalb vor dem Kodieren glatt aus der Umgebung ergänzt. Kacheln ganz ohne Quelldaten gibt es nicht (Lücke im PMTiles). Wo ein Wert vorliegt, ist er daher nicht automatisch ein Messwert, siehe Abschnitt 7.
-
-**Unterschied zu Mapbox?** Gleiche Kodierung wie `mapbox-terrain-dem-v1` (Mapbox-Formel, 512 px, aber ohne 1-px-Rand). mapx geht bis z16, ist offen und schlüsselfrei, verlustfrei und als ganze Datei herunterladbar; die Abdeckung ist auf Österreich begrenzt.
-
-**Warum sehe ich Nähte in der Schummerung?** Kacheln mit 1-px-Rand (514 px) erzeugen mit `tileSize: 512` Nähte. Diese Kacheln sind randlos 512 × 512, `tileSize: 512` ist richtig.

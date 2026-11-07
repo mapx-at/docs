@@ -6,7 +6,8 @@ export const t = data.tilesets.dop_flugblock;
 export const url = `https://tiles.mapx.at/${t.datei}`;
 
 Zu jedem Pixel des [Orthophotos](/daten/orthophoto/) die Fläche des Bildflugs (Operats), aus dem es stammt, mit Flugzeitraum.
-Damit lässt sich zum Beispiel „Aufnahme von“ in einer Karte anzeigen.
+
+<Nutzungen items={[{t:"Aufnahmezeitpunkt anzeigen",d:"„Aufnahme von“ in der Karte"},{t:"Aktualität einschätzen",d:"Alter des Luftbilds an einem Ort"},{t:"Bildwechsel erklären",d:"Farbnähte zwischen Flügen nachvollziehen"},{t:"Qualitätsprüfung",d:"Welcher Flug liefert welches Gebiet"}]} />
 
 ## Kennwerte
 
@@ -15,22 +16,6 @@ Damit lässt sich zum Beispiel „Aufnahme von“ in einer Karte anzeigen.
 ## Live-Karte
 
 <ProduktKarte id="dop_flugblock" center={[14.3, 47.6]} zoom={7} />
-
-## Layer
-
-<LayerTabelle id="dop_flugblock" info={{ dop_flugblock: "Gewinnerflächen je Operat" }} />
-
-| Feld | Bedeutung |
-|---|---|
-| `operat` | Name des Operats (z. B. Zillertal, Linz) |
-| `flugblock_id`, `archivnr` | Archivnummer des Operats (Text bzw. Zahl) |
-| `flug_von`, `flug_bis` | Beginn und Ende des Befliegungszeitraums |
-| `flugdatum` | Ende des Zeitraums, bestimmt den Vorrang |
-| `flugjahr` | Jahr aus dem Datum |
-| `rang` | Vorrang, 0 = höchster |
-| `stichtag` | Lieferstand der Bilddaten, nicht das Flugdatum |
-
-Ein Flugblock ist ein **Operat**, kein einzelner Flugtag: Es gibt kein Tagesdatum, nur den Zeitraum des Operats; ein Operat kann bis zu drei Monate dauern.
 
 ## Einbinden
 
@@ -55,7 +40,13 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} 
   </TabItem>
 </Tabs>
 
-## Datenherkunft
+## Layer-Referenz
+
+### dop_flugblock
+
+<FeldReferenz ts="dop_flugblock" layer="dop_flugblock" />
+
+## Quelle und Aktualität
 
 - Quelle: BEV „Aktualität Orthophoto Operate Farbe und Infrarot“.
 - Die Flächen zeigen, wo ein Operat im Orthophoto **tatsächlich** zu sehen ist, nicht die ursprünglichen Umrisse. Ein Operat kann mehrere Flächen haben.
@@ -63,16 +54,8 @@ curl -s -o kachel.pbf https://tiles.mapx.at/v1/dop-flugblock/14/8860/5730.pbf`} 
 ## Hinweise
 
 - Der Vorrang folgt dem Ende des Zeitraums und kann überraschen: St. Pölten (Ende 23.07.2023) liegt vor Linz (28.05.2023).
+- Ein Flugblock ist ein Operat, kein einzelner Flugtag: Es gibt kein Tagesdatum, nur den Zeitraum des Operats; ein Operat kann bis zu drei Monate dauern.
 
-## Versionen
-
-Datei mit Stichtag im Namen, sie ändert sich nie; ein neuer Stand ist eine neue Datei.
-
-| Stand | Datei |
-|---|---|
-| {t.stand} | <code>{t.datei}</code> |
-
-Alle Änderungen: [Changelog](/changelog/).
 
 ## Attribution
 
