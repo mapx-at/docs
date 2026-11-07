@@ -18,7 +18,7 @@ The endpoint renders a map view as an image, in the shape of the Mapbox Static I
   { name: "size", type: "string", required: true, desc: "<code>{width}x{height}[@2x][.png|.webp]</code>, each 1 to 1280 pixels; with <code>@2x</code> up to 2560 pixels. Default is PNG." },
 ]} />
 
-> The vector style `karte` is not rendered and returns `400`. Use MapLibre with [Styles](/en/api/styles/) for it.
+> Styles: `luftbild`, `gelaende` and the vector map `karte`, `karte-morgen`, `karte-abend`, `karte-nacht` (areas, lines, hillshade, labels; icons are not drawn yet). `hybrid` returns `400`.
 
 ## Overlays
 
@@ -49,6 +49,6 @@ In HTML an `img` element is enough:
 
 ## Errors
 
-Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)): `400` invalid input (for example style `karte`, size above 1280, invalid overlay), `404` unknown path, `429` rate limit exceeded (honour `Retry-After`), `503` temporarily unavailable. General: [Errors and limits](/en/api/fehler/). Machine-readable: [openapi.json](https://api.mapx.at/v1/openapi.json).
+Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)): `400` invalid input (for example style `hybrid`, size above 1280, invalid overlay), `404` unknown path, `429` rate limit exceeded (honour `Retry-After`), `503` temporarily unavailable. General: [Errors and limits](/en/api/fehler/). Machine-readable: [openapi.json](https://api.mapx.at/v1/openapi.json).
 
 For attribution see [License](/en/lizenz/): images with orthophoto need the BEV notice.
