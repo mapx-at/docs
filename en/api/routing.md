@@ -19,6 +19,7 @@ Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "language", type: "string", desc: "Language of the instructions, for example <code>de</code>." },
   { name: "alternatives", type: "boolean | integer", default: "false", desc: "<code>true</code> returns up to two more routes in <code>routes[]</code>, a number from 0 to 3 limits the count. Only with exactly two coordinates." },
   { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, comma-separated. Returns <code>legs[].annotation</code> with one value per geometry segment (seconds, metres, metres per second)." },
+  { name: "incidents", type: "boolean", default: "true for driving-traffic", desc: "Traffic reports along the route in <code>legs[].incidents</code> (car only), see <a href=\"/en/api/traffic/\">Traffic</a>." },
   { name: "radiuses", type: "string", desc: "Search radius for snapping to the network per coordinate in metres, separated by <code>;</code>, or <code>unlimited</code>." },
   { name: "approaches", type: "string", desc: "<code>unrestricted</code> or <code>curb</code> per coordinate. Validated, but not yet used by the router." },
   { name: "bearings", type: "string", desc: "<code>degrees,tolerance</code> per coordinate, separated by <code>;</code> (empty leaves a point free). Validated, but not yet used by the router." },
