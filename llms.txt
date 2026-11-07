@@ -1,0 +1,18 @@
+# mapx Doku
+
+> Offene Geodaten für Österreich (Kacheln und API) von mapx. Seiten sind statisch; Kennwerte stammen beim Build aus den echten PMTiles-Dateien.
+
+- [Schnellstart](https://docs.mapx.at/start/): MapLibre + PMTiles in fünf Minuten
+- [DTM Geländemodell](https://docs.mapx.at/daten/dtm/): Terrain-RGB (Mapbox-Kodierung, 0,1 m), z5-z16, BEV ALS-DTM 1 m, CC BY 4.0
+- [DTM (English)](https://docs.mapx.at/en/daten/dtm/)
+- [Terrain-RGB](https://docs.mapx.at/konzepte/terrain-rgb/): Formel -10000 + (R*65536+G*256+B)*0.1
+- [API](https://docs.mapx.at/api/): tiles, tilejson, xyz, elevation (Spezifikation)
+- [OpenAPI Elevation](https://docs.mapx.at/openapi.yaml)
+- [Lizenz und Attribution](https://docs.mapx.at/lizenz/)
+- [Changelog](https://docs.mapx.at/changelog/)
+
+## Wichtige Fakten
+
+- Kacheln: https://tiles.mapx.at/<datei>.pmtiles, HTTP-Range, CORS offen, kein Schlüssel. Dateinamen enthalten Stichtag und Hash.
+- Terrain-RGB: WebP verlustfrei, 512 px ohne Rand, encoding "mapbox", maxzoom 16, darüber Overzoom.
+- Fehlende Quelldaten sind keine Nodata-Pixel, sondern glatt fortgesetztes Gelände (keine Messung).
