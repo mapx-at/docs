@@ -121,7 +121,20 @@ höhe_m = -10000 + (R · 65536 + G · 256 + B) · 0,1
 
 Ausführlich: [Terrain-RGB](/konzepte/terrain-rgb/).
 
-## Auflösung je Zoom
+## Vertikale Auflösung und Genauigkeit
+
+| | Wert | Bedeutung |
+|---|---|---|
+| Vertikale Auflösung | **0,1 m** | kleinster Höhenschritt der Kodierung |
+| Abweichung zur Quelle | **≤ 0,05 m** | Rundung beim Kodieren, sonst keine Veränderung (verlustfrei) |
+| Höhengenauigkeit der Quelle | **± 0,50 m** | Angabe des BEV für das ALS-DTM; im Hochgebirge sind größere Abweichungen möglich |
+| Höhenbezug | EVRF2000 Austria | orthometrische Höhen (EPSG:9274), wie in der Quelle |
+
+Die Kodierung ist also fünfmal feiner als die Genauigkeit der Messung: Sie begrenzt die Qualität nicht.
+
+In den Übersichtsstufen z15 bis z5 ist jeder Pixel der Mittelwert der feineren Stufe. Die vertikale Auflösung bleibt 0,1 m, kleine Spitzen und Gipfel werden aber geglättet. Für exakte Punkthöhen z16 lesen oder die [Höhen-API](/api/hoehe/) verwenden.
+
+## Horizontale Auflösung je Zoom
 
 Bei 47,5° N, 512-px-Kacheln, Web-Mercator:
 
@@ -142,7 +155,7 @@ Das DTM entsteht aus dem ALS-DTM 1 m des BEV (Airborne Laserscanning, nur Gelän
 ## Hinweise
 
 - Quantisierung 0,1 m. Die Abweichung zur Quelle liegt im Rundungsbereich (höchstens 0,05 m).
-- Die Lage- und Höhengenauigkeit entspricht der amtlichen Quelle des BEV.
+- Höhengenauigkeit laut BEV ± 0,50 m, Details unter [Vertikale Auflösung und Genauigkeit](#vertikale-auflösung-und-genauigkeit).
 - Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](/daten/dsm/).
 - **Kein Messwert außerhalb der Daten.** Das Gebiet des Kachelsatzes ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
 - Die Übersichtsstufen z15 bis z5 sind im Höhenraum gemittelt.

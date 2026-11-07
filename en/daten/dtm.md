@@ -121,7 +121,20 @@ height_m = -10000 + (R · 65536 + G · 256 + B) · 0.1
 
 In detail: [Terrain-RGB](/en/konzepte/terrain-rgb/).
 
-## Resolution by zoom
+## Vertical resolution and accuracy
+
+| | Value | Meaning |
+|---|---|---|
+| Vertical resolution | **0.1 m** | smallest height step of the encoding |
+| Deviation from source | **≤ 0.05 m** | rounding during encoding, otherwise unchanged (lossless) |
+| Vertical accuracy of the source | **± 0.50 m** | stated by BEV for the ALS-DTM; larger deviations are possible in high mountains |
+| Height reference | EVRF2000 Austria | orthometric heights (EPSG:9274), as in the source |
+
+The encoding is five times finer than the accuracy of the survey, so it does not limit quality.
+
+In the overview levels z15 to z5 each pixel is the mean of the finer level. The vertical resolution stays 0.1 m, but small peaks and summits are smoothed. For exact point heights read z16 or use the [elevation API](/en/api/hoehe/).
+
+## Horizontal resolution by zoom
 
 At 47.5° N, 512 px tiles, Web Mercator:
 
@@ -143,7 +156,7 @@ The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain on
 
 - Quantization 0.1 m. The deviation from the source is within the rounding range.
 - Position via the official transformation grid.
-- The vertical and positional accuracy corresponds to the official BEV model.
+- Vertical accuracy per BEV ± 0.50 m, see [Vertical resolution and accuracy](#vertical-resolution-and-accuracy).
 - The DTM shows the terrain without buildings, trees and bridges. For the surface there is the [DSM](/en/daten/dsm/).
 - Coverage is the rectangle 9.53–17.17° E, 46.37–49.02° N. Outside Austria and in gaps the value is a smooth continuation of the terrain, not a measurement.
 

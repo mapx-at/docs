@@ -59,7 +59,7 @@ for f in r.json()["features"]:
 GeoJSON <code>FeatureCollection</code>, ein <code>Point</code>-Feature je Punkt in Anfragereihenfolge (bei <code>path</code> entlang der Linie).
 
 <ParamTable kind="response" params={[
-  { name: "elevation", type: "number | null", desc: "Höhe in Metern über Adria (Gebrauchshöhe), eine Nachkommastelle. <code>null</code> außerhalb des Datengebiets." },
+  { name: "elevation", type: "number | null", desc: "Höhe in Metern, eine Nachkommastelle (Höhenbezug der Quelle, beim DTM EVRF2000 orthometrisch). <code>null</code> außerhalb des Datengebiets." },
   { name: "distance_m", type: "number", desc: "Nur bei <code>path</code>: Strecke vom Linienanfang in Metern." },
   { name: "model", type: "string", desc: "Verwendetes Modell", values: [{ v: "dtm", d: "DTM" }, { v: "dsm", d: "DSM" }] },
   { name: "resolution_m", type: "number", desc: "Rasterweite der Quelle in Metern (1)." },
