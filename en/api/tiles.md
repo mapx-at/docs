@@ -12,7 +12,7 @@ Every tile set (base map, cadastre, contours, DTM, DSM, orthophoto, flight block
   { name: "ext", type: "string", required: true, desc: "Matches the tile set: <code>pbf</code> (alias <code>mvt</code>) for vector, <code>webp</code> or <code>png</code> for raster. Any other extension gives <code>404</code>." },
 ]} />
 
-The address `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` without `/tiles/` stays valid but is deprecated (marked `deprecated` in the OpenAPI); new clients use `/v1/tiles/…`.
+The former address without `/tiles/` (`/v1/{tileset}/{z}/{x}/{y}.{ext}`) has been removed and answers `404`; clients use `/v1/tiles/…`.
 
 ## Tileset list
 

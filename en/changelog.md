@@ -4,6 +4,12 @@ Changes to data products, APIs and these docs.
 
 ## 08.11.2026
 
+- Changed: error responses (`application/problem+json`) now carry a stable `code`, a `type` URI into the new [error catalog](/en/api/errors/) (instead of `about:blank`) and, where useful, `param` and `allowed`. `title` and `detail` are English, German with `Accept-Language: de`. Unparsable path coordinates (e.g. `/v1/parcel/abc`) now answer `400` instead of `404`.
+- Changed: the OpenAPI description is OpenAPI 3.1, fully English, with response schemas and examples for the main endpoints, a server list, rate-limit description and `/v1/geocode/{q}`.
+- Changed: `overview` for Directions defaults to `simplified` (as in Mapbox, much smaller responses on long routes); `overview=full` returns every vertex as before.
+- New: headers `Server-Timing` (`router`, `search`, `render`, `total`), `ETag` and `Last-Modified` for styles, TileJSON and OpenAPI (conditional requests answer `304`), `RateLimit-Policy` per endpoint group.
+- Removed: the former alias paths `/v1/{tileset}.json` and `/v1/{tileset}/{z}/{x}/{y}.{ext}` (use `/v1/tiles/…`) and `/v1/directions/driving-ev/…`. Both were already blocked at the gateway (`404`).
+
 - Deprecated: the German API identifiers are replaced by English ones. The old names keep working as aliases **until 2027-05-31** (sunset) and return the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"`. All mappings: [Migration to English names](/en/api/migration/).
   - Style IDs: `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`.
   - Tilesets: `basis` → `streets`, `kataster` → `cadastre`, `hoehenlinien` → `contours`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks` (`dtm`, `dsm` stay).

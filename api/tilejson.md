@@ -1,12 +1,12 @@
 # TileJSON
 
-TileJSON 3.0 je Produkt unter /v1/{tileset}.json: Kachel-URL, Zoombereich, Gebiet und Attribution in einer Antwort.
+TileJSON 3.0 je Produkt unter /v1/tiles/{tileset}.json: Kachel-URL, Zoombereich, Gebiet und Attribution in einer Antwort.
 
 TileJSON beschreibt ein Produkt so, dass Kartenclients es ohne weitere Angaben einbinden: MapLibre, Mapbox GL, OpenLayers und QGIS lesen Zoombereich, Gebiet und Attribution daraus. Für Produkte mit neuem Stand bleibt die URL gleich.
 
 ## TileJSON abrufen
 
-**GET https://tiles.mapx.at/v1/{tileset}.json**
+**GET https://tiles.mapx.at/v1/tiles/{tileset}.json**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Produkt, Werte wie bei <a href=\"/api/kacheln/\">Kacheln</a>." },

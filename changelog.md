@@ -4,6 +4,12 @@
 
 ## 08.11.2026
 
+- Geändert: Fehlerantworten (`application/problem+json`) tragen jetzt einen stabilen `code`, einen `type` als URI auf den neuen [Fehlerkatalog](/api/errors/) (statt `about:blank`) und wo sinnvoll `param` und `allowed`. `title` und `detail` sind englisch, mit `Accept-Language: de` deutsch. Nicht lesbare Pfadkoordinaten (z. B. `/v1/parcel/abc`) ergeben `400` statt `404`.
+- Geändert: Die OpenAPI-Beschreibung ist OpenAPI 3.1, vollständig englisch, mit Antwort-Schemas und Beispielen für die wichtigsten Endpunkte, Server-Liste, Rate-Limit-Beschreibung und `/v1/geocode/{q}`.
+- Geändert: `overview` bei Directions ist standardmäßig `simplified` (wie Mapbox, deutlich kleinere Antworten bei langen Routen); `overview=full` liefert wie bisher alle Stützpunkte.
+- Neu: Header `Server-Timing` (`router`, `search`, `render`, `total`), `ETag` und `Last-Modified` für Stile, TileJSON und OpenAPI (bedingte Anfragen mit `304`), `RateLimit-Policy` je Endpunktgruppe.
+- Entfernt: die früheren Alias-Pfade `/v1/{tileset}.json` und `/v1/{tileset}/{z}/{x}/{y}.{ext}` (nutzen Sie `/v1/tiles/…`) sowie `/v1/directions/driving-ev/…`. Beide waren am Gateway bereits gesperrt (`404`).
+
 - Deprecated: Die deutschen Bezeichner der API werden durch englische ersetzt. Die alten Namen funktionieren als Alias **bis zum 31.05.2027** (Sunset) und liefern die Header `Deprecation`, `Sunset` und `Link: …; rel="successor-version"`. Alle Zuordnungen: [Migration auf englische Namen](/api/migration/).
   - Stil-IDs: `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`.
   - Kachelsätze: `basis` → `streets`, `kataster` → `cadastre`, `hoehenlinien` → `contours`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks` (`dtm`, `dsm` bleiben).

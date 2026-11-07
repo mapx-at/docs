@@ -14,7 +14,7 @@ Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }, { v: "driving-truck", d: "truck over 3.5 t" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optional intermediate points and destination as <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Geometry format, <code>geojson</code> returns a GeoJSON line." },
-  { name: "overview", type: "string", desc: "Level of detail of the geometry, for example <code>full</code>." },
+  { name: "overview", type: "string", desc: "Geometry: <code>simplified</code> (default, simplified as in Mapbox), <code>full</code> (every vertex) or <code>false</code> (no geometry)." },
   { name: "steps", type: "boolean", default: "false", desc: "With <code>true</code>, turn instructions in <code>legs[].steps</code>." },
   { name: "language", type: "string", desc: "Language of the instructions, for example <code>de</code>." },
   { name: "alternatives", type: "boolean | integer", default: "false", desc: "<code>true</code> returns up to two more routes in <code>routes[]</code>, a number from 0 to 3 limits the count. Only with exactly two coordinates." },
@@ -38,7 +38,7 @@ Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (sec
 
 **Exclusions:** `exclude=motorway` and `exclude=toll` (also comma separated, profile `driving` only). `motorway` blocks motorways (GIP category A); expressways stay allowed. `toll` blocks the special-toll sections (A9 Gleinalm and Bosruck, A10 Tauern and Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); vignette roads stay allowed, use `motorway` for those. Other values give `400`. If start or destination lies on a blocked section the router finds no route.
 
-**Tolls in the response:** Every car route (`driving`, also `driving-ev`) contains `routes[].toll`: `vignette_required` (at least 300 m on vignette roads), `vignette_m` (metres on vignette roads), `vignette_products[]` (car vignettes with `name` and `amount` in euro), `special_toll[]` (special-toll stations on the way with `name`, `amount`, `location`), `special_toll_total` and `currency`. A toll station counts once per trip even if the data lists several directional sections. Source: ASFINAG, toll information, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The figures apply to cars without trailer; prices are those of the data set for 2026. **Toll links:** Every route also carries `routes[].toll_road` (`true` if it runs over links with the GIP attribute TOLL, i.e. special-toll sections such as A13 Brenner) and `toll_road_m` (metres on them). With `steps=true` each step has `intersections[0].classes` in Mapbox style: `toll` (step touches special-toll links), `motorway`, `ferry`. Vignette roads are not `toll`; they appear in `toll.vignette_*`. The special-toll price is in `toll.special_toll[]`.
+**Tolls in the response:** Every car route (`driving`) contains `routes[].toll`: `vignette_required` (at least 300 m on vignette roads), `vignette_m` (metres on vignette roads), `vignette_products[]` (car vignettes with `name` and `amount` in euro), `special_toll[]` (special-toll stations on the way with `name`, `amount`, `location`), `special_toll_total` and `currency`. A toll station counts once per trip even if the data lists several directional sections. Source: ASFINAG, toll information, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The figures apply to cars without trailer; prices are those of the data set for 2026. **Toll links:** Every route also carries `routes[].toll_road` (`true` if it runs over links with the GIP attribute TOLL, i.e. special-toll sections such as A13 Brenner) and `toll_road_m` (metres on them). With `steps=true` each step has `intersections[0].classes` in Mapbox style: `toll` (step touches special-toll links), `motorway`, `ferry`. Vignette roads are not `toll`; they appear in `toll.vignette_*`. The special-toll price is in `toll.special_toll[]`.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
@@ -57,29 +57,6 @@ Profile `driving-truck` (`/v1/directions/driving-truck/{coordinates}`, also `iso
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-truck/14.29,48.30;16.37,48.21?steps=true&weight=26&height=3.6&width=2.55&length=16.5"`} />
 
-
-## EV routing
-
-> Until the terms of use of the E-Control charging data are settled the endpoint answers `404`.
-
-
-**GET https://api.mapx.at/v1/directions/driving-ev/{coordinates}**
-
-Exactly start and destination. The car route is computed; if the range is too short the service picks charging stations along the route and routes via them. Linear range model: constant consumption per kilometre, start with a full battery, charge up to `ev_charge_to`, never arrive below `ev_reserve`.
-
-<ParamTable params={[
-  { name: "ev_range_km", type: "number", desc: "Required. Range on a full battery in km (1 to 1500)." },
-  { name: "ev_charge_kw_min", type: "number", default: "50", desc: "Minimum charging power of stations in kW." },
-  { name: "ev_battery_kwh", type: "number", default: "60", desc: "Battery size, used for charging time." },
-  { name: "ev_charge_kw_max", type: "number", default: "100", desc: "Highest charging power of the vehicle in kW." },
-  { name: "ev_charge_to", type: "number", default: "0.8", desc: "Charge target as share of the battery." },
-  { name: "ev_reserve", type: "number", default: "0.1", desc: "Reserve on arrival as share of the battery." },
-  { name: "steps, language", type: "", desc: "as for Directions." },
-]} />
-
-The response is a Directions response, each entry of `legs[]` ends at a charging station. `routes[0].ev` holds `stops[]` (`id`, `name`, `location`, `max_kw`, `along_m`, `offset_m`, `soc_arrival`, `soc_departure`, `charge_s`), `drive_s`, `charge_s` and `total_s`. The route `duration` is driving time only, `ev.total_s` includes charging. If a stage has no station the service answers `400` and names the section. Stations more than 3 km from the route are not used. Data source: E-Control charging station directory.
-
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-ev/16.37,48.21;11.40,47.27?ev_range_km=300&ev_charge_kw_min=100"`} />
 
 ## Isochrone
 
@@ -148,7 +125,7 @@ Finds the best order for 2 to 25 points (travelling salesman, Mapbox Optimizatio
   { name: "roundtrip", type: "boolean", default: "true", desc: "With <code>true</code> the trip returns to the start. With <code>destination=last</code>, <code>source=first</code> is required; the path from the first to the last point is searched and the way back to the start is added." },
   { name: "steps", type: "boolean", default: "false", desc: "Turn instructions in <code>legs[].steps</code>." },
   { name: "geometries", type: "string", default: "geojson", desc: "<code>geojson</code>, <code>polyline</code> or <code>polyline6</code>." },
-  { name: "overview", type: "string", desc: "<code>false</code> omits the geometry." },
+  { name: "overview", type: "string", desc: "<code>simplified</code> (default), <code>full</code> or <code>false</code> (no geometry)." },
   { name: "language", type: "string", default: "de", desc: "<code>de</code> or <code>en</code>." },
 ]} />
 

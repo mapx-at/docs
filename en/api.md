@@ -14,10 +14,10 @@ All APIs follow the same rules:
 
 | API | Endpoint | Purpose |
 |---|---|---|
-| [Tiles](/en/api/kacheln/) | `GET tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` | raster, elevation and vector tiles |
+| [Tiles](/en/api/kacheln/) | `GET tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}` | raster, elevation and vector tiles |
 | [PMTiles](/en/api/kacheln/#pmtiles-file) | `GET tiles.mapx.at/<file>.pmtiles` | whole product as one file, via HTTP range |
 | [Tileset list](/en/api/tiles/#tileset-list) | `GET api.mapx.at/v1/tiles` | all tilesets with name, TileJSON URL, attribution, data date |
-| [TileJSON](/en/api/tilejson/) | `GET tiles.mapx.at/v1/{tileset}.json` | product description for map clients |
+| [TileJSON](/en/api/tilejson/) | `GET tiles.mapx.at/v1/tiles/{tileset}.json` | product description for map clients |
 
 ## Elevation
 

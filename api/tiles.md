@@ -12,7 +12,7 @@ Jeder Kachelsatz (Basiskarte, Kataster, Höhenlinien, DTM, DSM, Orthophoto, Flug
   { name: "ext", type: "string", required: true, desc: "Passend zum Kachelsatz: <code>pbf</code> (Alias <code>mvt</code>) für Vektor, <code>webp</code> oder <code>png</code> für Raster. Eine andere Endung ergibt <code>404</code>." },
 ]} />
 
-Die Adresse `tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}` ohne `/tiles/` bleibt gültig, ist aber veraltet (in der OpenAPI als `deprecated` markiert); neue Clients verwenden `/v1/tiles/…`.
+Die frühere Adresse ohne `/tiles/` (`/v1/{tileset}/{z}/{x}/{y}.{ext}`) wurde entfernt und antwortet mit `404`; Clients verwenden `/v1/tiles/…`.
 
 ## Tileset-Liste
 

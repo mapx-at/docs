@@ -1,12 +1,12 @@
 # TileJSON
 
-TileJSON 3.0 per product at /v1/{tileset}.json: tile URL, zoom range, bounds and attribution in one response.
+TileJSON 3.0 per product at /v1/tiles/{tileset}.json: tile URL, zoom range, bounds and attribution in one response.
 
 TileJSON describes a product so that map clients can add it without further settings: MapLibre, Mapbox GL, OpenLayers and QGIS read zoom range, bounds and attribution from it. The URL stays the same when a product gets a new release.
 
 ## Retrieve TileJSON
 
-**GET https://tiles.mapx.at/v1/{tileset}.json**
+**GET https://tiles.mapx.at/v1/tiles/{tileset}.json**
 
 <ParamTable params={[
   { name: "tileset", type: "string", required: true, desc: "Product, values as for <a href=\"/en/api/kacheln/\">Tiles</a>." },
