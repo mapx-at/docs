@@ -2,7 +2,7 @@
 
 Directions, Isochrone, Matrix und Map Matching auf dem GIP.at-Netz für Fuß, Rad und Auto.
 
-Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC BY 4.0). Die Endpunkte folgen der Mapbox-Form, `/v1/...` mit dem Profil im Pfad, und brauchen kein Zugangstoken. Profile: `walking`, `cycling`, `driving` (ein Präfix `mapbox/` wird akzeptiert). Koordinaten stehen als `lon,lat` im Pfad, mehrere Punkte mit `;` getrennt.
+Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC BY 4.0). Die Endpunkte folgen der Mapbox-Form, `/v1/...` mit dem Profil im Pfad, und brauchen kein Zugangstoken. Profile: `walking`, `cycling`, `driving`, `driving-traffic` (Auto mit aktueller Verkehrslage und Sperren, siehe [Verkehr](/api/traffic/); ein Präfix `mapbox/` wird akzeptiert). Koordinaten stehen als `lon,lat` im Pfad, mehrere Punkte mit `;` getrennt.
 
 ## Directions
 
@@ -11,7 +11,7 @@ Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC
 Gleichwertig: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "walking", d: "zu Fuß" }, { v: "cycling", d: "Rad" }, { v: "driving", d: "Auto" }] },
+  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "walking", d: "zu Fuß" }, { v: "cycling", d: "Rad" }, { v: "driving", d: "Auto" }, { v: "driving-traffic", d: "Auto mit Verkehrslage und Sperren" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optionale Zwischenpunkte und Ziel als <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Format der Geometrie, <code>geojson</code> liefert eine GeoJSON-Linie." },
   { name: "overview", type: "string", desc: "Detailgrad der Geometrie, zum Beispiel <code>full</code>." },

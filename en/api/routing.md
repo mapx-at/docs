@@ -2,7 +2,7 @@
 
 Directions, isochrones, matrix and map matching on the GIP.at network for walking, cycling and driving.
 
-The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 4.0). The endpoints follow the Mapbox shape, `/v1/...` with the profile in the path, and need no access token. Profiles: `walking`, `cycling`, `driving` (a `mapbox/` prefix is accepted). Coordinates appear in the path as `lon,lat`, several points separated by `;`.
+The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 4.0). The endpoints follow the Mapbox shape, `/v1/...` with the profile in the path, and need no access token. Profiles: `walking`, `cycling`, `driving`, `driving-traffic` (car with current traffic and closures, see [Traffic](/en/api/traffic/)) (a `mapbox/` prefix is accepted). Coordinates appear in the path as `lon,lat`, several points separated by `;`.
 
 ## Directions
 
@@ -11,7 +11,7 @@ The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 
 Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }] },
+  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optional intermediate points and destination as <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Geometry format, <code>geojson</code> returns a GeoJSON line." },
   { name: "overview", type: "string", desc: "Level of detail of the geometry, for example <code>full</code>." },
