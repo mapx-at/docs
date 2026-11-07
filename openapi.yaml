@@ -13,7 +13,7 @@ paths:
     get:
       operationId: getElevation
       summary: Höhe für Punkte oder Profil entlang eines Pfads
-      description: Entweder `points` oder `path` (mit `samples`) angeben.
+      description: Entweder `points` (höchstens 512) oder `path` (2 bis 512 Stützpunkte, mit `samples`) angeben. Außerhalb der Daten ist `elevation` null.
       parameters:
         - name: points
           in: query
@@ -26,7 +26,7 @@ paths:
         - name: samples
           in: query
           description: Anzahl gleichmäßig verteilter Messpunkte entlang `path`.
-          schema: { type: integer, minimum: 2 }
+          schema: { type: integer, minimum: 2, maximum: 1024, default: 100 }
         - name: model
           in: query
           schema: { type: string, enum: [dtm, dsm], default: dtm }
@@ -39,8 +39,8 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/ElevationCollection" }
         "400": { $ref: "#/components/responses/Problem" }
-        "404": { $ref: "#/components/responses/Problem" }
         "429": { $ref: "#/components/responses/Problem" }
+        "503": { $ref: "#/components/responses/Problem" }
 components:
   responses:
     Problem:
@@ -71,8 +71,9 @@ components:
                 type: object
                 required: [elevation, resolution_m, model, stichtag]
                 properties:
-                  elevation: { type: number, description: Höhe in Metern. }
-                  resolution_m: { type: number, description: Pixelgröße der benutzten Kachelstufe in Metern. }
+                  elevation: { type: [number, "null"], description: Höhe in Metern (0,1 m gerundet), null außerhalb der Daten. }
+                  resolution_m: { type: number, description: Rasterweite der Quelle in Metern. }
+                  distance_m: { type: number, description: Nur bei `path` Strecke vom Pfadanfang in Metern. }
                   model: { type: string, enum: [dtm, dsm] }
                   stichtag: { type: string, description: Stichtag der Quelldaten (ISO 8601 Datum). }
     Problem:
