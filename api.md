@@ -41,6 +41,8 @@ Alle APIs folgen denselben Regeln:
 | [Isochrone](/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | Erreichbarkeitsflächen |
 | [Matrix](/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | Fahrzeiten zwischen vielen Orten |
 | [Map Matching](/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS-Spur auf das Wegenetz |
+| [Optimierte Reihenfolge](/api/routing/#optimierte-reihenfolge) | `GET api.mapx.at/v1/optimized-trips/{profile}/{coordinates}` | beste Reihenfolge für bis zu 25 Stopps |
+| [Tourenplanung](/api/optimization/) | `POST api.mapx.at/v1/optimization` | Touren für mehrere Fahrzeuge mit Kapazität und Zeitfenstern |
 
 Alle Endpunkte laufen unter `https://api.mapx.at/v1/` ohne Zugangstoken. [Beispiele](/beispiele/) zeigen jeden Weg live.
 

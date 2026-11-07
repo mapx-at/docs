@@ -17,9 +17,18 @@ Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "overview", type: "string", desc: "Level of detail of the geometry, for example <code>full</code>." },
   { name: "steps", type: "boolean", default: "false", desc: "With <code>true</code>, turn instructions in <code>legs[].steps</code>." },
   { name: "language", type: "string", desc: "Language of the instructions, for example <code>de</code>." },
+  { name: "alternatives", type: "boolean | integer", default: "false", desc: "<code>true</code> returns up to two more routes in <code>routes[]</code>, a number from 0 to 3 limits the count. Only with exactly two coordinates." },
+  { name: "annotations", type: "string", desc: "<code>duration</code>, <code>distance</code>, <code>speed</code>, comma-separated. Returns <code>legs[].annotation</code> with one value per geometry segment (seconds, metres, metres per second)." },
+  { name: "radiuses", type: "string", desc: "Search radius for snapping to the network per coordinate in metres, separated by <code>;</code>, or <code>unlimited</code>." },
+  { name: "approaches", type: "string", desc: "<code>unrestricted</code> or <code>curb</code> per coordinate. Validated, but not yet used by the router." },
+  { name: "bearings", type: "string", desc: "<code>degrees,tolerance</code> per coordinate, separated by <code>;</code> (empty leaves a point free). Validated, but not yet used by the router." },
 ]} />
 
 Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (seconds), `legs` and `geometry`.
+
+**Alternatives** come from laterally offset via points: the router computes start → via point → destination for ten points along the fastest route and keeps paths that take at most 1.4 times as long, contain no U-turn and share at most 70 percent with the main route and with each other. `routes[0]` is always the fastest route, the others follow by duration. The request costs several times a plain route against the rate limit.
+
+**Exclusions** (`exclude=motorway|toll|…`) are not available yet because the router has none; the request is rejected with `400`.
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/cycling/15.33,48.23;15.34,48.24?geometries=geojson&overview=full"`} />
 
@@ -77,6 +86,32 @@ Snaps a GPS trace to the road network.
 Response: `matchings[]` with `geometry`, `distance`, `duration` and `confidence`, plus `tracepoints` (snapped point or `null`).
 
 <Code lang="bash" code={`curl "https://api.mapx.at/v1/matching/driving/15.33019,48.2299;15.3295,48.229?geometries=geojson"`} />
+
+## Optimized trips
+
+**GET https://api.mapx.at/v1/optimized-trips/{profile}/{coordinates}**
+
+Finds the best order for 2 to 25 points (travelling salesman, Mapbox Optimization API v1) and returns the route in that order. Up to 12 points are solved exactly, beyond that with nearest neighbour, 2-opt and Or-opt on the travel-time matrix.
+
+<ParamTable params={[
+  { name: "profile", type: "string", required: true, desc: "As above." },
+  { name: "coordinates", type: "string", required: true, desc: "2 to 25 places as <code>lon,lat;lon,lat;…</code>." },
+  { name: "source", type: "string", default: "any", desc: "<code>first</code>: the first point is the start. <code>any</code>: any start." },
+  { name: "destination", type: "string", default: "any", desc: "<code>last</code>: the last point is the end. <code>any</code>: any end." },
+  { name: "roundtrip", type: "boolean", default: "true", desc: "With <code>true</code> the trip returns to the start. With <code>destination=last</code>, <code>source=first</code> is required; the path from the first to the last point is searched and the way back to the start is added." },
+  { name: "steps", type: "boolean", default: "false", desc: "Turn instructions in <code>legs[].steps</code>." },
+  { name: "geometries", type: "string", default: "geojson", desc: "<code>geojson</code>, <code>polyline</code> or <code>polyline6</code>." },
+  { name: "overview", type: "string", desc: "<code>false</code> omits the geometry." },
+  { name: "language", type: "string", default: "de", desc: "<code>de</code> or <code>en</code>." },
+]} />
+
+Response: `trips[]` with one route (`distance`, `duration`, `legs`, `geometry`) and `waypoints[]` in input order. Each entry has `waypoint_index` (position in the trip) and `trips_index` (always 0). If points are not connected, the answer is `422`.
+
+<Code lang="bash" code={`curl "https://api.mapx.at/v1/optimized-trips/driving/15.3338,48.2279;15.2065,48.2111;15.0864,48.1696;15.3969,48.2339?source=first&roundtrip=true"`} />
+
+Like matrix and isochrone, the request counts as expensive.
+
+For tours with several vehicles, capacities and time windows see [Vehicle routing](/en/api/optimization/).
 
 ## Errors and limits
 
