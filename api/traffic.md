@@ -1,90 +1,569 @@
-# Verkehr
+# Traffic API
 
-Ereignismeldungen (Unfälle, Baustellen, Sperren), Verkehrsregelungen, Wechselverkehrszeichen und Routing mit Sperren aus offiziellen österreichischen Quellen.
+Traffic incidents, motorway speed limits, signs and traffic tiles.
 
-Die Verkehrs-API liefert Ereignismeldungen (Unfälle, Baustellen, Sperren mit Zeitraum) und Verkehrsregelungen für ganz Österreich, den Stand der ASFINAG-Wechselverkehrszeichen auf Autobahnen und Schnellstraßen als GeoJSON oder Vektorkacheln und das Routing-Profil `driving-traffic`, das Sperren umfährt. Kein Schlüssel, CORS offen.
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-> Quellen: **EVIS.AT** der ASFINAG (Ereignisse geplant und ungeplant, Verkehrsregelungen von Ländern, Städten, Polizei und ASFINAG; CC BY 4.0 nach Registrierung) und die **Wechselverkehrszeichen** der ASFINAG (CC BY 4.0). Das Wegenetz stammt von [GIP.at](https://www.gip.at) (CC BY 4.0). Namensnennung: „Verkehrsdaten: ASFINAG / EVIS.AT“. Jede Antwort enthält das Feld `attribution`.
-> 
-> Meldungen mit `mandatory: true` (EVIS `compliance-option` mandatory) und alle Verkehrsregelungen sind verbindlich: der Router behandelt sie als Sperre, und Karten müssen sie unverändert darstellen (Text `text` nicht kürzen oder umdeuten). Nicht verwendet werden die kostenpflichtigen EVIS-Daten zur flächigen Verkehrslage, Prognose und Ganglinien; es gibt daher keine Staustufen.
+Incident reports (accidents, roadworks, closures), speed limits shown on motorway gantries and a vector layer for maps.
 
-EVIS wird zentral im Routing-Dienst abgerufen (Prüfsumme alle 2 Minuten, Daten nur bei Änderung), die Wechselverkehrszeichen alle 2 Minuten. Anfragen an die mapx-API belasten die Quellen nicht.
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `static` (5/s) · Guide: [Traffic](/guides/traffic/)
 
-## Ereignismeldungen
+## Speed limits of variable message signs on motorways (GeoJSON)
 
-**GET https://api.mapx.at/v1/traffic/incidents**
+`GET /v1/traffic/flow`
 
-<ParamTable params={[
-  { name: "bbox", type: "string", desc: "<code>west,süd,ost,nord</code> in Grad. Ohne <code>bbox</code> kommen alle Meldungen, auch die ohne Ortsangabe." },
-  { name: "planned", type: "boolean", desc: "<code>true</code> nur geplante, <code>false</code> nur ungeplante Ereignisse." },
-  { name: "road", type: "string", desc: "Straßennummer, zum Beispiel <code>A12</code>." },
-  { name: "active", type: "boolean", default: "true", desc: "<code>false</code> liefert auch beendete und künftige Meldungen (Standard, sobald <code>from</code> oder <code>to</code> gesetzt ist)." },
-  { name: "type", type: "string", desc: "Kommagetrennt: <code>road_closure</code>, <code>construction</code>, <code>lane_restriction</code>, <code>accident</code>, <code>congestion</code>, <code>road_hazard</code>, <code>miscellaneous</code>." },
-  { name: "from, to", type: "string", desc: "Zeitfenster in UTC, <code>YYYY-MM-DD</code> oder <code>YYYY-MM-DDTHH:MMZ</code>: Meldungen, deren Zeitraum das Fenster berührt." },
-  { name: "route", type: "string", desc: "Nur Meldungen entlang einer Route: Encoded Polyline (wie <code>geometries=polyline6</code>) oder GeoJSON-<code>LineString</code>. Berücksichtigt die Fahrtrichtung; sortiert nach Lage auf der Route." },
-  { name: "route_precision", type: "number", default: "6", desc: "Präzision der Polyline, 5 oder 6." },
-  { name: "buffer", type: "number", default: "25", desc: "Korridorbreite je Seite in Meter (1 bis 1000)." },
-  { name: "limit, offset", type: "number", default: "200, 0", desc: "Seitenweise Abfrage, <code>limit</code> höchstens 1000. Die Antwort nennt <code>total</code> und, falls weitere folgen, <code>next_offset</code>." },
-]} />
+Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No area-wide traffic state (the paid source is not used). Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
-Lange Routen passen nicht in eine URL: dieselben Parameter gehen auch als JSON-Objekt per `POST` (dort darf `route` ein GeoJSON-Objekt sein).
+**Parameters**
 
-Antwort: GeoJSON `FeatureCollection` mit der Geometrie entlang der GIP-Kanten (`LineString` oder `MultiLineString`).
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `bbox` | query | string | yes | – | west,south,east,north in degrees (WGS84) |
 
-<ParamTable kind="response" params={[
-  { name: "type, impact", type: "string", desc: "Typ im Mapbox-Wortschatz (siehe <code>type</code>) und Schwere: <code>critical</code> (gesperrt), <code>major</code> (verbindlich, Fahrstreifen, Unfall), <code>minor</code>, <code>low</code> (geplant). Von mapx aus Art und Sperrangabe abgeleitet." },
-  { name: "geometry_index_start, geometry_index_end", type: "number", desc: "Nur mit <code>route</code>: betroffene Stützpunkte der übergebenen Route." },
-  { name: "kind, category", type: "string", desc: "Art, zum Beispiel <code>Straßensperre</code>, <code>Bauarbeiten</code>, <code>Unfall</code>, <code>Verkehrssteuerungsmaßnahme</code>." },
-  { name: "mandatory", type: "boolean", desc: "Verbindliche Meldung: gilt im Routing als Sperre." },
-  { name: "both_directions", type: "boolean", desc: "Wirkt in beiden Fahrtrichtungen." },
-  { name: "text", type: "string", desc: "Meldungstext der ASFINAG." },
-  { name: "road", type: "string", desc: "Straßennummer." },
-  { name: "planned, closed", type: "boolean", desc: "Geplantes Ereignis, Straße vollständig gesperrt." },
-  { name: "start, end, updated", type: "string", desc: "Zeitraum und letzte Änderung, UTC." },
-]} />
+**Example**
 
-<Code lang="bash" code={`# Meldungen auf der A12 (Inntal)
-curl "https://api.mapx.at/v1/traffic/incidents?road=A12"
+<Tabs syncKey="lang">
+<TabItem label="curl">
 
-# Sperren und Baustellen im Dezember rund um Linz
-curl "https://api.mapx.at/v1/traffic/incidents?bbox=14.1,48.2,14.5,48.4&type=road_closure,construction&from=2026-12-01&to=2026-12-31"
+```bash
+curl -s "https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5" | jq
+```
 
-# Meldungen entlang einer Route (Geometrie aus /v1/directions mit geometries=polyline6)
-curl -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" \\
-  -d '{"route": {"type": "LineString", "coordinates": [[16.37, 48.21], [16.30, 48.19]]}, "buffer": 30}'`} />
+</TabItem>
+<TabItem label="JavaScript">
 
-## Tempolimits (Wechselverkehrszeichen)
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5");
+const data = await res.json();
+```
 
-**GET https://api.mapx.at/v1/traffic/flow**
+</TabItem>
+<TabItem label="Python">
 
-<ParamTable params={[
-  { name: "bbox", type: "string", required: true, desc: "<code>west,süd,ost,nord</code> in Grad." },
-]} />
+```python
 
-Autobahn- und Schnellstraßen-Kanten, auf denen ein Wechselverkehrszeichen mit Position ein Tempolimit unter der freien Geschwindigkeit anzeigt (`speed_kmh`, `free_kmh`, `level` 0 bis 3 nach Verhältnis). Das Limit gilt im Router auf der Kante am Schild, nicht auf der ganzen Strecke bis zum nächsten Zeichen.
+res = requests.get("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5")
+data = res.json()
+```
 
-## Vektorkacheln und Stil
+</TabItem>
+</Tabs>
 
-**GET https://api.mapx.at/v1/traffic/tiles.json**
+**Example response**
 
-Die Kacheln `/v1/traffic/tiles/{z}/{x}/{y}.pbf` (Zoom 5 bis 14, 60 Sekunden Cache) enthalten die Ebenen `traffic` (`level`, `speed`, `free`) und `incidents` (`kind`, `text`, `road`, `planned`, `closed`). Die Stile `streets*` enthalten die Ebenen `verkehr-*` ausgeblendet (`visibility: none`); der Stil `traffic-day` zeigt sie. Zum Einblenden: `map.setLayoutProperty("verkehr-lage", "visibility", "visible")` für alle Ebenen mit Präfix `verkehr-`. Im Viewer auf mapx.at schaltet „Ebenen → Verkehr“ die Ebenen ein (standardmäßig aus).
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            16.3,
+            48.1
+          ],
+          [
+            16.31,
+            48.11
+          ]
+        ]
+      },
+      "properties": {
+        "link": 4711,
+        "forward": true,
+        "speed_kmh": 80,
+        "free_kmh": 130,
+        "level": 2,
+        "travel_time_s": 48,
+        "time": "2026-11-08T11:55:00Z"
+      }
+    }
+  ]
+}
+```
 
-## Routing mit Sperren
+**Errors** (details: [error catalog](/api/errors/))
 
-Das Profil `driving-traffic` gilt für `directions`, `matrix` und `isochrone`. Verbindliche Sperren (EVIS `mandatory`, Verkehrsregelungen für Pkw) sind gesperrt. Unverbindliche Straßensperren und zeitlich bedingte Regelungen (Wochentage und Uhrzeiten stehen nur im Text) werden stark gemieden, bleiben aber befahrbar, damit das Netz zusammenhängt; die Fahrzeit bleibt unverändert. Tempolimits der Wechselverkehrszeichen verlängern die Fahrzeit. Es gibt keine flächige Verkehrslage: übrige Kanten behalten die Standardgewichte. Der Router rechnet ohne Contraction Hierarchies und ist langsamer als `driving`; ohne Datenstand antwortet er mit `503`.
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/driving-traffic/10.74,47.24;10.66,47.07"`} />
+## Incident reports and traffic regulations (EVIS.AT): accidents, roadworks, closures with time span
 
-**Meldungen in der Route:** Bei `driving-traffic` (und mit `incidents=true` auch bei `driving`) enthält jede Teilstrecke `routes[].legs[].incidents` in Mapbox-Form: `id`, `type`, `description` (Meldungstext unverändert), `sub_type` (Art laut Quelle), `geometry_index_start` und `geometry_index_end` (Stützpunkte der Teilstrecke), `closed`, `impact`, `mandatory`, `start_time`, `end_time`, `creation_time`, `affected_road_names`. Berücksichtigt werden aktive Meldungen in Fahrtrichtung bis 25 m neben der Route. `incidents=false` schaltet das ab. Quellenangabe in `incidents_attribution`.
+`GET /v1/traffic/incidents`
 
-## Wechselverkehrszeichen
+Active reports (`active=false`: also ended and future), filterable by area, route, type and time window, paged (`limit`/`offset`, `total`, `next_offset`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
-**GET https://api.mapx.at/v1/traffic/signs**
+**Parameters**
 
-Aktueller Zustand der ASFINAG-Wechselverkehrszeichen: `speed_kmh` (angezeigtes Tempolimit), `pictogram`, `text` (Zusatztexte), `image` (Bild der ASFINAG), `working`. Die Quelle nennt eine Position nur bei einem kleinen Teil der Anlagen (rund 40 von 5300); die übrigen verweisen auf die Anlagentabelle der ASFINAG und erscheinen nur in `total_signs`. Optional `bbox`.
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `bbox` | query | string |  | – | west,south,east,north; optional |
+| `planned` | query | string |  | – | true: planned only, false: unplanned only |
+| `road` | query | string |  | – | Road number, e.g. A12 |
+| `active` | query | string |  | `with from/to` | false: also inactive (default with from/to) |
+| `type` | query | string |  | – | Comma-separated: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
+| `from` | query | string |  | – | Window start (UTC, YYYY-MM-DD or YYYY-MM-DDTHH:MM[:SS]Z): incidents still valid afterwards |
+| `to` | query | string |  | – | Window end (UTC): incidents starting before |
+| `route` | query | string |  | – | Route corridor: encoded polyline (like geometries=polyline6 or polyline) or GeoJSON LineString; result sorted by position on the route |
+| `route_precision` | query | string |  | – | 6 (default) or 5 |
+| `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
+| `limit` | query | string |  | `200` | At most this many features, 0 to 1000, default 200 |
+| `offset` | query | string |  | – | Skip features (paging) |
 
-## Status
+**Example**
 
-**GET https://api.mapx.at/v1/traffic/status**
+<Tabs syncKey="lang">
+<TabItem label="curl">
 
-Zeigt Stand der Daten (`fetched`), Zahl der Meldungen und Abschnitte sowie die im Router gesperrten und verlangsamten Kanten.
+```bash
+curl -s "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "total": 1,
+  "next_offset": null,
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            16.3,
+            48.19
+          ],
+          [
+            16.31,
+            48.2
+          ]
+        ]
+      },
+      "properties": {
+        "type": "road_closure",
+        "impact": "closed",
+        "kind": "roadworks",
+        "text": "A23: Sperre Richtung Wien",
+        "road": "A23",
+        "planned": true,
+        "closed": true,
+        "mandatory": true,
+  …
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Like GET, parameters as JSON object (for long routes)
+
+`POST /v1/traffic/incidents`
+
+Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString.
+
+**Request body (JSON)**
+
+```json
+{
+  "route": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        16.37,
+        48.21
+      ],
+      [
+        16.3,
+        48.19
+      ]
+    ]
+  },
+  "type": "road_closure,construction",
+  "limit": 50
+}
+```
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
+  -H "Content-Type: application/json" \
+  -d '{"route":{"type":"LineString","coordinates":[[16.37,48.21],[16.3,48.19]]},"type":"road_closure,construction","limit":50}' | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/incidents", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    "route": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          16.37,
+          48.21
+        ],
+        [
+          16.3,
+          48.19
+        ]
+      ]
+    },
+    "type": "road_closure,construction",
+    "limit": 50
+  }),
+});
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.post("https://api.mapx.at/v1/traffic/incidents", json={
+    "route": {
+      "type": "LineString",
+      "coordinates": [
+        [
+          16.37,
+          48.21
+        ],
+        [
+          16.3,
+          48.19
+        ]
+      ]
+    },
+    "type": "road_closure,construction",
+    "limit": 50
+  })
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "total": 1,
+  "next_offset": null,
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            16.3,
+            48.19
+          ],
+          [
+            16.31,
+            48.2
+          ]
+        ]
+      },
+      "properties": {
+        "type": "road_closure",
+        "impact": "closed",
+        "kind": "roadworks",
+        "text": "A23: Sperre Richtung Wien",
+        "road": "A23",
+        "planned": true,
+        "closed": true,
+        "mandatory": true,
+  …
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `405` | Method not allowed |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Variable message signs (ASFINAG) with position
+
+`GET /v1/traffic/signs`
+
+Current state: speed limit, pictogram, additional text. Only installations with a position in the source (about 40 of roughly 5300); the fields `total_signs` and `located_signs` give the numbers. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `bbox` | query | string |  | – | west,south,east,north; optional |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "total_signs": 5300,
+  "located_signs": 40,
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3,
+          48.1
+        ]
+      },
+      "properties": {
+        "working": true,
+        "speed_kmh": 100,
+        "pictogram": "speed",
+        "text": "",
+        "time": "2026-11-08T11:55:00Z"
+      }
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## TileJSON of traffic tiles
+
+`GET /v1/traffic/tiles.json`
+
+Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incidents` (kind, text, road, planned, closed, mandatory).
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/traffic/tiles.json" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/tiles.json");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/traffic/tiles.json")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "tilejson": "3.0.0",
+  "tiles": [
+    "https://api.mapx.at/v1/traffic/tiles/{z}/{x}/{y}.pbf"
+  ],
+  "minzoom": 5,
+  "maxzoom": 14
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Traffic vector tile (MVT)
+
+`GET /v1/traffic/tiles/{z}/{x}/{y}.pbf`
+
+Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `z` | path | integer | yes | – | 5 to 14 |
+| `x` | path | integer | yes | – | Column |
+| `y` | path | string | yes | – | Row, with .pbf |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf");
+const blob = await res.blob();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf")
+open("result.bin", "wb").write(res.content)
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## State of the traffic data
+
+`GET /v1/traffic/status`
+
+
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/traffic/status" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/traffic/status");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/traffic/status")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "available": true,
+  "incidents": 120,
+  "flow_segments": 900,
+  "slowed_arcs": 310,
+  "closed_arcs": 14
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Playground
+
+<Playground group="traffic" lang="en" />

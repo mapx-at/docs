@@ -1,57 +1,193 @@
-# Tilequery und Grundstück
+# Tilequery and Parcel API
 
-Vektor-Features im Umkreis eines Punkts mit Abstand (wie Mapbox Tilequery), dazu Grundstück und Höhe an einem Punkt.
+Features around a point from any vector tileset, and the parcel at a point.
 
-Tilequery beantwortet „Was liegt an diesem Punkt?“, ohne Kacheln selbst zu laden und zu zerlegen. Der Server liest die Vektorkachel auf der höchsten Zoomstufe des Tilesets (bei Radius auch die Nachbarkacheln), berechnet den Abstand in Metern und liefert GeoJSON im Stil von Mapbox. Kein Schlüssel, CORS offen.
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-## Tilequery
+Tilequery returns the vector features near a coordinate. Parcel returns the cadastral parcel (area, number, cadastral municipality) at a point.
 
-**GET https://api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json**
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Parcels](/guides/parcels/)
 
-`tileset` ist ein Name aus der [Kachel-Liste](/api/kacheln/) (zum Beispiel `streets`, `cadastre`, `contours`; die früheren Namen `basis`, `kataster`, `hoehenlinien` gelten bis 31.05.2027 als Alias, siehe [Migration](/api/migration/)). Mehrere Tilesets gehen kommagetrennt (höchstens 15): `streets,cadastre`. Alle Namen liefert `GET https://api.mapx.at/v1/tiles` ([Tileset-Liste](/api/tiles/#tileset-liste)).
+## Tilequery: vector features around a point
 
-<ParamTable params={[
-  { name: "radius", type: "number", default: "0", desc: "Umkreis in Metern, 0 bis 2000. Bei 0 kommen nur Features, die den Punkt enthalten (Polygone)." },
-  { name: "limit", type: "integer", default: "5", desc: "Anzahl Treffer, 1 bis 50." },
-  { name: "layers", type: "string", desc: "Kommagetrennte Ebenennamen, zum Beispiel <code>building_a,road_l</code>." },
-  { name: "geometry", type: "string", desc: "Nur eine Geometrieart", values: [{ v: "point", d: "Punkte" }, { v: "linestring", d: "Linien" }, { v: "polygon", d: "Flächen" }] },
-  { name: "dedupe", type: "boolean", default: "true", desc: "Dubletten entfernen, die durch Kachelgrenzen entstehen (gleiche Ebene und ID, sonst gleiche Eigenschaften)." },
-]} />
+`GET /v1/tilequery/{tilesets}/{coordinate}.json`
 
-Die Antwort ist eine `FeatureCollection`, das nächste Feature zuerst. Jedes Feature trägt seine Kachel-Attribute und zusätzlich `properties.tilequery`:
+Reads the vector tile at the tileset's highest zoom (and neighbouring tiles for a radius). FeatureCollection, nearest feature first, `properties.tilequery = {distance (m), geometry (point|linestring|polygon), layer}`. Polygons containing the point have distance 0.
 
-<ParamTable kind="response" params={[
-  { name: "tilequery.distance", type: "number", desc: "Abstand zum Punkt in Metern (0,1 m). Polygone, die den Punkt enthalten, haben 0." },
-  { name: "tilequery.geometry", type: "string", desc: "<code>point</code>, <code>linestring</code> oder <code>polygon</code>." },
-  { name: "tilequery.layer", type: "string", desc: "Name der Ebene." },
-  { name: "tilequery.tileset", type: "string", desc: "Nur bei mehreren Tilesets." },
-]} />
+<details>
+<summary>More</summary>
 
-Die Geometrien sind wie in der Kachel auf den Kachelrand zugeschnitten. Mit `dtm` oder `dsm` als Tileset kommt die Höhe als Punkt-Feature (`properties.elevation`).
+Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the height as a point feature. Geometries are clipped to the tile.
 
-<Code lang="bash" code={`# Gebäude und Wege im Umkreis von 30 m um den Melker Stiftsplatz
-curl "https://api.mapx.at/v1/tilequery/streets/15.3338,48.2279.json?radius=30&layers=building_a,road_l"`} />
+</details>
 
-## Grundstück am Punkt
+**Parameters**
 
-**GET https://api.mapx.at/v1/parcel/{lon},{lat}.json**
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `tilesets` | path | string | yes | – | Tileset names, comma-separated (at most 15), e.g. `streets,cadastre` |
+| `coordinate` | path | string | yes | – | lon,lat (the path ends in `.json`) |
+| `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
+| `limit` | query | string |  | `5` | 1 to 50, default 5 |
+| `layers` | query | string |  | – | Comma-separated layer names |
+| `geometry` | query | string |  | – | point, linestring or polygon |
+| `dedupe` | query | string |  | – | true (default) removes duplicates across tile borders |
 
-Liefert das Grundstück, das den Punkt enthält, als Polygon mit `parcel_number` (Grundstücksnummer; Bauparzellen beginnen mit einem Punkt, zum Beispiel `.14`), `cadastral_municipality_id` (Katastralgemeinde-Nummer), `area_m2` (Fläche in m²), `is_building_land` und `source`. Quelle ist die DKM des BEV (Stand der Kachelebene `cadastre`). Die früheren Felder `gstnr`, `kgnr`, `bauflaeche` und `quelle` sind deprecated und bis 31.05.2027 zusätzlich enthalten ([Migration](/api/migration/)).
+**Example**
 
-- Die Katasterkacheln enthalten nur Grenzlinien. Polygon und Fläche werden daraus berechnet; die Fläche weicht um Promille vom Wert im Grundstücksverzeichnis ab.
-- Grundstücke, die über das Kachelfenster um den Punkt (etwa 2 km) hinausreichen, fehlen.
-- Ohne Katasterdaten am Punkt (außerhalb der gebauten Regionen, im Straßenraum ohne Grundstück) ist die Liste leer.
+<Tabs syncKey="lang">
+<TabItem label="curl">
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/parcel/15.3338,48.2279.json"`} />
+```bash
+curl -s "https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3" | jq
+```
 
-## Höhe am Punkt
+</TabItem>
+<TabItem label="JavaScript">
 
-**GET https://api.mapx.at/v1/elevation/{lon},{lat}.json**
+```js
+const res = await fetch("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3");
+const data = await res.json();
+```
 
-Ein `Feature` mit `properties.dtm` (Gelände), `properties.dsm` (Oberfläche), `resolution_m` und `reference_date` (früher `stichtag`, deprecated bis 31.05.2027). Mehrere Punkte und Profile: [Höhe und Profil](/api/hoehe/).
+</TabItem>
+<TabItem label="Python">
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/elevation/15.3338,48.2279.json"`} />
+```python
 
-## Fehler
+res = requests.get("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3")
+data = res.json()
+```
 
-`400` bei ungültiger Koordinate, Radius oder Geometrieart, `404` bei unbekanntem Tileset, `429` über dem Limit (Tilequery zählt doppelt, Grundstück vierfach). Siehe [Fehler und Limits](/api/fehler/).
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.37,
+          48.21
+        ]
+      },
+      "properties": {
+        "name": "Herrengasse",
+        "tilequery": {
+          "distance": 3.2,
+          "geometry": "linestring",
+          "layer": "road_l"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Parcel at a point (BEV DKM)
+
+`GET /v1/parcel/{coordinate}`
+
+Parcel (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`; the old fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` are deprecated and still present until 2027-05-31) as polygon, computed from the boundary lines of the cadastre tiles (area deviates by per mille from the register value).
+
+<details>
+<summary>More</summary>
+
+Buildings return the building parcel (`parcel_number` starts with a dot). Parcels extending beyond the tile window (about 2 km) are missing. Empty list outside the cadastre data.
+
+</details>
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/parcel/15.3294,48.2272")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              16.3721,
+              48.2081
+            ],
+            [
+              16.3727,
+              48.2081
+            ],
+            [
+              16.3727,
+              48.2086
+            ],
+            [
+              16.3721,
+              48.2081
+            ]
+          ]
+        ]
+      },
+      "properties": {
+  …
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Playground
+
+<Playground group="tilequery" lang="en" />

@@ -1,69 +1,23 @@
-# API-Übersicht
+# API reference
 
-Alle mapx-APIs: Kacheln, TileJSON und Höhe. Ohne Schlüssel, CORS offen, Fehler als RFC 9457.
+All mapx APIs: endpoints, parameters, examples and a live playground, generated from the OpenAPI description.
 
-Alle APIs folgen denselben Regeln:
+All APIs live under `https://api.mapx.at/v1/` and need no key. The pages below are generated from the [OpenAPI description](https://api.mapx.at/v1/openapi.json) and always match the running service. Each page has a playground that calls the live API.
 
-- **Kein Schlüssel** – keine Anmeldung, kein Token, CORS offen für jede Website.
-- **Version im Pfad** – `/v1/`; bestehende Felder ändern sich innerhalb einer Version nicht, neue kommen nur dazu.
-- **Koordinaten** – immer `lon,lat` (WGS84), mehrere getrennt durch `;`. Mehr: [Koordinaten](/wissen/koordinaten/).
-- **Fehler** – `application/problem+json` nach [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457).
-- **Limits** – je IP-Adresse, darüber `429` mit `Retry-After`.
+## Conventions
 
-## Karten
+- **Coordinates** are `lon,lat` (WGS84), several separated by `;`. See [Coordinates](/reference/coordinates/).
+- **Errors** are `application/problem+json` (RFC 9457) with a stable `code`. See [Errors and limits](/api/errors/).
+- **Limits** are per IP address and zone; `429` carries `Retry-After`. See [Access and limits](/start/access-and-limits/).
+- **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
+- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Deprecations are announced in the [Changelog](/reference/changelog/) with a sunset date.
 
-| API | Endpunkt | Zweck |
-|---|---|---|
-| [Kacheln](/api/kacheln/) | `GET tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}` | Raster-, Höhen- und Vektorkacheln |
-| [PMTiles](/api/kacheln/#pmtiles-datei) | `GET tiles.mapx.at/<datei>.pmtiles` | ganzes Produkt als Datei, per HTTP-Range |
-| [Tileset-Liste](/api/tiles/#tileset-liste) | `GET api.mapx.at/v1/tiles` | alle Kachelsätze mit Namen, TileJSON-URL, Attribution, Stand |
-| [TileJSON](/api/tilejson/) | `GET tiles.mapx.at/v1/tiles/{tileset}.json` | Beschreibung eines Produkts für Kartenclients |
+## APIs
 
-## Höhe
+                          
+## More reference
 
-| API | Endpunkt | Zweck |
-|---|---|---|
-| [Höhe und Profil](/api/hoehe/) | `GET api.mapx.at/v1/elevation`, `/v1/elevation/profile` | Höhe für Punkte, Höhenprofil entlang einer Linie |
-
-## Wetter
-
-| API | Endpunkt | Zweck |
-|---|---|---|
-| [Wetter](/api/weather/) | `GET api.mapx.at/v1/weather/current`, `/v1/weather/forecast`, `/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png` | Messwerte, Stundenprognose, Wetterkacheln (GeoSphere Austria, CC BY 4.0) |
-
-## Bilder
-
-| API | Endpunkt | Zweck |
-|---|---|---|
-| [Static Images](/api/static/) | `GET api.mapx.at/v1/static/{style}/{view}/{size}` | Kartenbild als PNG oder WebP, mit Overlays |
-| [SDK mapx-gl](/api/sdk/) | `map.mapx.at/sdk/v1/` | MapLibre-Aufsatz mit Suche, Stilwechsel, Profil |
-
-## Stile, Suche und Routing
-
-| API | Endpunkt | Zweck |
-|---|---|---|
-| [Styles](/api/styles/) | `GET api.mapx.at/v1/styles/{id}` | fertige MapLibre-Stile |
-| [Geocoding](/api/geocoding/) | `GET api.mapx.at/v1/geocode`, `/v1/reverse` | Suche und Adresse zum Punkt |
-| [Search Box](/api/searchbox/) | `GET api.mapx.at/v1/searchbox/suggest`, `/retrieve/{id}`, `/category/{kategorie}` | Vorschläge, Details, Orte nach Kategorie |
-| [Tilequery](/api/tilequery/) | `GET api.mapx.at/v1/tilequery/{tileset}/{lon},{lat}.json`, `/v1/parcel/{lon},{lat}.json` | Features, Grundstück und Höhe an einem Punkt |
-| [Directions](/api/routing/#directions) | `GET api.mapx.at/v1/directions/{profile}/{coordinates}` | Route für Fuß, Rad, Auto |
-| [Öffentlicher Verkehr](/api/transit/) | `GET api.mapx.at/v1/directions/transit/{coordinates}` | Verbindung mit ÖV, Fuß und Rad |
-| [Isochrone](/api/routing/#isochrone) | `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}` | Erreichbarkeitsflächen |
-| [Matrix](/api/routing/#matrix) | `GET api.mapx.at/v1/matrix/{profile}/{coordinates}` | Fahrzeiten zwischen vielen Orten |
-| [Map Matching](/api/routing/#map-matching) | `GET api.mapx.at/v1/matching/{profile}/{coordinates}` | GPS-Spur auf das Wegenetz |
-| [Optimierte Reihenfolge](/api/routing/#optimierte-reihenfolge) | `GET api.mapx.at/v1/optimized-trips/{profile}/{coordinates}` | beste Reihenfolge für bis zu 25 Stopps |
-| [Tourenplanung](/api/optimization/) | `POST api.mapx.at/v1/optimization` | Touren für mehrere Fahrzeuge mit Kapazität und Zeitfenstern |
-| [Batch-Geocoding](/api/geocoding/#batch-geocoding) | `POST api.mapx.at/v1/geocode/batch` | bis zu 1000 Adressen in einem Aufruf |
-| [Adress-Autofill](/api/autofill/) | `GET api.mapx.at/v1/autofill/suggest` | Adressen beim Tippen vervollständigen |
-| [Adressvalidierung](/api/validation/) | `GET/POST api.mapx.at/v1/address/validate` | Adresse gegen das Adressregister prüfen |
-
-Alle Endpunkte laufen unter `https://api.mapx.at/v1/` ohne Zugangstoken. [Beispiele](/beispiele/) zeigen jeden Weg live.
-
-## Betrieb
-
-| Endpunkt | Zweck |
-|---|---|
-| `GET api.mapx.at/v1/openapi.json` | OpenAPI-Beschreibung aller Endpunkte |
-| `GET api.mapx.at/health` | Lebenszeichen für Monitoring |
-
-        
+- [Tilesets](/tilesets/): data sheets of every tileset.
+- [Style specification](/reference/style-spec/), [Terrain-RGB](/reference/terrain-rgb/), [Tile scheme](/reference/tile-scheme/).
+- [Errors and limits](/api/errors/), [Migration](/api/migration/), [Changelog](/reference/changelog/), [Attribution](/reference/attribution/).
+- [Status](https://api.mapx.at/health): health check of the API.

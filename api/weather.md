@@ -1,126 +1,292 @@
-# Wetter
+# Weather API
 
-Aktuelle Messwerte, stündliche Punktprognose und Wetterkacheln aus offenen Daten der GeoSphere Austria.
+Current observations, hourly forecast and weather tiles (GeoSphere Austria).
 
-Die Wetter-API liefert aktuelle Messwerte der nächsten Wetterstation, eine stündliche Prognose für einen Punkt und fertig eingefärbte Rasterkacheln für Temperatur, Niederschlag, Wind, Feuchte, Bewölkung und Luftdruck. Kein Schlüssel, CORS offen.
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-> Alle Wetterdaten stammen von der **GeoSphere Austria** (früher ZAMG) und stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Wer die Daten oder daraus gerenderte Kacheln zeigt, muss die Quelle nennen, zum Beispiel „Wetter: GeoSphere Austria, CC BY 4.0“. Jede Antwort enthält dazu das Feld `attribution` bzw. den Header `X-Weather-Attribution`, das TileJSON das Feld `attribution`.
+Observations of the nearest stations, an hourly forecast for a point and raster tiles for a map overlay. Source: GeoSphere Austria, CC BY 4.0.
 
-Die Daten werden alle 10 Minuten (Messwerte) bzw. mit jedem neuen Modelllauf (Prognose, etwa alle 3 Stunden, Auflösung 1 km) zentral geholt und zwischengespeichert. Anfragen an die mapx-API belasten die Quelle nicht.
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](/guides/maps/)
 
-## Aktuelle Messwerte
+## Current observations of the nearest TAWES stations
 
-**GET https://api.mapx.at/v1/weather/current**
+`GET /v1/weather/current`
 
-<ParamTable params={[
-  { name: "lon", type: "number", required: true, desc: "Längengrad (WGS84), auch <code>lng</code>." },
-  { name: "lat", type: "number", required: true, desc: "Breitengrad." },
-  { name: "limit", type: "integer", default: "3", desc: "Anzahl der nächsten Stationen, 1 bis 10." },
-  { name: "radius", type: "number", default: "50", desc: "Suchradius in Kilometern." },
-]} />
+GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first. Values come from a local cache, never fetched per request. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
-Antwort: GeoJSON `FeatureCollection`, nächste Station zuerst (TAWES-Messnetz der GeoSphere, rund 280 Stationen). Fehlt ein Messwert an der Station, ist er `null`.
+**Parameters**
 
-<ParamTable kind="response" params={[
-  { name: "station_id", type: "string", desc: "Stationsnummer (Synop)." },
-  { name: "name, state, altitude_m", type: "string, string, number", desc: "Name, Bundesland, Seehöhe der Station." },
-  { name: "distance_m", type: "number", desc: "Entfernung zum Punkt in Metern." },
-  { name: "time", type: "string", desc: "Messzeitpunkt, UTC." },
-  { name: "temperature_c", type: "number", desc: "Lufttemperatur in °C." },
-  { name: "humidity_pct", type: "number", desc: "Relative Feuchte in %." },
-  { name: "wind_speed_ms, wind_speed_kmh, wind_gust_ms, wind_direction_deg", type: "number", desc: "Mittelwind (10 Minuten), Spitze, Richtung, aus der der Wind weht." },
-  { name: "precipitation_mm_10min", type: "number", desc: "Niederschlag der letzten 10 Minuten in mm." },
-  { name: "pressure_hpa, pressure_msl_hpa", type: "number", desc: "Luftdruck an der Station und auf Meeresniveau reduziert." },
-]} />
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lat` | query | string | yes | – | Latitude |
+| `limit` | query | string |  | `3` | 1 to 10, default 3 |
+| `radius` | query | string |  | `50` | Search radius in km, default 50 |
 
-<Code lang="bash" code={`# Melk
-curl "https://api.mapx.at/v1/weather/current?lon=15.334&lat=48.227&limit=1"`} />
-
-## Prognose
-
-**GET https://api.mapx.at/v1/weather/forecast**
-
-<ParamTable params={[
-  { name: "lon", type: "number", required: true, desc: "Längengrad (WGS84)." },
-  { name: "lat", type: "number", required: true, desc: "Breitengrad." },
-  { name: "hours", type: "integer", default: "24", desc: "Anzahl Stunden ab der aktuellen Stunde, 1 bis 60 (je nach Modelllauf stehen weniger zur Verfügung)." },
-]} />
-
-Die Werte kommen aus dem Modell AROME (`nwp-v2-1h-1km`) und sind bilinear zum Punkt interpoliert. Gebiet: Österreich mit Rand, außerhalb `404`.
-
-<Code lang="json" code={`{
-  "location": { "lon": 15.334, "lat": 48.227, "grid_lon": 15.3347, "grid_lat": 48.225 },
-  "model": "GeoSphere AROME nwp-v2-1h-1km",
-  "reference_time": "2026-11-07T12:00Z",
-  "interval": "1h",
-  "hours": [
-    { "time": "2026-11-07T20:00Z", "temperature_c": 4.7, "precipitation_mm": 0.0, "wind_speed_ms": 4.1,
-      "wind_direction_deg": 52.0, "humidity_pct": 69.9, "cloud_cover_pct": 20.0, "pressure_msl_hpa": 1027.2 }
-  ],
-  "attribution": "Datenquelle: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
-}`} />
-
-`precipitation_mm` ist die Summe der jeweils letzten Stunde. Alle Zeiten sind UTC.
-
-## Kacheln
-
-**GET https://api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png**
-
-PNG-Kacheln 256 × 256, halbtransparent, außerhalb des Prognosegebiets leer. Zoom 0 bis 14 (Daten 1 km, ab etwa Zoom 12 nur noch glatt interpoliert).
-
-<ParamTable params={[
-  { name: "parameter", type: "string", required: true, desc: "Größe.", values: [
-    { v: "temperature", d: "Lufttemperatur 2 m, °C" },
-    { v: "precipitation", d: "Niederschlag je Stunde, mm/h" },
-    { v: "wind", d: "Windgeschwindigkeit 10 m, m/s" },
-    { v: "humidity", d: "Relative Feuchte, %" },
-    { v: "cloud", d: "Bewölkung, %" },
-    { v: "pressure", d: "Luftdruck auf Meeresniveau, hPa" },
-  ] },
-  { name: "time", type: "string", required: true, desc: "<code>now</code> (nächste Stunde) oder eine UTC-Stunde wie <code>2026-11-07T20:00Z</code>. Außerhalb der Prognose <code>404</code>." },
-]} />
-
-### TileJSON mit Zeitdimension
-
-**GET https://api.mapx.at/v1/weather/tiles/{parameter}.json**
-
-Das TileJSON 3.0.0 hat `tiles` für `now`, `bounds`, `attribution` und die Erweiterungen:
-
-- `mapx:time.times`: die verfügbaren Stunden (UTC), `mapx:time.reference_time`: der Modelllauf.
-- `mapx:time.template`: Kachel-URL mit Platzhalter `{time}`.
-- `mapx:legend`: Einheit und Farbstützstellen der Skala.
-
-Kacheln mit fester Stunde sind eine Stunde zwischenspeicherbar, mit `now` fünf Minuten.
+**Example**
 
 <Tabs syncKey="lang">
-  <TabItem label="JavaScript">
-<Code lang="js" code={`const API = "https://api.mapx.at/v1";
-const tj = await (await fetch(API + "/weather/tiles/temperature.json")).json();
-const t = tj["mapx:time"].times[3];            // vierte Stunde
-map.addSource("wetter", { type: "raster", tileSize: 256, maxzoom: 12,
-  tiles: [tj["mapx:time"].template.replace("{time}", t)],
-  attribution: "Wetter: GeoSphere Austria, CC BY 4.0" });
-map.addLayer({ id: "wetter", type: "raster", source: "wetter", paint: { "raster-opacity": 0.85 } });`} />
-  </TabItem>
-  <TabItem label="curl">
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/weather/tiles/temperature.json"
-curl -o kachel.png "https://api.mapx.at/v1/weather/tiles/precipitation/now/8/137/89.png"`} />
-  </TabItem>
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3")
+data = res.json()
+```
+
+</TabItem>
 </Tabs>
 
-Live: [Wetter-Overlay](/beispiele/wetter-overlay/).
+**Example response**
 
-## Fehler
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.35,
+          48.25
+        ]
+      },
+      "properties": {
+        "station_id": "11010",
+        "name": "Wien Hohe Warte",
+        "state": "Wien",
+        "altitude_m": 198,
+        "distance_m": 4200,
+        "time": "2026-11-08T11:50:00Z",
+        "temperature_c": 9.4,
+        "humidity_pct": 71,
+        "wind_speed_ms": 3.1,
+        "wind_direction_deg": 290,
+        "pressure_hpa": 1002.1
+      }
+    }
+  ]
+}
+```
 
-Fehler kommen als `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)).
+**Errors** (details: [error catalog](/api/errors/))
 
-| Status | Ursache |
+| Status | Meaning |
 |---|---|
-| `400` | `lon`/`lat` fehlen oder sind keine Zahlen, `hours`/`limit` außerhalb des Bereichs, `time` nicht lesbar |
-| `404` | Punkt außerhalb des Prognosegebiets, Parameter unbekannt, Zeit außerhalb der Prognose |
-| `429` | Limit überschritten, `Retry-After` beachten |
-| `503` | Daten noch nicht geladen (kurz nach einem Neustart) |
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
 
-## Lizenz und Herkunft
+## Hourly point forecast (AROME, 1 km)
 
-GeoSphere Austria Data Hub, Datensätze `tawes-v1-10min` (Stationsmessungen) und `nwp-v2-1h-1km` (AROME). Lizenz [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de), die Nutzung ist auch kommerziell erlaubt. Die Zahlen werden gerundet bzw. interpoliert und farbig dargestellt, das ist eine Bearbeitung der Originaldaten. Verbindliche Warnungen und Vorhersagen bietet die GeoSphere Austria unter [geosphere.at](https://www.geosphere.at/).
+`GET /v1/weather/forecast`
+
+GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current hour. Austria plus margin. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lat` | query | string | yes | – | Latitude |
+| `hours` | query | string |  | `24` | 1 to 60, default 24 |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "location": [
+    16.37,
+    48.21
+  ],
+  "reference_time": "2026-11-08T06:00:00Z",
+  "hours": [
+    {
+      "time": "2026-11-08T12:00:00Z",
+      "temperature_c": 10.1,
+      "precipitation_mm": 0,
+      "wind_speed_ms": 3.4,
+      "wind_direction_deg": 285,
+      "humidity_pct": 68,
+      "cloud_cover_pct": 40,
+      "pressure_msl_hpa": 1008.3
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## TileJSON of weather tiles with time dimension
+
+`GET /v1/weather/tiles/{param}.json`
+
+param: temperature, precipitation, wind, humidity, cloud, pressure. `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud or pressure, with .json |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/tiles/temperature.json" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature.json");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature.json")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "tilejson": "3.0.0",
+  "tiles": [
+    "https://api.mapx.at/v1/weather/tiles/temperature/now/{z}/{x}/{y}.png"
+  ],
+  "minzoom": 0,
+  "maxzoom": 14
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Weather raster tile (PNG 256, transparent outside the data)
+
+`GET /v1/weather/tiles/{param}/{time}/{z}/{x}/{y}.png`
+
+Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour such as `2026-11-07T20:00Z`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud, pressure |
+| `time` | path | string | yes | – | now or 2026-11-07T20:00Z |
+| `z` | path | integer | yes | – | 0 to 14 |
+| `x` | path | integer | yes | – | Column |
+| `y` | path | string | yes | – | Row, with .png |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png" -o result.png
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png");
+const blob = await res.blob();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png")
+open("result.png", "wb").write(res.content)
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**: `image/png` · PNG; header X-Weather-Reference-Time
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Playground
+
+<Playground group="weather" lang="en" />

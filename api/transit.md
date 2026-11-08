@@ -1,80 +1,259 @@
-# Öffentlicher Verkehr
+# Transit API
 
-Verbindungsauskunft mit Fußweg oder Rad zur Haltestelle, Abfahrtsmonitor und Haltestellen aus den offenen GTFS-Fahrplänen von ÖBB und Verkehrsverbünden.
+Public transport journeys, departure boards and stops from the timetable data.
 
-Die Auskunft verbindet den Fahrplan (GTFS, Routing-Verfahren RAPTOR) mit dem Fuß- und Radnetz [GIP.at](https://www.gip.at). Zubringer, Umstiegswege und Abgang werden auf dem echten Wegenetz berechnet. Fahrplandaten: ÖBB-Personenverkehr AG, [Soll-Fahrplan](https://data.oebb.at/de/datensaetze~soll-fahrplan-gtfs~) unter CC BY 4.0. Dazu kommen die Fahrpläne der Verkehrsverbünde (VOR, Verbundlinie, Salzburg, Kärnten, OÖVV, VVT, Vmobil, Linz AG) von [data.mobilitaetsverbuende.at](https://data.mobilitaetsverbuende.at) unter der Datenlizenz Mobilitätsverbünde Österreich: Stadt-, Regional- und Landbusse, Straßen- und U-Bahnen. Das Fahrplanjahr 2026 gilt vom 14.12.2025 bis 12.12.2026, andere Tage liefern `422`.
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-## Verbindungen
+Journeys with public transport (on foot or by bike to the stop), departure boards and stops, based on the scheduled timetable.
 
-**GET https://api.mapx.at/v1/directions/transit/{coordinates}**
+Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `search` (10/s) · Guide: [Transit departures](/guides/transit/)
 
-Rad zur Haltestelle: `GET /v1/directions/bike_transit/{coordinates}`.
+## Public transit: walking plus transit (GTFS timetable, RAPTOR)
 
-<ParamTable params={[
-  { name: "coordinates", type: "string", required: true, desc: "Genau Start und Ziel als <code>lon,lat;lon,lat</code>." },
-  { name: "depart_at", type: "string", desc: "Frühestens ab, ISO 8601 in Wiener Ortszeit, etwa <code>2026-11-09T08:00</code>. Auch mit Offset (<code>Z</code>, <code>+01:00</code>). Standard: jetzt." },
-  { name: "arrive_by", type: "string", desc: "Spätestens an, statt <code>depart_at</code>. Die Suche läuft rückwärts, die erste Verbindung fährt so spät wie möglich." },
-  { name: "routes", type: "integer", default: "3", desc: "Anzahl der Verbindungen, 1 bis 5." },
-]} />
+`GET /v1/directions/transit/{coordinates}`
 
-Profile: `transit` (zu Fuß bis 20 Minuten zur Haltestelle) und `bike_transit` (Rad bis 15 Minuten, das Rad wird nicht im Zug mitgenommen). Umstiege zwischen Haltestellen sind immer Fußwege bis 8 Minuten, an derselben Station gelten mindestens 2 Minuten.
+Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
 
-Antwort: `code`, `routes[]`, `waypoints[]`, `query` und `attribution`. Jede Route hat `duration` (Sekunden), `distance` (Meter), `departure`, `arrival` (ISO 8601), `transfers`, `summary`, `geometry` (GeoJSON) und `legs[]`. Jeder Abschnitt hat `mode`:
+**Parameters**
 
-- `walking` oder `cycling`: `duration`, `distance`, `from`, `to`, `geometry`. Der erste Abschnitt endet mit der Abfahrt, der letzte beginnt mit der Ankunft.
-- `transit`: `line` (`name` wie „RJX 61“, `long_name`, `type` wie `rail` oder `bus`, `agency`, `headsign`), `from`, `to`, `stops[]` (mit Ankunft und Abfahrt je Halt) und `geometry` als Linie durch die Halte. Die Linie folgt dem Linienverlauf aus dem Liniennetz der Mobilitätsverbünde, wo es einen kennt, sonst den Haltestellen.
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `coordinates` | path | string | yes | – | lon,lat;lon,lat (exactly origin and destination) |
+| `depart_at` | query | string |  | – | Earliest departure, e.g. 2026-11-09T08:00 |
+| `arrive_by` | query | string |  | – | Latest arrival, instead of depart_at |
+| `routes` | query | string |  | `3` | 1 to 5, default 3 |
 
-Liegt das Ziel nahe, enthält `routes[]` auch den reinen Fußweg (bzw. Radweg).
+**Example**
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/directions/transit/15.3338,48.2279;16.3770,48.1850?depart_at=2026-11-09T08:00"`} />
+<Tabs syncKey="lang">
+<TabItem label="curl">
 
-## Abfahrtsmonitor
-
-**GET https://api.mapx.at/v1/departures**
-
-<ParamTable params={[
-  { name: "stop", type: "string", required: true, desc: "Stations-ID aus <code>/v1/stops</code> oder der Suche (<code>stop_id</code>), etwa <code>at:43:7226</code> (IFOPT, auch eine Steig-ID wie <code>at:43:7226:0:2</code>), oder <code>lon,lat</code>: dann alle Stationen im Umkreis <code>radius</code>." },
-  { name: "time", type: "string", desc: "Ab wann, ISO 8601 in Wiener Ortszeit oder Unix-Sekunden. Standard: jetzt." },
-  { name: "limit", type: "integer", default: "20", desc: "Anzahl Abfahrten, 1 bis 100." },
-  { name: "radius", type: "integer", default: "300", desc: "Nur bei <code>lon,lat</code>: Umkreis in Metern, 1 bis 2000." },
-  { name: "horizon", type: "integer", default: "14400", desc: "Zeitfenster in Sekunden ab <code>time</code>, 60 bis 86400." },
-]} />
-
-Nächste Abfahrten nach dem **Soll-Fahrplan**: Verkehrstage nach Kalender und Fahrplanperiode (inklusive Ausnahmetagen und Fahrten, die nach Mitternacht vom Vortag weiterlaufen). Echtzeitdaten gibt es nicht, `realtime` ist immer `false`. Am Endhalt einer Fahrt gibt es keine Abfahrt.
-
-Antwort: `time`, `realtime`, `stops[]` (die gewählten Stationen) und `departures[]`, je Abfahrt `time`, `scheduled`, `realtime`, `line` (`name`, `short_name`, `long_name`, `trip_short_name` wie „R 2004“, `mode` wie `rail`, `bus`, `tram`, `subway`, `route_type`), `headsign`, `destination` (`id`, `name`), `platform` (Steig, `null` wenn unbekannt), `operator`, `stop` und `trip_id`.
-
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/departures?stop=at:43:7226&time=2026-11-09T08:00&limit=5"`} />
-
-```json
-{"time":"2026-11-09T08:00:00+01:00","realtime":false,
- "departures":[{"time":"2026-11-09T08:00:00+01:00","realtime":false,
-   "line":{"name":"R52","trip_short_name":"R 2004","mode":"rail","route_type":2},
-   "headsign":"Pöchlarn Bahnhof","platform":"2","operator":"OEBB Personenverkehr AG Kundenservice",
-   "stop":{"id":"at:43:7226","name":"Melk Bahnhof"}}]}
+```bash
+curl -s "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00" | jq
 ```
 
-## Haltestellen
+</TabItem>
+<TabItem label="JavaScript">
 
-**GET https://api.mapx.at/v1/stops**
+```js
+const res = await fetch("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00");
+const data = await res.json();
+```
 
-<ParamTable params={[
-  { name: "bbox", type: "string", desc: "<code>west,süd,ost,nord</code>, höchstens 1 Quadratgrad. Größte Knoten zuerst." },
-  { name: "near", type: "string", desc: "<code>lon,lat</code>, statt <code>bbox</code>: nächste zuerst, mit <code>distance</code> in Metern." },
-  { name: "radius", type: "integer", default: "500", desc: "Nur mit <code>near</code>: Meter, 1 bis 5000." },
-  { name: "limit", type: "integer", default: "50", desc: "1 bis 500." },
-]} />
+</TabItem>
+<TabItem label="Python">
 
-Stationen aus allen Feeds; Steige und die Einträge verschiedener Verbünde mit derselben IFOPT-Kennung (`at:<land>:<nr>`) sind zu einer Station zusammengeführt. Je Station `id`, `name`, `location` (`[lon, lat]`), `modes` und `lines`.
+```python
 
-<Code lang="bash" code={`curl "https://api.mapx.at/v1/stops?near=16.3752,48.1851&radius=300"`} />
+res = requests.get("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00")
+data = res.json()
+```
 
-## Fehler
+</TabItem>
+</Tabs>
 
-| Status | Bedeutung |
+**Example response**
+
+```json
+{
+  "code": "Ok",
+  "routes": [
+    {
+      "duration": 2400,
+      "legs": [
+        {
+          "mode": "walking",
+          "duration": 300
+        },
+        {
+          "mode": "transit",
+          "line": "S1",
+          "from": "Wien Hbf",
+          "to": "Wien Floridsdorf"
+        }
+      ]
+    }
+  ],
+  "waypoints": []
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
 |---|---|
-| 400 | Koordinaten oder Zeit ungültig, <code>depart_at</code> und <code>arrive_by</code> zugleich |
-| 404 | keine Haltestelle in Reichweite (auch unbekannte <code>stop</code>), oder keine Verbindung innerhalb von 48 Stunden |
-| 422 | Datum außerhalb des Fahrplanzeitraums |
+| `400` | A parameter is missing or invalid |
+| `422` | Valid request that cannot be answered (for example no route) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
 
-Verbindungen werden nicht gecacht, Abfahrten 30 Sekunden, Haltestellen eine Stunde. Quelle angeben: „Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)“.
+## Departure board (scheduled GTFS timetable)
+
+`GET /v1/departures`
+
+Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included. Per departure: time, line (name, mode, route_type), headsign, destination, platform (null if unknown), operator, stop.
+
+<details>
+<summary>More</summary>
+
+No real-time data: `realtime` is always false. Outside the feed period 422, unknown station 404. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+
+</details>
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, also platform id `at:43:7226:0:2`) or lon,lat |
+| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local) or Unix seconds, default now |
+| `limit` | query | string |  | `20` | 1 to 100, default 20 |
+| `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
+| `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "time": "2026-11-09T08:00:00+01:00",
+  "realtime": false,
+  "stops": [
+    {
+      "id": "at:43:7226",
+      "name": "Melk Bahnhof"
+    }
+  ],
+  "departures": [
+    {
+      "time": "2026-11-09T08:04:00+01:00",
+      "line": {
+        "name": "REX 1",
+        "mode": "rail",
+        "route_type": 2
+      },
+      "headsign": "Wien Westbahnhof",
+      "platform": "2",
+      "stop": "at:43:7226"
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `422` | Valid request that cannot be answered (for example no route) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
+
+## Stops (GTFS stations merged by IFOPT)
+
+`GET /v1/stops`
+
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines`.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `bbox` | query | string |  | – | west,south,east,north in degrees, at most 1 square degree |
+| `near` | query | string |  | – | lon,lat, instead of bbox |
+| `radius` | query | string |  | `500` | With near only: meters, 1 to 5000, default 500 |
+| `limit` | query | string |  | `50` | 1 to 500, default 50 |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "stops": [
+    {
+      "id": "at:43:7226",
+      "name": "Melk Bahnhof",
+      "location": [
+        15.3338,
+        48.2279
+      ],
+      "modes": [
+        "rail",
+        "bus"
+      ],
+      "lines": [
+        "REX 1",
+        "S50"
+      ]
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
+
+## Playground
+
+<Playground group="transit" lang="en" />

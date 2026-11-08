@@ -1,8 +1,8 @@
-# Fehlerkatalog
+# Errors and limits
 
-Alle Fehlercodes der mapx-API: Typ-URI, Status, Bedeutung und was zu tun ist.
+Error codes, status codes, rate limits and caching of all mapx APIs.
 
-Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)). Der `type` ist ein URI auf diese Seite: `https://docs.mapx.at/api/errors/#<code>`. Auswertbar sind `code` (oder `type`) und `status`, nie der Text.
+Every error is an `application/problem+json` document ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)). The `type` is a URI into this page: `https://docs.mapx.at/api/errors/#<code>`. Branch on `code` (or `type`) and `status`, never on the text.
 
 <Code lang="json" code={`{
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
@@ -14,205 +14,224 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
   "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi"]
 }`} />
 
-## Felder
+## Fields
 
-| Field | Bedeutung |
+| Field | Meaning |
 |---|---|
-| `type` | URI des Fehlertyps (Anker auf dieser Seite) |
-| `title` | Kurze Zusammenfassung des Typs |
-| `status` | HTTP-Status |
-| `detail` | Erklärung zu dieser Anfrage; standardmäßig englisch |
-| `code` | Stabiler maschinenlesbarer Code, entspricht dem Anker |
-| `param` | Betroffener Parameter (wo sinnvoll) |
-| `allowed` | Erlaubte Werte bei Aufzählungen (wo sinnvoll) |
+| `type` | URI of the error type (anchor on this page) |
+| `title` | Short summary of the type |
+| `status` | HTTP status |
+| `detail` | Explanation for this request; English by default |
+| `code` | Stable machine-readable code, equals the anchor |
+| `param` | Offending parameter (where applicable) |
+| `allowed` | Accepted values for enumerations (where applicable) |
 
-## Sprache
+## Language
 
-`title` und `detail` sind standardmäßig englisch. Mit `Accept-Language: de` kommen deutsche Texte; `type`, `code`, `param` und `allowed` bleiben gleich. Antworten tragen `Content-Language` und `Vary: Accept-Language`. Das deutsche `detail` ist die allgemeine Beschreibung des Codes, das englische `detail` ist am genauesten.
+`title` and `detail` are English by default. Send `Accept-Language: de` to get German texts; `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
 
-## Katalog
+## Catalog
 
-| Code | Status | Titel |
+| Code | Status | Title |
 |---|---|---|
-| [`bad-request`](#bad-request) | 400 | Ungültige Anfrage |
-| [`missing-parameter`](#missing-parameter) | 400 | Parameter fehlt |
-| [`invalid-parameter`](#invalid-parameter) | 400 | Ungültiger Parameter |
-| [`invalid-coordinates`](#invalid-coordinates) | 400 | Ungültige Koordinaten |
-| [`invalid-body`](#invalid-body) | 400 | Ungültiger Anfragekörper |
-| [`unknown-path`](#unknown-path) | 404 | Unbekannter Pfad |
-| [`not-found`](#not-found) | 404 | Nicht gefunden |
-| [`unknown-style`](#unknown-style) | 404 | Unbekannter Stil |
-| [`unknown-tileset`](#unknown-tileset) | 404 | Unbekanntes Tileset |
-| [`unknown-font`](#unknown-font) | 404 | Unbekannte Schrift |
-| [`unknown-parameter`](#unknown-parameter) | 404 | Unbekannter Parameter |
-| [`unknown-id`](#unknown-id) | 404 | Unbekannte Id |
-| [`tile-out-of-range`](#tile-out-of-range) | 404 | Kachel außerhalb des Bereichs |
-| [`method-not-allowed`](#method-not-allowed) | 405 | Methode nicht erlaubt |
-| [`unprocessable`](#unprocessable) | 422 | Anfrage nicht verarbeitbar |
-| [`rate-limited`](#rate-limited) | 429 | Rate-Limit überschritten |
-| [`internal-error`](#internal-error) | 500 | Interner Fehler |
-| [`upstream-error`](#upstream-error) | 502 | Fehler im Backend |
-| [`service-unavailable`](#service-unavailable) | 503 | Dienst nicht verfügbar |
-| [`service-busy`](#service-busy) | 503 | Dienst ausgelastet |
+| [`bad-request`](#bad-request) | 400 | Bad request |
+| [`missing-parameter`](#missing-parameter) | 400 | Missing parameter |
+| [`invalid-parameter`](#invalid-parameter) | 400 | Invalid parameter |
+| [`invalid-coordinates`](#invalid-coordinates) | 400 | Invalid coordinates |
+| [`invalid-body`](#invalid-body) | 400 | Invalid request body |
+| [`unknown-path`](#unknown-path) | 404 | Unknown path |
+| [`not-found`](#not-found) | 404 | Not found |
+| [`unknown-style`](#unknown-style) | 404 | Unknown style |
+| [`unknown-tileset`](#unknown-tileset) | 404 | Unknown tileset |
+| [`unknown-font`](#unknown-font) | 404 | Unknown font |
+| [`unknown-parameter`](#unknown-parameter) | 404 | Unknown parameter |
+| [`unknown-id`](#unknown-id) | 404 | Unknown id |
+| [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
+| [`method-not-allowed`](#method-not-allowed) | 405 | Method not allowed |
+| [`unprocessable`](#unprocessable) | 422 | Unprocessable request |
+| [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded |
+| [`internal-error`](#internal-error) | 500 | Internal error |
+| [`upstream-error`](#upstream-error) | 502 | Upstream error |
+| [`service-unavailable`](#service-unavailable) | 503 | Service unavailable |
+| [`service-busy`](#service-busy) | 503 | Service busy |
 
 ### bad-request
 
-**400** · Ungültige Anfrage
+**400** · Bad request
 
-Die Anfrage ist ungültig, ohne dass ein spezifischerer Code passt.
+The request is invalid in a way no more specific code covers.
 
-Was tun: `detail` lesen und die Anfrage korrigieren.
+What to do: Read `detail` and fix the request.
 
 ### missing-parameter
 
-**400** · Parameter fehlt
+**400** · Missing parameter
 
-Ein Pflichtparameter fehlt. `param` nennt ihn.
+A required parameter is missing. `param` names it.
 
-Was tun: Den in `param` genannten Parameter ergänzen.
+What to do: Add the parameter named in `param`.
 
 ### invalid-parameter
 
-**400** · Ungültiger Parameter
+**400** · Invalid parameter
 
-Ein Parameter hat einen fehlerhaften Wert, liegt außerhalb des Bereichs oder ist keiner der erlaubten Werte. `param` nennt ihn; bei Aufzählungen listet `allowed` die erlaubten Werte.
+A parameter has a value that is malformed, out of range or not one of the accepted values. `param` names it; for enumerations `allowed` lists the accepted values.
 
-Was tun: Einen Wert aus `allowed` oder innerhalb des in `detail` genannten Bereichs verwenden.
+What to do: Use a value from `allowed` or inside the range stated in `detail`.
 
 ### invalid-coordinates
 
-**400** · Ungültige Koordinaten
+**400** · Invalid coordinates
 
-Eine Koordinate (Pfadsegment oder Parameter) ist nicht lesbar oder liegt außerhalb des gültigen Bereichs. Nicht lesbare Pfadkoordinaten ergeben 400, nicht 404.
+A coordinate (path segment or parameter) cannot be parsed or is outside the valid range. Unparsable path coordinates answer 400, not 404.
 
-Was tun: `lon,lat` in WGS84-Grad senden (Länge -180 bis 180, Breite -90 bis 90).
+What to do: Send `lon,lat` in WGS84 degrees (longitude -180 to 180, latitude -90 to 90).
 
 ### invalid-body
 
-**400** · Ungültiger Anfragekörper
+**400** · Invalid request body
 
-Der Körper einer POST-Anfrage ist kein gültiges JSON oder hat nicht die erwartete Form.
+The body of a POST request is not valid JSON or not in the expected shape.
 
-Was tun: Das JSON gegen das Schema der OpenAPI-Beschreibung prüfen.
+What to do: Check the JSON against the schema in the OpenAPI description.
 
 ### unknown-path
 
-**404** · Unbekannter Pfad
+**404** · Unknown path
 
-Diesen Pfad gibt es nicht.
+The path does not exist.
 
-Was tun: Pfad mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) vergleichen. Die früheren Aliase `/v1/{tileset}...` und `driving-ev` wurden entfernt.
+What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` and `driving-ev` were removed.
 
 ### not-found
 
-**404** · Nicht gefunden
+**404** · Not found
 
-Die angefragte Ressource (Kachel, Sprite, ...) existiert nicht.
+The addressed resource (a tile, a sprite, ...) does not exist.
 
-Was tun: Bei Kacheln als leere Kachel behandeln.
+What to do: For tiles treat as an empty tile.
 
 ### unknown-style
 
-**404** · Unbekannter Stil
+**404** · Unknown style
 
-Die Stil-Id ist nicht bekannt.
+The style id is not known.
 
-Was tun: Stile mit `/v1/styles` auflisten.
+What to do: List styles with `/v1/styles`.
 
 ### unknown-tileset
 
-**404** · Unbekanntes Tileset
+**404** · Unknown tileset
 
-Der Tileset-Name ist nicht bekannt.
+The tileset name is not known.
 
-Was tun: Tilesets mit `/v1/tiles` auflisten.
+What to do: List tilesets with `/v1/tiles`.
 
 ### unknown-font
 
-**404** · Unbekannte Schrift
+**404** · Unknown font
 
-Der Schriftname ist nicht bekannt.
+The font name is not known.
 
-Was tun: Schriften mit `/v1/fonts` auflisten.
+What to do: List fonts with `/v1/fonts`.
 
 ### unknown-parameter
 
-**404** · Unbekannter Parameter
+**404** · Unknown parameter
 
-Ein Wetter-Parametername ist nicht bekannt.
+A weather parameter name is not known.
 
-Was tun: Einen von temperature, precipitation, wind, humidity, cloud, pressure verwenden.
+What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure.
 
 ### unknown-id
 
-**404** · Unbekannte Id
+**404** · Unknown id
 
-Eine Vorschlags-, Adress- oder Orts-Id ist nicht bekannt (oder nach einem Datenupdate abgelaufen).
+A suggestion, address or place id is not known (or expired after a data update).
 
-Was tun: Neu suchen und die Id aus der frischen Antwort verwenden.
+What to do: Search again and use the id from the fresh response.
 
 ### tile-out-of-range
 
-**404** · Kachel außerhalb des Bereichs
+**404** · Tile out of range
 
-Die Kachel liegt außerhalb des Zoom- oder Kachelbereichs des Tilesets oder Stils.
+The tile is outside the zoom or tile range of the tileset or style.
 
-Was tun: Innerhalb von `minzoom`/`maxzoom` und `bounds` des TileJSON bleiben.
+What to do: Stay within `minzoom`/`maxzoom` and `bounds` of the TileJSON.
 
 ### method-not-allowed
 
-**405** · Methode nicht erlaubt
+**405** · Method not allowed
 
-Erlaubt ist nur GET (und HEAD), POST nur für Batch-Geocoding, Tourenplanung, Adressvalidierung und Verkehrsmeldungen.
+Only GET (and HEAD) is allowed, POST only for batch geocoding, optimization, address validation and traffic incidents.
 
-Was tun: Die dokumentierte Methode verwenden.
+What to do: Use the documented method.
 
 ### unprocessable
 
-**422** · Anfrage nicht verarbeitbar
+**422** · Unprocessable request
 
-Die Anfrage ist formal gültig, kann aber nicht beantwortet werden, etwa keine Route zwischen den Punkten oder ein Datum außerhalb der Fahrplanperiode.
+The request is well-formed but cannot be answered, e.g. no route between the points or a date outside the timetable period.
 
-Was tun: Punkte oder Zeit ändern; `detail` lesen.
+What to do: Change the points or the time; read `detail`.
 
 ### rate-limited
 
-**429** · Rate-Limit überschritten
+**429** · Rate limit exceeded
 
-Zu viele Anfragen von Ihrer IP-Adresse in dieser Endpunktgruppe. Siehe [Limits](/api/fehler/#limits).
+Too many requests from your IP address in this endpoint group. See [rate limits](/api/errors/#rate-limits).
 
-Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort nennt die Zone.
+What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
 
 ### internal-error
 
-**500** · Interner Fehler
+**500** · Internal error
 
-Auf dem Server ist ein unerwarteter Fehler aufgetreten.
+An unexpected error occurred on the server.
 
-Was tun: Einmal wiederholen; bleibt es, die Anfrage melden.
+What to do: Retry once; if it persists, report the request.
 
 ### upstream-error
 
-**502** · Fehler im Backend
+**502** · Upstream error
 
-Ein Backend-Dienst (Suche, Router) hat nicht oder fehlerhaft geantwortet.
+A backing service (search, router) did not answer or answered with an error.
 
-Was tun: Nach einigen Sekunden erneut versuchen.
+What to do: Retry after a few seconds.
 
 ### service-unavailable
 
-**503** · Dienst nicht verfügbar
+**503** · Service unavailable
 
-Die Daten oder der Dienst sind vorübergehend nicht verfügbar (etwa Wetterdaten noch nicht geladen, Stil wird neu gebaut).
+The data or service is temporarily unavailable (e.g. weather data not loaded yet, a style being rebuilt).
 
-Was tun: Später erneut versuchen.
+What to do: Retry later.
 
 ### service-busy
 
-**503** · Dienst ausgelastet
+**503** · Service busy
 
-Der Server ist an seiner Parallelitätsgrenze.
+The server is at its concurrency limit.
 
-Was tun: `Retry-After` Sekunden warten und erneut versuchen.
+What to do: Wait `Retry-After` seconds and retry.
 
-Siehe auch: [Fehler und Limits](/api/fehler/) für Limits und Caching.
+See also: [Errors and limits](/api/errors/) for rate limits and caching.
+
+## Rate limits
+
+Limits per zone are listed under [Access and limits](/start/access-and-limits/). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `404` and `422` unchanged.
+
+## Caching
+
+| Header | Value |
+|---|---|
+| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON, elevation, parcel), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
+| `ETag`, `Last-Modified` | version; with `If-None-Match` / `If-Modified-Since` → `304` (tiles, styles, TileJSON, OpenAPI) |
+| `Server-Timing` | `router`, `search`, `render`, `total` in milliseconds |
+| `RateLimit-Policy` | zone and limit of the endpoint |
+
+PMTiles files carry the release date in their name and never change; they may be cached indefinitely.
+
+## Attribution
+
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: BEV – DKM, CC BY 4.0` for parcels or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](/reference/attribution/).

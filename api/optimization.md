@@ -1,73 +1,228 @@
-# Tourenplanung
+# Optimization API
 
-Touren für mehrere Fahrzeuge mit Kapazität, Zeitfenstern und Abhol-/Lieferaufträgen, vereinfacht nach Mapbox Optimization v2.
+Best order for up to 25 stops and tour planning for several vehicles.
 
-Verteilt Aufträge auf Fahrzeuge und bringt sie je Fahrzeug in eine günstige Reihenfolge. Die Fahrzeiten kommen aus der Matrix auf dem [GIP.at](https://www.gip.at)-Netz. Für eine einzelne Fahrt mit bester Reihenfolge reicht [Optimierte Reihenfolge](/api/routing/#optimierte-reihenfolge).
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-**POST https://api.mapx.at/v1/optimization**
+Finds the best order of stops (traveling salesman) or plans tours for several vehicles with capacities and time windows.
 
-Der Rumpf ist JSON (`Content-Type: application/json`, höchstens 256 KB). Zeiten sind Sekunden, Mengen ganze Zahlen (auch mehrere Dimensionen, etwa Gewicht und Volumen), Koordinaten `[lon, lat]`.
+Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [Navigation](/guides/navigation/)
 
-## Eingabe
+## Optimized order
 
-<ParamTable params={[
-  { name: "profile", type: "string", default: "driving", desc: "<code>driving</code>, <code>cycling</code> oder <code>walking</code>." },
-  { name: "vehicles", type: "array", required: true, desc: "1 bis 10 Fahrzeuge: <code>id</code>, <code>start</code> (Pflicht), <code>end</code> (ohne Angabe endet die Tour am letzten Auftrag), <code>capacity</code> (Liste, ohne Angabe unbegrenzt), <code>time_window</code> (<code>[von, bis]</code>, Standard unbegrenzt ab 0)." },
-  { name: "services", type: "array", desc: "Aufträge an einem Ort: <code>id</code>, <code>location</code>, <code>service</code> (Dauer, Standard 0), <code>delivery</code> (Menge, die am Start geladen und hier abgegeben wird, auch <code>amount</code>), <code>pickup</code> (Menge, die hier aufgenommen wird), <code>time_windows</code> (Liste von <code>[von, bis]</code>)." },
-  { name: "shipments", type: "array", desc: "Abhol- und Lieferaufträge: <code>id</code>, <code>amount</code>, <code>pickup</code> und <code>delivery</code> mit je <code>location</code>, <code>service</code>, <code>time_windows</code>. Abholung kommt vor der Lieferung, beide im selben Fahrzeug." },
-  { name: "options.time_limit_ms", type: "integer", default: "1500", desc: "Rechenzeit der Suche, 50 bis 10000." },
-  { name: "options.geometry", type: "boolean", default: "false", desc: "Mit <code>true</code> bekommt jede Tour eine <code>geometry</code> (höchstens 80 Teilstrecken insgesamt); Format über <code>options.geometries</code>." },
-]} />
+`GET /v1/optimized-trips/{profile}/{coordinates}`
 
-Grenzen: 10 Fahrzeuge, 50 Aufträge (Services plus Sendungen), 60 verschiedene Orte. Ids müssen eindeutig sein.
+2 to 25 coordinates. Exact up to 12 points, above that nearest neighbour with 2-opt and Or-opt over the duration matrix. Response like Directions: `trips[]` with one route, `waypoints[]` in input order with `waypoint_index` (position in the trip) and `trips_index`.
 
-## Beispiel
+<details>
+<summary>More</summary>
 
-<Code lang="bash" code={`curl -X POST https://api.mapx.at/v1/optimization -H 'Content-Type: application/json' -d '{   "profile": "driving",   "vehicles": [     { "id": "melk", "start": [15.3338, 48.2279], "end": [15.3338, 48.2279], "capacity": [3], "time_window": [28800, 64800] },     { "id": "ybbs", "start": [15.0864, 48.1696], "capacity": [3], "time_window": [28800, 64800] }   ],   "services": [     { "id": "poechlarn", "location": [15.2065, 48.2111], "service": 600, "delivery": [1] },     { "id": "loosdorf", "location": [15.3969, 48.2339], "service": 600, "delivery": [1], "time_windows": [[28800, 36000]] },     { "id": "mank", "location": [15.3167, 48.1167], "service": 900, "delivery": [2] }   ],   "shipments": [     { "id": "paket", "amount": [1],       "pickup": { "location": [15.2597, 48.2018], "service": 120 },       "delivery": { "location": [15.0764, 48.1692], "service": 120 } }   ],   "options": { "time_limit_ms": 1500, "geometry": true } }'`} />
+Expensive: zone `heavy`.
 
-Anfrage (lesbar):
+</details>
 
-<Code lang="json" code={`{
-  "profile": "driving",
-  "vehicles": [
-    { "id": "melk", "start": [15.3338, 48.2279], "end": [15.3338, 48.2279], "capacity": [3], "time_window": [28800, 64800] },
-    { "id": "ybbs", "start": [15.0864, 48.1696], "capacity": [3], "time_window": [28800, 64800] }
-  ],
-  "services": [
-    { "id": "poechlarn", "location": [15.2065, 48.2111], "service": 600, "delivery": [1] },
-    { "id": "loosdorf", "location": [15.3969, 48.2339], "service": 600, "delivery": [1], "time_windows": [[28800, 36000]] },
-    { "id": "mank", "location": [15.3167, 48.1167], "service": 900, "delivery": [2] }
-  ],
-  "shipments": [
-    { "id": "paket", "amount": [1],
-      "pickup": { "location": [15.2597, 48.2018], "service": 120 },
-      "delivery": { "location": [15.0764, 48.1692], "service": 120 } }
-  ],
-  "options": { "time_limit_ms": 1500, "geometry": true }
-}`} />
+**Parameters**
 
-## Antwort
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `profile` | path | string | yes | – | driving, driving-traffic (with current traffic and closures), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `source` | query | string |  | – | any (default) or first (point 0 is the start) |
+| `destination` | query | string |  | – | any (default) or last (last point is the end) |
+| `roundtrip` | query | string |  | – | true (default) returns to the start, or false; true with destination=last needs source=first |
+| `steps` | query | string |  | – | true for turn-by-turn steps |
+| `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
+| `overview` | query | string |  | – | simplified (default) \| full \| false |
+| `language` | query | string |  | – | de (default) or en |
 
-<Code lang="json" code={`{
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
   "code": "Ok",
-  "summary": { "cost": 5563.6, "duration": 5563.6, "distance": 104708.3, "service": 3240.0, "waiting_time": 0.0, "routes": 2, "unassigned": 0, "computing_ms": 1517 },
-  "routes": [
-    { "vehicle": "melk", "duration": 4080.0, "distance": 76800.0, "end_time": 34560.0,
-      "steps": [
-        { "type": "start", "location": [15.3338, 48.2279], "arrival": 28800.0, "load": [3] },
-        { "type": "job", "id": "loosdorf", "location": [15.3969, 48.2339], "arrival": 29280.0, "waiting_time": 0.0, "service": 600.0, "load": [2] },
-        { "type": "end", "location": [15.3338, 48.2279], "arrival": 34560.0, "load": [0] }
-      ] }
-  ],
+  "trips": [],
+  "waypoints": []
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `422` | Valid request that cannot be answered (for example no route) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
+
+## Tour planning (simplified Optimization v2)
+
+`POST /v1/optimization`
+
+Vehicles with start/end/capacity/time window, services (one location) and shipments (pickup before delivery, same vehicle) with duration, time windows and amounts. Heuristic: regret insertion, local search, ruin and recreate until `options.time_limit_ms`. At most 10 vehicles, 50 jobs, 60 distinct locations, 256 KB.
+
+<details>
+<summary>More</summary>
+
+Times in seconds. Expensive: zone `heavy`.
+
+</details>
+
+**Request body (JSON)**
+
+| Name | Type | Description |
+|---|---|---|
+| `profile` | string | driving (default), cycling, cycling-mtb or walking |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s -X POST "https://api.mapx.at/v1/optimization" \
+  -H "Content-Type: application/json" \
+  -d '{"vehicles":[{"id":1,"start":[16.3725,48.2083],"end":[16.3725,48.2083]}],"services":[{"id":1,"location":[15.6256,48.2049],"service":300},{"id":2,"location":[14.2858,48.3069],"service":300}]}' | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/optimization", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    "vehicles": [
+      {
+        "id": 1,
+        "start": [
+          16.3725,
+          48.2083
+        ],
+        "end": [
+          16.3725,
+          48.2083
+        ]
+      }
+    ],
+    "services": [
+      {
+        "id": 1,
+        "location": [
+          15.6256,
+          48.2049
+        ],
+        "service": 300
+      },
+      {
+        "id": 2,
+        "location": [
+          14.2858,
+          48.3069
+        ],
+        "service": 300
+      }
+    ]
+  }),
+});
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.post("https://api.mapx.at/v1/optimization", json={
+    "vehicles": [
+      {
+        "id": 1,
+        "start": [
+          16.3725,
+          48.2083
+        ],
+        "end": [
+          16.3725,
+          48.2083
+        ]
+      }
+    ],
+    "services": [
+      {
+        "id": 1,
+        "location": [
+          15.6256,
+          48.2049
+        ],
+        "service": 300
+      },
+      {
+        "id": 2,
+        "location": [
+          14.2858,
+          48.3069
+        ],
+        "service": 300
+      }
+    ]
+  })
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "summary": {
+    "cost": 9000,
+    "unassigned": 0
+  },
+  "routes": [],
   "unassigned": []
-}`} />
+}
+```
 
-- `summary`: Summen über alle Touren (`cost` = Fahrzeit in Sekunden, `distance` in Metern, `service`, `waiting_time`), Zahl der Touren und der nicht eingeplanten Aufträge, `computing_ms`.
-- `routes[]`: eine Tour je genutztem Fahrzeug. `steps[]` hat die Typen `start`, `job`, `pickup`, `delivery`, `end`, dazu `arrival` (Sekunden), `waiting_time`, `service` und `load` nach dem Halt.
-- `unassigned[]`: Aufträge ohne Platz, mit `reason` (Kapazität, Erreichbarkeit, Zeitfenster).
+**Errors** (details: [error catalog](/api/errors/))
 
-## Verfahren und Grenzen
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `405` | Method not allowed |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
 
-Das Ziel sind zuerst möglichst viele eingeplante Aufträge, dann die kleinste Gesamtfahrzeit. Gerechnet wird mit Regret-Einfügung, lokaler Suche (Umhängen, Umkehren) und Ruin-and-Recreate bis zum Zeitlimit; das Ergebnis ist gut, aber nicht beweisbar optimal. Fahrzeuge starten zu Beginn ihres Zeitfensters und warten bei Bedarf vor einem Zeitfenster; ein späterer Start, der das Warten vermeidet, wird nicht gesucht. Fähigkeiten (Skills), Prioritäten, Pausen und feste Fahrzeugkosten gibt es nicht.
+## Playground
 
-Die Anfrage zählt zu den aufwendigen und hat ein enges Limit. Fehler: `400` ungültige Eingabe (mit Hinweis auf das Feld), `429` Limit, `502` Routing nicht erreichbar. Allgemeines: [Fehler und Limits](/api/fehler/).
+<Playground group="optimization" lang="en" />

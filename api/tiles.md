@@ -1,40 +1,206 @@
-# XYZ-Kacheln
+# Tiles API
 
-Alle Kachelsätze als XYZ-Kacheln über /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}, mit TileJSON, Caching und ETag.
+Tileset list, TileJSON and XYZ tiles (vector, raster, elevation).
 
-Jeder Kachelsatz (Basiskarte, Kataster, Höhenlinien, DTM, DSM, Orthophoto, Flugblöcke) ist über dieselbe Adresse abrufbar, in der Form der Mapbox Tiles API. Ohne Schlüssel, CORS offen.
+{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
-**GET https://api.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}**
+Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. The whole product is also available as one [PMTiles](https://docs.protomaps.com/pmtiles/) file; see [Tilesets](/tilesets/).
 
-<ParamTable params={[
-  { name: "tileset", type: "string", required: true, desc: "Kachelsatz, Namen siehe <a href=\"/api/kacheln/\">Kacheln</a> (z. B. <code>mapx-basis</code>, <code>mapx-kataster</code>, <code>hoehenlinien</code>, <code>dtm</code>, <code>dsm</code>, <code>dop-ortho</code>)." },
-  { name: "z, x, y", type: "integer", required: true, desc: "Zoom, Spalte, Zeile im XYZ-Schema (Ursprung oben links)." },
-  { name: "ext", type: "string", required: true, desc: "Passend zum Kachelsatz: <code>pbf</code> (Alias <code>mvt</code>) für Vektor, <code>webp</code> oder <code>png</code> für Raster. Eine andere Endung ergibt <code>404</code>." },
-]} />
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s) · Guide: [Maps](/guides/maps/)
 
-Die frühere Adresse ohne `/tiles/` (`/v1/{tileset}/{z}/{x}/{y}.{ext}`) wurde entfernt und antwortet mit `404`; Clients verwenden `/v1/tiles/…`.
+## List tilesets
 
-## Tileset-Liste
+`GET /v1/tiles`
 
-**GET https://api.mapx.at/v1/tiles**
+Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution and data date (`stand`) per tileset. Old German names (`basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`) are listed under `aliases` and remain valid until 2027-05-31 (responses carry `Deprecation`, `Sunset` and `Link` headers).
 
-Alle verfügbaren Kachelsätze in `tilesets[]`: `name`, `aliases` (gleichwertige Namen wie `dtm`; die früheren deutschen Namen wie `basis` bleiben bis 31.05.2027 Alias), `type` (`vector`, `raster`, `dem`), `format`, `minzoom`, `maxzoom`, `bounds`, `tilejson` (URL), `attribution`, `version`, `stand` (Datenstand) und `built` (Bauzeit). Die Namen gelten auch für [Tilequery](/api/tilequery/).
+**Example**
 
-## TileJSON
+<Tabs syncKey="lang">
+<TabItem label="curl">
 
-**GET https://api.mapx.at/v1/tiles/{tileset}.json**
+```bash
+curl -s "https://api.mapx.at/v1/tiles" | jq
+```
 
-Das Feld `tiles` der TileJSON zeigt auf die Kachel-Adresse oben, dazu `minzoom`, `maxzoom`, `bounds`, `center` und bei Vektor `vector_layers`. Details: <a href="/api/tilejson/">TileJSON</a>.
+</TabItem>
+<TabItem label="JavaScript">
 
-## Antworten
+```js
+const res = await fetch("https://api.mapx.at/v1/tiles");
+const data = await res.json();
+```
 
-| Status | Bedeutung |
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/tiles")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "tilesets": [
+    {
+      "name": "streets",
+      "aliases": [
+        "basis"
+      ],
+      "type": "vector",
+      "format": "pbf",
+      "tilejson": "https://api.mapx.at/v1/tiles/streets.json",
+      "minzoom": 0,
+      "maxzoom": 14,
+      "bounds": [
+        9.5,
+        46.3,
+        17.2,
+        49.1
+      ],
+      "attribution": "...",
+      "stand": "2026-10-01"
+    }
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
 |---|---|
-| `200` | Kachel. Vektorkacheln mit `Content-Encoding: gzip`, wenn der Client `Accept-Encoding: gzip` sendet, sonst entpackt. |
-| `304` | `If-None-Match` passt zum `ETag`. |
-| `400` | Zeile ist keine Zahl. |
-| `404` | Kachelsatz unbekannt, Endung passt nicht, Zoom oder Kachel außerhalb des Bereichs, Kachel leer. Fehler als `application/problem+json`. |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
-`ETag` stammt aus dem Datei-Hash des Kachelsatzes, `Cache-Control: public, max-age=86400`. Eine fehlende Kachel ist kein Fehler des Dienstes (wie bei Mapbox): Clients überspringen sie.
+## TileJSON 3.0.0
 
-> Für MapLibre und eigenes Hosting sind die <a href="/api/kacheln/">PMTiles-Dateien</a> effizienter, ein Aufruf liest nur die nötigen Bereiche.
+`GET /v1/tiles/{tileset}.json`
+
+TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`Last-Modified`, `If-None-Match` gives 304.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `tileset` | path | string | yes | – | Tileset name |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/tiles/streets.json" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/tiles/streets.json");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/tiles/streets.json")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "tilejson": "3.0.0",
+  "name": "streets",
+  "tiles": [
+    "https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf"
+  ],
+  "minzoom": 0,
+  "maxzoom": 14,
+  "bounds": [
+    9.5,
+    46.3,
+    17.2,
+    49.1
+  ]
+}
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## XYZ tile
+
+`GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
+
+`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Missing tile or wrong extension: 404 problem+json. Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `tileset` | path | string | yes | – | Tileset name, see `/v1/tiles` |
+| `z` | path | integer | yes | – | Zoom level |
+| `x` | path | integer | yes | – | Tile column |
+| `y` | path | integer | yes | – | Tile row |
+| `ext` | path | string | yes | – | pbf, mvt, webp, png or jpg |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf");
+const blob = await res.blob();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf")
+open("result.png", "wb").write(res.content)
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `304` | Not modified (with `If-None-Match`) |
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Playground
+
+<Playground group="tiles" lang="en" />

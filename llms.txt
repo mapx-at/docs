@@ -1,47 +1,29 @@
-# mapx Doku
+# mapx Docs
 
-> Offene Geodaten für Österreich (Kacheln und API) von mapx. Seiten sind statisch; Kennwerte stammen beim Build aus den echten PMTiles-Dateien.
+> Maps and location APIs for Austria from official open data (CC BY 4.0). No key, open CORS. Every page is also available as Markdown (append .md to the path, for example /guides/maps.md). German pages live under /de/.
 
-- [Schnellstart](https://docs.mapx.at/start/): MapLibre + PMTiles in fünf Minuten
-- [DTM Geländemodell](https://docs.mapx.at/daten/dtm/): Terrain-RGB (Mapbox-Kodierung, 0,1 m), z5-z16, BEV ALS-DTM 1 m, CC BY 4.0
-- [English documentation](https://docs.mapx.at/en/): all pages exist under /en/, for example [API](https://docs.mapx.at/en/api/), [Static Images](https://docs.mapx.at/en/api/static/), [SDK mapx-gl](https://docs.mapx.at/en/api/sdk/), [Routing](https://docs.mapx.at/en/api/routing/), [Geocoding](https://docs.mapx.at/en/api/geocoding/), [Styles](https://docs.mapx.at/en/api/styles/), [Examples](https://docs.mapx.at/en/beispiele/), [DTM](https://docs.mapx.at/en/daten/dtm/)
-- [Terrain-RGB](https://docs.mapx.at/konzepte/terrain-rgb/): Formel -10000 + (R*65536+G*256+B)*0.1
-- [API](https://docs.mapx.at/api/): tiles, tilejson, xyz, elevation (Spezifikation)
-- [Styles](https://docs.mapx.at/api/styles/): fertige MapLibre-Stile streets, satellite, outdoors
-- [Suche und Geocoding](https://docs.mapx.at/api/geocoding/): /v1/geocode, /v1/reverse, Suchindex
-- [Weather](https://docs.mapx.at/api/weather/): current observations, hourly forecast, weather tiles (GeoSphere Austria, CC BY 4.0)
-- [Routing](https://docs.mapx.at/api/routing/): directions, isochrone, matrix, matching (GIP.at)
-- [Static Images](https://docs.mapx.at/api/static/): /v1/static, Luftbild und Gelände als PNG/WebP mit Pin-, Linien- und GeoJSON-Overlays
-- [SDK mapx-gl](https://docs.mapx.at/api/sdk/): MapLibre-Aufsatz, https://map.mapx.at/sdk/v1/
-- [Beispiele](https://docs.mapx.at/beispiele/): 12 lauffähige MapLibre-Beispiele mit Code und HTML-Datei
-- [OpenAPI Elevation](https://docs.mapx.at/openapi.yaml)
-- [Lizenz und Attribution](https://docs.mapx.at/lizenz/)
-- [Changelog](https://docs.mapx.at/changelog/)
+## Get started
+- [What is mapx](https://docs.mapx.at/start/what-is-mapx/)
+- [Access and limits](https://docs.mapx.at/start/access-and-limits/): no key, rate-limit zones, attribution
+- [First map in 5 minutes](https://docs.mapx.at/start/first-map/)
+- [First search](https://docs.mapx.at/start/first-search/)
+- [First route](https://docs.mapx.at/start/first-route/)
+- [Glossary](https://docs.mapx.at/start/glossary/), [FAQ](https://docs.mapx.at/start/faq/)
 
-## Wichtige Fakten
+## Guides
+- [Maps](https://docs.mapx.at/guides/maps/), [Search](https://docs.mapx.at/guides/search/), [Navigation](https://docs.mapx.at/guides/navigation/), [Traffic](https://docs.mapx.at/guides/traffic/)
+- [Transit departures](https://docs.mapx.at/guides/transit/), [Static images](https://docs.mapx.at/guides/static-images/), [Elevation and terrain](https://docs.mapx.at/guides/elevation/), [Parcels](https://docs.mapx.at/guides/parcels/)
+- [SDK mapx-gl](https://docs.mapx.at/guides/sdk/), [Examples](https://docs.mapx.at/examples/)
 
-- Kacheln: https://tiles.mapx.at/<datei>.pmtiles, HTTP-Range, CORS offen, kein Schlüssel. Dateinamen enthalten Stichtag und Hash.
-- Terrain-RGB: WebP verlustfrei, 512 px ohne Rand, encoding "mapbox", maxzoom 16, darüber Overzoom.
-- Fehlende Quelldaten sind keine Nodata-Pixel, sondern glatt fortgesetztes Gelände (keine Messung).
+## Reference
+- [API overview](https://docs.mapx.at/api/): generated from https://api.mapx.at/v1/openapi.json
+- APIs: [Tiles](https://docs.mapx.at/api/tiles/), [Styles](https://docs.mapx.at/api/styles/), [Geocoding](https://docs.mapx.at/api/geocoding/), [Search Box](https://docs.mapx.at/api/search-box/), [Address](https://docs.mapx.at/api/address/), [Directions](https://docs.mapx.at/api/directions/), [Optimization](https://docs.mapx.at/api/optimization/), [Transit](https://docs.mapx.at/api/transit/), [Static Images](https://docs.mapx.at/api/static-images/), [Tilequery and Parcel](https://docs.mapx.at/api/tilequery/), [Elevation](https://docs.mapx.at/api/elevation/), [Weather](https://docs.mapx.at/api/weather/), [Traffic](https://docs.mapx.at/api/traffic/)
+- [Tilesets](https://docs.mapx.at/tilesets/), [Style specification](https://docs.mapx.at/reference/style-spec/), [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb/)
+- [Errors and limits](https://docs.mapx.at/api/errors/), [Migration](https://docs.mapx.at/api/migration/), [Changelog](https://docs.mapx.at/reference/changelog/), [Attribution](https://docs.mapx.at/reference/attribution/)
 
-## Beispiele (jede Seite auch als .md, zum Beispiel /beispiele/route.md)
-
-- [Karte einbetten](https://docs.mapx.at/beispiele/karte-einbetten/): Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
-- [Basiskarte wechseln](https://docs.mapx.at/beispiele/basiskarte-wechseln/): Zwischen Karte, Luftbild und Gelände umschalten.
-- [Tageszeit und Nachtmodus](https://docs.mapx.at/beispiele/licht/): Den Standardstil in vier Lichtstimmungen.
-- [3D-Gelände](https://docs.mapx.at/beispiele/gelaende-3d/): Luftbild über dem Geländemodell, geneigt und überhöht.
-- [Höhe per Klick](https://docs.mapx.at/beispiele/hoehe-abfragen/): Ein Klick fragt die Höhe an einem Punkt, wahlweise Gelände oder Oberfläche.
-- [Höhenprofil](https://docs.mapx.at/beispiele/hoehenprofil/): Linie klicken, Profil sehen.
-- [Suche](https://docs.mapx.at/beispiele/suche/): Orte, Adressen und Gipfel suchen und anspringen.
-- [Route](https://docs.mapx.at/beispiele/route/): Start und Ziel klicken, Weg samt Länge und Dauer erhalten.
-- [Wetter-Overlay](https://docs.mapx.at/beispiele/wetter-overlay/): Temperatur, Niederschlag oder Wind als Overlay, Stunde per Regler.
-- [Erreichbarkeit (Isochronen)](https://docs.mapx.at/beispiele/isochrone/): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
-- [Fahrzeitmatrix](https://docs.mapx.at/beispiele/matrix/): Fahrzeiten zwischen mehreren Orten in einer Anfrage.
-- [Kataster: Grundstück per Klick](https://docs.mapx.at/beispiele/kataster-klick/): Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.
-- [TileJSON-Quellen](https://docs.mapx.at/beispiele/tilejson-quelle/): Orthophoto und Höhenlinien ohne fertigen Stil einbinden.
-
-## Hinweise für Werkzeuge
-
-- Beispielcode nutzt MapLibre GL JS 4.7.1 und pmtiles 3.2.1 (CDN), das Protokoll `pmtiles://` muss registriert sein.
-- Stile: https://mapx.at/styles/ (künftig /v1/styles/{streets|satellite|outdoors}). Keine OSM-Daten, nur amtliche Quellen.
-- Such- und Routing-Dienst antworten nur auf freigegebene Herkünfte (CORS).
+## Key facts
+- Base URL https://api.mapx.at/v1/, tiles https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}. Coordinates are lon,lat.
+- Styles: streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets, outdoors. Tilesets: streets, cadastre, contours, terrain-rgb, dsm, orthophoto, orthophoto-flight-blocks.
+- Routing profiles: driving, driving-traffic, driving-truck, cycling, walking.
+- Terrain-RGB: height_m = -10000 + (R*65536 + G*256 + B)*0.1.
+- Errors are application/problem+json with a stable code. Rate limits per zone in the RateLimit-Policy header.

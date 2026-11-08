@@ -1,32 +1,32 @@
-# Migration auf englische Namen
+# Migration to English names
 
-Alte deutsche IDs und Feldnamen der API, ihre englischen Nachfolger, die Deprecation-Header und das Sunset-Datum 31.05.2027.
+Former German API IDs and field names, their English successors, the deprecation headers and the sunset date 2027-05-31.
 
-Seit dem 08.11.2026 verwendet die API durchgehend englische Kennungen für Stile, Kachelsätze, Suchkategorien und Antwortfelder. Die alten deutschen Namen funktionieren unverändert weiter, **bis zum 31.05.2027** (Sunset). Danach liefern sie `404` bzw. enthalten die alten Felder nicht mehr.
+Since 2026-11-08 the API uses English identifiers for styles, tilesets, search categories and response fields. The former German names keep working unchanged **until 2027-05-31** (sunset). After that they return `404`, or the old fields are no longer included.
 
-> Wer bis zum 31.05.2027 nichts ändert, bekommt ab dann Fehler. Die neuen Namen funktionieren schon jetzt; ein Umstieg ist ein reiner Namenstausch, die Daten sind identisch.
+> If nothing changes by 2027-05-31, requests with the old names will fail from then on. The new names already work today; switching is a pure rename, the data is identical.
 
-## Header bei alten Namen
+## Headers on old names
 
-Eine Anfrage mit altem Namen liefert dieselbe Antwort wie mit dem neuen Namen, dazu drei Header:
+A request using an old name returns the same response as with the new name, plus three headers:
 
-| Header | Bedeutung |
+| Header | Meaning |
 |---|---|
-| `Deprecation: @1794096000` | Der Name ist seit dem 08.11.2026 abgekündigt ([RFC 9745](https://www.rfc-editor.org/rfc/rfc9745), Zeitstempel in Unix-Sekunden). |
-| `Sunset: Mon, 31 May 2027 00:00:00 GMT` | Ab diesem Zeitpunkt entfällt der alte Name ([RFC 8594](https://www.rfc-editor.org/rfc/rfc8594)). |
-| `Link: <https://api.mapx.at/v1/styles/streets>; rel="successor-version"` | Die gleiche Ressource unter dem neuen Namen. |
+| `Deprecation: @1794096000` | The name has been deprecated since 2026-11-08 ([RFC 9745](https://www.rfc-editor.org/rfc/rfc9745), Unix timestamp in seconds). |
+| `Sunset: Mon, 31 May 2027 00:00:00 GMT` | From this moment the old name is removed ([RFC 8594](https://www.rfc-editor.org/rfc/rfc8594)). |
+| `Link: <https://api.mapx.at/v1/styles/streets>; rel="successor-version"` | The same resource under the new name. |
 
 ```bash
 curl -sI https://api.mapx.at/v1/styles/karte | grep -iE '^(deprecation|sunset|link)'
 ```
 
-Die Header stehen bei Stilen (`/v1/styles/{id}` samt Sprites und Static Tiles), Static Images (`/v1/static/{style}/…`), Kacheln, TileJSON, Tilequery und bei der Search Box mit alten Kategorie-IDs. In den Antworten mit den alten Feldnamen (Grundstück, Höhe) stehen beide Namen nebeneinander; die alten sind in der [OpenAPI](https://api.mapx.at/v1/openapi.json) als deprecated markiert.
+The headers appear on styles (`/v1/styles/{id}` including sprites and static tiles), static images (`/v1/static/{style}/…`), tiles, TileJSON, tilequery, and on the Search Box when old category IDs are used. Responses with old field names (parcel, elevation) contain both names side by side; the old ones are marked deprecated in the [OpenAPI](https://api.mapx.at/v1/openapi.json).
 
-## Stil-IDs
+## Style IDs
 
-Gilt für `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/styles/{id}/sprite` und `/v1/static/{style}/…`.
+Applies to `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/styles/{id}/sprite` and `/v1/static/{style}/…`.
 
-| alt | neu |
+| old | new |
 |---|---|
 | `karte` | `streets` |
 | `karte-morgen` | `streets-dawn` |
@@ -37,13 +37,13 @@ Gilt für `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/sty
 | `hybrid` | `satellite-streets` |
 | `gelaende` | `outdoors` |
 
-Die Metadaten der Stile heißen jetzt `mapx:style` und `mapx:api_style` (früher `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` bleibt unverändert.
+Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` is unchanged.
 
-## Kachelsätze
+## Tilesets
 
-Gilt für `/v1/tiles`, TileJSON, XYZ-Kachelpfade und `/v1/tilequery`. `dtm` und `dsm` bleiben. Die Dateinamen der PMTiles ändern sich nicht.
+Applies to `/v1/tiles`, TileJSON, XYZ tile paths and `/v1/tilequery`. `dtm` and `dsm` stay. The PMTiles file names do not change.
 
-| alt | neu |
+| old | new |
 |---|---|
 | `basis` | `streets` |
 | `kataster` | `cadastre` |
@@ -52,13 +52,13 @@ Gilt für `/v1/tiles`, TileJSON, XYZ-Kachelpfade und `/v1/tilequery`. `dtm` und 
 | `dop` | `orthophoto` |
 | `dop_flugblock` | `orthophoto-flight-blocks` |
 
-Die Namen in `aliases` der Antwort von `GET /v1/tiles` führen alle gleichwertigen Namen auf. Style-interne Quell-IDs und Ebenen-IDs (zum Beispiel `basis`, `hoehenlinien-index`) bleiben vorerst unverändert.
+The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) stay unchanged for now.
 
-## Suchkategorien
+## Search categories
 
-Gilt für `/v1/searchbox/category/{id}`, `poi_category` und `poi_category_ids`. Der Name (`name`) bleibt über `language=` lokalisiert. Unverändert bleiben: `kindergarten`, `defibrillator`, `park`, `museum`.
+Applies to `/v1/searchbox/category/{id}`, `poi_category` and `poi_category_ids`. The `name` stays localised via `language=`. Unchanged: `kindergarten`, `defibrillator`, `park`, `museum`.
 
-| alt | neu |
+| old | new |
 |---|---|
 | `bahnhof` | `train_station` |
 | `haltestelle` | `bus_stop` |
@@ -106,9 +106,9 @@ Gilt für `/v1/searchbox/category/{id}`, `poi_category` und `poi_category_ids`. 
 | `toilette` | `toilets` |
 | `trinkwasser` | `drinking_water` |
 
-## Felder
+## Fields
 
-| Endpunkt | alt | neu |
+| Endpoint | old | new |
 |---|---|---|
 | `/v1/parcel` | `gstnr` | `parcel_number` |
 | `/v1/parcel` | `kgnr` | `cadastral_municipality_id` |
@@ -116,4 +116,4 @@ Gilt für `/v1/searchbox/category/{id}`, `poi_category` und `poi_category_ids`. 
 | `/v1/parcel` | `quelle` | `source` |
 | `/v1/elevation`, `/v1/elevation/profile`, `/v1/elevation/{coordinate}`, `/v1/tilequery` | `stichtag` | `reference_date` |
 
-Bis zum Sunset enthalten die Antworten beide Felder. `/v1/weather/*` liefert die Windrichtung bereits als `wind_direction_deg`.
+Until the sunset, responses contain both fields. `/v1/weather/*` already returns wind direction as `wind_direction_deg`.
