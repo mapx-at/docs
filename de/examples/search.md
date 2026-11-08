@@ -2,7 +2,7 @@
 
 Orte, Adressen und Gipfel suchen und anspringen.
 
-Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen. Kein Zugangstoken nötig.
+Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen.
 
 ```js
 // Suche: Orte, Adressen, Gipfel und Grundstücke über /v1/geocode (GeoJSON im Mapbox-Stil).

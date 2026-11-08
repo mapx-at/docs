@@ -1,6 +1,6 @@
 # mapx Docs
 
-Karten, Suche, Navigation, Höhen, Öffentlicher Verkehr, Verkehr und statische Bilder für Österreich. Offizielle Open Data, kostenloser API-Token.
+Karten, Suche, Navigation, Höhen, öffentlicher Verkehr, Verkehr und statische Bilder für Österreich. Offizielle Open Data, kostenloser API-Token.
 
 ## Den passenden Weg wählen
 

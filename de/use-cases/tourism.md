@@ -4,12 +4,14 @@ Rad- und MTB-Routen, Radrouten-Ebene, Höhenprofil und Wetter für Touren und G�
 
 Gäste fragen „Welchen Weg mit dem Rad, wie steil ist er, und wie wird das Wetter?“. Die Antworten kommen aus derselben API: Routen mit den Profilen `cycling` und `cycling-mtb`, ein Höhenprofil, die beschilderten Radrouten auf der Karte und die Vorhersage für das Ziel.
 
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+
 ## Routen für Räder
 
 `cycling` bevorzugt Radwege und beschilderte Routen und bewertet unbefestigte Abschnitte und starke Steigungen schlechter. `cycling-mtb` bevorzugt Forststraßen und Singletrails. Mit `steps=true` trägt jeder Schritt die Art der Infrastruktur und den Belag, `routes[].summary` enthält Anstieg, Abstieg und maximale Steigung.
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions/cycling-mtb/15.3294,48.2272;15.4,48.3?steps=true&overview=false" \
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/cycling-mtb/15.3294,48.2272;15.4,48.3?steps=true&overview=false" \
   | jq '.routes[0] | {distance, duration, summary}'
 ```
 
@@ -35,7 +37,7 @@ Das [SDK-Beispiel](/de/examples/sdk-controls/) zeigt beide Controls zusammen.
 Jede Tourenseite gewinnt mit einem Profil. Die Routengeometrie in die Höhen-API geben (2 bis 512 Punkte; die vereinfachte Standardgeometrie der Route passt):
 
 ```js
-const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097")).json()).routes[0];
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).routes[0];
 // overview=simplified (Standard) hält die Linie unter dem Limit von 512 Punkten
 const p = await mapx.elevationProfile(route.geometry.coordinates, 120);
 console.log(`Anstieg ${Math.round(p.ascent)} m, Abstieg ${Math.round(p.descent)} m, ${Math.round(p.min)}-${Math.round(p.max)} m`);

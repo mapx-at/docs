@@ -21,7 +21,7 @@ Das Bundle von `https://map.mapx.at/sdk/v1/` laden (CORS ist offen) oder die Dat
 <div id="map" style="height:100vh"></div>
 <script type="module">
   import mapx from "https://map.mapx.at/sdk/v1/mapx-gl.bundle.js";
-  const map = mapx.map({ container: "map", style: "streets", center: [15.33, 48.23], zoom: 12 });
+  const map = mapx.map({ accessToken: "DEIN_TOKEN", container: "map", style: "streets", center: [15.33, 48.23], zoom: 12 });
   map.addControl(new mapx.SearchControl(), "top-left");
   map.addControl(new mapx.RouteControl(), "top-right");
   map.addControl(new mapx.LayerControl(), "top-right");
@@ -29,6 +29,10 @@ Das Bundle von `https://map.mapx.at/sdk/v1/` laden (CORS ist offen) oder die Dat
 ```
 
 Ein vollständiges Beispiel liegt unter [map.mapx.at/sdk/v1/example.html](https://map.mapx.at/sdk/v1/example.html).
+
+## Token
+
+Alle Aufrufe brauchen einen Token ([Zugang und Limits](/de/start/access-and-limits/)). Er wird einmal gesetzt, mit `mapx.map({ accessToken: "DEIN_TOKEN", … })` oder `mapx.setAccessToken("DEIN_TOKEN")`; Helfer, Styles, Tiles und `staticImageUrl()` tragen ihn dann mit. Auf Webseiten einen öffentlichen Token (`mx_pk_…`) verwenden, geheime Tokens (`mx_sk_…`) gehören nur auf Server.
 
 ## Karte
 

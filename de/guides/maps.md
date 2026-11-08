@@ -20,7 +20,7 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
-  center: [12.694, 47.074], zoom: 12, // Grossglockner
+  center: [12.694, 47.074], zoom: 12, // Großglockner
 });
 ```
 

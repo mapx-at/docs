@@ -53,7 +53,7 @@ from pmtiles.reader import Reader
 URL = "${url}"
 
 def get_bytes(offset, length):
-    r = requests.get(URL, headers={"Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
+    r = requests.get(URL, headers={"Authorization": "Bearer DEIN_TOKEN", "Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
     r.raise_for_status()
     return r.content
 
@@ -65,10 +65,10 @@ print(hoehe.shape, hoehe.min(), hoehe.max())`} />
   </TabItem>
   <TabItem label="curl">
     <Code lang="bash" code={`# eine Kachel über den XYZ-Endpunkt
-curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
 
 # ganze Datei, fortsetzbar
-curl -C - -O ${url}`} />
+curl -C - -H "Authorization: Bearer DEIN_TOKEN" -O ${url}`} />
   </TabItem>
 </Tabs>
 
@@ -79,7 +79,7 @@ höhe_m = -10000 + (R · 65536 + G · 256 + B) · 0,1
 ```
 
 - Wertebereich theoretisch −10000 m bis +1 667 721,5 m in Schritten von 0,1 m; in Österreich liegen die Werte zwischen rund 115 m (Neusiedler See) und rund 3 798 m (Großglockner).
-- Gerundet wird beim Schreiben auf 0,1 m (Rundung zur geraden Zahl bei genau .5, siehe Code oben), Werte außerhalb des Bereichs werden begrenzt.
+- Gerundet wird beim Schreiben auf 0,1 m (Rundung zur geraden Zahl bei genau .5), Werte außerhalb des Bereichs werden begrenzt.
 - WebP **verlustfrei**: verlustbehaftete Kompression würde die kodierten Höhen direkt verfälschen. Keine Alpha-Information nutzen, RGB-Bänder unverändert lesen (kein Farbmanagement, kein Premultiplied Alpha).
 - 512 × 512 Pixel, **ohne Rand** (kein 1-px-Skirt). In MapLibre `tileSize: 512` und `encoding: "mapbox"` angeben.
 
@@ -96,6 +96,8 @@ Ausführlich: [Terrain-RGB](/de/reference/terrain-rgb/).
 
 Die Kodierung ist also fünfmal feiner als die Genauigkeit der Messung: Sie begrenzt die Qualität nicht.
 
+In den Übersichtsstufen z15 bis z5 ist jedes Pixel der Mittelwert der feineren Stufe. Die vertikale Auflösung bleibt 0,1 m, kleine Spitzen und Gipfel werden aber geglättet. Für exakte Punkthöhen z16 lesen oder die [Höhen-API](/de/api/elevation/) nutzen.
+
 
 ## Horizontale Auflösung je Zoom
 
@@ -103,8 +105,8 @@ Bei 47,5° N, 512-px-Kacheln, Web-Mercator:
 
 <Aufloesung />
 
-Die Daten stammen aus einem 1-m-Raster. z16 (≈ 0,8 m pro Pixel) ist die erste Stufe, die die Quelle nicht vergröbert; z15 würde etwa 60 % der Pixel verwerfen.
-Über z16 gibt es keine Kacheln: MapLibre zoomt ab z17 die z16-Kachel auf (`maxzoom: 16` setzen), es entsteht keine zusätzliche Information.
+Die Daten stammen aus einem 1-m-Raster. z16 (≈ 0,8 m pro Pixel) ist die feinste Stufe und erhält die Auflösung der Quelle.
+Über z16 gibt es keine Kacheln: MapLibre zoomt ab z17 die z16-Kachel auf (`maxzoom: 16` setzen).
 
 ## Quelle und Aktualität
 

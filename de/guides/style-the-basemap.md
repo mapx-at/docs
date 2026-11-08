@@ -2,7 +2,7 @@
 
 Einen eigenen MapLibre-Kartenstil für die mapx-Basiskarte schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen.
 
-**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](/de/tilesets/streets/) bauen. mapx liefert die Daten, das Aussehen bestimmen Sie.
+**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](/de/tilesets/streets/) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
 
 **Voraussetzungen:** ein Browser und ein statischer Webserver. Grundkenntnisse in MapLibre-Styles (Quellen und Ebenen).
 
@@ -20,6 +20,7 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
+     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const quelle = { type: "vector", url: "https://tiles.mapx.at/v1/tiles/streets.json" };
    ```
 
@@ -98,6 +99,10 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
      new maplibregl.Map({
        container: "map",
        center: [15.334, 48.227], zoom: 14,
+       // Token an alle Anfragen an mapx.at hängen
+       transformRequest: (url) => ({
+         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+       }),
        style: {
          version: 8,
          sources: { streets: quelle },
@@ -118,12 +123,12 @@ Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen,
 
 ## Beschriftung braucht eigene Glyphen
 
-mapx liefert keine Schriften. Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Style ein `glyphs`-Feld, das auf eine von Ihnen betriebene oder gewählte Schriftquelle zeigt:
+mapx liefert keine Schriften. Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Style ein `glyphs`-Feld, das auf eine selbst betriebene oder gewählte Schriftquelle zeigt:
 
 ```js
 style: {
   version: 8,
-  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // Ihre eigene Glyphenquelle
+  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // eigene Glyphenquelle
   sources: { streets: quelle },
   layers: [
     // ...
@@ -135,7 +140,7 @@ style: {
 }
 ```
 
-Das Beispiel nutzt die freien Demo-Glyphen von MapLibre (Schrift `Open Sans Semibold`). Für den Produktivbetrieb eine eigene Glyphenquelle verwenden; `text-font` muss einer Schrift entsprechen, die sie ausliefert.
+Das Beispiel nutzt die freien Demo-Glyphen von MapLibre (Schrift `Open Sans Semibold`). Für den Produktivbetrieb eine eigene Glyphenquelle verwenden; `text-font` muss einer Schrift entsprechen, die die Glyphenquelle ausliefert.
 
 ## Nächste Schritte
 

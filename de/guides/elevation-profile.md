@@ -4,7 +4,7 @@ Höhenprofil für einen Weg über die Höhen-API abfragen und als SVG-Diagramm z
 
 **Ziel:** Für eine Wegstrecke ein Höhenprofil (Entfernung gegen Höhe) abfragen und als Diagramm darstellen.
 
-**Voraussetzungen:** ein Browser. Ein kostenloser Token, kein Framework, keine Bibliothek.
+**Voraussetzungen:** ein Browser. Ein kostenloser Token ([Zugang und Limits](/de/start/access-and-limits/)), kein Framework, keine Bibliothek.
 
 Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
 
@@ -13,7 +13,7 @@ Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `sampl
 1. **Anfrage testen.** Die Linie besteht aus `lon,lat`-Paaren, getrennt durch Semikolon (Länge vor Breite). 50 Messpunkte entlang einer Strecke am Großglockner:
 
    ```bash
-   curl "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
+   curl -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
    Die Antwort ist eine GeoJSON-`FeatureCollection`, je Messpunkt ein Feature mit `elevation` (m) und `distance_m` (Strecke vom Anfang).
@@ -33,7 +33,7 @@ Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `sampl
    <script type="module">
      const linie = "12.69,47.07;12.70,47.08";
      const url = `https://api.mapx.at/v1/elevation?path=${linie}&samples=100&model=dtm`;
-     const daten = await (await fetch(url)).json();
+     const daten = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 
      // Messpunkte ohne Höhe (außerhalb der Daten) auslassen
      const pts = daten.features
@@ -70,7 +70,7 @@ Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `sampl
    </script>
    ```
 
-4. **Öffnen.** `profil.html` über einen statischen Server öffnen (`npx serve`); der Browser darf die API direkt abfragen.
+4. **Öffnen.** `profil.html` über einen statischen Server öffnen (`npx serve`); der Browser darf die API direkt abfragen. Für Webseiten dazu einen öffentlichen Token (`mx_pk_…`) mit der eigenen Origin verwenden, `localhost` nur während der Entwicklung erlauben.
 
 </Steps>
 

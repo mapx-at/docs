@@ -4,12 +4,14 @@ Lkw-Routing mit Fahrzeugmaßen, Fahrzeitmatrizen, Tourenplanung und Verkehr für
 
 Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuelle Verkehrslage. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
 
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+
 ## Lkw-Routen
 
 Das Profil `driving-truck` nimmt die Fahrzeugmaße und meidet Straßen mit passenden Gewichts-, Höhen-, Breiten- und Längenbeschränkungen und Verboten. Ohne Angaben gelten 40 t, 4 m Höhe und 2,55 m Breite.
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
   | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
 ```
 
@@ -29,7 +31,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];
 const q = depots.map((p) => p.join(",")).join(";");
-const m = await (await fetch(`https://api.mapx.at/v1/matrix/driving/${q}?annotations=duration,distance`)).json();
+const m = await (await fetch(`https://api.mapx.at/v1/matrix/driving/${q}?annotations=duration,distance`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 console.log(m.durations[0][1] / 60, "min", m.distances[0][1] / 1000, "km"); // Wien nach Melk
 ```
 
@@ -46,7 +48,7 @@ const body = {
     { id: 2, location: [14.2858, 48.3069], service: 600 },
   ],
 };
-const res = await fetch("https://api.mapx.at/v1/optimization", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+const res = await fetch("https://api.mapx.at/v1/optimization", { method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer DEIN_TOKEN" }, body: JSON.stringify(body) });
 const tour = await res.json();
 console.log(tour.routes[0].steps.map((s) => s.id ?? s.type), tour.unassigned); // unassigned: Aufträge, die nicht passten
 ```
@@ -59,7 +61,7 @@ Das Ergebnis mit einer `directions`-Anfrage durch die Orte aus `tour.routes[0].s
 
 ```js
 const bbox = [14.5, 47.8, 16.9, 48.6]; // Niederösterreich
-const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${bbox}&active=true&type=construction&limit=50`)).json();
+const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${bbox}&active=true&type=construction&limit=50`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 

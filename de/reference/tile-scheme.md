@@ -21,7 +21,7 @@ function kachel(lon, lat, z) {
 kachel(12.694, 47.074, 12);   // { z: 12, x: 2192, y: 1439 }
 ```
 
-Eine Kachel liefert der Endpunkt `https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}`, siehe [Kacheln](/de/api/tiles/).
+Eine Kachel liefert der Endpunkt `https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`, siehe [Kacheln](/de/api/tiles/).
 
 ## 512-Pixel-Kacheln
 
@@ -44,9 +44,9 @@ Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vo
 
 ## Overzoom
 
-Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre setzen Sie dazu `maxzoom` an der Quelle auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](/de/api/errors/).
+Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](/de/api/errors/).
 
-> Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) setzen Sie im Style `minzoom: 16`.
+> Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) im Style `minzoom: 16` setzen.
 
 ## Weiter
 

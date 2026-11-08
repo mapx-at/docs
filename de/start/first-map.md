@@ -2,7 +2,7 @@
 
 Eine vollständige HTML-Datei mit mapx-Karte. Kopieren, speichern, öffnen.
 
-Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](/de/start/access-and-limits/) ersetzen (erlaubter Origin: deine Seite, beim Testen `localhost`). Kein Build-Schritt.
+Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](/de/start/access-and-limits/) ersetzen (erlaubter Origin: die eigene Seite, beim Testen `localhost`). Kein Build-Schritt.
 
 <Tabs syncKey="client">
 <TabItem label="MapLibre GL JS">

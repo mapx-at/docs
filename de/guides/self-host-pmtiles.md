@@ -8,25 +8,25 @@ export const dtm = `https://tiles.mapx.at/${data.tilesets.relief.datei}`;
 
 **Voraussetzungen:** ein Server, S3-kompatibler Speicher oder CDN mit Unterstützung für HTTP-Range-Anfragen. Eine PMTiles-Datei ist eine einzelne statische Datei; ein Tile-Server ist nicht nötig.
 
-Die Dateien liegen offen unter `https://tiles.mapx.at/<datei>.pmtiles` (Dateinamen je Produkt unter „Kennwerte“ auf den [Produktseiten](/de/tilesets/)). Der Dateiname enthält den Stichtag und ändert sich nie, ein neuer Stand bekommt einen neuen Namen. Mit Quellenangabe nach [CC BY 4.0](/de/reference/attribution/) dürfen Sie die Dateien weitergeben und spiegeln.
+Die Dateien liegen unter `https://tiles.mapx.at/<datei>.pmtiles` (Token als `?access_token=DEIN_TOKEN` anhängen, siehe [Zugang und Limits](/de/start/access-and-limits/); Dateinamen je Produkt unter „Kennwerte“ auf den [Produktseiten](/de/tilesets/)). Der Dateiname enthält den Stichtag und ändert sich nie, ein neuer Stand bekommt einen neuen Namen. Mit Quellenangabe nach [CC BY 4.0](/de/reference/attribution/) dürfen die Dateien weitergegeben und gespiegelt werden.
 
 <Steps>
 
 1. **Datei herunterladen.** `curl -C -` setzt einen abgebrochenen Download fort:
 
-   <Code lang="bash" code={`curl -C - -O ${dtm}`} />
+   <Code lang="bash" code={`curl -C - -O "${dtm}?access_token=DEIN_TOKEN"`} />
 
-   Das Orthophoto und die Höhenmodelle sind sehr umfangreiche Dateien; prüfen Sie vor dem Download Speicher und Bandbreite. Für Teilgebiete geht es einfacher mit Schritt 2.
+   Das Orthophoto und die Höhenmodelle sind sehr umfangreiche Dateien; vor dem Download Speicher und Bandbreite prüfen. Für Teilgebiete geht es einfacher mit Schritt 2.
 
 2. **Optional: nur einen Ausschnitt holen.** Mit dem Kommandozeilenwerkzeug [`pmtiles`](https://github.com/protomaps/go-pmtiles) liest `extract` per Range-Request nur die Kacheln eines Gebiets aus der Online-Datei:
 
    <Code lang="bash" code={`# Ausschnitt per Bounding-Box (west,süd,ost,nord)
-pmtiles extract ${dtm} salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
+pmtiles extract "${dtm}?access_token=DEIN_TOKEN" salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
 
 # oder nur bis zu einer Zoomstufe
-pmtiles extract ${dtm} uebersicht.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1`} />
+pmtiles extract "${dtm}?access_token=DEIN_TOKEN" uebersicht.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1`} />
 
-   Die Ausgabedatei ist eine vollständige PMTiles-Datei, die Sie wie jede andere ausliefern.
+   Die Ausgabedatei ist eine vollständige PMTiles-Datei, die sich wie jede andere ausliefern lässt.
 
 3. **Ausliefern.** Der Server muss `Range`-Anfragen mit `206 Partial Content` beantworten. Beispiel nginx:
 
@@ -41,7 +41,7 @@ pmtiles extract ${dtm} uebersicht.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1
    }
    ```
 
-   Bei S3 und kompatiblen Speichern genügt eine CORS-Regel, die `GET` und `HEAD` für Ihre Seiten-Herkunft (oder `*`) erlaubt, die Header `Range`, `If-Match` und `If-None-Match` zulässt und `ETag`, `Content-Length`, `Content-Range` freigibt. Hinter einem CDN muss das CDN Range-Anfragen an den Ursprung weiterreichen oder selbst bedienen.
+   Bei S3 und kompatiblen Speichern genügt eine CORS-Regel, die `GET` und `HEAD` für die Herkunft der eigenen Seite (oder `*`) erlaubt, die Header `Range`, `If-Match` und `If-None-Match` zulässt und `ETag`, `Content-Length`, `Content-Range` freigibt. Hinter einem CDN muss das CDN Range-Anfragen an den Ursprung weiterreichen oder selbst bedienen.
 
 4. **In der Karte verwenden.** Statt `tiles.mapx.at` die eigene URL:
 
@@ -62,7 +62,7 @@ pmtiles extract ${dtm} uebersicht.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1
 
 ## Caching
 
-Weil Dateinamen unveränderlich sind, setzen Sie `Cache-Control: public, max-age=31536000, immutable`. Ein neuer Stand wird unter neuem Namen veröffentlicht; Ihre Seite wechselt, indem sie die neue URL einträgt. Details zum Caching der mapx-Dienste: [Fehler, Limits und Betrieb](/de/api/errors/).
+Weil Dateinamen unveränderlich sind, ist `Cache-Control: public, max-age=31536000, immutable` richtig. Ein neuer Stand wird unter neuem Namen veröffentlicht; die eigene Seite wechselt, indem sie die neue URL einträgt. Details zum Caching der mapx-Dienste: [Fehler, Limits und Betrieb](/de/api/errors/).
 
 ## Ergebnis
 

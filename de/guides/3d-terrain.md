@@ -6,7 +6,7 @@ Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit Ma
 
 **Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](/de/start/access-and-limits/)).
 
-Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) und das [Orthophoto](/de/tilesets/orthophoto/) (Bild, Typ `raster`). Beide Tilesets binden Sie über [TileJSON](/de/api/tiles/) ein, ohne einen Dateinamen zu kennen.
+Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) und das [Orthophoto](/de/tilesets/orthophoto/) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](/de/api/tiles/) einbinden, ohne einen Dateinamen zu kennen.
 
 <Steps>
 
@@ -44,10 +44,15 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
 
    ```html
    <script>
+     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const map = new maplibregl.Map({
        container: "map",
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
        maxPitch: 80,
+       // Token an alle Anfragen an mapx.at hängen
+       transformRequest: (url) => ({
+         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+       }),
        style: {
          version: 8,
          sources: quellen,
@@ -69,7 +74,7 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
 
 Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusätzlich schattiert. Das Orthophoto reicht bis z18 (20 cm), das DTM bis z16 (Rasterweite 1 m); MapLibre vergrößert darüber hinaus automatisch.
 
-> Mit `exaggeration` überhöhen Sie das Relief. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
+> Mit `exaggeration` lässt sich das Relief überhöhen. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
 
 ## Nächste Schritte
 

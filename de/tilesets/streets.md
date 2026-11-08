@@ -37,8 +37,8 @@ Die Farben der Live-Karte sind automatisch vergeben (Fläche, Linie, Punkt je La
     Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/streets.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/tiles/streets/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/streets.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/streets/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 
@@ -67,7 +67,7 @@ Alle Felder und Werte jedes Layers: [Basiskarte: Layer-Referenz](/de/reference/s
 
 ## Hinweise
 
-- Nicht enthalten: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen; kleine Flugfelder fehlen teils; Gewässer kennen kein „verrohrt“. Skigebiete haben den Stand 2017.
+- Nicht enthalten: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen; kleine Flugfelder fehlen teils. Skigebiete haben den Stand 2017.
 - Ausland: praktisch leer (nur Bodensee und Gewässer bis knapp hinter die Grenze).
 - Glyphen und Schriften für Beschriftungen liefert mapx nicht; der Style braucht eigene.
 

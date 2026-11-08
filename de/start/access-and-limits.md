@@ -6,7 +6,7 @@ Kostenloser API-Token, öffentliche und geheime Tokens, Übergabe, Rate Limits p
 
 Alle Endpunkte unter `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` und alle Tiles unter `https://tiles.mapx.at/` brauchen einen Token. Er ist kostenlos, es gibt keine nutzungsabhängige Verrechnung.
 
-1. [account.mapx.at](https://account.mapx.at/) öffnen und mit der E-Mail-Adresse registrieren (ein 8-stelliger Code kommt per Mail) oder mit Google bzw. Microsoft anmelden. Zustimmen musst du der Kontaktaufnahme zu Dienst und Konto (Sicherheit, Änderungen, Abschaltung). Werbung und Newsletter sind eine eigene, freiwillige Checkbox.
+1. [account.mapx.at](https://account.mapx.at/) öffnen und mit der E-Mail-Adresse registrieren (ein 8-stelliger Code kommt per Mail) oder mit Google bzw. Microsoft anmelden. Der Kontaktaufnahme zu Dienst und Konto (Sicherheit, Änderungen, Abschaltung) ist zuzustimmen. Werbung und Newsletter sind eine eigene, freiwillige Checkbox.
 2. Unter **Tokens** beliebig viele benannte Tokens anlegen. Der Token wird nur einmal angezeigt, dann kopieren. Tokens lassen sich jederzeit sperren, rotieren oder löschen, Löschen wirkt sofort.
 3. Den Token bei jeder Anfrage mitschicken (siehe unten). Die Seite **Nutzung** zeigt Anfragen je Token, Produkt und Tag, auch abgelehnte mit Grund.
 
@@ -16,7 +16,7 @@ Die OpenAPI-Beschreibung `https://api.mapx.at/v1/openapi.json` und CORS-Prefligh
 
 | Art | Präfix | Einsatz | Einschränkung |
 |---|---|---|---|
-| Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo du es erlaubst. | Nur lesende Produkte, nur `GET`/`HEAD`. Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
+| Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo es erlaubt ist. | Nur lesende Produkte, nur `GET`/`HEAD`. Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
 | Geheim | `mx_sk_…` | Server, Skripte und CI. Nie in eine Webseite oder App einbauen. | Keine Origin-Bindung; optional an IP-Bereiche (CIDR) gebunden. |
 
 Ein öffentlicher Token wird gegen den Header `Origin` geprüft (bei Kachel- und Bildanfragen ohne Origin gegen den Host des `Referer`). Anfragen von anderen Seiten bekommen `403` mit dem Grund `origin-not-allowed`. `localhost` nur während der Entwicklung als Origin eintragen.
@@ -77,7 +77,7 @@ Für Massenabfragen die [PMTiles](/de/tilesets/)-Datei einmal herunterladen stat
 
 ## CORS und Caching
 
-CORS erlaubt jeden Origin und den Header `Authorization`, die APIs lassen sich also direkt aus dem Browser aufrufen. Antworten ohne Token in der URL dürfen von gemeinsamen Caches gespeichert werden; Antworten mit deinem Token (Styles mit `access_token`) sind `private`.
+CORS erlaubt jeden Origin und den Header `Authorization`. Der Header `Authorization: Bearer` funktioniert daher auch im Browser (der Preflight wird ohne Token beantwortet), ebenso `access_token` in der URL. Die APIs lassen sich direkt aus dem Browser aufrufen. Antworten ohne Token in der URL dürfen von gemeinsamen Caches gespeichert werden; Antworten mit dem Token in der URL (Styles mit `access_token`) sind `private`.
 
 ## Attribution
 

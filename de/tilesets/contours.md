@@ -35,21 +35,21 @@ Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](/
     Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/contours.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/contours.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 
 ## Layer-Referenz
 
-| `lvl` | Zoom | Abstand | Indexlinie |
-|---|---|---|---|
-| 10 | 10–11 | 100 m | 500 m |
-| 12 | 12–13 | 50 m | 200 m |
-| 14 | 14–15 | 20 m | 100 m |
-| 16 | ab 16 | 10 m | 50 m |
+| `lvl` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß-σ) | Mindestlänge |
+|---|---|---|---|---|---|---|
+| 10 | 10–11 | 100 m | 500 m | 20 m | 60 m | 600 m |
+| 12 | 12–13 | 50 m | 200 m | 10 m | 25 m | 250 m |
+| 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
+| 16 | ab 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
 
-Jede Stufe hat eigene Glättung und Mindestlänge der Linien. Unter z10 gibt es keine Linien. Im Style nach `lvl` filtern, sonst liegen in z12 und darüber mehrere Stufen übereinander,
+Unter z10 gibt es keine Linien. Im Style nach `lvl` filtern, sonst liegen in z12 und darüber mehrere Stufen übereinander,
 falls der Client überzoomt.
 
 <Code lang="js" code={`{ id: "hl", type: "line", source: "v", "source-layer": "contour_l",

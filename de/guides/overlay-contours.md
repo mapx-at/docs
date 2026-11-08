@@ -4,7 +4,7 @@ Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basisk
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
-**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine Schriftquelle (Glyphen), die Sie selbst angeben, siehe [Basiskarte stylen](/de/guides/style-the-basemap/#beschriftung-braucht-eigene-glyphen).
+**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine eigene Schriftquelle (Glyphen), siehe [Basiskarte gestalten](/de/guides/style-the-basemap/#beschriftung-braucht-eigene-glyphen).
 
 Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
@@ -20,6 +20,7 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
+     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const quellen = {
        ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        linien: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
@@ -72,7 +73,7 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
    };
    ```
 
-   `text-font` muss eine Schrift Ihrer Glyphenquelle sein. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
+   `text-font` muss eine Schrift der Glyphenquelle sein. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
 
 4. **Karte starten.**
 
@@ -80,9 +81,13 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
      new maplibregl.Map({
        container: "map",
        center: [12.694, 47.074], zoom: 14,
+       // Token an alle Anfragen an mapx.at hängen
+       transformRequest: (url) => ({
+         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+       }),
        style: {
          version: 8,
-         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // Ihre Glyphenquelle
+         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // eigene Glyphenquelle
          sources: quellen,
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
        }
@@ -96,7 +101,7 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
 
 Über dem Luftbild liegen feine Höhenlinien, deren Abstand sich mit dem Zoom anpasst (100 m bis 10 m). Indexlinien sind kräftig und tragen die Höhe in Metern.
 
-Für eine Karte statt Luftbild ersetzen Sie die Orthophoto-Ebene durch die Ebenen aus [Basiskarte stylen](/de/guides/style-the-basemap/); die Höhenlinien kommen danach darüber.
+Für eine Karte statt Luftbild die Orthophoto-Ebene durch die Ebenen aus [Basiskarte gestalten](/de/guides/style-the-basemap/) ersetzen; die Höhenlinien kommen danach darüber.
 
 > Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](/de/guides/3d-terrain/).
 

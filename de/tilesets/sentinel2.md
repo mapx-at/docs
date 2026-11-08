@@ -28,8 +28,8 @@ Ein Satellitenbild Österreichs, das sich täglich fortschreibt: Für jedes Pixe
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/sentinel2.json
-curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
   </TabItem>
 </Tabs>
 

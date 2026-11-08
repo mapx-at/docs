@@ -2,7 +2,7 @@
 
 Ort anklicken, fertige Bild-URL mit Marker erhalten.
 
-Ein Static Image ist eine einfache URL, die ein PNG oder WebP liefert: für Exposés, E-Mails, PDFs und Orte ohne JavaScript. Stil, Marker, Ausschnitt und Größe stehen im Pfad. Karte anklicken verschiebt den Marker; das Bild darunter ist die darunter angezeigte URL.
+Ein Static Image ist eine einfache URL, die ein PNG oder WebP liefert: für Exposés, E-Mails, PDFs und Orte ohne JavaScript. Stil, Marker, Ausschnitt und Größe stehen im Pfad. Karte anklicken verschiebt den Marker; das Bild darunter lädt die angezeigte URL.
 
 ```js
 // Static image: click the map, get a ready-made PNG of that place for a listing, e-mail or PDF. No JavaScript map needed on the target page.

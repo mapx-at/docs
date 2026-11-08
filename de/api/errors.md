@@ -16,7 +16,7 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
 
 ## Felder
 
-| Field | Bedeutung |
+| Feld | Bedeutung |
 |---|---|
 | `type` | URI des Fehlertyps (Anker auf dieser Seite) |
 | `title` | Kurze Zusammenfassung des Typs |
@@ -54,6 +54,8 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
 | [`upstream-error`](#upstream-error) | 502 | Fehler im Backend |
 | [`service-unavailable`](#service-unavailable) | 503 | Dienst nicht verfügbar |
 | [`service-busy`](#service-busy) | 503 | Dienst ausgelastet |
+
+Token-Fehler (401 `missing-token`, `invalid-token`, `token-expired`; 403 `token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) stehen mit Ursache und Abhilfe unter [Zugang und Limits](/de/start/access-and-limits/).
 
 ### bad-request
 
@@ -179,7 +181,7 @@ Was tun: Punkte oder Zeit ändern; `detail` lesen.
 
 **429** · Rate-Limit überschritten
 
-Zu viele Anfragen von Ihrer IP-Adresse in dieser Endpunktgruppe. Siehe [Limits](/de/api/errors/#limits).
+Zu viele Anfragen in dieser Endpunktgruppe (gezählt je Token, ohne gültigen Token je IP-Adresse). Siehe [Limits](/de/api/errors/#limits).
 
 Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort nennt die Zone.
 

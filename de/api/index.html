@@ -82,7 +82,7 @@
 <ul>
 <li><strong>Koordinaten</strong> sind <code dir="auto">lon,lat</code> (WGS84), mehrere getrennt durch <code dir="auto">;</code>. Siehe <a href="/de/reference/coordinates/">Koordinaten</a>.</li>
 <li><strong>Fehler</strong> sind <code dir="auto">application/problem+json</code> (RFC 9457) mit stabilem <code dir="auto">code</code>. Siehe <a href="/de/api/errors/">Fehler und Limits</a>.</li>
-<li><strong>Limits</strong> gelten pro IP-Adresse und Zone; <code dir="auto">429</code> trägt <code dir="auto">Retry-After</code>. Siehe <a href="/de/start/access-and-limits/">Zugang und Limits</a>.</li>
+<li><strong>Limits</strong> gelten pro Token und Zone; <code dir="auto">429</code> trägt <code dir="auto">Retry-After</code>. Siehe <a href="/de/start/access-and-limits/">Zugang und Limits</a>.</li>
 <li><strong>Caching:</strong> Tiles, Styles und TileJSON tragen <code dir="auto">ETag</code>; mit <code dir="auto">If-None-Match</code> kommt <code dir="auto">304</code>.</li>
 <li><strong>Versionierung:</strong> Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu. Deprecations werden im <a href="/de/reference/changelog/">Changelog</a> mit Stichtag angekündigt.</li>
 </ul>

@@ -8,7 +8,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 
 - **Koordinaten** sind `lon,lat` (WGS84), mehrere getrennt durch `;`. Siehe [Koordinaten](/de/reference/coordinates/).
 - **Fehler** sind `application/problem+json` (RFC 9457) mit stabilem `code`. Siehe [Fehler und Limits](/de/api/errors/).
-- **Limits** gelten pro IP-Adresse und Zone; `429` trägt `Retry-After`. Siehe [Zugang und Limits](/de/start/access-and-limits/).
+- **Limits** gelten pro Token und Zone; `429` trägt `Retry-After`. Siehe [Zugang und Limits](/de/start/access-and-limits/).
 - **Caching:** Tiles, Styles und TileJSON tragen `ETag`; mit `If-None-Match` kommt `304`.
 - **Versionierung:** Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu. Deprecations werden im [Changelog](/de/reference/changelog/) mit Stichtag angekündigt.
 

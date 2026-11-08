@@ -14,6 +14,8 @@ Ein Tileset per Namen verwenden:
 map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
 ```
 
+Alle Anfragen an `tiles.mapx.at` brauchen einen Token, siehe [Zugang und Limits](/de/start/access-and-limits/). Bei MapLibre-Quellen hängt `transformRequest` den Token an, bei Dateien `?access_token=DEIN_TOKEN`.
+
 Die TileJSON-Adresse ist `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Die früheren deutschen Namen funktionieren noch bis 2027-05-31, siehe [Migration](/de/api/migration/).
 
 ## Nächste Schritte

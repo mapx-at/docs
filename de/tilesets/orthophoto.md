@@ -43,8 +43,8 @@ Klick zeigt den Flugblock am Punkt (Operat, Flugzeitraum).
     XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/orthophoto.json
-curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/orthophoto.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp`} />
   </TabItem>
 </Tabs>
 

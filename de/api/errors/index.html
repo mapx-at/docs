@@ -83,7 +83,7 @@
 <table>
 <thead>
 <tr>
-<th>Field</th>
+<th>Feld</th>
 <th>Bedeutung</th>
 </tr>
 </thead>
@@ -232,6 +232,7 @@
 </tr>
 </tbody>
 </table>
+<p>Token-Fehler (401 <code dir="auto">missing-token</code>, <code dir="auto">invalid-token</code>, <code dir="auto">token-expired</code>; 403 <code dir="auto">token-blocked</code>, <code dir="auto">pk-not-allowed</code>, <code dir="auto">origin-missing</code>, <code dir="auto">origin-not-allowed</code>, <code dir="auto">app-not-allowed</code>, <code dir="auto">ip-not-allowed</code>) stehen mit Ursache und Abhilfe unter <a href="/de/start/access-and-limits/">Zugang und Limits</a>.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="bad-request">bad-request</h3><a class="sl-anchor-link" href="#bad-request"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Abschnitt betitelt „bad-request“</span></a></div>
 <p><strong>400</strong> · Ungültige Anfrage</p>
 <p>Die Anfrage ist ungültig, ohne dass ein spezifischerer Code passt.</p>
@@ -294,7 +295,7 @@
 <p>Was tun: Punkte oder Zeit ändern; <code dir="auto">detail</code> lesen.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="rate-limited">rate-limited</h3><a class="sl-anchor-link" href="#rate-limited"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Abschnitt betitelt „rate-limited“</span></a></div>
 <p><strong>429</strong> · Rate-Limit überschritten</p>
-<p>Zu viele Anfragen von Ihrer IP-Adresse in dieser Endpunktgruppe. Siehe <a href="/de/api/errors/#limits">Limits</a>.</p>
+<p>Zu viele Anfragen in dieser Endpunktgruppe (gezählt je Token, ohne gültigen Token je IP-Adresse). Siehe <a href="/de/api/errors/#limits">Limits</a>.</p>
 <p>Was tun: <code dir="auto">Retry-After</code> Sekunden warten, dann mit wachsendem Abstand erneut. Der Header <code dir="auto">RateLimit-Policy</code> jeder Antwort nennt die Zone.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="internal-error">internal-error</h3><a class="sl-anchor-link" href="#internal-error"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Abschnitt betitelt „internal-error“</span></a></div>
 <p><strong>500</strong> · Interner Fehler</p>

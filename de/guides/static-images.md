@@ -2,11 +2,11 @@
 
 Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten.
 
-Ein Static Image ist ein HTTP-Request, der ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
+Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
 
 ```html
-<img alt="Vienna city center" width="600" height="400"
-     src="https://api.mapx.at/v1/static/streets/16.3725,48.2085,14/600x400.png">
+<img alt="Wiener Innenstadt" width="600" height="400"
+     src="https://api.mapx.at/v1/static/streets/16.3725,48.2085,14/600x400.png?access_token=DEIN_TOKEN">
 ```
 
 ## URL-Format
@@ -23,7 +23,7 @@ Ein Static Image ist ein HTTP-Request, der ein Bild liefert. Es eignet sich dort
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
+Der Token gehört an jede Bild-URL (`?access_token=…`, [Zugang und Limits](/de/start/access-and-limits/)). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 
 ## Overlays
 
@@ -36,7 +36,7 @@ Overlays folgen nach dem Style, getrennt durch Kommas (bis zu 50).
 | GeoJSON | `geojson({...})` mit simplestyle-Properties (URL-kodiert) |
 
 ```bash
-curl -s "https://api.mapx.at/v1/static/streets/pin-s+ff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400.png" -o vienna.png
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/static/streets/pin-s+ff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400.png" -o vienna.png
 ```
 
 ## Eine Route automatisch einpassen
@@ -45,9 +45,9 @@ Mit `auto` statt der Ansicht zeigt das Bild alle Overlays.
 
 ```js
 const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified";
-const { routes } = await (await fetch(dir)).json();
+const { routes } = await (await fetch(dir, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const path = encodeURIComponent(routes[0].geometry); // kodierte Polyline, Präzision 5
-const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp`;
+const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=DEIN_TOKEN`;
 ```
 
 Die Route kommt aus [Directions](/de/guides/navigation/) mit `geometries=polyline`.
@@ -57,7 +57,7 @@ Die Route kommt aus [Directions](/de/guides/navigation/) mit `geometries=polylin
 `satellite` zeigt das Orthophoto, `outdoors` ergänzt Höhenlinien und Wege.
 
 ```
-https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp
+https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp?access_token=DEIN_TOKEN
 ```
 
 Die Quellenangabe neben dem Bild anzeigen, siehe [Attribution](/de/reference/attribution/).

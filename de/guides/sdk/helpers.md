@@ -2,7 +2,7 @@
 
 Eine typisierte Funktion je API: Suche, Geocoding, Routing, Matrix, Optimization, Grundstücke, Höhe, Verkehr, ÖV, Wetter und statische Bilder.
 
-Jeder Helfer ist eine einfache `async`-Funktion, die typisiertes JSON liefert und bei Fehlern einen [`MapxError`](/de/guides/sdk/errors/) wirft. Koordinaten sind `[lng, lat]`. Mit `signal` (ein `AbortSignal`) lässt sich eine Anfrage abbrechen. Alle Beispiele laufen in der Browser-Konsole jeder Seite, die `mapx` geladen hat ([Installation](/de/guides/sdk/)).
+Jeder Helfer ist eine einfache `async`-Funktion, die typisiertes JSON liefert und bei Fehlern einen [`MapxError`](/de/guides/sdk/errors/) wirft. Koordinaten sind `[lng, lat]`. Mit `signal` (ein `AbortSignal`) lässt sich eine Anfrage abbrechen. Alle Beispiele laufen in der Browser-Konsole jeder Seite, die `mapx` geladen hat ([Installation](/de/guides/sdk/)). Voraussetzung ist ein gesetzter Token (`mapx.setAccessToken("DEIN_TOKEN")`, siehe [Token](/de/guides/sdk/#token)).
 
 ## Suche und Geocoding
 

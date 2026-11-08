@@ -35,8 +35,8 @@ Zu jedem Pixel des [Orthophotos](/de/tilesets/orthophoto/) die Fläche des Bildf
     Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 

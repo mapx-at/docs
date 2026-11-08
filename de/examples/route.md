@@ -2,7 +2,7 @@
 
 Start und Ziel klicken, Weg samt Länge und Dauer erhalten.
 
-Die Routing-API arbeitet auf dem GIP.at-Netz für Fuß, Rad und Auto. Die Antwort hat die Mapbox-Form `routes[0]` mit `geometry` (GeoJSON-Linie), `distance` in Metern und `duration` in Sekunden.
+Die Routing-API arbeitet auf dem GIP.at-Netz für Fuß, Rad, Mountainbike und Auto. Die Antwort hat die Mapbox-Form `routes[0]` mit `geometry` (GeoJSON-Linie), `distance` in Metern und `duration` in Sekunden.
 
 ```js
 // Route: Start und Ziel in die Karte klicken, die Directions-API liefert eine GeoJSON-Linie.

@@ -4,6 +4,8 @@ Grundstücke, Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für 
 
 Gemeindewerkzeuge arbeiten mit Grundstücken und Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Kataster, Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+
 ## Grundstücke
 
 Der Kataster liegt als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt vor.
@@ -16,7 +18,7 @@ new mapx.ParcelPopup(map); // Klick: Nummer, Fläche, Katastralgemeinde, Gebäud
 Ein Grundstück über seine Nummer suchen (die Katastralgemeinde gehört zur Identität):
 
 ```bash
-curl -s "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
 ```
 
 Die Grenzen stammen aus der Katastralmappe des BEV (DKM). Die Fläche wird aus den Grenzlinien berechnet und weicht um Promille vom Register ab. Dort, wo die Daten gezeigt werden, darauf hinweisen: zur Orientierung, nicht rechtsverbindlich.
@@ -27,7 +29,7 @@ Formulare für Anmeldungen, Anträge und Meldungen sollen nur existierende Adres
 
 ```js
 const q = new URLSearchParams({ street: "Haubtplatz", housenumber: "1", postcode: "3390", place: "Melk" });
-const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}`)).json();
+const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
@@ -57,7 +59,7 @@ Für ein einfaches Bild ohne JavaScript (Druck, Newsletter, Seite ohne Skripte) 
 
 ```html
 <img alt="Lage des Gemeindeamts" width="600" height="400"
-     src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png">
+     src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=DEIN_TOKEN">
 ```
 
 Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](/de/examples/geojson-overlay/) zeigen. Die Attribution der Daten sichtbar lassen ([Attribution](/de/reference/attribution/)).

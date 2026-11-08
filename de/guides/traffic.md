@@ -17,7 +17,7 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_cursor } = await (await fetch(url)).json();
+const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
@@ -26,7 +26,7 @@ Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße), `road_clas
 Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
 ```
 
 ## Fahrstreifen auf Autobahnen
@@ -35,7 +35,7 @@ Baustellen auf Autobahnen und Schnellstraßen enthalten `lanes` von der ASFINAG:
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction";
-const { features } = await (await fetch(url)).json();
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
 
@@ -44,7 +44,7 @@ for (const f of features) for (const l of f.properties.lanes) console.log(f.prop
 Die Route als `route` übergeben (kodierte Polyline oder GeoJSON). Die Ergebnisse sind nach der Position auf der Route sortiert. Für lange Routen `POST` mit JSON-Body verwenden.
 
 ```bash
-curl -s -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
+curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
   "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
   "type": "road_closure,construction", "buffer": 50
 }' | jq '.total'
@@ -62,7 +62,7 @@ map.on("load", () => {
 });
 ```
 
-Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
+Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](/de/start/access-and-limits/). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
 ## Route mit Verkehrslage
 
