@@ -40,7 +40,7 @@ console.log(r.distance, "m", r.duration, "s");
 ## Lkw-Routen
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions/driving-truck/16.3725,48.2085;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" | jq '.routes[0] | {distance, duration, truck}'
+curl -s "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" | jq '.routes[0] | {distance, duration, truck}'
 ```
 
 Der Router meidet Straßen, die für das Fahrzeug gesperrt sind: Gewichtsklassen- und Anhängerverbote sowie Höhen-, Breiten-, Gewichts- und Längenbeschränkungen. Die Geschwindigkeit ist auf 80 km/h auf Autobahnen, 70 auf Freilandstraßen und 50 im Ortsgebiet begrenzt. Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet; betroffene Straßen stehen in `steps[].notices[]` mit `type: truck_restriction`.

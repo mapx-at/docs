@@ -28,7 +28,7 @@ function zeigen(param, i) {
   if (map.getLayer('wetter')) map.removeLayer('wetter');
   if (map.getSource('wetter')) map.removeSource('wetter');
   map.addSource('wetter', {
-    type: 'raster', tileSize: 256, maxzoom: 12,
+    type: 'raster', tileSize: 512, maxzoom: 11, // smooth fields: fewer, larger tiles keep the request count low
     tiles: [`${API}/weather/tiles/${param}/${t}/{z}/{x}/{y}.png`],
     attribution: 'Wetter: GeoSphere Austria, CC BY 4.0',
   });

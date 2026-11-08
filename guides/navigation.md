@@ -40,7 +40,7 @@ console.log(r.distance, "m", r.duration, "s");
 ## Truck routes
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions/driving-truck/16.3725,48.2085;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" | jq '.routes[0] | {distance, duration, truck}'
+curl -s "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" | jq '.routes[0] | {distance, duration, truck}'
 ```
 
 The router avoids roads closed to the vehicle: weight-class and trailer bans, height, width, weight and length limits. Speeds are capped at 80 km/h on motorways, 70 on rural roads, 50 in built-up areas. District-wide bans from free-text ordinances are not routed; affected roads are reported in `steps[].notices[]` with `type: truck_restriction`.
