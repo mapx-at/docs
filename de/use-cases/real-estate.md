@@ -1,6 +1,6 @@
 # Immobilien
 
-Grundstücks-Dossier, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
+Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
 
 Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne) ohne Schlüssel. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
 
@@ -44,6 +44,23 @@ document.querySelector("#expose").src = img; // geht auch in E-Mails und PDFs
 ```
 
 Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](/de/guides/static-images/). Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](/de/reference/attribution/)).
+
+## Sonne, Hitze und Schnee am Standort
+
+Käufer fragen nach Solarertrag, Sommerhitze und Schneelast. `/v1/climate/{lon},{lat}` antwortet aus Daten der GeoSphere Austria; dasselbe Objekt steht als `properties.climate` im Dossier (am inneren Punkt des Grundstücks). Jeder Abschnitt nennt Datensatz, Rasterzelle und letzten Datentag.
+
+```js
+const c = await (await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272")).json();
+console.log(
+  `Globalstrahlung: ${c.solar?.global_radiation_kwh_m2_year} kWh/m² pro Jahr, ${c.solar?.sunshine_hours_year} h Sonnenschein`,
+  `| Jahresmittel ${c.temperature.mean_annual_c.normal} °C (1991-2020), Trend +${c.temperature.trend_c_per_decade} °C je Jahrzehnt`,
+  `| Hitzetage (TX ≥ 30 °C): ${c.temperature_extremes.hot_days_per_year.normal} → ${c.temperature_extremes.hot_days_per_year.recent} pro Jahr`,
+  `| Schneetage: ${c.snow.snow_days_per_winter.normal} pro Winter, jetzt ${c.snow.current.depth_cm} cm`,
+  `| Dürre (SPEI 365): ${c.drought.spei365.class}`,
+);
+```
+
+Eine grobe Photovoltaik-Abschätzung ist die Strahlung auf dem Dach mal Modulwirkungsgrad und Systemwirkungsgrad (etwa 0,8); der Wert dient der Orientierung und ersetzt keine Ertragsprognose. Die erste Anfrage für ein Gebiet, nach dem noch niemand gefragt hat, kann bis zu 20 Sekunden dauern, spätere kommen aus dem Cache. Im Dossier ist der Abschnitt `null` mit `status: "partial"`, bis die Daten geladen sind; nach `retry_after_s` erneut fragen. Referenz: [Climate API](/de/api/climate/). Den Quellenhinweis anzeigen: GeoSphere Austria, CC BY 4.0 ([Quellenangaben](/de/reference/attribution/)).
 
 ## Wie gut ist es erreichbar
 

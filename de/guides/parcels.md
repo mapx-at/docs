@@ -76,6 +76,7 @@ curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m
 | `elevation` | Min, Mittel, Max und mittlere/maximale Neigung aus dem Geländemodell an einem Punktraster im Grundstück |
 | `addresses`, `nearest_transit_stop` | Adressen des Registers auf dem Grundstück, nächste Haltestelle im Umkreis von 2 km |
 | `orthophoto` | Flugjahr und -datum |
+| `climate` | Sonnenpotenzial, Temperatur- und Niederschlagsnormale, Hitze- und Schneetage, Dürreindex; dasselbe Objekt wie [`/v1/climate/{lon},{lat}`](/de/api/climate/) am inneren Punkt des Grundstücks. Solange ein neues Gebiet geladen wird, sind Abschnitte `null` mit `status: "partial"`; nach `retry_after_s` Sekunden erneut fragen |
 | `links.static_image` | fertige [Static-Images](/de/guides/static-images/)-URL mit umrandetem Grundstück |
 
 Die Punktabfrage ergänzt `parcel_id` und `links.dossier`; `?include=dossier` liefert je Feature das volle Dossier. Referenz: [Tilequery und Parcel API](/de/api/tilequery/).

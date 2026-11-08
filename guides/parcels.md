@@ -76,6 +76,7 @@ curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m
 | `elevation` | min, mean, max and mean/max slope from the terrain model on a point grid inside the parcel |
 | `addresses`, `nearest_transit_stop` | register addresses on the parcel, nearest stop within 2 km |
 | `orthophoto` | flight year and date |
+| `climate` | solar potential, temperature and precipitation normals, hot and snow days, drought index; same object as [`/v1/climate/{lon},{lat}`](/api/climate/) at the parcel's inner point. While a new area is being loaded, sections are `null` with `status: "partial"`; ask again after `retry_after_s` seconds |
 | `links.static_image` | ready-made [static image](/guides/static-images/) URL with the parcel outlined |
 
 The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns the full dossier per feature. Reference: [Tilequery and Parcel API](/api/tilequery/).

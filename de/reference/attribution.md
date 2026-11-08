@@ -43,6 +43,7 @@ JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es is
 | Maut, Verkehr | ASFINAG / EVIS.AT, CC BY 4.0, Straßennetz GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), Datenquelle Mobilitätsverbünde Österreich OG |
 | Wetter | GeoSphere Austria, CC BY 4.0 |
+| Klima, `properties.climate` des Grundstücks-Dossiers | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Parcel, Tilequery (Kataster) | BEV – DKM, CC BY 4.0 |
 | Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 

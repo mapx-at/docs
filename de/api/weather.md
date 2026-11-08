@@ -106,6 +106,7 @@ GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current h
 | `lon` | query | string | ja | – | Longitude (also `lng`), WGS84 |
 | `lat` | query | string | ja | – | Latitude |
 | `hours` | query | string |  | `24` | 1 to 60, default 24 |
+| `ensemble` | query | string |  | – | true: add `uncertainty` (p10/p50/p90 of the ensemble for temperature, gust, precipitation) to every hour |
 
 **Beispiel**
 
@@ -113,14 +114,14 @@ GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current h
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6" | jq
+curl -s "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6");
+const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true");
 const data = await res.json();
 ```
 
@@ -129,7 +130,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6")
+res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true")
 data = res.json()
 ```
 
@@ -154,7 +155,99 @@ data = res.json()
       "wind_direction_deg": 285,
       "humidity_pct": 68,
       "cloud_cover_pct": 40,
-      "pressure_msl_hpa": 1008.3
+      "pressure_msl_hpa": 1008.3,
+      "weather_symbol": {
+        "code": 3,
+        "text": "Partly cloudy",
+        "icon": "partly-cloudy"
+      },
+      "snow_limit_m": 1200,
+      "sunshine_min": 31.5,
+      "radiation_wm2": 180.2,
+      "cape_jkg": 0,
+      "snowfall_mm": 0,
+      "uncertainty": {
+        "temperature_c": {
+          "p10": 8.9,
+  …
+```
+
+**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+
+| Status | Bedeutung |
+|---|---|
+| `400` | Parameter fehlt oder ist ungültig |
+| `404` | Nicht gefunden (Name, Pfad oder Position) |
+| `429` | Rate-Limit überschritten, `Retry-After` abwarten |
+| `503` | Daten vorübergehend nicht verfügbar |
+
+## Precipitation nowcast for a point (15 min steps, 3 h)
+
+`GET /v1/weather/nowcast/{coordinates}`
+
+GeoSphere INCA nowcast nowcast-v1-15min-1km, bilinear to the point. `precipitation_starts_in_min` / `precipitation_ends_in_min` are derived from the 15-minute steps (wet from 0.1 mm/h); `null` when nothing changes within the horizon. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+**Parameter**
+
+| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|---|
+| `coordinates` | path | string | ja | – | lon,lat, e.g. 16.3725,48.2085 |
+
+**Beispiel**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Beispielantwort**
+
+```json
+{
+  "location": {
+    "lon": 16.3725,
+    "lat": 48.2085
+  },
+  "reference_time": "2026-11-08T10:45Z",
+  "interval": "15min",
+  "precipitation_now": false,
+  "precipitation_starts_in_min": 30,
+  "precipitation_ends_in_min": null,
+  "steps": [
+    {
+      "time": "2026-11-08T11:00Z",
+      "minutes_from_now": 5,
+      "precipitation_mm": 0,
+      "precipitation_rate_mm_h": 0,
+      "precipitation_type": null,
+      "temperature_c": 9.8,
+      "dew_point_c": 5.1,
+      "humidity_pct": 71,
+      "wind_speed_ms": 3.2,
+      "wind_gust_ms": 6.1,
+      "wind_direction_deg": 290
     }
   ]
 }
@@ -173,7 +266,7 @@ data = res.json()
 
 `GET /v1/weather/tiles/{param}.json`
 
-param: temperature, precipitation, wind, humidity, cloud, pressure, or the air quality layers aqi (daily index), no2, o3, pm10, pm25 (near-surface, EEA limits) and dust (Saharan dust load). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
+param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (hourly, AROME) or rr_nowcast, pt_nowcast (precipitation radar nowcast, 15 min steps). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
 
 <details>
 <summary>Mehr</summary>
@@ -186,7 +279,7 @@ Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25 or dust, with .json |
+| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast or pt_nowcast, with .json |
 
 **Beispiel**
 
@@ -248,8 +341,8 @@ Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust |
-| `time` | path | string | ja | – | now or 2026-11-07T20:00Z |
+| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast |
+| `time` | path | string | ja | – | now or 2026-11-07T20:00Z (nowcast: 15 min steps such as 2026-11-07T20:15Z) |
 | `z` | path | integer | ja | – | 0 to 14 |
 | `x` | path | integer | ja | – | Column |
 | `y` | path | string | ja | – | Row, with .png |

@@ -152,6 +152,10 @@
 <td>flight year and date</td>
 </tr>
 <tr>
+<td><code dir="auto">climate</code></td>
+<td>solar potential, temperature and precipitation normals, hot and snow days, drought index; same object as <a href="/api/climate/"><code dir="auto">/v1/climate/{lon},{lat}</code></a> at the parcel’s inner point. While a new area is being loaded, sections are <code dir="auto">null</code> with <code dir="auto">status: "partial"</code>; ask again after <code dir="auto">retry_after_s</code> seconds</td>
+</tr>
+<tr>
 <td><code dir="auto">links.static_image</code></td>
 <td>ready-made <a href="/guides/static-images/">static image</a> URL with the parcel outlined</td>
 </tr>

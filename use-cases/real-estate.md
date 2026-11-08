@@ -1,6 +1,6 @@
 # Real estate
 
-Parcel dossier, a static image for the listing and reachability of an address, with code that runs as it is.
+Parcel dossier, solar, heat and snow at the site, a static image for the listing and reachability of an address, with code that runs as it is.
 
 For a listing you need three things: facts about the parcel, a picture that shows where it lies, and an answer to "how well can I reach it". All of it comes from official open data (BEV cadastre, orthophoto, GIP, timetables) without a key. The data is for orientation and not legally binding.
 
@@ -44,6 +44,23 @@ document.querySelector("#expose").src = img; // also fine in e-mails and PDFs
 ```
 
 Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](/guides/static-images/). The image carries the attribution of its data; keep it visible in the layout ([Attribution](/reference/attribution/)).
+
+## Sun, heat and snow at the site
+
+Buyers ask for solar yield, summer heat and snow load. `/v1/climate/{lon},{lat}` answers from GeoSphere Austria data; the same object is `properties.climate` in the dossier (taken at the inner point of the parcel). Each section names its dataset, grid cell and last day of data.
+
+```js
+const c = await (await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272")).json();
+console.log(
+  `Global radiation: ${c.solar?.global_radiation_kwh_m2_year} kWh/m² per year, ${c.solar?.sunshine_hours_year} h of sunshine`,
+  `| mean temperature ${c.temperature.mean_annual_c.normal} °C (1991-2020), trend +${c.temperature.trend_c_per_decade} °C per decade`,
+  `| hot days (TX ≥ 30 °C): ${c.temperature_extremes.hot_days_per_year.normal} → ${c.temperature_extremes.hot_days_per_year.recent} per year`,
+  `| snow days: ${c.snow.snow_days_per_winter.normal} per winter, now ${c.snow.current.depth_cm} cm`,
+  `| drought (SPEI 365): ${c.drought.spei365.class}`,
+);
+```
+
+A rough photovoltaic estimate is the radiation on the roof times the module efficiency and a performance ratio (about 0.8); the value is for orientation and replaces no yield study. The first request for an area that nobody has asked for can take up to 20 seconds, later ones answer from a cache. In the dossier the section is `null` with `status: "partial"` until the data are loaded; ask again after `retry_after_s`. Reference: [Climate API](/api/climate/). Show the credit: GeoSphere Austria, CC BY 4.0 ([Attribution](/reference/attribution/)).
 
 ## How well can I reach it
 
