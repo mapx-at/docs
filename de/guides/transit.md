@@ -38,6 +38,16 @@ curl -s "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.18
 
 Genau einen Start und ein Ziel übergeben. `depart_at` (früheste Abfahrt) oder `arrive_by` (späteste Ankunft) verwenden, Standard ist jetzt. Die Antwort enthält Fußwege auf dem Straßennetz und Fahrten mit Linie, Haltestellen und Zeiten.
 
+## Erreichbarkeit mit ÖV
+
+Zu Fuß plus öffentlicher Verkehr als Isochronen: Profil `transit` der Isochronen-API. Die Suche geht zu den Haltestellen rund um den Start, fährt ab `depart_at` nach Soll-Fahrplan und geht von jeder erreichten Haltestelle wieder zu Fuß weiter.
+
+```bash
+curl -s "https://api.mapx.at/v1/isochrone/transit/16.3725,48.2085?contours_minutes=10,20,30&depart_at=2026-11-10T08:00" | jq '.features[] | {contour: .properties.contour, km2: .properties.area_km2}'
+```
+
+Ohne `depart_at` beginnt die Isochrone jetzt (Wiener Ortszeit). Es gilt nur `contours_minutes`. Die Fläche hängt stark von der Uhrzeit ab: derselbe Start hat nachts eine deutlich kleinere Fläche. Außerhalb des Fahrplanzeitraums antwortet die API mit `422`.
+
 ## Abfahrten in einer App zeigen
 
 1. Eine Haltestelle mit [`/v1/stops`](/de/api/transit/) suchen oder die Nutzer auf die Karte klicken lassen.
