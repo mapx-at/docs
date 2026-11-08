@@ -1,7 +1,5 @@
 # OptimizationRequest
 
-mapx-gl OptimizationRequest
-
 ## Properties
 
 ### options?
@@ -35,3 +33,4 @@ mapx-gl OptimizationRequest
 ### vehicles
 
 > **vehicles**: `object`[]
+

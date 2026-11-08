@@ -1,8 +1,6 @@
 # Traffic API
 
-Traffic incidents, motorway speed limits, signs and traffic tiles.
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Incident reports (accidents, roadworks, closures), speed limits shown on motorway gantries and a vector layer for maps.
 
@@ -22,32 +20,31 @@ Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No a
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -129,32 +126,31 @@ Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`)
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -231,8 +227,8 @@ Body: the same parameters as a JSON object; `route` as polyline string or GeoJSO
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
@@ -241,8 +237,8 @@ curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
   -d '{"route":{"type":"LineString","coordinates":[[16.37,48.21],[16.3,48.19]]},"type":"road_closure,construction","limit":50}' | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/incidents", {
@@ -269,10 +265,11 @@ const res = await fetch("https://api.mapx.at/v1/traffic/incidents", {
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.post("https://api.mapx.at/v1/traffic/incidents", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
     "route": {
@@ -294,8 +291,6 @@ res = requests.post("https://api.mapx.at/v1/traffic/incidents", headers={"Author
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -357,32 +352,31 @@ Current state: speed limit, pictogram, additional text. Only installations with 
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -431,32 +425,31 @@ Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incid
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles.json" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/tiles.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -495,32 +488,31 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.bin", "wb").write(res.content)
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
 
@@ -542,32 +534,31 @@ open("result.bin", "wb").write(res.content)
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/status" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/status", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/status", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -591,4 +582,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="traffic" lang="en" />
+
+

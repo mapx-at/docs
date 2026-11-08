@@ -1,6 +1,5 @@
 # Höhe per Klick
 
-Ein Klick fragt die Höhe an einem Punkt, wahlweise Gelände oder Oberfläche.
 
 Die Höhen-API liefert GeoJSON mit `elevation` in Metern. DTM zeigt das Gelände, DSM Gebäude und Bewuchs.
 
@@ -33,3 +32,4 @@ map.on('click', async (e) => {
 ## Verwendete APIs
 
 - [Höhe](/de/api/elevation/) `GET /v1/elevation`
+

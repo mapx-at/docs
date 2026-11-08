@@ -1,6 +1,5 @@
 # Address autofill in a form
 
-Type a street, pick a suggestion, the form fills itself.
 
 Autofill is made for checkout and registration forms: one text field, one suggestion list, and the other fields (house number, postcode, place) are filled from the chosen suggestion. Each suggestion already carries its coordinates.
 
@@ -44,3 +43,4 @@ f.street.addEventListener('input', async () => {
 ## APIs used
 
 - [Address](/api/address/) `GET api.mapx.at/v1/autofill/suggest`
+

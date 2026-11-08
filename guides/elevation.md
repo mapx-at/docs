@@ -1,7 +1,5 @@
 # Elevation and terrain
 
-Heights at points, elevation profiles, terrain models and 3D terrain in the map.
-
 mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
 ## Height at a point
@@ -55,3 +53,4 @@ The tiles use the Terrain-RGB encoding: `height = -10000 + (R * 65536 + G * 256 
 - [Elevation API](/api/elevation/)
 - [Tilesets](/tilesets/terrain-rgb/): terrain model data sheet
 - [Overlay contour lines](/guides/overlay-contours/)
+

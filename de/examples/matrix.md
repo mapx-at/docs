@@ -1,6 +1,5 @@
 # Fahrzeitmatrix
 
-Fahrzeiten zwischen mehreren Orten in einer Anfrage.
 
 Die Matrix-API nimmt Quellen (und optional Ziele) und liefert Dauer (und optional Distanz) für alle Paare, `null` heißt nicht routbar.
 
@@ -34,3 +33,4 @@ document.getElementById('los').addEventListener('click', async () => {
 ## Verwendete APIs
 
 - [Routing](/de/api/directions/#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
+

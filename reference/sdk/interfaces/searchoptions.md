@@ -1,7 +1,5 @@
 # SearchOptions
 
-mapx-gl SearchOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -51,3 +49,4 @@ mapx-gl SearchOptions
 ### types?
 
 > `optional` **types**: `string` \| `string`[]
+

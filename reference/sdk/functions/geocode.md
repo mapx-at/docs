@@ -1,7 +1,5 @@
 # geocode
 
-mapx-gl geocode
-
 > **geocode**(`q`, `o`): `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
 
 Geocoding: Adressen, Orte, Gipfel und mit `types: ['parcel']` Grundstücke (`KG 14105 Gst 102/3`).
@@ -15,3 +13,4 @@ Geocoding: Adressen, Orte, Gipfel und mit `types: ['parcel']` Grundstücke (`KG 
 ## Returns
 
 `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+

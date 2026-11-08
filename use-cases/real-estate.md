@@ -1,6 +1,5 @@
 # Real estate
 
-Parcel dossier, solar, heat and snow at the site, a static image for the listing and reachability of an address, with code that runs as it is.
 
 For a listing you need three things: facts about the parcel, a picture that shows where it lies, and an answer to "how well can I reach it". All of it comes from official open data (BEV cadastre, orthophoto, GIP, timetables). You need a free API token ([Access and limits](/start/access-and-limits/)); the samples show it as `YOUR_TOKEN`. The data is for orientation and not legally binding.
 
@@ -77,27 +76,27 @@ console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 
 For public transport use the next stop from the dossier and its [departures](/guides/transit/): `GET /v1/departures?stop=<stop id>&limit=5`.
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3},
                  headers={"Authorization": "Bearer YOUR_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
 
-</TabItem>
-</Tabs>
 
 ## Next steps
 
 - [Parcels](/guides/parcels/) and the [Parcel on click](/examples/parcel-on-click/) example
 - [Static images](/guides/static-images/) with markers and paths
 - [Navigation](/guides/navigation/) for isochrones and matrices
+

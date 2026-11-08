@@ -1,7 +1,5 @@
 # weatherForecast
 
-mapx-gl weatherForecast
-
 > **weatherForecast**(`point`, `o`): `Promise`\<`object`\>
 
 Stundenvorhersage (AROME 1 km) für einen Punkt.
@@ -27,3 +25,4 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 ### reference\_time
 
 > **reference\_time**: `string`
+

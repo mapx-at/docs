@@ -1,7 +1,5 @@
 # ElevationProfileControl
 
-mapx-gl ElevationProfileControl
-
 Linie klicken, Höhenprofil (Auf-/Abstieg, Diagramm) über /v1/elevation/profile.
 
 ## Extends
@@ -65,3 +63,4 @@ internally.
 #### Inherited from
 
 `DrawControl.onRemove`
+

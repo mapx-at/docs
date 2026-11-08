@@ -1,6 +1,5 @@
 # 3D terrain with orthophoto
 
-A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.
 
 **Goal:** A map where the orthophoto is draped over real terrain, shaded for depth and tiltable in the browser.
 
@@ -8,7 +7,6 @@ A 3D map with real elevation relief, hillshading and aerial imagery on top, usin
 
 This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`) and the [orthophoto](/tilesets/orthophoto/) (imagery, type `raster`). Both tilesets are added via [TileJSON](/api/tiles/), so you never need a file name.
 
-<Steps>
 
 1. **Create the page.** A file `index.html` with MapLibre GL JS and a map container:
 
@@ -68,7 +66,6 @@ This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`)
 
 5. **Run it.** Run `npx serve` in the folder and open the printed address. Dragging with the right mouse button tilts and rotates the map.
 
-</Steps>
 
 ## Result
 
@@ -76,9 +73,11 @@ The aerial imagery lies on the terrain around the Großglockner, slopes are addi
 
 > `exaggeration` exaggerates the relief. `1.0` is natural; for flat terrain `1.5` to `2` looks more plastic.
 
+
 ## Next steps
 
 - Read the elevation at a click: `map.queryTerrainElevation(e.lngLat)`, details in [DTM terrain model](/tilesets/terrain-rgb/).
 - Contour lines and labels on top: [Overlay contour lines](/guides/overlay-contours/).
 - Elevation profile along a line: [Elevation profile](/guides/elevation-profile/).
 - Show the credit correctly: [Attribution](/reference/attribution/).
+

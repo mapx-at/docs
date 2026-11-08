@@ -1,6 +1,5 @@
 # Elevation on click
 
-A click queries the elevation at a point, terrain or surface.
 
 The elevation API returns GeoJSON with `elevation` in metres. The DTM shows the terrain, the DSM buildings and vegetation.
 
@@ -33,3 +32,4 @@ map.on('click', async (e) => {
 ## APIs used
 
 - [Elevation](/api/elevation/) `GET /v1/elevation`
+

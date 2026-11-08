@@ -1,7 +1,5 @@
 # tilequery
 
-mapx-gl tilequery
-
 > **tilequery**(`tilesets`, `point`, `o`): `Promise`\<`GeoJSON.FeatureCollection`\>
 
 Vektorkachel-Abfrage: nächste Objekte um einen Punkt (`radius` bis 2000 m). `tilesets` z. B. `['streets','cadastre']`.
@@ -17,3 +15,4 @@ Vektorkachel-Abfrage: nächste Objekte um einen Punkt (`radius` bis 2000 m). `ti
 ## Returns
 
 `Promise`\<`GeoJSON.FeatureCollection`\>
+

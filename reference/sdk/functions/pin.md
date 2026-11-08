@@ -1,7 +1,5 @@
 # pin
 
-mapx-gl pin
-
 > **pin**(`at`, `o`): `string`
 
 Marker-Overlay: `pin([16.37,48.2], { color: 'e11d48', size: 'l' })`.
@@ -19,3 +17,4 @@ Marker-Overlay: `pin([16.37,48.2], { color: 'e11d48', size: 'l' })`.
 ## Returns
 
 `string`
+

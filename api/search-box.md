@@ -1,8 +1,6 @@
 # Search Box API
 
-Suggestions while typing, details of a result and places by category.
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Type-ahead search for addresses and places. Call `suggest` while the user types, then `retrieve` for the chosen result.
 
@@ -28,32 +26,31 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -100,32 +97,31 @@ FeatureCollection with one feature (point, bbox, coordinates, context); 404 for 
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/place-6456531" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -177,32 +173,31 @@ Places of the category (several comma-separated), nearest first with `proximity`
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -251,32 +246,31 @@ Stable category ids (`canonical_id`), name and Maki icon.
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/searchbox/list/category?language=en", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/searchbox/list/category?language=en", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -303,4 +297,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="search-box" lang="en" />
+
+

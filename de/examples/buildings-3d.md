@@ -1,6 +1,5 @@
 # 3D-Gebäude
 
-Gebäude mit BEV-Höhen als 3D-Körper, Kamera geneigt.
 
 Der Stil `streets` enthält eine extrudierte Gebäudeebene, die standardmäßig aus ist. Die Ebenen-IDs stehen in den Style-Metadaten (`mapx:groups`), damit lässt sich eine ganze Gruppe einschalten, ohne die Namen zu kennen. Auf Zoom 15 oder höher gehen und die Karte kippen (rechte Maustaste oder zwei Finger).
 
@@ -24,3 +23,4 @@ map.on('style.load', () => {
 ## Verwendete APIs
 
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{id}`
+

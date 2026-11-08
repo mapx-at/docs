@@ -1,10 +1,10 @@
 # Fehler und Limits
 
-Fehlercodes, Statuscodes, Anfragelimits und Caching aller mapx-APIs.
 
 Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)). Der `type` ist ein URI auf diese Seite: `https://docs.mapx.at/api/errors/#<code>`. Auswertbar sind `code` (oder `type`) und `status`, nie der Text.
 
-<Code lang="json" code={`{
+```json
+{
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
   "title": "Invalid parameter",
   "status": 400,
@@ -12,7 +12,8 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
   "code": "invalid-parameter",
   "param": "types",
   "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi"]
-}`} />
+}
+```
 
 ## Felder
 
@@ -237,3 +238,4 @@ PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen u
 ## Attribution
 
 JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](/de/reference/attribution/).
+

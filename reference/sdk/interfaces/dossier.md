@@ -1,7 +1,5 @@
 # Dossier
 
-mapx-gl Dossier
-
 ## Extends
 
 - `Feature`\<`GeoJSON.Polygon` \| `GeoJSON.MultiPolygon`\>
@@ -155,3 +153,4 @@ Properties associated with this feature.
 #### Overrides
 
 `GeoJSON.Feature.properties`
+

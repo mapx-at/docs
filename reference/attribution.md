@@ -1,9 +1,5 @@
 # Attribution and license
 
-CC BY 4.0: which source to credit, with ready-made text per tileset and API.
-
-export const t = data.tilesets;
-export const s = (h) => (h || "").replace(/<[^>]+>/g, "");
 
 All mapx data is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). You may use it commercially. You must name the source and the license and must not present modifications as official. The credit has to be visible to the users of the map, for example in the corner, not only in an imprint.
 
@@ -24,12 +20,12 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 
 | Tileset | Text |
 |---|---|
-| `streets` | {s(t.basis.metadata.attribution)} |
-| `cadastre` | {s(t.kataster.metadata.attribution)} |
-| `contours` | {s(t.hoehenlinien.metadata.attribution)} |
-| `terrain-rgb` | {s(t.relief.metadata.attribution)} |
-| `dsm` | {s(t.dsm.metadata.attribution)} |
-| `orthophoto` | {s(t.dop.metadata.attribution)} |
+| `streets` | {{< ts k="basis" f="attribution" >}} |
+| `cadastre` | {{< ts k="kataster" f="attribution" >}} |
+| `contours` | {{< ts k="hoehenlinien" f="attribution" >}} |
+| `terrain-rgb` | {{< ts k="relief" f="attribution" >}} |
+| `dsm` | {{< ts k="dsm" f="attribution" >}} |
+| `orthophoto` | {{< ts k="dop" f="attribution" >}} |
 | `orthophoto-flight-blocks` | BEV, CC BY 4.0 |
 
 ## Text per API
@@ -48,3 +44,4 @@ JSON responses with data carry a top-level `attribution` field. Show it when you
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 The credit is also stored in the TileJSON and PMTiles metadata.
+

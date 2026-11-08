@@ -1,7 +1,5 @@
 # WeatherStation
 
-mapx-gl WeatherStation
-
 ## Properties
 
 ### distance\_m
@@ -49,3 +47,4 @@ mapx-gl WeatherStation
 ### wind\_speed\_kmh
 
 > **wind\_speed\_kmh**: `null` \| `number`
+

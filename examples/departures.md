@@ -1,6 +1,5 @@
 # Departures at a stop
 
-Click near a stop, see the next departures.
 
 `DeparturesPopup` from the [SDK](/guides/sdk/) finds the nearest stop to a click and lists the next departures from the scheduled timetable (no real-time data). The dots are the stops of the visible area from `/v1/stops`.
 
@@ -31,3 +30,4 @@ map.on("load", () => {
 
 - [Transit](/api/transit/) `GET api.mapx.at/v1/stops`
 - [Transit](/api/transit/) `GET api.mapx.at/v1/departures`
+

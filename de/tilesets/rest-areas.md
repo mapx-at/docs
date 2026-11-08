@@ -1,10 +1,12 @@
 # Rastanlagen
 
-Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Tileset rastanlagen) und Suchkategorie rastplatz.
 
 Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Verkehrsdaten der ASFINAG, 314 Standorte.
 
-> Datenquelle: ASFINAG, Rast-, Pendler- und Lkw-Parkplätze, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Bearbeitung: Auswahl und Umformung der Felder.
+> **Namensnennung**
+
+Datenquelle: ASFINAG, Rast-, Pendler- und Lkw-Parkplätze, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Bearbeitung: Auswahl und Umformung der Felder.
+
 
 | | |
 |---|---|
@@ -15,3 +17,4 @@ Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Ve
 | Abfrage | [Tilequery](/de/api/tilequery/) mit `rastanlagen` als Tileset |
 
 Die Belegung in Echtzeit ist (noch) nicht Teil der Kacheln.
+

@@ -1,7 +1,5 @@
 # WeatherHour
 
-mapx-gl WeatherHour
-
 ## Properties
 
 ### cloud\_cover\_pct
@@ -49,3 +47,4 @@ mapx-gl WeatherHour
 ### wind\_speed\_ms
 
 > **wind\_speed\_ms**: `number`
+

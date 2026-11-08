@@ -1,7 +1,5 @@
 # Grundstücke
 
-Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen zeichnen und Attribute lesen.
-
 Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich.
 
 | Aufgabe | Verwendung |
@@ -98,3 +96,4 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=
 - [Tilequery und Parcel API](/de/api/tilequery/)
 - [Tilesets](/de/tilesets/cadastre/): Layer und Felder des Katasters
 - [Höhen](/de/guides/elevation/): Höhe des Grundstücks
+

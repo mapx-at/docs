@@ -1,6 +1,5 @@
 # Reverse geocoding
 
-Click the map, get the nearest address.
 
 Reverse geocoding turns a coordinate into the nearest address, street or place. `types` limits the kind of result, `radius` the search distance in metres.
 
@@ -31,3 +30,4 @@ map.on('click', async (e) => {
 ## APIs used
 
 - [Geocoding](/api/geocoding/) `GET api.mapx.at/v1/reverse`
+

@@ -1,6 +1,5 @@
 # Overlay contour lines
 
-Place contour lines with index lines and elevation labels over orthophoto or the basemap.
 
 **Goal:** Place contour lines of suitable density over aerial imagery, draw index lines more strongly and label them with their elevation.
 
@@ -8,7 +7,6 @@ Place contour lines with index lines and elevation labels over orthophoto or the
 
 The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `lvl` (generalisation level 10, 12, 14, 16). Lines exist from z10.
 
-<Steps>
 
 1. **Page with background.** The orthophoto as base, the contours as a vector source:
 
@@ -94,7 +92,6 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    </script>
    ```
 
-</Steps>
 
 ## Result
 
@@ -104,8 +101,10 @@ For a map instead of imagery, replace the orthophoto layer with the layers from 
 
 > Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](/guides/3d-terrain/).
 
+
 ## Next steps
 
 - Fields and levels in detail: [Contour lines](/tilesets/contours/).
 - Three-dimensional terrain: [3D terrain](/guides/3d-terrain/).
 - Credits: [Attribution](/reference/attribution/).
+

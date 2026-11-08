@@ -1,7 +1,5 @@
 # ReverseOptions
 
-mapx-gl ReverseOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -33,3 +31,4 @@ mapx-gl ReverseOptions
 ### types?
 
 > `optional` **types**: `string` \| [`GeocodeType`](/reference/sdk/type-aliases/geocodetype/)[]
+

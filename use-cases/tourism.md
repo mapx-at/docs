@@ -1,7 +1,5 @@
 # Tourism
 
-Bike and mountain-bike routes, cycle-route layer, elevation profile and weather for tours and visitor information.
-
 The snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once ([Access and limits](/start/access-and-limits/)).
 
 Visitors ask "Which way by bike, how steep is it, and what is the weather?". The answers come from the same API: routes with the profiles `cycling` and `cycling-mtb`, a profile of the heights, the signposted cycle routes on the map and the forecast for the destination.
@@ -72,3 +70,4 @@ console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${
 - [Navigation](/guides/navigation/) and [Elevation and terrain](/guides/elevation/)
 - [3D terrain](/guides/3d-terrain/) for a spectacular tour map
 - [Static images](/guides/static-images/) for brochures and newsletters
+

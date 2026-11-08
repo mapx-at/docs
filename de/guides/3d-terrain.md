@@ -1,6 +1,5 @@
 # 3D-Gelände mit Orthophoto
 
-Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und kostenlosem Token.
 
 **Ziel:** Eine Karte, auf der das Orthophoto über dem echten Gelände liegt, plastisch schattiert und im Browser kippbar.
 
@@ -8,7 +7,6 @@ Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit Ma
 
 Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) und das [Orthophoto](/de/tilesets/orthophoto/) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](/de/api/tiles/) einbinden, ohne einen Dateinamen zu kennen.
 
-<Steps>
 
 1. **Seite anlegen.** Datei `index.html` mit MapLibre GL JS und einem Kartencontainer:
 
@@ -68,7 +66,6 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
 
 5. **Starten.** `npx serve` im Ordner, die ausgegebene Adresse öffnen. Mit gedrückter rechter Maustaste ziehen kippt und dreht die Karte.
 
-</Steps>
 
 ## Ergebnis
 
@@ -76,9 +73,11 @@ Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusä
 
 > Mit `exaggeration` lässt sich das Relief überhöhen. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
 
+
 ## Nächste Schritte
 
 - Höhe pro Klick auslesen: `map.queryTerrainElevation(e.lngLat)`, Details in [DTM Geländemodell](/de/tilesets/terrain-rgb/).
 - Höhenlinien und Beschriftung darüber: [Höhenlinien überlagern](/de/guides/overlay-contours/).
 - Höhenprofil entlang einer Linie: [Höhenprofil](/de/guides/elevation-profile/).
 - Quellenangabe richtig anzeigen: [Attribution](/de/reference/attribution/).
+

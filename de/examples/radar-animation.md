@@ -1,6 +1,5 @@
 # Niederschlagsradar-Animation
 
-Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation.
 
 Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`.
 
@@ -53,7 +52,9 @@ document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e
 
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
 
+
 ## Verwendete APIs
 
 - [Wetter](/de/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
 - [Niederschlags-Nowcast](/de/api/weather/) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
+

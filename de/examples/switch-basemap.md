@@ -1,6 +1,5 @@
 # Basiskarte wechseln
 
-Zwischen Karte, Luftbild und Gelände umschalten.
 
 Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt.
 
@@ -31,3 +30,4 @@ for (const knopf of document.querySelectorAll('[data-stil]')) {
 ## Verwendete APIs
 
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{streets|satellite|outdoors}`
+

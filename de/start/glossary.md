@@ -1,7 +1,5 @@
 # Glossar
 
-Begriffe aus der mapx-Dokumentation.
-
 **Annotation.** Zusätzliche Werte je Routensegment, zum Beispiel Geschwindigkeit oder Höhe. Angefordert mit `annotations`.
 
 **Katastralgemeinde (KG).** Einheit des österreichischen Grundbuchs. Eine Grundstücksnummer ist nur innerhalb einer KG eindeutig.
@@ -33,3 +31,4 @@ Begriffe aus der mapx-Dokumentation.
 **TileJSON.** Eine kleine JSON-Beschreibung eines Tilesets: URL-Vorlage, Zoombereich, Grenzen, Attribution.
 
 **Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `cadastre`. Siehe [Tilesets](/de/tilesets/).
+

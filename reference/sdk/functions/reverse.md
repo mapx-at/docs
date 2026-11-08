@@ -1,7 +1,5 @@
 # reverse
 
-mapx-gl reverse
-
 > **reverse**(`point`, `o`): `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
 
 Reverse Geocoding: nächstes Objekt zu einem Punkt (`lon,lat`).
@@ -15,3 +13,4 @@ Reverse Geocoding: nächstes Objekt zu einem Punkt (`lon,lat`).
 ## Returns
 
 `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+

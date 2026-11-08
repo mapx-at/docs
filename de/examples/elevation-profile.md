@@ -1,6 +1,5 @@
 # Höhenprofil
 
-Linie klicken, Profil sehen.
 
 Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `samples` gleichmäßig verteilte Messpunkte samt Auf- und Abstieg liefert. Ein Canvas zeichnet das Profil.
 
@@ -48,3 +47,4 @@ async function zeichne() {
 ## Verwendete APIs
 
 - [Höhe und Profil](/de/api/elevation/#elevation-profile-along-a-line) `GET api.mapx.at/v1/elevation/profile`
+

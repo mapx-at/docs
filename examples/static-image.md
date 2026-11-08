@@ -1,6 +1,5 @@
 # Static image for a listing
 
-Click a place, get a ready-made image URL with a pin.
 
 A static image is a plain URL that returns a PNG or WebP: for listings, e-mails, PDFs and places without JavaScript. Style, pin, view and size are part of the path. Click the map to move the pin; the image below is the URL shown under it.
 
@@ -30,3 +29,4 @@ update();
 ## APIs used
 
 - [Static Images](/api/static-images/) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`
+

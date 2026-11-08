@@ -1,7 +1,5 @@
 # LayerControl
 
-mapx-gl LayerControl
-
 Ebenen-Schalter: Gruppen und Overlays kommen aus den Style-Metadaten (`mapx:groups`, `mapx:overlays`), keine Liste im Code nötig.
 
 ## Implements
@@ -86,3 +84,4 @@ Gruppe per Code ein-/ausschalten.
 #### Returns
 
 `void`
+

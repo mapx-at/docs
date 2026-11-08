@@ -1,8 +1,6 @@
 # Weather API
 
-Aktuelle Messwerte, Stundenvorhersage, Niederschlags-Nowcast, Warnungen und Wetterkacheln (GeoSphere Austria).
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Messwerte der nächsten Stationen, Stundenvorhersage für einen Punkt und Rasterkacheln für ein Karten-Overlay. Quelle: GeoSphere Austria, CC BY 4.0.
 
@@ -25,32 +23,31 @@ GeoSphere Austria station network, 10-minute values (temperature, humidity, wind
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -112,32 +109,31 @@ GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current h
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -199,32 +195,31 @@ GeoSphere INCA nowcast nowcast-v1-15min-1km, bilinear to the point. `precipitati
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -289,32 +284,31 @@ Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/tiles/temperature.json" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -357,32 +351,31 @@ Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png" -o result.png
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**: `image/png` · PNG; header X-Weather-Reference-Time
 
@@ -423,32 +416,31 @@ Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -497,4 +489,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="weather" lang="de" />
+
+

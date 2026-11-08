@@ -1,7 +1,5 @@
 # Access and limits
 
-Free API token, public and secret tokens, how to send them, rate limits per zone, CORS, caching and attribution.
-
 ## Get a token
 
 All endpoints under `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` and all tiles under `https://tiles.mapx.at/` need a token. It is free and there is no usage-based charge.
@@ -87,3 +85,4 @@ Show the source of the data wherever the map or result is visible. MapLibre adds
 
 - [First map in 5 minutes](/start/first-map/)
 - [Errors and limits](/api/errors/)
+

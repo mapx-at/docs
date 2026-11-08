@@ -1,21 +1,20 @@
 # Erste Route
 
-Eine Autoroute von Wien nach Melk anfordern und auf einer Karte zeichnen.
 
 ## Anfrage
 
 Koordinaten sind immer `lon,lat`, getrennt durch `;`.
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?overview=false" \
   | jq '.routes[0] | {distance, duration}'
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?overview=simplified";
@@ -23,18 +22,17 @@ const { routes } = await (await fetch(url, { headers: { Authorization: "Bearer D
 console.log(routes[0].distance / 1000, "km", routes[0].duration / 60, "min");
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272"
 route = requests.get(url, params={"overview": "simplified"}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()["routes"][0]
 print(route["distance"] / 1000, "km", route["duration"] / 60, "min")
 ```
 
-</TabItem>
-</Tabs>
 
 `distance` ist in Metern, `duration` in Sekunden. Weitere Profile: `driving-truck`, `cycling`, `walking`. Siehe den [Navigation-Guide](/de/guides/navigation/).
 
@@ -56,3 +54,4 @@ map.on("load", () => {
 
 - [Navigation-Guide](/de/guides/navigation/): Lkw, Rad, Maut, Alternativen
 - [Directions API](/de/api/directions/)
+

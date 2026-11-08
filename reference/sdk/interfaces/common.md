@@ -1,7 +1,5 @@
 # Common
 
-mapx-gl Common
-
 ## Extended by
 
 - [`GeocodeOptions`](/reference/sdk/interfaces/geocodeoptions/)
@@ -22,3 +20,4 @@ mapx-gl Common
 ### signal?
 
 > `optional` **signal**: `AbortSignal`
+

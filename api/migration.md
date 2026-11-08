@@ -1,10 +1,10 @@
 # Migration to English names
 
-Former German API IDs and field names, their English successors, the deprecation headers and the sunset date 2027-05-31.
 
 Since 2026-11-08 the API uses English identifiers for styles, tilesets, search categories and response fields. The former German names keep working unchanged **until 2027-05-31** (sunset). After that they return `404`, or the old fields are no longer included.
 
 > If nothing changes by 2027-05-31, requests with the old names will fail from then on. The new names already work today; switching is a pure rename, the data is identical.
+
 
 ## Headers on old names
 
@@ -117,3 +117,4 @@ Applies to `/v1/searchbox/category/{id}`, `poi_category` and `poi_category_ids`.
 | `/v1/elevation`, `/v1/elevation/profile`, `/v1/elevation/{coordinate}`, `/v1/tilequery` | `stichtag` | `reference_date` |
 
 Until the sunset, responses contain both fields. `/v1/weather/*` already returns wind direction as `wind_direction_deg`.
+

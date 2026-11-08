@@ -1,7 +1,5 @@
 # RouteControl
 
-mapx-gl RouteControl
-
 Routenplaner: Start/Ziel per Klick, Profile inkl. Lkw und MTB, Maut/Autobahn meiden, Lkw-Maße. Ergebnis in `last` und `onRoute`.
 
 ## Implements
@@ -102,3 +100,4 @@ Start und Ziel setzen und sofort rechnen.
 #### Returns
 
 `Promise`\<`void`\>
+

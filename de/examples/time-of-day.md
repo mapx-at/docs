@@ -1,6 +1,5 @@
 # Tageszeit und Nachtmodus
 
-Den Standardstil in vier Lichtstimmungen.
 
 Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dunkle Oberfläche genügt die Nacht-Variante.
 
@@ -28,3 +27,4 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 ## Verwendete APIs
 
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{streets-dawn|streets|streets-dusk|streets-night}`
+

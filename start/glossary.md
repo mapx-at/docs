@@ -1,7 +1,5 @@
 # Glossary
 
-Terms used in the mapx documentation.
-
 **Annotation.** Extra values per route segment, for example speed or elevation. Requested with `annotations`.
 
 **Cadastral municipality (KG).** Austrian land registry unit. A parcel number is only unique within one KG.
@@ -33,3 +31,4 @@ Terms used in the mapx documentation.
 **TileJSON.** A small JSON description of a tileset: URL template, zoom range, bounds, attribution.
 
 **Tileset.** A named collection of tiles, for example `streets` or `cadastre`. See [Tilesets](/tilesets/).
+

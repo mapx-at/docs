@@ -1,8 +1,6 @@
 # Transit API
 
-ÖV-Verbindungen, Abfahrtstafeln und Haltestellen aus den Fahrplandaten.
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Verbindungen mit öffentlichem Verkehr (zu Fuß oder mit dem Rad zur Haltestelle), Abfahrtstafeln und Haltestellen auf Basis des Fahrplans.
 
@@ -25,32 +23,31 @@ Exactly origin and destination. Connections with walks on the GIP.at network and
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -114,32 +111,31 @@ No real-time data: `realtime` is always false. Outside the feed period 422, unkn
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -198,32 +194,31 @@ Stations in a box (`bbox`, by number of trip patterns descending) or around a po
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -262,4 +257,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="transit" lang="de" />
+
+

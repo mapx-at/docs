@@ -1,7 +1,5 @@
 # elevationProfile
 
-mapx-gl elevationProfile
-
 > **elevationProfile**(`line`, `samples`, `model`, `signal`?): `Promise`\<[`ElevationProfile`](/reference/sdk/interfaces/elevationprofile/)\>
 
 Höhenprofil entlang einer Linie (2 bis 512 Stützpunkte).
@@ -19,3 +17,4 @@ Höhenprofil entlang einer Linie (2 bis 512 Stützpunkte).
 ## Returns
 
 `Promise`\<[`ElevationProfile`](/reference/sdk/interfaces/elevationprofile/)\>
+

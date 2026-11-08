@@ -1,6 +1,5 @@
 # Höhenprofil entlang einer Linie
 
-Höhenprofil für einen Weg über die Höhen-API abfragen und als SVG-Diagramm zeichnen, in reinem JavaScript.
 
 **Ziel:** Für eine Wegstrecke ein Höhenprofil (Entfernung gegen Höhe) abfragen und als Diagramm darstellen.
 
@@ -8,7 +7,6 @@ Höhenprofil für einen Weg über die Höhen-API abfragen und als SVG-Diagramm z
 
 Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
 
-<Steps>
 
 1. **Anfrage testen.** Die Linie besteht aus `lon,lat`-Paaren, getrennt durch Semikolon (Länge vor Breite). 50 Messpunkte entlang einer Strecke am Großglockner:
 
@@ -72,7 +70,6 @@ Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `sampl
 
 4. **Öffnen.** `profil.html` über einen statischen Server öffnen (`npx serve`); der Browser darf die API direkt abfragen. Für Webseiten dazu einen öffentlichen Token (`mx_pk_…`) mit der eigenen Origin verwenden, `localhost` nur während der Entwicklung erlauben.
 
-</Steps>
 
 ## Ergebnis
 
@@ -80,8 +77,10 @@ Ein SVG-Diagramm mit Fläche und Linie der Höhe über der Strecke und darunter 
 
 > Je mehr `samples`, desto genauer der Auf- und Abstieg, aber desto mehr Rauschen. Mit `model=dsm` zeigt das Profil die Oberfläche (Bäume, Gebäude) statt des Geländes, siehe [DTM und DSM](/de/start/faq/#was-ist-der-unterschied-zwischen-dtm-und-dsm). Ein Pfad hat 2 bis 512 Stützpunkte, `samples` 2 bis 1024.
 
+
 ## Nächste Schritte
 
 - Alle Parameter und Antwortfelder: [Höhe und Profil](/de/api/elevation/).
 - Linie aus einem GPX-Track: Koordinaten als `lon,lat;lon,lat` zusammensetzen, Reihenfolge siehe [Koordinaten](/de/reference/coordinates/).
 - Limits bei vielen Abfragen: [Fehler und Limits](/de/api/errors/).
+

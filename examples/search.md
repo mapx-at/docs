@@ -1,6 +1,5 @@
 # Search
 
-Search for places, addresses and peaks and fly to them.
 
 The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit has `place_name`, `center` and usually a `bbox` for zooming. No access token needed.
 
@@ -43,3 +42,4 @@ eingabe.addEventListener('input', async () => {
 ## APIs used
 
 - [Geocoding](/api/geocoding/) `GET api.mapx.at/v1/geocode`
+

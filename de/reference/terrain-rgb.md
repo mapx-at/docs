@@ -1,6 +1,5 @@
 # Terrain-RGB
 
-Wie mapx Höhen als Farbe kodiert, Wertebereich, Rundung und Dekodierfunktionen.
 
 Terrain-RGB speichert eine Höhe pro Pixel in den drei Farbkanälen eines Bildes. So lassen sich Höhenkacheln mit gewöhnlichen
 Bildformaten ausliefern, und Clients wie MapLibre berechnen daraus Schummerung und 3D-Gelände.
@@ -16,8 +15,12 @@ R ist das höchstwertige Byte. Der Zahlenwert `q = R·65536 + G·256 + B` liegt 
 
 ## Dekodieren
 
-<Code lang="js" code={`const hoehe = (r, g, b) => -10000 + (r * 65536 + g * 256 + b) * 0.1;`} />
-<Code lang="python" code={`hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als numpy-Arrays`} />
+```js
+const hoehe = (r, g, b) => -10000 + (r * 65536 + g * 256 + b) * 0.1;
+```
+```python
+hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als numpy-Arrays
+```
 
 ## Worauf achten
 
@@ -27,3 +30,4 @@ R ist das höchstwertige Byte. Der Zahlenwert `q = R·65536 + G·256 + B` liegt 
 - **512 Pixel, kein Rand.** `tileSize: 512`.
 
 Anwendung: [DTM Geländemodell](/de/tilesets/terrain-rgb/).
+

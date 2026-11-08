@@ -1,8 +1,6 @@
 # Static Images API
 
-Kartenbilder als PNG oder WebP, mit Pins, Pfaden und GeoJSON-Overlays.
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Rendert ein Kartenbild für Ausschnitt und Größe, optional mit Overlays. Das Ergebnis ist cachebar (`ETag`).
 
@@ -31,32 +29,31 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400" -o result.png
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**: `image/png`, `image/webp` · Image
 
@@ -96,32 +93,31 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400" -o result.png
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**: `image/png`, `image/webp` · Image
 
@@ -139,4 +135,5 @@ open("result.png", "wb").write(res.content)
 
 ## Playground
 
-<Playground group="static-images" lang="de" />
+
+

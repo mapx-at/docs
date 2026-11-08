@@ -1,6 +1,5 @@
 # Elevation profile
 
-Click a line, see the profile.
 
 The vertices go to `/v1/elevation/profile` as `coordinates`; it returns `samples` evenly spaced points plus ascent and descent. A canvas draws the profile.
 
@@ -48,3 +47,4 @@ async function zeichne() {
 ## APIs used
 
 - [Elevation and profile](/api/elevation/#elevation-profile-along-a-line) `GET api.mapx.at/v1/elevation/profile`
+

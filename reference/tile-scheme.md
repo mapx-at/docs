@@ -1,6 +1,5 @@
 # Tile scheme
 
-Web Mercator, z/x/y, 512-pixel tiles, resolution per zoom level and overzoom.
 
 All mapx tiles follow the common web map scheme. With MapLibre, Leaflet, OpenLayers or QGIS you do not need to configure anything; for your own requests and calculations, here is what matters.
 
@@ -38,7 +37,7 @@ If you forget it, the map looks off by one zoom level and blurry or too fine.
 
 Resolution depends on latitude. The table applies to 47.5° N, the middle of Austria:
 
-<Aufloesung lang="en" />
+
 
 One level deeper halves the pixel size. The elevation models exist up to z16, the orthophoto up to z18.
 
@@ -48,7 +47,9 @@ If a level is higher than the stored one, the **client scales up** the tiles of 
 
 > Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched. For the cadastre (z16 only) set `minzoom: 16` in the style.
 
+
 ## Further reading
 
 - Elevation values in tiles: [Terrain-RGB](/reference/terrain-rgb/).
 - Coordinates and projections: [Coordinates](/reference/coordinates/).
+

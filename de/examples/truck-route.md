@@ -1,6 +1,5 @@
 # Lkw-Route mit Optionen
 
-Fahrzeugmaße, Maut und Autobahn meiden, Alternativen.
 
 Das Profil `driving-truck` mit Gewicht und Höhe wählen: Straßen mit passenden Verboten und Beschränkungen werden gemieden, die Antwort nennt die GO-mautpflichtigen Kilometer. Für Pkw (`driving`) lassen sich Maut und Autobahn meiden, dazu gibt es bis zu zwei Alternativen. Start und Ziel anklicken.
 
@@ -49,3 +48,4 @@ async function route() {
 ## Verwendete APIs
 
 - [Directions](/de/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+

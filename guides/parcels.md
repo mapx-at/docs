@@ -1,7 +1,5 @@
 # Parcels
 
-Find the cadastral parcel at a point, draw parcel boundaries and read their attributes.
-
 The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Use |
@@ -98,3 +96,4 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=
 - [Tilequery and Parcel API](/api/tilequery/)
 - [Tilesets](/tilesets/cadastre/): layers and fields of the cadastre
 - [Elevation](/guides/elevation/): height of the parcel
+

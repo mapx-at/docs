@@ -1,6 +1,5 @@
 # Reachability (isochrones)
 
-Which area can be reached in 5, 10 and 15 minutes?
 
 A click sets the start point. The isochrone API returns one MultiPolygon per step, the largest area first.
 
@@ -38,3 +37,4 @@ async function abfragen(ort) {
 ## APIs used
 
 - [Routing](/api/directions/#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
+

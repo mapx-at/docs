@@ -1,7 +1,5 @@
 # ParcelOptions
 
-mapx-gl ParcelOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -21,3 +19,4 @@ mapx-gl ParcelOptions
 #### Inherited from
 
 [`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+

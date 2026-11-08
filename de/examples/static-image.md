@@ -1,6 +1,5 @@
 # Static Image fürs Exposé
 
-Ort anklicken, fertige Bild-URL mit Marker erhalten.
 
 Ein Static Image ist eine einfache URL, die ein PNG oder WebP liefert: für Exposés, E-Mails, PDFs und Orte ohne JavaScript. Stil, Marker, Ausschnitt und Größe stehen im Pfad. Karte anklicken verschiebt den Marker; das Bild darunter lädt die angezeigte URL.
 
@@ -30,3 +29,4 @@ update();
 ## Verwendete APIs
 
 - [Static Images](/de/api/static-images/) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`
+

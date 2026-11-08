@@ -1,7 +1,5 @@
 # parcel
 
-mapx-gl parcel
-
 ## parcel(point, o)
 
 > **parcel**(`point`, `o`): `Promise`\<`GeoJSON.FeatureCollection` & `object`\>
@@ -31,3 +29,4 @@ Grundstück an einem Punkt (BEV DKM). Mit `dossier: true` liefert jedes Feature 
 ### Returns
 
 `Promise`\<`GeoJSON.FeatureCollection` & `object`\>
+

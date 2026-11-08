@@ -1,7 +1,5 @@
 # SearchControl
 
-mapx-gl SearchControl
-
 Suchfeld über /v1/geocode; Auswahl fliegt zum Treffer.
 
 ## Implements
@@ -68,3 +66,4 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
+

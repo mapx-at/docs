@@ -1,11 +1,10 @@
 # First map in 5 minutes
 
-A complete HTML file that shows a mapx map. Copy, save, open.
 
 Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` with a public token from [account.mapx.at](/start/access-and-limits/) (allowed origin: your site, or `localhost` while testing). No build step.
 
-<Tabs syncKey="client">
-<TabItem label="MapLibre GL JS">
+**MapLibre GL JS**
+
 
 ```html
 <!doctype html>
@@ -34,8 +33,8 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 </html>
 ```
 
-</TabItem>
-<TabItem label="SDK mapx-gl">
+**SDK mapx-gl**
+
 
 The [SDK](/guides/sdk/) adds a search box and a style switcher. Download `mapx-gl.bundle.js` and `mapx-gl.css` from `https://map.mapx.at/sdk/v1/` and serve them next to your page.
 
@@ -61,8 +60,6 @@ The [SDK](/guides/sdk/) adds a search box and a style switcher. Download `mapx-g
 </html>
 ```
 
-</TabItem>
-</Tabs>
 
 The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](/api/styles/).
 
@@ -73,3 +70,4 @@ MapLibre GL JS {V.maplibre} is the version these examples are tested with.
 - [First search](/start/first-search/)
 - [Maps guide](/guides/maps/): styles, terrain, overlays
 - [Examples](/examples/)
+

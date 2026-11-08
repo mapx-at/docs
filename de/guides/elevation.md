@@ -1,7 +1,5 @@
 # Höhen und Gelände
 
-Höhen an Punkten, Höhenprofile, Geländemodelle und 3D-Gelände in der Karte.
-
 mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen.
 
 ## Höhe an einem Punkt
@@ -55,3 +53,4 @@ Die Tiles verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G
 - [Elevation API](/de/api/elevation/)
 - [Tilesets](/de/tilesets/terrain-rgb/): Datenblatt des Geländemodells
 - [Höhenlinien überlagern](/de/guides/overlay-contours/)
+

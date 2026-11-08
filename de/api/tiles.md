@@ -1,8 +1,6 @@
 # Tiles API
 
-Tileset-Liste, TileJSON und XYZ-Kacheln (Vektor, Raster, Höhe).
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Listet die Tilesets, beschreibt jedes als TileJSON und liefert Kacheln als `{z}/{x}/{y}`. Jedes Produkt gibt es zusätzlich als [PMTiles](https://docs.protomaps.com/pmtiles/)-Datei, siehe [Tilesets](/de/tilesets/).
 
@@ -16,32 +14,31 @@ Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON 
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -93,32 +90,31 @@ TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`La
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets.json" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles/streets.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -167,32 +163,31 @@ data = res.json()
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
 
@@ -209,4 +204,5 @@ open("result.png", "wb").write(res.content)
 
 ## Playground
 
-<Playground group="tiles" lang="de" />
+
+

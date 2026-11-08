@@ -1,7 +1,5 @@
 # mapx
 
-mapx-gl mapx
-
 > `const` **mapx**: `object`
 
 Namespace-Objekt: `mapx.map({...})`, `mapx.directions(...)`.
@@ -545,3 +543,4 @@ Bei `pmtiles://…/{z}/{x}/{y}` kommt er vor den Kachelpfad, bei Archiv-URLs ans
 #### Returns
 
 `string`
+

@@ -1,6 +1,5 @@
 # Cadastre: parcel on click
 
-Parcel boundaries over aerial imagery, a click shows the number.
 
 The cadastre tileset contains boundary lines from zoom 16 with parcel number and cadastral municipality. `queryRenderedFeatures` reads them at the click point.
 
@@ -30,3 +29,4 @@ map.on('click', (e) => {
 ## APIs used
 
 - [Cadastre](/tilesets/cadastre/) (vector tiles in the `satellite` style)
+

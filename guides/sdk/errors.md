@@ -1,7 +1,5 @@
 # Errors and retries in the SDK
 
-MapxError carries code, status, param and allowed values from the problem+json response; retry only what is worth retrying.
-
 Every helper throws a `MapxError` when the API answers with an error or the network fails. It mirrors the `application/problem+json` document of the [error catalog](/api/errors/).
 
 | Property | Meaning |
@@ -62,3 +60,4 @@ input.oninput = async () => {
 
 - [Errors and limits](/api/errors/) with the rate-limit zones
 - [SDK helpers](/guides/sdk/helpers/)
+

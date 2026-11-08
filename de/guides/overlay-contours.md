@@ -1,6 +1,5 @@
 # Höhenlinien überlagern
 
-Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basiskarte legen.
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
@@ -8,7 +7,6 @@ Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basisk
 
 Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
-<Steps>
 
 1. **Seite mit Hintergrund.** Das Orthophoto als Basis, die Höhenlinien als Vektorquelle:
 
@@ -95,7 +93,6 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
    </script>
    ```
 
-</Steps>
 
 ## Ergebnis
 
@@ -105,8 +102,10 @@ Für eine Karte statt Luftbild die Orthophoto-Ebene durch die Ebenen aus [Basisk
 
 > Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](/de/guides/3d-terrain/).
 
+
 ## Nächste Schritte
 
 - Felder und Stufen im Detail: [Höhenlinien](/de/tilesets/contours/).
 - Gelände dreidimensional: [3D-Gelände](/de/guides/3d-terrain/).
 - Quellenangabe: [Attribution](/de/reference/attribution/).
+

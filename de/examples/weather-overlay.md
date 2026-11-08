@@ -1,6 +1,5 @@
 # Wetter-Overlay
 
-Temperatur, Niederschlag oder Wind als Overlay über der Karte, Stunde per Regler.
 
 Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Raster-Layer.
 
@@ -47,6 +46,8 @@ document.getElementById('stunde').addEventListener('input', (e) => zeigen(docume
 
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
 
+
 ## Verwendete APIs
 
 - [Wetter](/de/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`
+

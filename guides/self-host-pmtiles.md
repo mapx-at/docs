@@ -1,8 +1,5 @@
 # Self-host PMTiles
 
-Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
-
-export const dtm = `https://tiles.mapx.at/${data.tilesets.relief.datei}`;
 
 **Goal:** Run a mapx PMTiles file on your own infrastructure, for example for resilience, internal networks or your own domain, or a subset of it.
 
@@ -10,21 +7,24 @@ export const dtm = `https://tiles.mapx.at/${data.tilesets.relief.datei}`;
 
 The files are free to download with a token ([Access and limits](/start/access-and-limits/)) at `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN` (file names per product under "Key figures" on the [product pages](/tilesets/)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](/reference/attribution/) you may redistribute and mirror the files.
 
-<Steps>
 
 1. **Download the file.** `curl -C -` resumes an interrupted download:
 
-   <Code lang="bash" code={`curl -C - -O "${dtm}?access_token=YOUR_TOKEN"`} />
+   ```bash
+   curl -C - -O "@@url:relief@@?access_token=YOUR_TOKEN"
+   ```
 
    The orthophoto and the elevation models are very large files; check storage and bandwidth before downloading. For sub-areas step 2 is easier.
 
 2. **Optional: fetch only a subset.** With the [`pmtiles`](https://github.com/protomaps/go-pmtiles) command line tool, `extract` reads only the tiles of an area from the online file using range requests:
 
-   <Code lang="bash" code={`# subset by bounding box (west,south,east,north)
-pmtiles extract "${dtm}?access_token=YOUR_TOKEN" salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
+   ```bash
+   # subset by bounding box (west,south,east,north)
+   pmtiles extract "@@url:relief@@?access_token=YOUR_TOKEN" salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
 
-# or only up to a zoom level
-pmtiles extract "${dtm}?access_token=YOUR_TOKEN" overview.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1`} />
+   # or only up to a zoom level
+   pmtiles extract "@@url:relief@@?access_token=YOUR_TOKEN" overview.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1
+   ```
 
    The output is a complete PMTiles file that you serve like any other.
 
@@ -58,7 +58,6 @@ pmtiles extract "${dtm}?access_token=YOUR_TOKEN" overview.pmtiles --maxzoom=12 -
    curl -s -D - -o /dev/null -r 0-16383 https://tiles.example.com/salzburg.pmtiles
    ```
 
-</Steps>
 
 ## Caching
 
@@ -70,8 +69,10 @@ A file or subset is served independently of mapx, with the same look and accurac
 
 > An alternative without your own files: the [TileJSON address](/api/tiles/) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. It always points to the current release.
 
+
 ## Next steps
 
 - File format and protocol: [PMTiles documentation](https://docs.protomaps.com/pmtiles/).
 - Display with MapLibre: [First map](/start/first-map/).
 - Do not forget the credit: [Attribution](/reference/attribution/).
+

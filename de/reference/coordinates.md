@@ -1,7 +1,5 @@
 # Koordinaten
 
-Reihenfolge lon,lat, WGS84 und Web-Mercator, amtliche Quellen in MGI und ETRS89.
-
 ## Reihenfolge: Länge vor Breite
 
 Alle mapx-Schnittstellen, TileJSON, MapLibre und GeoJSON verwenden **`lon, lat`** (Länge, dann Breite), also Ost-West vor Nord-Süd:
@@ -34,3 +32,4 @@ Die Ausgangsdaten der Behörden liegen in unterschiedlichen Systemen: Österreic
 
 - [Kachelschema](/de/reference/tile-scheme/)
 - [Höhe und Profil](/de/api/elevation/)
+

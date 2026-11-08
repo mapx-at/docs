@@ -1,10 +1,10 @@
 # Migration auf englische Namen
 
-Alte deutsche IDs und Feldnamen der API, ihre englischen Nachfolger, die Deprecation-Header und das Sunset-Datum 31.05.2027.
 
 Seit dem 08.11.2026 verwendet die API durchgehend englische Kennungen für Stile, Kachelsätze, Suchkategorien und Antwortfelder. Die alten deutschen Namen funktionieren unverändert weiter, **bis zum 31.05.2027** (Sunset). Danach liefern sie `404` bzw. enthalten die alten Felder nicht mehr.
 
 > Wer bis zum 31.05.2027 nichts ändert, bekommt ab dann Fehler. Die neuen Namen funktionieren schon jetzt; ein Umstieg ist ein reiner Namenstausch, die Daten sind identisch.
+
 
 ## Header bei alten Namen
 
@@ -117,3 +117,4 @@ Gilt für `/v1/searchbox/category/{id}`, `poi_category` und `poi_category_ids`. 
 | `/v1/elevation`, `/v1/elevation/profile`, `/v1/elevation/{coordinate}`, `/v1/tilequery` | `stichtag` | `reference_date` |
 
 Bis zum Sunset enthalten die Antworten beide Felder. `/v1/weather/*` liefert die Windrichtung bereits als `wind_direction_deg`.
+

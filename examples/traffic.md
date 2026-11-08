@@ -1,6 +1,5 @@
 # Traffic flow and incidents
 
-Traffic style plus the active incidents of the visible area.
 
 The style `traffic-day` colours the road network by current flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
 
@@ -38,3 +37,4 @@ map.on('load', () => {
 
 - [Traffic](/api/traffic/) `GET api.mapx.at/v1/traffic/incidents`
 - [Styles](/api/styles/) `GET api.mapx.at/v1/styles/traffic-day`
+

@@ -1,7 +1,5 @@
 # Departure
 
-mapx-gl Departure
-
 ## Properties
 
 ### destination
@@ -77,3 +75,4 @@ mapx-gl Departure
 ### time
 
 > **time**: `string`
+

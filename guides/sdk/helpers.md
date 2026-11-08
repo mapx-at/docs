@@ -1,7 +1,5 @@
 # SDK helpers for the APIs
 
-One typed function per API: search, geocoding, routing, matrix, optimization, parcels, elevation, traffic, transit, weather and static images.
-
 Every helper is a plain `async` function that returns typed JSON and throws a [`MapxError`](/guides/sdk/errors/) on failure. Coordinates are `[lng, lat]`. Pass `signal` (an `AbortSignal`) to cancel a request. All examples run in the browser console on any page that has loaded `mapx` ([install](/guides/sdk/)) and set a token with `mapx.setAccessToken("YOUR_TOKEN")`.
 
 ## Search and geocoding
@@ -104,3 +102,4 @@ Use `mapx.geojsonOverlay(feature)` to draw a polygon (for example a parcel) with
 - [Controls and popups](/guides/sdk/controls/)
 - [Errors and retries](/guides/sdk/errors/)
 - [SDK reference](/reference/sdk/) with all types
+

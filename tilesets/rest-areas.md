@@ -1,10 +1,12 @@
 # Rest areas
 
-Rest areas and truck parking of ASFINAG as vector tiles (tileset rastanlagen) and search category rastplatz.
 
 Rest, commuter and truck parking sites along motorways and expressways from the ASFINAG traffic data, 314 locations.
 
-> Data source: ASFINAG, rest, commuter and truck parking, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: selection and reshaping of fields.
+> **Attribution**
+
+Data source: ASFINAG, rest, commuter and truck parking, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: selection and reshaping of fields.
+
 
 | | |
 |---|---|
@@ -15,3 +17,4 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 | Query | [Tilequery](/api/tilequery/) with `rastanlagen` as tileset |
 
 Real-time occupancy is not part of the tiles (yet).
+

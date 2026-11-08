@@ -1,6 +1,5 @@
 # Suche
 
-Orte, Adressen und Gipfel suchen und anspringen.
 
 Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen.
 
@@ -43,3 +42,4 @@ eingabe.addEventListener('input', async () => {
 ## Verwendete APIs
 
 - [Geocoding](/de/api/geocoding/) `GET api.mapx.at/v1/geocode`
+

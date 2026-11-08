@@ -1,6 +1,5 @@
 # Navigation
 
-Routen für Auto, Lkw, Rad und zu Fuß, Maut, Isochronen, Matrizen, Map Matching und Tourenplanung.
 
 Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`.
 
@@ -125,3 +124,4 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/opt
 - [Directions API](/de/api/directions/), [Optimization API](/de/api/optimization/)
 - [Verkehr](/de/guides/traffic/): Störungen entlang einer Route
 - [Routen-Beispiel](/de/examples/route/)
+

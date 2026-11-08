@@ -1,7 +1,5 @@
 # TransitOptions
 
-mapx-gl TransitOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -39,3 +37,4 @@ mapx-gl TransitOptions
 #### Inherited from
 
 [`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+

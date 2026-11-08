@@ -1,7 +1,5 @@
 # DeparturesPopup
 
-mapx-gl DeparturesPopup
-
 Klick auf die Karte (oder `open()`) zeigt die nächsten Abfahrten der Haltestelle in der Nähe.
 
 ## Constructors
@@ -45,3 +43,4 @@ Popup für einen Punkt oder eine Haltestellen-ID öffnen.
 #### Returns
 
 `void`
+

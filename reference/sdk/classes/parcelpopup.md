@@ -1,7 +1,5 @@
 # ParcelPopup
 
-mapx-gl ParcelPopup
-
 Klick auf die Karte öffnet ein Popup mit dem Grundstück an dieser Stelle (Nummer, KG, Fläche, Gebäude, Höhe).
 
 ## Constructors
@@ -29,3 +27,4 @@ Klick auf die Karte öffnet ein Popup mit dem Grundstück an dieser Stelle (Numm
 #### Returns
 
 `void`
+

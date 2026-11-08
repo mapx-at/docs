@@ -1,7 +1,5 @@
 # MeasureControl
 
-mapx-gl MeasureControl
-
 Strecken- und Flächenmessung per Klick (Kugelgeometrie, wie im Viewer).
 
 ## Extends
@@ -57,3 +55,4 @@ internally.
 #### Inherited from
 
 `DrawControl.onRemove`
+

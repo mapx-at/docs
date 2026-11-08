@@ -1,7 +1,5 @@
 # Zugang und Limits
 
-Kostenloser API-Token, öffentliche und geheime Tokens, Übergabe, Rate Limits pro Zone, CORS, Caching und Attribution.
-
 ## Token holen
 
 Alle Endpunkte unter `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` und alle Tiles unter `https://tiles.mapx.at/` brauchen einen Token. Er ist kostenlos, es gibt keine nutzungsabhängige Verrechnung.
@@ -87,3 +85,4 @@ Die Datenquelle überall anzeigen, wo die Karte oder das Ergebnis sichtbar ist. 
 
 - [Erste Karte in 5 Minuten](/de/start/first-map/)
 - [Fehler und Limits](/de/api/errors/)
+

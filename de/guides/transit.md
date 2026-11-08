@@ -1,7 +1,5 @@
 # Transit-Abfahrten
 
-Verbindungen, Haltestellen und Abfahrtstafeln im öffentlichen Verkehr aus dem Soll-Fahrplan.
-
 Die Fahrplandaten decken Österreich ab (ÖBB und die regionalen Verkehrsverbünde). Es ist der Soll-Fahrplan: `realtime` ist immer `false`. Anfragen für Verbindungen liegen in der Zone `route`, für Haltestellen und Abfahrten in der Zone `search`.
 
 | Aufgabe | Endpunkt |
@@ -75,3 +73,4 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/isochrone/
 - [Transit API](/de/api/transit/)
 - [Navigation](/de/guides/navigation/)
 - [Attribution](/de/reference/attribution/): Quellenangabe der Fahrplandaten
+

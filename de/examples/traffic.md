@@ -1,6 +1,5 @@
 # Verkehrslage und Meldungen
 
-Verkehrsstil plus die aktiven Meldungen im sichtbaren Ausschnitt.
 
 Der Stil `traffic-day` färbt das Straßennetz nach der aktuellen Verkehrslage. Meldungen (Unfälle, Baustellen, Sperren) kommen von `/v1/traffic/incidents`; das Beispiel lädt die aktiven für den sichtbaren Ausschnitt und zeichnet sie darüber. Eine Linie anklicken zeigt den Text.
 
@@ -38,3 +37,4 @@ map.on('load', () => {
 
 - [Verkehr](/de/api/traffic/) `GET api.mapx.at/v1/traffic/incidents`
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/traffic-day`
+

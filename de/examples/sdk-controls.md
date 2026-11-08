@@ -1,6 +1,5 @@
 # SDK: Routenplaner und Ebenen
 
-RouteControl mit Lkw-Profil, LayerControl, Suche und Stilumschalter.
 
 Fünf Controls des [SDK `mapx-gl`](/de/guides/sdk/) ergeben ein vollständiges Kartenwerkzeug. `RouteControl` (Pfeil-Schaltfläche) bietet die sechs Profile, Maut und Autobahn meiden und Lkw-Maße; `LayerControl` baut seine Schalter aus den Style-Metadaten.
 
@@ -21,3 +20,4 @@ map.addControl(new mapx.StyleSwitcherControl(), "top-right");
 
 - [Directions](/de/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
 - [Geocoding](/de/api/geocoding/) `GET api.mapx.at/v1/geocode`
+

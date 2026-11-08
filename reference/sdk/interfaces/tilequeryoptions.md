@@ -1,7 +1,5 @@
 # TilequeryOptions
 
-mapx-gl TilequeryOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -45,3 +43,4 @@ mapx-gl TilequeryOptions
 #### Inherited from
 
 [`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+

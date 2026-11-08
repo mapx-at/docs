@@ -1,6 +1,5 @@
 # Address validation
 
-Check an address against the official register and show the corrected result.
 
 Validation compares the four address parts with the BEV address register. The result has a `status` (`match`, `corrected`, `ambiguous`, `not_found`), the list of `deviations` and either the matching `address` with coordinates or a list of `candidates`. The pre-filled address has a typo on purpose.
 
@@ -36,3 +35,4 @@ document.getElementById('pruefen').addEventListener('click', async () => {
 ## APIs used
 
 - [Address](/api/address/) `GET api.mapx.at/v1/address/validate`
+

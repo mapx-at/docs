@@ -1,6 +1,5 @@
 # Maps
 
-Show a mapx map, switch styles, add tilesets and overlays.
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
@@ -74,8 +73,10 @@ Each tileset is also one PMTiles file. Download it once instead of fetching tile
 
 > Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](/reference/attribution/).
 
+
 ## Next
 
 - [Style the basemap](/guides/style-the-basemap/)
 - [Tilesets](/tilesets/)
 - [Styles API](/api/styles/) and [Tiles API](/api/tiles/)
+

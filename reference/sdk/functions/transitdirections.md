@@ -1,7 +1,5 @@
 # transitDirections
 
-mapx-gl transitDirections
-
 > **transitDirections**(`from`, `to`, `o`): `Promise`\<`any`\>
 
 ÖV-Verbindung (zu Fuß oder mit Rad zur Haltestelle). Zeit als ISO 8601 in Wiener Ortszeit.
@@ -17,3 +15,4 @@ mapx-gl transitDirections
 ## Returns
 
 `Promise`\<`any`\>
+

@@ -1,6 +1,5 @@
 # Search Box mit Vorschlägen
 
-Vorschläge beim Tippen, Position nach dem Klick, Typfilter.
 
 Die Search Box arbeitet in zwei Schritten: `suggest` liefert Vorschläge beim Tippen, `retrieve` die Position des gewählten. Für beide Aufrufe dasselbe `session_token` verwenden, für die nächste Suche ein neues. Der Typfilter begrenzt die Vorschläge.
 
@@ -50,3 +49,4 @@ async function pick(id) {
 
 - [Search Box](/de/api/search-box/) `GET api.mapx.at/v1/searchbox/suggest`
 - [Search Box](/de/api/search-box/) `GET api.mapx.at/v1/searchbox/retrieve/{id}`
+

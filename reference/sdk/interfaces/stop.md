@@ -1,7 +1,5 @@
 # Stop
 
-mapx-gl Stop
-
 ## Properties
 
 ### distance?
@@ -37,3 +35,4 @@ mapx-gl Stop
 ### name
 
 > **name**: `string`
+

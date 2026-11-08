@@ -1,7 +1,5 @@
 # matrix
 
-mapx-gl matrix
-
 > **matrix**(`profile`, `points`, `o`): `Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
 
 Fahrzeit-/Distanzmatrix für mehrere Punkte in einer Anfrage.
@@ -17,3 +15,4 @@ Fahrzeit-/Distanzmatrix für mehrere Punkte in einer Anfrage.
 ## Returns
 
 `Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
+

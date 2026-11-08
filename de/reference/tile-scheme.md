@@ -1,6 +1,5 @@
 # Kachelschema
 
-Web-Mercator, z/x/y, 512-Pixel-Kacheln, Auflösung je Zoomstufe und Overzoom.
 
 Alle mapx-Kacheln folgen dem gängigen Schema von Web-Karten. Wer MapLibre, Leaflet, OpenLayers oder QGIS nutzt, muss dazu nichts einstellen; für eigene Abfragen und Berechnungen steht hier das Wichtigste.
 
@@ -38,7 +37,7 @@ Vergisst man das, wirkt die Karte um eine Zoomstufe versetzt und unscharf oder z
 
 Die Auflösung hängt von der Breite ab. Die Tabelle gilt für 47,5° N, die Mitte Österreichs:
 
-<Aufloesung />
+
 
 Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vor, das Orthophoto bis z18.
 
@@ -48,7 +47,9 @@ Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kach
 
 > Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) im Style `minzoom: 16` setzen.
 
+
 ## Weiter
 
 - Höhenwerte in Kacheln: [Terrain-RGB](/de/reference/terrain-rgb/).
 - Koordinaten und Projektionen: [Koordinaten](/de/reference/coordinates/).
+

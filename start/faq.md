@@ -1,7 +1,5 @@
 # FAQ
 
-Short answers on tokens, licence, freshness, offline use and common errors.
-
 ## Do I need a token or an account?
 
 Yes, a free account and API token. Register at [account.mapx.at](https://account.mapx.at/), create a token and send it as `Authorization: Bearer` (servers) or `access_token` (browsers, images). CORS is open. See [Access and limits](/start/access-and-limits/).
@@ -65,3 +63,4 @@ The former German style, tileset and category names work until 2027-05-31. See [
 ## Where do I report a problem?
 
 Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).
+

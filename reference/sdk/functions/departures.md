@@ -1,7 +1,5 @@
 # departures
 
-mapx-gl departures
-
 > **departures**(`stop`, `o`): `Promise`\<[`Departure`](/reference/sdk/interfaces/departure/)[]\>
 
 Abfahrten (Soll-Fahrplan) an einer Haltestelle (`at:49:1320`) oder rund um eine Koordinate.
@@ -15,3 +13,4 @@ Abfahrten (Soll-Fahrplan) an einer Haltestelle (`at:49:1320`) oder rund um eine 
 ## Returns
 
 `Promise`\<[`Departure`](/reference/sdk/interfaces/departure/)[]\>
+

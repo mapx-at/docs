@@ -1,7 +1,5 @@
 # searchSuggest
 
-mapx-gl searchSuggest
-
 > **searchSuggest**(`q`, `o`): `Promise`\<[`Suggestion`](/reference/sdk/interfaces/suggestion/)[]\>
 
 Search Box, Schritt 1: Vorschläge während der Eingabe. Dasselbe `sessionToken` für suggest und retrieve verwenden.
@@ -15,3 +13,4 @@ Search Box, Schritt 1: Vorschläge während der Eingabe. Dasselbe `sessionToken`
 ## Returns
 
 `Promise`\<[`Suggestion`](/reference/sdk/interfaces/suggestion/)[]\>
+

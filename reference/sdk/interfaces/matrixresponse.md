@@ -1,7 +1,5 @@
 # MatrixResponse
 
-mapx-gl MatrixResponse
-
 ## Properties
 
 ### code
@@ -31,3 +29,4 @@ mapx-gl MatrixResponse
 ### sources
 
 > **sources**: `object`[]
+

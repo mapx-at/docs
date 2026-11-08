@@ -1,8 +1,6 @@
 # Address API
 
-Address autofill for forms and address validation against the register.
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Autofill completes a postal address while the user types. Validation checks an address against the official register.
 
@@ -25,32 +23,31 @@ Official address register only (BEV). Completes street, house number, postcode a
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -100,32 +97,31 @@ data = res.json()
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/address-7065749" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/address-7065749", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/autofill/retrieve/address-7065749", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -185,32 +181,31 @@ Checks an address against the official register. `status`: match | corrected | a
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -266,8 +261,8 @@ Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `p
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/address/validate" \
@@ -276,8 +271,8 @@ curl -s -X POST "https://api.mapx.at/v1/address/validate" \
   -d '{"street":"Hauptstr.","housenumber":"12a","postcode":"3390"}' | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/address/validate", {
@@ -292,10 +287,11 @@ const res = await fetch("https://api.mapx.at/v1/address/validate", {
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.post("https://api.mapx.at/v1/address/validate", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
     "street": "Hauptstr.",
@@ -305,8 +301,6 @@ res = requests.post("https://api.mapx.at/v1/address/validate", headers={"Authori
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -346,4 +340,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="address" lang="en" />
+
+

@@ -1,6 +1,5 @@
 # TileJSON-Quellen
 
-Orthophoto und Höhenlinien ohne fertigen Stil einbinden.
 
 Eine TileJSON-URL pro Produkt genügt: MapLibre liest Kachel-URL, Zoombereich und Attribution daraus. Hier ein eigener, minimaler Stil.
 
@@ -32,3 +31,4 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 ## Verwendete APIs
 
 - [TileJSON](/de/api/tiles/) `orthophoto`, `contours`
+

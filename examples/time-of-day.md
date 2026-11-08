@@ -1,6 +1,5 @@
 # Time of day and night mode
 
-The default style in four lighting moods.
 
 Morning, day, evening and night are separate palettes of the same style. For a dark UI the night variant is enough.
 
@@ -28,3 +27,4 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 ## APIs used
 
 - [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{streets-dawn|streets|streets-dusk|streets-night}`
+

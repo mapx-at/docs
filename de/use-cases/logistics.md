@@ -1,7 +1,5 @@
 # Logistik
 
-Lkw-Routing mit Fahrzeugmaßen, Fahrzeitmatrizen, Tourenplanung und Verkehr für Zustellung und Flotten.
-
 Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuelle Verkehrslage. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
@@ -72,3 +70,4 @@ Der Kartenstil `traffic-day` zeigt die Verkehrslage; siehe das [Beispiel](/de/ex
 - [Navigation](/de/guides/navigation/): alle Profile und Parameter
 - [Verkehr](/de/guides/traffic/)
 - [Fehler und Limits](/de/api/errors/): Rate-Limit-Zonen und was bei `429` zu tun ist
+

@@ -1,7 +1,5 @@
 # directions
 
-mapx-gl directions
-
 > **directions**(`profile`, `waypoints`, `o`): `Promise`\<[`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/)\>
 
 Routing (Mapbox-Directions-Antwort, Geometrie als GeoJSON). Profile: driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking.
@@ -17,3 +15,4 @@ Routing (Mapbox-Directions-Antwort, Geometrie als GeoJSON). Profile: driving, dr
 ## Returns
 
 `Promise`\<[`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/)\>
+

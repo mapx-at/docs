@@ -1,6 +1,5 @@
 # Route
 
-Click start and destination, get the way with length and duration.
 
 The routing API works on the GIP.at network for walking, cycling, mountain biking and driving. The response has the Mapbox shape `routes[0]` with `geometry` (GeoJSON line), `distance` in metres and `duration` in seconds.
 
@@ -42,3 +41,4 @@ map.on('click', async (e) => {
 ## APIs used
 
 - [Routing](/api/directions/#routing) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+

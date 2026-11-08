@@ -1,6 +1,5 @@
 # Switch the basemap
 
-Switch between map, aerial imagery and terrain.
 
 Three ready-made styles share position and zoom. `map.setStyle()` swaps the base, the view stays.
 
@@ -31,3 +30,4 @@ for (const knopf of document.querySelectorAll('[data-stil]')) {
 ## APIs used
 
 - [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{streets|satellite|outdoors}`
+

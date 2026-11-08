@@ -1,6 +1,5 @@
 # 3D terrain
 
-Aerial imagery over the terrain model, tilted and exaggerated.
 
 The Terrain-RGB tileset via TileJSON as a `raster-dem` source, `map.setTerrain()` and a slider for the exaggeration.
 
@@ -35,3 +34,4 @@ document.getElementById('ueberhoehung').addEventListener('input', (e) => {
 
 - [TileJSON](/api/tiles/) `dtm`
 - Style `satellite`
+

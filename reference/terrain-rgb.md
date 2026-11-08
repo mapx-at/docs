@@ -1,6 +1,5 @@
 # Terrain-RGB
 
-How mapx encodes elevation as color: value range, rounding and decoding functions.
 
 Terrain-RGB stores one elevation per pixel in the three color channels of an image. This lets elevation tiles be served in ordinary
 image formats, and clients such as MapLibre compute shading and 3D terrain from them.
@@ -16,8 +15,12 @@ R is the most significant byte. The value `q = R·65536 + G·256 + B` lies betwe
 
 ## Decoding
 
-<Code lang="js" code={`const hoehe = (r, g, b) => -10000 + (r * 65536 + g * 256 + b) * 0.1;`} />
-<Code lang="python" code={`hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als numpy-Arrays`} />
+```js
+const hoehe = (r, g, b) => -10000 + (r * 65536 + g * 256 + b) * 0.1;
+```
+```python
+hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als numpy-Arrays
+```
 
 ## What to watch for
 
@@ -27,3 +30,4 @@ R is the most significant byte. The value `q = R·65536 + G·256 + B` lies betwe
 - **512 pixels, no border.** `tileSize: 512`.
 
 Application: [DTM terrain model](/tilesets/terrain-rgb/).
+

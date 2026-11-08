@@ -1,45 +1,43 @@
 # Contour lines
 
-Contour lines for Austria as vector tiles, z10 to z16, 100 m to 10 m interval, derived from the BEV ALS-DTM 1 m.
-
-export const t = data.tilesets.hoehenlinien;
-export const url = `https://tiles.mapx.at/${t.datei}`;
 
 Contour lines for all of Austria as vector tiles, derived from the [DTM](/tilesets/terrain-rgb/). There are four generalization levels, each with its own interval, smoothing and index lines.
 
-<Nutzungen items={[{t:"Hiking and outdoor maps",d:"Contours with labeled index lines",href:"/guides/overlay-contours/"},{t:"Overlays",d:"Lines over the basemap or orthophoto",href:"/guides/overlay-contours/"},{t:"Route planning",d:"Read gradient and terrain shape"},{t:"Planning maps",d:"Elevation bands in thematic maps"},{t:"QGIS",d:"Vector tiles in desktop GIS",href:"/guides/qgis/"}]} />
+
 
 ## Specifications
 
-<Kennwerte id="hoehenlinien" lang="en" />
+
 
 ## Live map
 
-<ProduktKarte id="hoehenlinien" center={[12.694, 47.074]} zoom={13} lang="en" />
+
 
 ## Add to your map
 
-<Tabs syncKey="client">
-  <TabItem label="MapLibre">
-    <Code lang="js" code={`new maplibregl.Map({
-  container: "map",
-  style: {
-    version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" } },
-    layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
-  }
-});`} />
-    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://${url}?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
-  </TabItem>
-  <TabItem label="QGIS">
-    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
-  </TabItem>
-  <TabItem label="curl">
-    <Code lang="bash" code={`curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/contours.json
-curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf`} />
-  </TabItem>
-</Tabs>
+  **MapLibre**
 
+    ```js
+    new maplibregl.Map({
+      container: "map",
+      style: {
+        version: 8,
+        sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" } },
+        layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
+      }
+    });
+    ```
+    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
+    **QGIS**
+
+    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+    **curl**
+
+    ```bash
+    curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/contours.json
+    curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf
+    ```
+  
 ## Layer reference
 
 | `lvl` | Zoom | Interval | Index line | Grid | Smoothing (Gaussian σ) | Minimum length |
@@ -52,15 +50,17 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 There are no lines below z10. Filter by `lvl` in the style, otherwise several levels overlap at z12 and above
 if the client overzooms.
 
-<Code lang="js" code={`{ id: "hl", type: "line", source: "v", "source-layer": "contour_l",
+```js
+{ id: "hl", type: "line", source: "v", "source-layer": "contour_l",
   paint: { "line-color": "#b5651d", "line-width": ["case", ["==", ["get", "index"], 1], 1.4, 0.6] } }
 { id: "hl-text", type: "symbol", source: "v", "source-layer": "contour_l",
   filter: ["==", ["get", "index"], 1],
-  layout: { "symbol-placement": "line", "text-field": ["concat", ["get", "ele"], " m"], "text-size": 10 } }`} />
+  layout: { "symbol-placement": "line", "text-field": ["concat", ["get", "ele"], " m"], "text-size": 10 } }
+```
 
 ### contour_l
 
-<FeldReferenz ts="hoehenlinien" layer="contour_l" />
+
 
 ## Source and currency
 
@@ -77,6 +77,7 @@ if the client overzooms.
 
 Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
 
-<Code lang="html" code={data.tilesets.hoehenlinien.metadata.attribution || "BEV, CC BY 4.0"} />
+{{< attribution ts="hoehenlinien" >}}
 
 More: [License](/reference/attribution/).
+

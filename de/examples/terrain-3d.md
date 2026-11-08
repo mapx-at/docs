@@ -1,6 +1,5 @@
 # 3D-Gelände
 
-Luftbild über dem Geländemodell, geneigt und überhöht.
 
 Das Terrain-RGB-Tileset per TileJSON als `raster-dem`-Quelle, `map.setTerrain()` und ein Regler für die Überhöhung.
 
@@ -35,3 +34,4 @@ document.getElementById('ueberhoehung').addEventListener('input', (e) => {
 
 - [TileJSON](/de/api/tiles/) `dtm`
 - Stil `satellite`
+

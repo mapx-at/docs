@@ -1,6 +1,5 @@
 # Immobilien
 
-Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
 
 Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne), nutzbar mit einem kostenlosen Token. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
 
@@ -79,26 +78,26 @@ console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 
 Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](/de/guides/transit/) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`.
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
 
-</TabItem>
-</Tabs>
 
 ## Nächste Schritte
 
 - [Grundstücke](/de/guides/parcels/) und das Beispiel [Grundstück per Klick](/de/examples/parcel-on-click/)
 - [Statische Bilder](/de/guides/static-images/) mit Markern und Pfaden
 - [Navigation](/de/guides/navigation/) für Isochronen und Matrizen
+

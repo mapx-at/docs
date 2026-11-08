@@ -1,7 +1,5 @@
 # optimization
 
-mapx-gl optimization
-
 > **optimization**(`body`, `signal`?): `Promise`\<[`OptimizationResponse`](/reference/sdk/interfaces/optimizationresponse/)\>
 
 Tourenplanung (Fahrzeuge, Aufträge, Zeitfenster). Höchstens 10 Fahrzeuge und 50 Aufträge; Zeiten in Sekunden.
@@ -15,3 +13,4 @@ Tourenplanung (Fahrzeuge, Aufträge, Zeitfenster). Höchstens 10 Fahrzeuge und 5
 ## Returns
 
 `Promise`\<[`OptimizationResponse`](/reference/sdk/interfaces/optimizationresponse/)\>
+

@@ -1,6 +1,5 @@
 # ÖV-Verbindung
 
-Start und Ziel klicken, Fuß- und Fahrabschnitte erhalten.
 
 Die Transit-API kombiniert Fußwege auf dem Wegenetz mit Fahrten aus dem Fahrplan. Ohne `depart_at` wird für jetzt geplant, `arrive_by` plant rückwärts. Fußabschnitte sind gestrichelt gezeichnet, Fahrten durchgezogen.
 
@@ -42,3 +41,4 @@ map.on('click', async (e) => {
 ## Verwendete APIs
 
 - [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/directions/transit/{coordinates}`
+

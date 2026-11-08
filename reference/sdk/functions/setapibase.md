@@ -1,7 +1,5 @@
 # setApiBase
 
-mapx-gl setApiBase
-
 > **setApiBase**(`url`): `void`
 
 Basis-URL der API ändern (z. B. Staging).
@@ -13,3 +11,4 @@ Basis-URL der API ändern (z. B. Staging).
 ## Returns
 
 `void`
+

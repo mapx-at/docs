@@ -1,6 +1,5 @@
 # Elevation profile along a line
 
-Query an elevation profile for a route through the elevation API and draw it as an SVG chart, in plain JavaScript.
 
 **Goal:** Query an elevation profile (distance against elevation) for a route and draw it as a chart.
 
@@ -8,7 +7,6 @@ Query an elevation profile for a route through the elevation API and draw it as 
 
 With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint returns elevation values spaced evenly by length along the line.
 
-<Steps>
 
 1. **Test the request.** The line is made of `lon,lat` pairs separated by semicolons (longitude first). 50 sample points along a route at the Großglockner:
 
@@ -72,7 +70,6 @@ With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint retur
 
 4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly.
 
-</Steps>
 
 ## Result
 
@@ -80,8 +77,10 @@ An SVG chart with area and line of elevation over distance, with length, ascent 
 
 > More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](/start/faq/#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
 
+
 ## Next steps
 
 - All parameters and response fields: [Elevation and profile](/api/elevation/).
 - Line from a GPX track: join the coordinates as `lon,lat;lon,lat`, order see [Coordinates](/reference/coordinates/).
 - Limits for many requests: [Errors and limits](/api/errors/).
+

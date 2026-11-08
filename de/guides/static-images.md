@@ -1,6 +1,5 @@
 # Static Images
 
-Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten.
 
 Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
 
@@ -71,3 +70,4 @@ Für Clients, die nur Raster-Tiles lesen (Leaflet, QGIS), rendern Static Tiles e
 - [Static Images API](/de/api/static-images/)
 - [Karten](/de/guides/maps/): dieselben Styles interaktiv
 - [Grundstücke](/de/guides/parcels/): Grundstücksgrenze als GeoJSON-Overlay
+

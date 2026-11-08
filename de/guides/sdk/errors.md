@@ -1,7 +1,5 @@
 # Fehler und Wiederholungen im SDK
 
-MapxError trägt code, status, param und erlaubte Werte aus der problem+json-Antwort; nur wiederholen, was sich lohnt.
-
 Jeder Helfer wirft einen `MapxError`, wenn die API einen Fehler meldet oder das Netz ausfällt. Er bildet das `application/problem+json`-Dokument des [Fehlerkatalogs](/de/api/errors/) ab.
 
 | Eigenschaft | Bedeutung |
@@ -60,3 +58,4 @@ input.oninput = async () => {
 
 - [Fehler und Limits](/de/api/errors/) mit den Rate-Limit-Zonen
 - [SDK-Helfer](/de/guides/sdk/helpers/)
+

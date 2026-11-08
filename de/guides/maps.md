@@ -1,6 +1,5 @@
 # Karten
 
-Eine mapx-Karte anzeigen, Styles wechseln, Tilesets und Overlays hinzufügen.
 
 mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Style entsteht.
 
@@ -73,8 +72,10 @@ Jedes Tileset ist auch eine einzelne PMTiles-Datei. Einmal herunterladen statt T
 
 > Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, siehe [Attribution](/de/reference/attribution/).
 
+
 ## Nächste Schritte
 
 - [Basiskarte gestalten](/de/guides/style-the-basemap/)
 - [Tilesets](/de/tilesets/)
 - [Styles API](/de/api/styles/) und [Tiles API](/de/api/tiles/)
+

@@ -1,7 +1,5 @@
 # stops
 
-mapx-gl stops
-
 > **stops**(`o`): `Promise`\<[`Stop`](/reference/sdk/interfaces/stop/)[]\>
 
 Haltestellen im Fenster oder um einen Punkt.
@@ -13,3 +11,4 @@ Haltestellen im Fenster oder um einen Punkt.
 ## Returns
 
 `Promise`\<[`Stop`](/reference/sdk/interfaces/stop/)[]\>
+

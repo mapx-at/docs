@@ -1,7 +1,5 @@
 # StaticOptions
 
-mapx-gl StaticOptions
-
 ## Properties
 
 ### bearing?
@@ -65,3 +63,4 @@ Bildgröße in Pixel, je 1 bis 1280.
 ### zoom?
 
 > `optional` **zoom**: `number`
+

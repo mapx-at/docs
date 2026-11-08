@@ -1,6 +1,5 @@
 # Tour planning
 
-Click stops, get the best order from the depot and back.
 
 The optimization API orders stops for one or more vehicles, with service times, capacities and time windows. Here one vehicle starts and ends in Melk. Click up to nine stops; every click plans again. The order is drawn with one directions request through all stops.
 
@@ -58,3 +57,4 @@ async function plan() {
 
 - [Optimization](/api/optimization/) `POST api.mapx.at/v1/optimization`
 - [Directions](/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+

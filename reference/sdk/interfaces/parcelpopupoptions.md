@@ -1,7 +1,5 @@
 # ParcelPopupOptions
 
-mapx-gl ParcelPopupOptions
-
 ## Properties
 
 ### dossier?
@@ -31,3 +29,4 @@ Parzellenumriss auf der Karte hervorheben. Standard `true`.
 #### Returns
 
 `void`
+

@@ -1,7 +1,5 @@
 # IncidentOptions
 
-mapx-gl IncidentOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -57,3 +55,4 @@ mapx-gl IncidentOptions
 ### type?
 
 > `optional` **type**: `string`
+

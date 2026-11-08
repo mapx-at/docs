@@ -1,7 +1,5 @@
 # Traffic
 
-Incident reports, motorway speed limits, a traffic layer on the map and traffic-aware routes.
-
 Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](/start/first-map/).
 
 | Task | Endpoint |
@@ -77,3 +75,4 @@ The route avoids current closures and lists incidents in `legs[].incidents`. Use
 - [Traffic API](/api/traffic/)
 - [Navigation](/guides/navigation/): tolls, trucks, alternatives
 - [Attribution](/reference/attribution/): credit ASFINAG and GIP.at
+

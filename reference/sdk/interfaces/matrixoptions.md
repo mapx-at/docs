@@ -1,7 +1,5 @@
 # MatrixOptions
 
-mapx-gl MatrixOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -33,3 +31,4 @@ mapx-gl MatrixOptions
 ### sources?
 
 > `optional` **sources**: `number`[]
+

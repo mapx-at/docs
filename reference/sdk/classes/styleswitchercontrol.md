@@ -1,7 +1,5 @@
 # StyleSwitcherControl
 
-mapx-gl StyleSwitcherControl
-
 Dropdown zum Umschalten der Styles (Kurznamen aus /v1/styles). Gelände bleibt erhalten.
 
 ## Implements
@@ -68,3 +66,4 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
+

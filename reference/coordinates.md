@@ -1,7 +1,5 @@
 # Coordinates
 
-lon,lat order, WGS84 versus Web Mercator, official sources in MGI and ETRS89.
-
 ## Order: longitude first
 
 All mapx interfaces, TileJSON, MapLibre and GeoJSON use **`lon, lat`** (longitude, then latitude), that is east-west before north-south:
@@ -34,3 +32,4 @@ The authorities' source data uses different systems: Austrian national survey (M
 
 - [Tile scheme](/reference/tile-scheme/)
 - [Elevation and profile](/api/elevation/)
+

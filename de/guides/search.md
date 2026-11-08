@@ -1,6 +1,5 @@
 # Suche
 
-Geocoding, Type-ahead-Suche, Adress-Autofill und Validierung.
 
 Den Endpunkt nach der Aktion der Nutzer wählen.
 
@@ -80,3 +79,4 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/va
 - [Geocoding API](/de/api/geocoding/), [Search Box API](/de/api/search-box/), [Address API](/de/api/address/)
 - [Grundstücke](/de/guides/parcels/): Suchergebnisse vom Typ parcel
 - [Fehler und Limits](/de/api/errors/)
+

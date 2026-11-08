@@ -1,7 +1,5 @@
 # Gemeinden
 
-Grundstücke, Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
-
 Gemeindewerkzeuge arbeiten mit Grundstücken und Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Kataster, Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
@@ -69,3 +67,4 @@ Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](
 - [Grundstücke](/de/guides/parcels/) und [Suche](/de/guides/search/)
 - [ÖV-Abfahrten](/de/guides/transit/)
 - [Basiskarte stylen](/de/guides/style-the-basemap/) in den Farben der Gemeinde
+

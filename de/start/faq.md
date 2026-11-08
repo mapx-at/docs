@@ -1,7 +1,5 @@
 # FAQ
 
-Kurze Antworten zu Tokens, Lizenz, Aktualität, Offline-Nutzung und häufigen Fehlern.
-
 ## Brauche ich einen Token oder ein Konto?
 
 Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) registrieren, Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](/de/start/access-and-limits/).
@@ -61,3 +59,4 @@ Die früheren deutschen Style-, Tileset- und Kategorienamen funktionieren bis 20
 ## Wo melde ich ein Problem?
 
 Ein Issue in der [GitHub-Organisation mapx-at](https://github.com/mapx-at) eröffnen.
+

@@ -1,8 +1,6 @@
 # Air Quality API
 
-Air quality index, pollutants and Saharan dust for a point (GeoSphere Austria).
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Daily air quality index and hourly nitrogen dioxide, ozone, PM10 and PM2.5 near the surface plus the Saharan dust load for a point, from the GeoSphere chemical weather model (3 km). The index follows the EEA European Air Quality Index (1 good to 6 extremely poor; SO2 is not provided by the model). Map layers: the weather tiles `aqi`, `no2`, `o3`, `pm10`, `pm25` and `dust` (see [Weather API](/api/weather/)). Source: GeoSphere Austria, CC BY 4.0.
 
@@ -30,32 +28,31 @@ Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution
 
 **Example**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Example response**
 
@@ -105,4 +102,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="air-quality" lang="en" />
+
+

@@ -1,6 +1,5 @@
 # Weather overlay
 
-Temperature, precipitation or wind as an overlay on the map, hour chosen with a slider.
 
 The TileJSON `/v1/weather/tiles/{parameter}.json` lists the available hours under `mapx:time.times`. Each hour is its own tile source, loaded as a raster layer.
 
@@ -47,6 +46,8 @@ document.getElementById('stunde').addEventListener('input', (e) => zeigen(docume
 
 > Data source: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution is required.
 
+
 ## APIs used
 
 - [Weather](/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`
+

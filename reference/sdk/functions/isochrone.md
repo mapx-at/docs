@@ -1,7 +1,5 @@
 # isochrone
 
-mapx-gl isochrone
-
 > **isochrone**(`profile`, `center`, `o`): `Promise`\<`GeoJSON.FeatureCollection`\>
 
 Isochronen als GeoJSON-FeatureCollection (größte Fläche zuerst).
@@ -17,3 +15,4 @@ Isochronen als GeoJSON-FeatureCollection (größte Fläche zuerst).
 ## Returns
 
 `Promise`\<`GeoJSON.FeatureCollection`\>
+

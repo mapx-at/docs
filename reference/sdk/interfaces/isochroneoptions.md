@@ -1,7 +1,5 @@
 # IsochroneOptions
 
-mapx-gl IsochroneOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -27,3 +25,4 @@ mapx-gl IsochroneOptions
 #### Inherited from
 
 [`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+

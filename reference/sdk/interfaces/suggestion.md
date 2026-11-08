@@ -1,7 +1,5 @@
 # Suggestion
 
-mapx-gl Suggestion
-
 ## Properties
 
 ### context?
@@ -55,3 +53,4 @@ mapx-gl Suggestion
 ### stop\_id?
 
 > `optional` **stop\_id**: `string`
+

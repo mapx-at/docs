@@ -1,39 +1,43 @@
 # Sentinel-2 aktuell
 
-Immer aktuelles, wolkenfreies Satellitenbild Österreichs aus Copernicus Sentinel-2 als WebP-Kacheln, z5 bis z13, 10 m, täglich um 02:00 aktualisiert.
 
 Ein Satellitenbild Österreichs, das sich täglich fortschreibt: Für jedes Pixel gilt ein **robuster Wert aus den jüngsten wolken- und schattenfreien Sentinel-2-Aufnahmen** (Rolling Best-Pixel-Composite). Auflösung 10 m, Web-Mercator, WebP, 512 px, z5 bis z13 (darüber überzoomt der Client). Das Aufnahmedatum jedes Pixels wird im Bestand mitgeführt.
 
-<Nutzungen items={[{t:"Aktueller Hintergrund",d:"Satellitenansicht, die nicht Jahre alt ist"},{t:"Veränderungen sehen",d:"Schneelage, Ernte, Windwurf, Baustellen im 10-m-Raster"},{t:"Übersicht und Planung",d:"Landschaft, Vegetation und Gewässer im Überblick"}]} />
+
 
 ## Einbinden
 
-<Tabs syncKey="client">
-  <TabItem label="MapLibre">
-    <Code lang="js" code={`new maplibregl.Map({
-  container: "map",
-  center: [15.334, 48.227], zoom: 11,
-  style: {
-    version: 8,
-    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
-    layers: [{ id: "s2", type: "raster", source: "s2" }]
-  }
-});`} />
-    TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
-  </TabItem>
-  <TabItem label="Leaflet">
-    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
-  tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-  attribution: "Contains modified Copernicus Sentinel data 2026"
-}).addTo(map);`} />
-  </TabItem>
-  <TabItem label="curl">
-    <Code lang="bash" code={`curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
-curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
-  </TabItem>
-</Tabs>
+  **MapLibre**
 
+    ```js
+    new maplibregl.Map({
+      container: "map",
+      center: [15.334, 48.227], zoom: 11,
+      style: {
+        version: 8,
+        sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+        layers: [{ id: "s2", type: "raster", source: "s2" }]
+      }
+    });
+    ```
+    TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
+    **Leaflet**
+
+    ```js
+    L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
+      tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
+      attribution: "Contains modified Copernicus Sentinel data 2026"
+    }).addTo(map);
+    ```
+    **curl**
+
+    ```bash
+    curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
+    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
+    ```
+  
 > Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:stand` (jüngste eingepflegte Szene); PMTiles direkt: `https://tiles.mapx.at/sentinel2.pmtiles` (Cache 5 Minuten).
+
 
 ## TileJSON, Zoom und Aktualisierung
 
@@ -65,8 +69,10 @@ Aus demselben Composite entstehen vier weitere feste Tilesets. Wo kein Wert vorl
 | `sentinel2-ndwi` | Wasser, (Grün - NIR) / (Grün + NIR) | nur Werte über 0: hellblau (0) bis dunkelblau (0,7) |
 | `sentinel2-ndsi` | Schnee, (Grün - SWIR) / (Grün + SWIR) | nur Werte ab 0,4: hellblau bis weiß (0,8); Wasser fällt über eine NIR-Schwelle heraus |
 
-<Code lang="js" code={`map.addSource("ndvi", { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2-ndvi.json", tileSize: 512 });
-map.addLayer({ id: "ndvi", type: "raster", source: "ndvi", paint: { "raster-opacity": 0.8 } });`} />
+```js
+map.addSource("ndvi", { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2-ndvi.json", tileSize: 512 });
+map.addLayer({ id: "ndvi", type: "raster", source: "ndvi", paint: { "raster-opacity": 0.8 } });
+```
 
 Im mapx-Viewer sind sie die Überlagerungen „Aufnahmedatum“, „Vegetation (NDVI)“, „Wasser (NDWI)“ und „Schnee (NDSI)“ in der Gruppe Satellit, mit Legende und Deckkraft-Regler.
 
@@ -79,6 +85,9 @@ Im mapx-Viewer sind sie die Überlagerungen „Aufnahmedatum“, „Vegetation (
 
 Pflicht nach den Copernicus-Nutzungsbedingungen (frei, vollständig und offen) für bearbeitete Daten:
 
-<Code lang="html" code={"Contains modified Copernicus Sentinel data 2026"} />
+```html
+Contains modified Copernicus Sentinel data 2026
+```
 
 Die Jahreszahl nennt das Jahr der Aufnahmen; MapLibre übernimmt den Text aus TileJSON oder PMTiles. Mehr: [Lizenz](/de/reference/attribution/).
+

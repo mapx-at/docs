@@ -1,7 +1,5 @@
 # ParcelFeature
 
-mapx-gl ParcelFeature
-
 > **ParcelFeature**: `GeoJSON.Feature`\<`GeoJSON.Polygon` \| `GeoJSON.MultiPolygon`, `object`\> & `object`
 
 ## Type declaration
@@ -13,3 +11,4 @@ mapx-gl ParcelFeature
 ### links.dossier
 
 > **dossier**: `string`
+

@@ -1,6 +1,5 @@
 # Abfahrten an einer Haltestelle
 
-Nahe an eine Haltestelle klicken, nächste Abfahrten sehen.
 
 `DeparturesPopup` aus dem [SDK](/de/guides/sdk/) sucht die nächste Haltestelle zum Klick und listet die nächsten Abfahrten aus dem Soll-Fahrplan (keine Echtzeitdaten). Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
 
@@ -31,3 +30,4 @@ map.on("load", () => {
 
 - [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/stops`
 - [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/departures`
+

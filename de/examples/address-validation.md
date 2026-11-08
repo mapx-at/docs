@@ -1,6 +1,5 @@
 # Adressvalidierung
 
-Eine Adresse gegen das amtliche Register prüfen und das korrigierte Ergebnis zeigen.
 
 Die Validierung gleicht die vier Adressteile mit dem Adressregister des BEV ab. Das Ergebnis hat einen `status` (`match`, `corrected`, `ambiguous`, `not_found`), die Liste der `deviations` und entweder die passende `address` mit Koordinaten oder eine Liste von `candidates`. Die vorbelegte Adresse enthält absichtlich einen Tippfehler.
 
@@ -36,3 +35,4 @@ document.getElementById('pruefen').addEventListener('click', async () => {
 ## Verwendete APIs
 
 - [Adressen](/de/api/address/) `GET api.mapx.at/v1/address/validate`
+

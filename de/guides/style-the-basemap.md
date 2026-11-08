@@ -1,6 +1,5 @@
 # Eigene Karte aus der Basiskarte
 
-Einen eigenen MapLibre-Kartenstil für die mapx-Basiskarte schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen.
 
 **Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](/de/tilesets/streets/) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
 
@@ -8,7 +7,6 @@ Einen eigenen MapLibre-Kartenstil für die mapx-Basiskarte schreiben: Nutzung, G
 
 Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](/de/tilesets/streets/).
 
-<Steps>
 
 1. **Seite und Quelle.** Die Quelle ist der TileJSON-Link, Zoombereich und Attribution kommen automatisch mit:
 
@@ -115,7 +113,6 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    </script>
    ```
 
-</Steps>
 
 ## Ergebnis
 
@@ -147,3 +144,4 @@ Das Beispiel nutzt die freien Demo-Glyphen von MapLibre (Schrift `Open Sans Semi
 - Alle Layer, Felder und Werte: [Basiskarte](/de/tilesets/streets/).
 - Höhenlinien und Beschriftung darüberlegen: [Höhenlinien überlagern](/de/guides/overlay-contours/).
 - Karte für den Druck oder als Offline-Datei: [PMTiles selbst hosten](/de/guides/self-host-pmtiles/).
+

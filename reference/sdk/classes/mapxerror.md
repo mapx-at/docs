@@ -1,7 +1,5 @@
 # MapxError
 
-mapx-gl MapxError
-
 Fehler der mapx-API (`application/problem+json`, RFC 9457). Auf `code` verzweigen, nie auf den Text.
 
 ## Extends
@@ -113,3 +111,4 @@ Fehler aus einer Antwort lesen (auch wenn der Body kein problem+json ist).
 #### Returns
 
 `Promise`\<[`MapxError`](/reference/sdk/classes/mapxerror/)\>
+

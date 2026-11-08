@@ -1,6 +1,5 @@
 # Your own GeoJSON on the map
 
-Points, line and area over the mapx style, popup on click.
 
 Your own data goes on top of the mapx style as a GeoJSON source. Filter by geometry type to style points, lines and areas separately. Larger datasets work the same way as PMTiles.
 
@@ -39,3 +38,4 @@ map.on('load', () => {
 ## APIs used
 
 - [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{id}`
+

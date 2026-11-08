@@ -1,8 +1,6 @@
 # Climate API
 
-Sonnenpotenzial, Klimanormale, Hitzetage, Schnee und Dürre an einem Punkt (GeoSphere Austria).
-
-{/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
+<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
 
 Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Temperatur- und Niederschlagsnormale mit Trend, Hitze- und Frosttage, Schneetage je Winter und der Dürreindex. Quelle: GeoSphere Austria, CC BY 4.0. Dasselbe Objekt steht als `properties.climate` im [Grundstücks-Dossier](/de/api/tilequery/).
 
@@ -30,32 +28,31 @@ Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. 
 
 **Beispiel**
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow" | jq
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-</TabItem>
-</Tabs>
 
 **Beispielantwort**
 
@@ -116,4 +113,5 @@ data = res.json()
 
 ## Playground
 
-<Playground group="climate" lang="de" />
+
+

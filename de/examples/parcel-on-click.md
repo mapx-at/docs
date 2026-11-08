@@ -1,6 +1,5 @@
 # Kataster: Grundstück per Klick
 
-Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.
 
 Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer und Katastralgemeinde. `queryRenderedFeatures` liest sie am Klickpunkt.
 
@@ -30,3 +29,4 @@ map.on('click', (e) => {
 ## Verwendete APIs
 
 - [Kataster](/de/tilesets/cadastre/) (Vektorkacheln im Stil `satellite`)
+

@@ -1,7 +1,5 @@
 # GeocodeFeature
 
-mapx-gl GeocodeFeature
-
 ## Properties
 
 ### bbox?
@@ -57,3 +55,4 @@ mapx-gl GeocodeFeature
 ### text
 
 > **text**: `string`
+

@@ -1,7 +1,5 @@
 # Incident
 
-mapx-gl Incident
-
 ## Properties
 
 ### category?
@@ -55,3 +53,4 @@ mapx-gl Incident
 ### type
 
 > **type**: `string`
+

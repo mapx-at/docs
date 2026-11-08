@@ -1,53 +1,53 @@
 # Orthophoto
 
-Aerial imagery of Austria from the BEV as WebP tiles, z5 to z18, 20 cm, with an unambiguous flight-block choice per pixel.
-
-export const t = data.tilesets.dop;
-export const url = `https://tiles.mapx.at/${t.datei}`;
 
 The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolution of the source). Which flight supplies a pixel is shown by the [Flight blocks](/tilesets/orthophoto-flight-blocks/) tileset.
 
-<Nutzungen items={[{t:"Aerial imagery background",d:"Satellite-map alternative for web and apps"},{t:"3D terrain",d:"Orthophoto on the DTM",href:"/guides/3d-terrain/"},{t:"Planning and documentation",d:"Situation on site at 20 cm"},{t:"Checking parcels",d:"Cadastre over the aerial image"},{t:"QGIS",d:"Aerial imagery as XYZ or PMTiles layer",href:"/guides/qgis/"}]} />
+
 
 ## Specifications
 
-<Kennwerte id="dop" lang="en" />
+
 
 ## Live map
 
-<ProduktKarte id="dop" overlay="dop_flugblock" center={[15.334, 48.227]} zoom={14} lang="en" />
+
 
 Clicking shows the flight block at the point (survey, flight period).
 
 ## Add to your map
 
-<Tabs syncKey="client">
-  <TabItem label="MapLibre">
-    <Code lang="js" code={`new maplibregl.Map({
-  container: "map",
-  style: {
-    version: 8,
-    sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
-    layers: [{ id: "ortho", type: "raster", source: "ortho" }]
-  }
-});`} />
-    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://${url}?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
-  </TabItem>
-  <TabItem label="Leaflet">
-    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
-  tileSize: 512, zoomOffset: -1, crossOrigin: true,
-  attribution: "BEV, CC BY 4.0"
-}).addTo(map);`} />
-  </TabItem>
-  <TabItem label="QGIS">
-    XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
-  </TabItem>
-  <TabItem label="curl">
-    <Code lang="bash" code={`curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/orthophoto.json
-curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp`} />
-  </TabItem>
-</Tabs>
+  **MapLibre**
 
+    ```js
+    new maplibregl.Map({
+      container: "map",
+      style: {
+        version: 8,
+        sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
+        layers: [{ id: "ortho", type: "raster", source: "ortho" }]
+      }
+    });
+    ```
+    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
+    **Leaflet**
+
+    ```js
+    L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
+      tileSize: 512, zoomOffset: -1, crossOrigin: true,
+      attribution: "BEV, CC BY 4.0"
+    }).addTo(map);
+    ```
+    **QGIS**
+
+    XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+    **curl**
+
+    ```bash
+    curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/orthophoto.json
+    curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp
+    ```
+  
 ## Source and currency
 
 - Source: BEV **Digital Orthophoto (DOP) RGB**, 20 cm, captured 2022 to 2025.
@@ -64,6 +64,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.
 
 Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
 
-<Code lang="html" code={data.tilesets.dop.metadata.attribution || "BEV, CC BY 4.0"} />
+{{< attribution ts="dop" >}}
 
 More: [License](/reference/attribution/).
+

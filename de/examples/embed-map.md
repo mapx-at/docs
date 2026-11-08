@@ -1,6 +1,5 @@
 # Karte einbetten
 
-Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
 
 Der kürzeste Weg zu einer Karte: MapLibre GL JS, das pmtiles-Protokoll und die Stil-URL. Zoom, Neigung und Maßstab kommen als Steuerelemente dazu.
 
@@ -26,3 +25,4 @@ map.addControl(new maplibregl.ScaleControl());
 ## Verwendete APIs
 
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/streets`
+

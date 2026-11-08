@@ -1,6 +1,5 @@
 # Adress-Autofill im Formular
 
-Straße tippen, Vorschlag wählen, das Formular füllt sich.
 
 Autofill ist für Bestell- und Anmeldeformulare gedacht: ein Textfeld, eine Vorschlagsliste, und die übrigen Felder (Hausnummer, PLZ, Ort) werden aus dem gewählten Vorschlag gefüllt. Jeder Vorschlag bringt seine Koordinaten schon mit.
 
@@ -44,3 +43,4 @@ f.street.addEventListener('input', async () => {
 ## Verwendete APIs
 
 - [Adressen](/de/api/address/) `GET api.mapx.at/v1/autofill/suggest`
+

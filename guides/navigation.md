@@ -1,6 +1,5 @@
 # Navigation
 
-Routes for car, truck, bike and foot, tolls, isochrones, matrices, map matching and tour planning.
 
 Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
@@ -133,3 +132,4 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/opt
 - [Directions API](/api/directions/), [Optimization API](/api/optimization/)
 - [Traffic](/guides/traffic/): incidents along a route
 - [Route example](/examples/route/)
+

@@ -1,7 +1,5 @@
 # DirectionsOptions
 
-mapx-gl DirectionsOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -95,3 +93,4 @@ Nur `driving-truck`: Gesamtgewicht t (0,5–60), Höhe m (1,5–5), Breite m (1�
 #### width?
 
 > `optional` **width**: `number`
+

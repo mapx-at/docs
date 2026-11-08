@@ -1,6 +1,5 @@
 # 3D buildings
 
-Extruded buildings with BEV heights, camera tilted.
 
 The `streets` style contains an extruded building layer that is switched off by default. The layer ids are listed in the style metadata (`mapx:groups`), so you switch a whole group on without knowing the names. Zoom in to level 15 or more and tilt the map (right mouse button or two fingers).
 
@@ -24,3 +23,4 @@ map.on('style.load', () => {
 ## APIs used
 
 - [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{id}`
+

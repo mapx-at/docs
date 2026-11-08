@@ -1,7 +1,5 @@
 # Logistics
 
-Truck routing with vehicle size, travel-time matrices, tour planning and traffic for deliveries and fleets.
-
 All requests need a token ([Access and limits](/start/access-and-limits/)); in server code use a secret token (`mx_sk_…`) and never ship it in a web page.
 
 Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic situation. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
@@ -72,3 +70,4 @@ The map style `traffic-day` shows the flow; see the [example](/examples/traffic/
 - [Navigation](/guides/navigation/): all profiles and parameters
 - [Traffic](/guides/traffic/)
 - [Errors and limits](/api/errors/): rate-limit zones and what to do on `429`
+

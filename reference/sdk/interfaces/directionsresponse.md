@@ -1,7 +1,5 @@
 # DirectionsResponse
 
-mapx-gl DirectionsResponse
-
 ## Properties
 
 ### code
@@ -19,3 +17,4 @@ mapx-gl DirectionsResponse
 ### waypoints
 
 > **waypoints**: `object`[]
+

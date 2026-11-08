@@ -1,7 +1,5 @@
 # MapxOptions
 
-mapx-gl MapxOptions
-
 ## Extends
 
 - `Omit`\<`MapOptions`, `"style"` \| `"center"`\>
@@ -35,3 +33,4 @@ Kurzname (`streets`, `satellite`, `outdoors`, ...), Style-URL oder Style-Objekt.
 > `optional` **terrain**: `boolean` \| `object`
 
 3D-Gelände einschalten (Überhöhung 1,4).
+

@@ -1,18 +1,17 @@
 # First search
 
-Find an address or place with one request, then show the result on a map.
 
 ## Request
 
-<Tabs syncKey="lang">
-<TabItem label="curl">
+**curl**
+
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1" | jq '.features[0] | {place_name, center}'
 ```
 
-</TabItem>
-<TabItem label="JavaScript">
+**JavaScript**
+
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
@@ -20,18 +19,17 @@ const { features } = await res.json();
 console.log(features[0].place_name, features[0].center); // center is [lon, lat]
 ```
 
-</TabItem>
-<TabItem label="Python">
+**Python**
+
 
 ```python
+import requests
 
 res = requests.get("https://api.mapx.at/v1/geocode", params={"q": "Stephansplatz Wien", "limit": 1}, headers={"Authorization": "Bearer YOUR_TOKEN"})
 feature = res.json()["features"][0]
 print(feature["place_name"], feature["center"])
 ```
 
-</TabItem>
-</Tabs>
 
 The response is a GeoJSON `FeatureCollection`. Each feature has `place_name`, `center` (`lon,lat`) and `geometry`. Pass `types=address` to limit results to addresses.
 
@@ -52,3 +50,4 @@ Put the code in a `<script type="module">` so that top-level `await` works.
 
 - [Search guide](/guides/search/): type-ahead, categories, address forms
 - [Geocoding API](/api/geocoding/)
+

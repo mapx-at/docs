@@ -1,7 +1,5 @@
 # RouteOptions
 
-mapx-gl RouteOptions
-
 ## Properties
 
 ### onError()?
@@ -59,3 +57,4 @@ Maut-/Autobahn-Schalter und Lkw-Maße anzeigen (Standard `true`).
 > `optional` **profiles**: [`Profile`](/reference/sdk/type-aliases/profile/)[]
 
 Angebotene Profile; Standard alle sechs.
+

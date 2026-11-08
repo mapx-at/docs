@@ -1,7 +1,5 @@
 # ElevationProfile
 
-mapx-gl ElevationProfile
-
 ## Properties
 
 ### ascent
@@ -49,3 +47,4 @@ mapx-gl ElevationProfile
 ### min
 
 > **min**: `number`
+

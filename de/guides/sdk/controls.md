@@ -1,7 +1,5 @@
 # SDK-Controls und Popups
 
-RouteControl, LayerControl, SearchControl, ParcelPopup und DeparturesPopup: fertige Kartenwerkzeuge in je einer Zeile.
-
 Controls kommen mit `map.addControl(control, position)` auf die Karte. Popups hängen sich mit `new Popup(map, options)` an die Karte. Die Texte sind deutsch, wenn Seite oder Browser deutsch sind, sonst englisch.
 
 ## RouteControl
@@ -76,3 +74,4 @@ document.querySelector("#tools").onchange = (e) => (e.target.checked ? parcels.r
 - [SDK-Helfer](/de/guides/sdk/helpers/)
 - [Fehler und Wiederholungen](/de/guides/sdk/errors/)
 - [SDK-Referenz](/reference/sdk/)
+

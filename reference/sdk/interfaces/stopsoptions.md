@@ -1,7 +1,5 @@
 # StopsOptions
 
-mapx-gl StopsOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -39,3 +37,4 @@ mapx-gl StopsOptions
 #### Inherited from
 
 [`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+

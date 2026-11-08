@@ -1,6 +1,5 @@
 # Travel-time matrix
 
-Travel times between several places in one request.
 
 The matrix API takes sources (and optionally destinations) and returns duration (and optionally distance) for all pairs; `null` means not routable.
 
@@ -34,3 +33,4 @@ document.getElementById('los').addEventListener('click', async () => {
 ## APIs used
 
 - [Routing](/api/directions/#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
+

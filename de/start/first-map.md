@@ -1,11 +1,10 @@
 # Erste Karte in 5 Minuten
 
-Eine vollständige HTML-Datei mit mapx-Karte. Kopieren, speichern, öffnen.
 
 Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](/de/start/access-and-limits/) ersetzen (erlaubter Origin: die eigene Seite, beim Testen `localhost`). Kein Build-Schritt.
 
-<Tabs syncKey="client">
-<TabItem label="MapLibre GL JS">
+**MapLibre GL JS**
+
 
 ```html
 <!doctype html>
@@ -34,8 +33,8 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
 </html>
 ```
 
-</TabItem>
-<TabItem label="SDK mapx-gl">
+**SDK mapx-gl**
+
 
 Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `mapx-gl.bundle.js` und `mapx-gl.css` von `https://map.mapx.at/sdk/v1/` herunterladen und neben der Seite ausliefern.
 
@@ -61,8 +60,6 @@ Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `ma
 </html>
 ```
 
-</TabItem>
-</Tabs>
 
 Der Style `streets` ist ein gewöhnlicher [MapLibre-Style](https://maplibre.org/maplibre-style-spec/). Durch `satellite` oder `outdoors` ersetzen, um das Aussehen zu ändern. Alle Styles: [Styles API](/de/api/styles/).
 
@@ -73,3 +70,4 @@ MapLibre GL JS {V.maplibre} ist die Version, mit der diese Beispiele getestet si
 - [Erste Suche](/de/start/first-search/)
 - [Karten-Guide](/de/guides/maps/): Styles, Gelände, Overlays
 - [Beispiele](/de/examples/)
+

@@ -1,7 +1,5 @@
 # elevation
 
-mapx-gl elevation
-
 > **elevation**(`points`, `model`): `Promise`\<`number` \| `null` \| (`number` \| `null`)[]\>
 
 Höhe (m) für einen oder mehrere Punkte; null außerhalb der Daten. `dsm` = Oberflächenmodell.
@@ -15,3 +13,4 @@ Höhe (m) für einen oder mehrere Punkte; null außerhalb der Daten. `dsm` = Obe
 ## Returns
 
 `Promise`\<`number` \| `null` \| (`number` \| `null`)[]\>
+

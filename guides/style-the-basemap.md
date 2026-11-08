@@ -1,6 +1,5 @@
 # Your own map from the basemap
 
-Write your own MapLibre style for the mapx basemap: land use, water, roads, buildings and boundaries.
 
 **Goal:** Build your own, consistently coloured map from the vector tiles of the [basemap](/tilesets/streets/). mapx provides the data, you decide how it looks.
 
@@ -8,7 +7,6 @@ Write your own MapLibre style for the mapx basemap: land use, water, roads, buil
 
 The basemap has 18 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](/tilesets/streets/).
 
-<Steps>
 
 1. **Page and source.** The source is the TileJSON link; zoom range and attribution come with it:
 
@@ -114,7 +112,6 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    </script>
    ```
 
-</Steps>
 
 ## Result
 
@@ -146,3 +143,4 @@ style: {
 - All layers, fields and values: [Basemap](/tilesets/streets/).
 - Overlay contour lines and labels: [Overlay contour lines](/guides/overlay-contours/).
 - A map for print or as an offline file: [Self-host PMTiles](/guides/self-host-pmtiles/).
+

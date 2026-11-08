@@ -1,6 +1,5 @@
 # Precipitation radar animation
 
-Rain and snow of the next three hours in 15-minute steps, played as an animation.
 
 The TileJSON `/v1/weather/tiles/rr_nowcast.json` lists the 15-minute steps under `mapx:time.times`. The example adds one raster layer per step and switches their visibility, so the animation does not wait for tiles. For a single point use `GET /v1/weather/nowcast/{lon},{lat}`.
 
@@ -53,7 +52,9 @@ document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e
 
 > Data source: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution is required.
 
+
 ## APIs used
 
 - [Weather](/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
 - [Precipitation nowcast](/api/weather/) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
+

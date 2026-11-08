@@ -1,6 +1,5 @@
 # Eigenes GeoJSON auf der Karte
 
-Punkte, Linie und Fläche über dem mapx-Stil, Popup per Klick.
 
 Eigene Daten liegen als GeoJSON-Quelle über dem mapx-Stil. Ein Filter auf den Geometrietyp erlaubt, Punkte, Linien und Flächen getrennt zu gestalten. Größere Datensätze funktionieren genauso als PMTiles.
 
@@ -39,3 +38,4 @@ map.on('load', () => {
 ## Verwendete APIs
 
 - [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{id}`
+

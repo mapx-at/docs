@@ -1,6 +1,5 @@
 # SDK: route planner and layers
 
-RouteControl with truck profile, LayerControl, search and style switcher.
 
 Five controls of the [SDK `mapx-gl`](/guides/sdk/) give a complete map tool. `RouteControl` (the arrow button) offers the six profiles, avoid tolls and motorways and truck size; `LayerControl` builds its switches from the style metadata.
 
@@ -21,3 +20,4 @@ map.addControl(new mapx.StyleSwitcherControl(), "top-right");
 
 - [Directions](/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
 - [Search](/api/geocoding/) `GET api.mapx.at/v1/geocode`
+

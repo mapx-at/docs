@@ -1,7 +1,5 @@
 # What is mapx
 
-Maps and location APIs for Austria, built only on official open data.
-
 mapx is a set of maps and location APIs for Austria. All data comes from official open sources (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others), so there is no usage-based pricing. A free account and API token are required ([Access and limits](/start/access-and-limits/)).
 
 | Product | What you get | Start |
@@ -22,3 +20,4 @@ The APIs follow the conventions of well-known web mapping services: the same URL
 - [Access and limits](/start/access-and-limits/)
 - [First map in 5 minutes](/start/first-map/)
 - [API reference](/api/)
+

@@ -1,6 +1,5 @@
 # Changelog
 
-Changes to the APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed.
 
 Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](/api/migration/).
 
@@ -60,11 +59,5 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 
 ## Tileset releases
 
-<table>
-  <thead><tr><th>Tileset</th><th>Source date</th><th>File</th></tr></thead>
-  <tbody>
-    {Object.values(data.tilesets).filter((x) => ["relief", "dsm"].includes(x.key)).map((x) => (
-      <tr><td>{x.key === "relief" ? "terrain-rgb" : x.key}</td><td>{x.stand}</td><td><code>{x.datei}</code></td></tr>
-    ))}
-  </tbody>
-</table>
+
+

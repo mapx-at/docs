@@ -1,6 +1,5 @@
 # Reverse Geocoding
 
-Karte anklicken, nächste Adresse erhalten.
 
 Reverse Geocoding macht aus einer Koordinate die nächste Adresse, Straße oder den nächsten Ort. `types` begrenzt die Art des Ergebnisses, `radius` die Suchdistanz in Metern.
 
@@ -31,3 +30,4 @@ map.on('click', async (e) => {
 ## Verwendete APIs
 
 - [Geocoding](/de/api/geocoding/) `GET api.mapx.at/v1/reverse`
+

@@ -1,6 +1,5 @@
 # Static images
 
-Render map images as PNG or WebP with pins, paths and GeoJSON, for reports, emails and web pages.
 
 A static image is one HTTP request that returns a picture. Use it where an interactive map is not possible: PDFs, emails, listings, social previews. The token goes into the URL as `access_token`, because an image tag cannot send a header. For web pages use a public token (`mx_pk_…`) with your site as allowed origin; build images for e-mails and PDFs on your server with a secret token (`mx_sk_…`) so the secret does not end up in the message.
 
@@ -71,3 +70,4 @@ For clients that only read raster tiles (Leaflet, QGIS), Static Tiles render a s
 - [Static Images API](/api/static-images/)
 - [Maps](/guides/maps/): the same styles interactively
 - [Parcels](/guides/parcels/): parcel boundary as GeoJSON overlay
+

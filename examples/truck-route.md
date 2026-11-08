@@ -1,6 +1,5 @@
 # Truck route with options
 
-Vehicle size, avoid tolls and motorways, alternatives.
 
 Choose the profile `driving-truck` and give weight and height: roads with matching bans and limits are avoided, and the response reports the kilometres subject to the GO toll. For cars (`driving`) you can avoid tolls and motorways and get up to two alternatives. Click start and destination.
 
@@ -49,3 +48,4 @@ async function route() {
 ## APIs used
 
 - [Directions](/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+

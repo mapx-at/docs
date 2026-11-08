@@ -1,7 +1,5 @@
 # Transit departures
 
-Public transport journeys, stops and departure boards from the scheduled timetable.
-
 The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Endpoint |
@@ -75,3 +73,4 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/
 - [Transit API](/api/transit/)
 - [Navigation](/guides/navigation/)
 - [Attribution](/reference/attribution/): timetable data credit
+

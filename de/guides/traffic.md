@@ -1,7 +1,5 @@
 # Verkehr
 
-Störungsmeldungen, Tempolimits auf Autobahnen, eine Verkehrsebene auf der Karte und Routen mit Verkehrslage.
-
 Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 | Aufgabe | Endpunkt |
@@ -77,3 +75,4 @@ Die Route meidet aktuelle Sperren und listet Störungen in `legs[].incidents`. M
 - [Traffic API](/de/api/traffic/)
 - [Navigation](/de/guides/navigation/): Maut, Lkw, Alternativen
 - [Attribution](/de/reference/attribution/): ASFINAG und GIP.at nennen
+

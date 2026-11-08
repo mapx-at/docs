@@ -1,6 +1,5 @@
 # Search Box with suggestions
 
-Suggestions while typing, position after the click, type filter.
 
 Search Box works in two steps: `suggest` returns suggestions while the user types, `retrieve` returns the position of the chosen one. Use the same `session_token` for both calls and a new one for the next search. The type filter limits the suggestions.
 
@@ -50,3 +49,4 @@ async function pick(id) {
 
 - [Search Box](/api/search-box/) `GET api.mapx.at/v1/searchbox/suggest`
 - [Search Box](/api/search-box/) `GET api.mapx.at/v1/searchbox/retrieve/{id}`
+

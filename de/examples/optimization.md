@@ -1,6 +1,5 @@
 # Tourenplanung
 
-Haltestellen anklicken, beste Reihenfolge ab Depot und zurück.
 
 Die Optimization-API ordnet Stopps für ein oder mehrere Fahrzeuge, mit Servicezeiten, Kapazitäten und Zeitfenstern. Hier startet und endet ein Fahrzeug in Melk. Bis zu neun Stopps anklicken, jeder Klick plant neu. Die Reihenfolge wird mit einer Directions-Anfrage durch alle Stopps gezeichnet.
 
@@ -58,3 +57,4 @@ async function plan() {
 
 - [Optimization](/de/api/optimization/) `POST api.mapx.at/v1/optimization`
 - [Directions](/de/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+

@@ -1,7 +1,5 @@
 # OptimizationResponse
 
-mapx-gl OptimizationResponse
-
 ## Properties
 
 ### code
@@ -45,3 +43,4 @@ mapx-gl OptimizationResponse
 ### unassigned
 
 > **unassigned**: `object`[]
+

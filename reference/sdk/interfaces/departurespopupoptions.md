@@ -1,7 +1,5 @@
 # DeparturesPopupOptions
 
-mapx-gl DeparturesPopupOptions
-
 ## Properties
 
 ### limit?
@@ -17,3 +15,4 @@ Anzahl Abfahrten (Standard 8).
 > `optional` **radius**: `number`
 
 Radius in Metern um den Klick (Standard 150).
+

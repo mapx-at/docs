@@ -1,7 +1,5 @@
 # searchRetrieve
 
-mapx-gl searchRetrieve
-
 > **searchRetrieve**(`id`, `o`): `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Point`\>\>
 
 Search Box, Schritt 2: Koordinate und Details zu einem Vorschlag (`mapbox_id`).
@@ -15,3 +13,4 @@ Search Box, Schritt 2: Koordinate und Details zu einem Vorschlag (`mapbox_id`).
 ## Returns
 
 `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Point`\>\>
+

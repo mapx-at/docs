@@ -1,7 +1,5 @@
 # GeocodeOptions
 
-mapx-gl GeocodeOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -39,3 +37,4 @@ mapx-gl GeocodeOptions
 ### types?
 
 > `optional` **types**: `string` \| [`GeocodeType`](/reference/sdk/type-aliases/geocodetype/)[]
+

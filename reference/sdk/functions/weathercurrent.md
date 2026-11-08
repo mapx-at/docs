@@ -1,7 +1,5 @@
 # weatherCurrent
 
-mapx-gl weatherCurrent
-
 > **weatherCurrent**(`point`, `o`): `Promise`\<[`WeatherStation`](/reference/sdk/interfaces/weatherstation/)[]\>
 
 Aktuelle Messwerte der nächsten Stationen.
@@ -15,3 +13,4 @@ Aktuelle Messwerte der nächsten Stationen.
 ## Returns
 
 `Promise`\<[`WeatherStation`](/reference/sdk/interfaces/weatherstation/)[]\>
+

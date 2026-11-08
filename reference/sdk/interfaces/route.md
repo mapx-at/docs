@@ -1,7 +1,5 @@
 # Route
 
-mapx-gl Route
-
 ## Indexable
 
  \[`k`: `string`\]: `unknown`
@@ -47,3 +45,4 @@ mapx-gl Route
 ### truck?
 
 > `optional` **truck**: `any`
+

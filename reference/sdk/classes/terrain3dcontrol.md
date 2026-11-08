@@ -1,7 +1,5 @@
 # Terrain3DControl
 
-mapx-gl Terrain3DControl
-
 Schalter für 3D-Gelände (Quelle `relief-terrain` des mapx-Styles).
 
 ## Implements
@@ -72,3 +70,4 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
+

@@ -1,7 +1,5 @@
 # trafficIncidents
 
-mapx-gl trafficIncidents
-
 > **trafficIncidents**(`o`): `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](/reference/sdk/interfaces/incident/)\>\>
 
 Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
@@ -13,3 +11,4 @@ Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
 ## Returns
 
 `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](/reference/sdk/interfaces/incident/)\>\>
+

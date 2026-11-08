@@ -1,6 +1,5 @@
 # mapx data in QGIS
 
-Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
 
 **Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download. You need a free token ([Access and limits](/start/access-and-limits/)); append `?access_token=YOUR_TOKEN` to every layer URL. Use a secret token (`mx_sk_…`) on your own computer: a public token only works for its allowed origins, and QGIS is not a website.
 
@@ -8,7 +7,6 @@ Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile c
 
 ## Orthophoto as an XYZ layer
 
-<Steps>
 
 1. In the Browser panel, right-click **XYZ Tiles**, **New Connection**.
 2. Name `mapx Orthophoto`, URL:
@@ -20,7 +18,6 @@ Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile c
 3. **Min. Zoom Level** 5, **Max. Zoom Level** 18, **Tile Resolution** 512 (Mapbox style, 512 px). Leave **Referer** and **Authentication** empty; the token in the URL is enough.
 4. Save with OK and load the connection into the map by double-click.
 
-</Steps>
 
 The project CRS can be anything, QGIS reprojects the Web Mercator tiles.
 
@@ -42,7 +39,6 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 
 ## Vector tiles
 
-<Steps>
 
 1. Browser panel, right-click **Vector Tiles**, **New Generic Connection**.
 2. Name `mapx Basemap`, URL:
@@ -54,7 +50,6 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 3. Enter **Min. Zoom Level** 0, **Max. Zoom Level** 16, OK.
 4. Drag the connection into the map. QGIS first shows a default style; change the look in the layer style editor or with your own style.
 
-</Steps>
 
 The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) and `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](/api/tiles/).
 
@@ -62,20 +57,20 @@ The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) a
 
 Vector tilesets can also be opened directly as a PMTiles file from QGIS 3.32, locally or over HTTP. The file name with its cut-off date is on each [product page](/tilesets/) under key figures.
 
-<Steps>
 
 1. Browser panel, right-click **Vector Tiles**, **New Generic Connection**.
 2. Set the **Service type** to PMTiles (or pick a local file) and enter the file as URL: `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
 3. Save with OK and load it into the map. QGIS reads only the required tiles via HTTP range.
 
-</Steps>
 
 Imagery and elevation tiles (orthophoto, DTM, DSM) are added through the XYZ connection above.
 
 > If your QGIS version does not offer the PMTiles service type, use the vector tile connection above; it delivers the same tiles.
+
 
 ## Next steps
 
 - Understand the elevation model: [Terrain-RGB](/reference/terrain-rgb/).
 - Keep data locally: [Self-host PMTiles](/guides/self-host-pmtiles/).
 - Credits in maps and reports: [Attribution](/reference/attribution/).
+

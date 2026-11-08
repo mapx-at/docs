@@ -1,9 +1,5 @@
 # Attribution und Lizenz
 
-CC BY 4.0: welche Quelle zu nennen ist, mit fertigem Text je Tileset und API.
-
-export const t = data.tilesets;
-export const s = (h) => (h || "").replace(/<[^>]+>/g, "");
 
 Alle mapx-Daten stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
 
@@ -24,12 +20,12 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 
 | Tileset | Text |
 |---|---|
-| `streets` | {s(t.basis.metadata.attribution)} |
-| `cadastre` | {s(t.kataster.metadata.attribution)} |
-| `contours` | {s(t.hoehenlinien.metadata.attribution)} |
-| `terrain-rgb` | {s(t.relief.metadata.attribution)} |
-| `dsm` | {s(t.dsm.metadata.attribution)} |
-| `orthophoto` | {s(t.dop.metadata.attribution)} |
+| `streets` | {{< ts k="basis" f="attribution" >}} |
+| `cadastre` | {{< ts k="kataster" f="attribution" >}} |
+| `contours` | {{< ts k="hoehenlinien" f="attribution" >}} |
+| `terrain-rgb` | {{< ts k="relief" f="attribution" >}} |
+| `dsm` | {{< ts k="dsm" f="attribution" >}} |
+| `orthophoto` | {{< ts k="dop" f="attribution" >}} |
 | `orthophoto-flight-blocks` | BEV, CC BY 4.0 |
 
 ## Text je API
@@ -48,3 +44,4 @@ JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es is
 | Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 Die Quellenangabe steht auch in den Metadaten von TileJSON und PMTiles.
+

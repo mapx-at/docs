@@ -1,7 +1,5 @@
 # LayerControlOptions
 
-mapx-gl LayerControlOptions
-
 ## Properties
 
 ### groups?
@@ -25,3 +23,4 @@ Beschriftungen je Gruppe; fehlende Gruppen zeigen ihren Schlüssel.
 > `optional` **open**: `boolean`
 
 Panel anfangs offen.
+

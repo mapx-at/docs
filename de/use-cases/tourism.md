@@ -1,7 +1,5 @@
 # Tourismus
 
-Rad- und MTB-Routen, Radrouten-Ebene, Höhenprofil und Wetter für Touren und Gästeinformation.
-
 Gäste fragen „Welchen Weg mit dem Rad, wie steil ist er, und wie wird das Wetter?“. Die Antworten kommen aus derselben API: Routen mit den Profilen `cycling` und `cycling-mtb`, ein Höhenprofil, die beschilderten Radrouten auf der Karte und die Vorhersage für das Ziel.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
@@ -72,3 +70,4 @@ console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${
 - [Navigation](/de/guides/navigation/) und [Höhe und Gelände](/de/guides/elevation/)
 - [3D-Gelände](/de/guides/3d-terrain/) für eine eindrucksvolle Tourenkarte
 - [Statische Bilder](/de/guides/static-images/) für Prospekte und Newsletter
+

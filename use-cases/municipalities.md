@@ -1,7 +1,5 @@
 # Municipalities
 
-Parcels, address validation, transit departures and an embedded map for municipal websites and administration tools.
-
 Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](/start/access-and-limits/)); snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once, or `accessToken` in `mapx.map`. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
 
 ## Parcels
@@ -67,3 +65,4 @@ Show your own data (playgrounds, collection points, closures) as [GeoJSON on the
 - [Parcels](/guides/parcels/) and [Search](/guides/search/)
 - [Transit departures](/guides/transit/)
 - [Style the basemap](/guides/style-the-basemap/) in the colours of your municipality
+

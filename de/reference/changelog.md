@@ -1,6 +1,5 @@
 # Changelog
 
-Änderungen an den APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
 Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. Details zur Umbenennung: [Migration](/de/api/migration/).
 
@@ -59,11 +58,5 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 
 ## Tileset-Stände
 
-<table>
-  <thead><tr><th>Tileset</th><th>Stand</th><th>Datei</th></tr></thead>
-  <tbody>
-    {Object.values(data.tilesets).filter((x) => ["relief", "dsm"].includes(x.key)).map((x) => (
-      <tr><td>{x.key === "relief" ? "terrain-rgb" : x.key}</td><td>{x.stand}</td><td><code>{x.datei}</code></td></tr>
-    ))}
-  </tbody>
-</table>
+
+

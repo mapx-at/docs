@@ -1,7 +1,5 @@
 # DeparturesOptions
 
-mapx-gl DeparturesOptions
-
 ## Extends
 
 - [`Common`](/reference/sdk/interfaces/common/)
@@ -39,3 +37,4 @@ mapx-gl DeparturesOptions
 ### time?
 
 > `optional` **time**: `string`
+

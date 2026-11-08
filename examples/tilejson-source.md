@@ -1,6 +1,5 @@
 # TileJSON sources
 
-Add orthophoto and contours without a ready-made style.
 
 One TileJSON URL per product is enough: MapLibre reads tile URL, zoom range and attribution from it. Here a custom, minimal style.
 
@@ -32,3 +31,4 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 ## APIs used
 
 - [TileJSON](/api/tiles/) `orthophoto`, `contours`
+

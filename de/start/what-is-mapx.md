@@ -1,7 +1,5 @@
 # Was ist mapx
 
-Karten und Location-APIs für Österreich, ausschließlich auf offiziellen Open Data.
-
 mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten stammen aus offiziellen offenen Quellen (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB und weitere). Deshalb gibt es keine nutzungsabhängigen Preise. Ein kostenloses Konto und ein API-Token sind nötig ([Zugang und Limits](/de/start/access-and-limits/)).
 
 | Produkt | Inhalt | Einstieg |
@@ -22,3 +20,4 @@ Die APIs folgen den Konventionen bekannter Web-Mapping-Dienste: gleiche URL-Form
 - [Zugang und Limits](/de/start/access-and-limits/)
 - [Erste Karte in 5 Minuten](/de/start/first-map/)
 - [API-Referenz](/de/api/)
+

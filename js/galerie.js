@@ -1,0 +1,1 @@
+(()=>{var l=document.querySelector(".mx-galerie"),r=l.querySelectorAll(".filter button");r.forEach(t=>t.addEventListener("click",()=>{r.forEach(e=>e.setAttribute("aria-pressed",String(e===t))),l.querySelectorAll(".karten li").forEach(e=>{e.hidden=!!t.dataset.f&&!e.dataset.p.split(" ").includes(t.dataset.f)})}));})();

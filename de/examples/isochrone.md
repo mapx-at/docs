@@ -1,6 +1,5 @@
 # Erreichbarkeit (Isochronen)
 
-Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 
 Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPolygon, die größte Fläche zuerst.
 
@@ -38,3 +37,4 @@ async function abfragen(ort) {
 ## Verwendete APIs
 
 - [Routing](/de/api/directions/#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
+

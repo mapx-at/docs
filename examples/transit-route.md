@@ -1,6 +1,5 @@
 # Public transit route
 
-Click start and destination, get walking and riding legs.
 
 The transit API combines walks on the road network with rides from the timetable. Without `depart_at` it plans for now; `arrive_by` plans backwards. Walking legs are drawn dashed, rides solid.
 
@@ -42,3 +41,4 @@ map.on('click', async (e) => {
 ## APIs used
 
 - [Transit](/api/transit/) `GET api.mapx.at/v1/directions/transit/{coordinates}`
+
