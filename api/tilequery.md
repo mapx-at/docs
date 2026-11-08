@@ -195,7 +195,7 @@ data = res.json()
 
 `GET /v1/parcels/{id}`
 
-Everything the open data say about one parcel in one call: administrative assignment, area (`area_m2` in the plane of the Gauss-Krueger system as the cadastre computes it, `area_ellipsoidal_m2`), land use shares from the DKM, buildings (count, footprint, heights from BEV DLM where available), terrain statistics (min, mean, max elevation and mean/max slope from the terrain model, grid of up to 250 points inside the parcel), addresses assigned to the parcel, nearest public transit stop (`null` if the router is unavailable), year of the orthophoto flight, the geometry as GeoJSON and a ready-made `links.static_image`.
+Everything the open data say about one parcel in one call: administrative assignment, area (`area_m2` in the plane of the Gauss-Krueger system as the cadastre computes it, `area_ellipsoidal_m2`), land use shares from the DKM, buildings (count, footprint, heights from BEV DLM where available), terrain statistics (min, mean, max elevation and mean/max slope from the terrain model, grid of up to 250 points inside the parcel), addresses assigned to the parcel, nearest public transit stop (`null` if the router is unavailable), year of the orthophoto flight, `climate` (the object of `/v1/climate/{coordinate}` at the inner point of the parcel: solar potential, normals, hot and snow days, drought; taken from a cache, sections are `null` with `status: partial` until the data of a new area are loaded), the geometry as GeoJSON and a ready-made `links.static_image`.
 
 <details>
 <summary>More</summary>

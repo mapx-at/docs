@@ -17,11 +17,27 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_offset } = await (await fetch(url)).json();
+const { features, total, next_cursor } = await (await fetch(url)).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
-Filter: `bbox`, `road` (zum Beispiel `A12`), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (UTC). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Mit `limit` und `offset` blättern. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
+Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße), `road_class` (`motorway`, `expressway`, `federal`, `state`, kommagetrennt, für A-, S-, B- und L-Straßen), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (UTC). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
+
+Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
+
+```bash
+curl -s "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
+```
+
+## Fahrstreifen auf Autobahnen
+
+Baustellen auf Autobahnen und Schnellstraßen enthalten `lanes` von der ASFINAG: ein Eintrag je Richtung und Fahrbahn mit den gesperrten Fahrstreifen (`right`, `middle`, `left`, `hard_shoulder`), der Zahl offener Fahrstreifen (`open`) von `original`, `contraflow`, `road_closed` und dem vorübergehenden `speed_limit_kmh`. `direction` ist `aligned` (in Richtung steigender Betriebskilometer) oder `opposite`. `sources` nennt die Herkunft einer Meldung (`evis`, `asfinag`); `source` benennt den Datensatz (`evis-planned+asfinag`, wenn beide passen, `asfinag-roadworks` für Baustellen, die nur die ASFINAG meldet). Der Text einer EVIS-Meldung bleibt unverändert.
+
+```js
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction";
+const { features } = await (await fetch(url)).json();
+for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
+```
 
 ## Störungen entlang einer Route
 
