@@ -96,7 +96,14 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, route, type and time window, paged (`limit`/`offset`, `total`, `next_offset`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next_cursor`, `next` as relative URL, `next_offset`).
+
+<details>
+<summary>More</summary>
+
+Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+
+</details>
 
 **Parameters**
 
@@ -104,7 +111,8 @@ Active reports (`active=false`: also ended and future), filterable by area, rout
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north; optional |
 | `planned` | query | string |  | – | true: planned only, false: unplanned only |
-| `road` | query | string |  | – | Road number, e.g. A12 |
+| `road` | query | string |  | – | Road number, normalized: A1, A 1 and A01 are the same; also S1, B99, L347 |
+| `road_class` | query | string |  | – | Comma-separated: motorway (A), expressway (S), federal (B), state (L) |
 | `active` | query | string |  | `with from/to` | false: also inactive (default with from/to) |
 | `type` | query | string |  | – | Comma-separated: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
 | `from` | query | string |  | – | Window start (UTC, YYYY-MM-DD or YYYY-MM-DDTHH:MM[:SS]Z): incidents still valid afterwards |
@@ -112,8 +120,10 @@ Active reports (`active=false`: also ended and future), filterable by area, rout
 | `route` | query | string |  | – | Route corridor: encoded polyline (like geometries=polyline6 or polyline) or GeoJSON LineString; result sorted by position on the route |
 | `route_precision` | query | string |  | – | 6 (default) or 5 |
 | `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
-| `limit` | query | string |  | `200` | At most this many features, 0 to 1000, default 200 |
-| `offset` | query | string |  | – | Skip features (paging) |
+| `sort` | query | string |  | `with route` | importance (default): closures and binding reports first, then road class A, S, B, L, then start; route (default with route): position on the route |
+| `limit` | query | string |  | `500` | At most this many features, 0 to 1000, default 500 |
+| `cursor` | query | string |  | – | Page marker: next_cursor of the previous response |
+| `offset` | query | string |  | – | Skip features (alternative to cursor) |
 
 **Example**
 
@@ -151,6 +161,8 @@ data = res.json()
   "type": "FeatureCollection",
   "total": 1,
   "next_offset": null,
+  "next_cursor": null,
+  "next": null,
   "features": [
     {
       "type": "Feature",
@@ -174,8 +186,6 @@ data = res.json()
         "text": "A23: Sperre Richtung Wien",
         "road": "A23",
         "planned": true,
-        "closed": true,
-        "mandatory": true,
   …
 ```
 
@@ -289,6 +299,8 @@ data = res.json()
   "type": "FeatureCollection",
   "total": 1,
   "next_offset": null,
+  "next_cursor": null,
+  "next": null,
   "features": [
     {
       "type": "Feature",
@@ -312,8 +324,6 @@ data = res.json()
         "text": "A23: Sperre Richtung Wien",
         "road": "A23",
         "planned": true,
-        "closed": true,
-        "mandatory": true,
   …
 ```
 

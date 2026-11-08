@@ -6,6 +6,8 @@ Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](/de/api/tiles
 
 <TilesetTable />
 
+Nicht in der Tabelle, weil es täglich ersetzt statt versioniert wird: [Sentinel-2 aktuell](/de/tilesets/sentinel2/) (`sentinel2`, Raster, z5 bis z13).
+
 Ein Tileset per Namen verwenden:
 
 ```js

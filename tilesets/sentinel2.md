@@ -1,0 +1,68 @@
+# Sentinel-2 current
+
+Always up-to-date, cloud-free satellite image of Austria from Copernicus Sentinel-2 as WebP tiles, z5 to z13, 10 m, updated daily at 02:00.
+
+A satellite image of Austria that updates every day: each pixel shows a **robust value from the most recent cloud- and shadow-free Sentinel-2 acquisitions** (rolling best-pixel composite). Resolution 10 m, Web Mercator, WebP, 512 px, z5 to z13 (the client overzooms beyond that). The acquisition date of every pixel is kept in the underlying store.
+
+<Nutzungen items={[{t:"Current background",d:"Satellite view that is not years old"},{t:"Seeing change",d:"Snow cover, harvest, windthrow, construction sites on a 10 m grid"},{t:"Overview and planning",d:"Landscape, vegetation and water at a glance"}]} />
+
+## Add to your map
+
+<Tabs syncKey="client">
+  <TabItem label="MapLibre">
+    <Code lang="js" code={`new maplibregl.Map({
+  container: "map",
+  center: [15.334, 48.227], zoom: 11,
+  style: {
+    version: 8,
+    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+    layers: [{ id: "s2", type: "raster", source: "s2" }]
+  }
+});`} />
+    TileJSON provides zoom range, bounds and attribution. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
+  </TabItem>
+  <TabItem label="Leaflet">
+    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
+  tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
+  attribution: "Contains modified Copernicus Sentinel data 2026"
+}).addTo(map);`} />
+  </TabItem>
+  <TabItem label="curl">
+    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/sentinel2.json
+curl -s -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
+  </TabItem>
+</Tabs>
+
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles` (cached for 5 minutes).
+
+## TileJSON, zoom and update
+
+| | |
+|---|---|
+| TileJSON | `https://tiles.mapx.at/v1/tiles/sentinel2.json` |
+| Tiles | `https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp` |
+| Zoom | z5 to z13 (6.4 m per pixel at z13 on 47.5 degrees north; the source is 10 m) |
+| Format | WebP, 512 px, Web Mercator |
+| Coverage | Austria (tiles at the border extend abroad) |
+| Update | daily at 02:00; new scenes are merged into the store, then the file is replaced atomically |
+
+## Source and method
+
+- Source: **Sentinel-2 L2A** (surface reflectance) from ESA/Copernicus as Cloud-Optimized GeoTIFF via Element84 Earth Search (STAC, AWS Open Data). Only bands B04, B03, B02 (10 m) and the scene classification SCL (20 m) are read, with HTTP range requests.
+- **Mask:** SCL classes 4 (vegetation), 5 (bare soil), 6 (water) and 11 (snow) are valid; clouds, shadows, cirrus, dark and unclassified pixels do not count. The mask is eroded by 40 m, and pixels with a very high blue share (haze) are dropped, except snow.
+- **Robust value instead of latest value:** each pixel keeps its last 5 valid observations. The output is a value of medium brightness among the observations of the 45 days before the most recent one; outliers (too blue, too bright, too dark) against the median are discarded. The image stays current while haze and thin clouds drop out.
+- **Gaps:** older observations fill pixels that were never clear recently; remaining holes are filled from neighbouring pixels.
+- **Seams:** each scene is brightness-matched to the stored data, and edges between acquisition days are blended softly.
+
+## Notes
+
+- The image mixes several days (the date is stored per pixel); dense ground fog lasting weeks can remain despite the filter.
+- 10 m source resolution: z13 is the last level with real gain in detail.
+
+## Attribution
+
+Required under the Copernicus terms of use (free, full and open) for modified data:
+
+<Code lang="html" code={"Contains modified Copernicus Sentinel data 2026"} />
+
+The year is the year of acquisition; MapLibre picks up the text from TileJSON or PMTiles. More: [License](/reference/attribution/).
