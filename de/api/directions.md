@@ -37,7 +37,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway and/or toll, comma-separated (driving, driving-traffic, driving-truck): avoid motorways or toll-road sections; vignette roads stay allowed. ferry is not supported |
+| `exclude` | query | string |  | – | motorway and/or toll, comma-separated (driving, driving-traffic, driving-truck): `motorway` avoids motorways (category A); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg). ferry is not supported |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; driving profiles only |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; driving profiles only |
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |

@@ -54,6 +54,22 @@ curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.web
 - **Lücken:** Ältere Beobachtungen füllen Pixel, die jüngst nie klar waren; Reste werden aus den Nachbarpixeln aufgefüllt.
 - **Nähte:** Eine Szene wird in der Helligkeit an den Bestand angeglichen, die Ränder zwischen Aufnahmetagen sind weich übergeblendet.
 
+## Index- und Datumsebenen
+
+Aus demselben Composite entstehen vier weitere feste Tilesets. Wo kein Wert vorliegt, sind sie durchsichtig und eignen sich als Überlagerung auf `sentinel2`, einem Luftbild oder einer Karte. Alle: WebP, 512 px, z5 bis z13, gleiche Attribution, täglich gemeinsam mit `sentinel2` ersetzt. In `/v1/tiles` erscheinen sie erst, wenn die Datei existiert. Das TileJSON enthält Wertebereich und Farbrampe in `mapx:legend`.
+
+| Tileset | Zeigt | Wert und Farbe |
+|---|---|---|
+| `sentinel2-datum` | Aufnahmedatum je Pixel | Alter in Tagen vor `mapx:stand`: 0 grün, 20 gelb, 45 orange, 90 rot, 180 dunkelrot |
+| `sentinel2-ndvi` | Vegetation, (NIR - Rot) / (NIR + Rot) | -0,1 grau, 0,05 kahl, 0,2 sandfarben, 0,4 hellgrün, 0,85 dunkelgrün |
+| `sentinel2-ndwi` | Wasser, (Grün - NIR) / (Grün + NIR) | nur Werte über 0: hellblau (0) bis dunkelblau (0,7) |
+| `sentinel2-ndsi` | Schnee, (Grün - SWIR) / (Grün + SWIR) | nur Werte ab 0,4: hellblau bis weiß (0,8); Wasser fällt über eine NIR-Schwelle heraus |
+
+<Code lang="js" code={`map.addSource("ndvi", { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2-ndvi.json", tileSize: 512 });
+map.addLayer({ id: "ndvi", type: "raster", source: "ndvi", paint: { "raster-opacity": 0.8 } });`} />
+
+Im mapx-Viewer sind sie die Überlagerungen „Aufnahmedatum“, „Vegetation (NDVI)“, „Wasser (NDWI)“ und „Schnee (NDSI)“ in der Gruppe Satellit, mit Legende und Deckkraft-Regler.
+
 ## Hinweise
 
 - Das Bild ist eine Mischung verschiedener Tage (Datum je Pixel im Bestand); dichter Bodennebel über Wochen kann trotz Filter stehen bleiben.

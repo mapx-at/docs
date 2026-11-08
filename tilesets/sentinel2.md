@@ -54,6 +54,22 @@ curl -s -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`
 - **Gaps:** older observations fill pixels that were never clear recently; remaining holes are filled from neighbouring pixels.
 - **Seams:** each scene is brightness-matched to the stored data, and edges between acquisition days are blended softly.
 
+## Index and date overlays
+
+Four further fixed tilesets are derived from the same composite. They are transparent where there is no value, so they work as overlays on `sentinel2`, a satellite image or a street map. All are WebP, 512 px, z5 to z13, same attribution; each is replaced daily together with `sentinel2`. They appear in `/v1/tiles` only once the file exists. The TileJSON carries the value range and colour ramp in `mapx:legend`.
+
+| Tileset | Shows | Value and colour |
+|---|---|---|
+| `sentinel2-datum` | Acquisition date per pixel | age in days before `mapx:stand`: 0 green, 20 yellow, 45 orange, 90 red, 180 dark red |
+| `sentinel2-ndvi` | Vegetation, (NIR - red) / (NIR + red) | -0.1 grey, 0.05 bare, 0.2 sand, 0.4 light green, 0.85 dark green |
+| `sentinel2-ndwi` | Water, (green - NIR) / (green + NIR) | only values above 0: light blue (0) to dark blue (0.7) |
+| `sentinel2-ndsi` | Snow, (green - SWIR) / (green + SWIR) | only values from 0.4: light blue to white (0.8); water is excluded by a NIR threshold |
+
+<Code lang="js" code={`map.addSource("ndvi", { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2-ndvi.json", tileSize: 512 });
+map.addLayer({ id: "ndvi", type: "raster", source: "ndvi", paint: { "raster-opacity": 0.8 } });`} />
+
+In the mapx viewer they are the overlays "Acquisition date", "Vegetation (NDVI)", "Water (NDWI)" and "Snow (NDSI)" in the layer group Satellite, with legend and opacity slider.
+
 ## Notes
 
 - The image mixes several days (the date is stored per pixel); dense ground fog lasting weeks can remain despite the filter.
