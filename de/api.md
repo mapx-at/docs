@@ -14,7 +14,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen keinen Key. Die fo
 
 ## APIs
 
-                          
+                            
 ## Weitere Referenz
 
 - [Tilesets](/de/tilesets/): Datenblätter aller Tilesets.

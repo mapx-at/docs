@@ -1,6 +1,6 @@
 # Weather API
 
-Aktuelle Messwerte, Stundenvorhersage und Wetterkacheln (GeoSphere Austria).
+Aktuelle Messwerte, Stundenvorhersage, Warnungen und Wetterkacheln (GeoSphere Austria).
 
 {/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 

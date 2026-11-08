@@ -1,6 +1,6 @@
 # Weather API
 
-Current observations, hourly forecast and weather tiles (GeoSphere Austria).
+Current observations, hourly forecast, warnings and weather tiles (GeoSphere Austria).
 
 {/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 

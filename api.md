@@ -14,7 +14,7 @@ All APIs live under `https://api.mapx.at/v1/` and need no key. The pages below a
 
 ## APIs
 
-                          
+                            
 ## More reference
 
 - [Tilesets](/tilesets/): data sheets of every tileset.

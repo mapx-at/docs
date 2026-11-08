@@ -50,7 +50,7 @@ Layernamen und Felder: [Tilesets](/de/tilesets/). Eigene Daten lassen sich genau
 
 ## Wetter- und Verkehrs-Overlays
 
-Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten.
+Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](/de/api/air-quality/). Die amtlichen Wetterwarnungen sind GeoJSON (`/v1/weather/warnings`, als `geojson`-Source einbinden und nach `level` einfärben).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
