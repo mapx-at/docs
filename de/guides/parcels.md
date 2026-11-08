@@ -59,6 +59,39 @@ const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties:
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp`;
 ```
 
+## Grundstücks-Dossier
+
+`GET /v1/parcels/{id}` liefert alles, was die offenen Daten zu einem Grundstück sagen, in einem Aufruf, für alle rund 10,2 Mio. Grundstücke Österreichs (DKM-Stichtag in `reference_date`). Die ID ist `<KG-Nummer>-<Grundstücksnummer>` mit `_` statt `/`, Bauparzellen mit Punkt (`14143-288_4`, `14143-.98`); sie steht als `properties.parcel_id` in Suchtreffern und der Punktabfrage.
+
+```bash
+curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
+```
+
+| Feld | Inhalt |
+|---|---|
+| `cadastral_municipality`, `municipality`, `district`, `state` | `{id, name}` |
+| `area_m2`, `area_ellipsoidal_m2` | Fläche in der Gauß-Krüger-Ebene (so rechnet der Kataster) und auf dem Ellipsoid; der Registerwert gehört nicht zu den offenen Daten |
+| `land_use` | DKM-Nutzungen mit `area_m2` und `share` |
+| `buildings` | Anzahl, Grundfläche, Höhen aus BEV DLM wo vorhanden, die 25 größten |
+| `elevation` | Min, Mittel, Max und mittlere/maximale Neigung aus dem Geländemodell an einem Punktraster im Grundstück |
+| `addresses`, `nearest_transit_stop` | Adressen des Registers auf dem Grundstück, nächste Haltestelle im Umkreis von 2 km |
+| `orthophoto` | Flugjahr und -datum |
+| `links.static_image` | fertige [Static-Images](/de/guides/static-images/)-URL mit umrandetem Grundstück |
+
+Die Punktabfrage ergänzt `parcel_id` und `links.dossier`; `?include=dossier` liefert je Feature das volle Dossier. Referenz: [Tilequery und Parcel API](/de/api/tilequery/).
+
+## Grundstückssuche
+
+Geocoding und Search Box kennen `types=parcel` für alle Katastralgemeinden:
+
+```bash
+curl -s "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exakter Treffer
+curl -s "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
+curl -s "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # Bauparzelle
+```
+
+`KG 14143 Gst 288/4`, `14143/288/4` und `14143 288/4` sind eindeutig (eine fünfstellige Zahl neben einer Grundstücksnummer ist die KG-Nummer, Postleitzahlen haben vier Stellen). `Melk 288/4` stellt Treffer mit dieser Nummer nach vorn.
+
 ## Nächste Schritte
 
 - [Tilequery und Parcel API](/de/api/tilequery/)

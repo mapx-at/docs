@@ -59,6 +59,39 @@ const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties:
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp`;
 ```
 
+## Parcel dossier
+
+`GET /v1/parcels/{id}` returns everything the open data say about one parcel in one call, for all roughly 10.2 million parcels of Austria (DKM key date in `reference_date`). The ID is `<KG number>-<parcel number>` with `/` written as `_`, building parcels with a leading dot (`14143-288_4`, `14143-.98`); it is `properties.parcel_id` in search results and in the point query.
+
+```bash
+curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
+```
+
+| Field | Content |
+|---|---|
+| `cadastral_municipality`, `municipality`, `district`, `state` | `{id, name}` |
+| `area_m2`, `area_ellipsoidal_m2` | area in the Gauss-Krueger plane (as the cadastre computes it) and on the ellipsoid; the register value is not part of the open data |
+| `land_use` | DKM land use classes with `area_m2` and `share` |
+| `buildings` | count, footprint, heights from BEV DLM where available, the 25 largest |
+| `elevation` | min, mean, max and mean/max slope from the terrain model on a point grid inside the parcel |
+| `addresses`, `nearest_transit_stop` | register addresses on the parcel, nearest stop within 2 km |
+| `orthophoto` | flight year and date |
+| `links.static_image` | ready-made [static image](/guides/static-images/) URL with the parcel outlined |
+
+The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns the full dossier per feature. Reference: [Tilequery and Parcel API](/api/tilequery/).
+
+## Parcel search
+
+Geocoding and Search Box know `types=parcel` for all cadastral municipalities:
+
+```bash
+curl -s "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exact hit
+curl -s "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
+curl -s "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # building parcel
+```
+
+`KG 14143 Gst 288/4`, `14143/288/4` and `14143 288/4` are unambiguous (a five-digit number next to a parcel number is the KG number, postcodes have four digits). `Melk 288/4` puts hits with that number first.
+
 ## Next
 
 - [Tilequery and Parcel API](/api/tilequery/)
