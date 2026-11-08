@@ -33,7 +33,7 @@ const map = new maplibregl.Map({
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://${url}", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "pmtiles://${url}?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
@@ -42,7 +42,7 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));`} />
   </TabItem>
   <TabItem label="QGIS">
     1. In the Browser panel, right-click **XYZ Tiles**, **New Connection**.
-    2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, tile resolution 512.
+    2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`, Min. Zoom 5, Max. Zoom 16, tile resolution 512.
     3. The layer shows the raw tiles (encoded color). Elevations follow from the formula in “Encoding” (`(R*65536 + G*256 + B)*0.1 - 10000`), for example in the Raster Calculator on the three bands.
   </TabItem>
   <TabItem label="Python">
@@ -50,7 +50,7 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));`} />
 from PIL import Image
 from pmtiles.reader import Reader
 
-URL = "${url}"
+URL = "${url}?access_token=YOUR_TOKEN"
 
 def get_bytes(offset, length):
     r = requests.get(URL, headers={"Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
@@ -65,10 +65,10 @@ print(hoehe.shape, hoehe.min(), hoehe.max())`} />
   </TabItem>
   <TabItem label="curl">
     <Code lang="bash" code={`# one tile via the XYZ endpoint
-curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
 
 # whole file, resumable
-curl -C - -O ${url}`} />
+curl -C - -O "${url}?access_token=YOUR_TOKEN"`} />
   </TabItem>
 </Tabs>
 

@@ -4,7 +4,7 @@ Write your own MapLibre style for the mapx basemap: land use, water, roads, buil
 
 **Goal:** Build your own, consistently coloured map from the vector tiles of the [basemap](/tilesets/streets/). mapx provides the data, you decide how it looks.
 
-**Prerequisites:** a browser and a static web server. Basic knowledge of MapLibre styles (sources and layers).
+**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](/start/access-and-limits/)). Basic knowledge of MapLibre styles (sources and layers).
 
 The basemap has 18 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](/tilesets/streets/).
 
@@ -20,6 +20,9 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
+     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
+     // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const source = { type: "vector", url: "https://tiles.mapx.at/v1/tiles/streets.json" };
    ```
 
@@ -97,6 +100,7 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    ```js
      new maplibregl.Map({
        container: "map",
+       transformRequest: withToken,
        center: [15.334, 48.227], zoom: 14,
        style: {
          version: 8,
@@ -116,14 +120,14 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
 
 A map in your own look: areas by land use, lakes, road network with trails, buildings and administrative boundaries. All data comes from a single tileset.
 
-## Labels need your own glyphs
+## Labels and fonts
 
-mapx does not provide fonts. For labels (`place_p`, `water_label_p`, `housenumber_p`, road names from `road_l` via the field `name`) the style needs a `glyphs` entry pointing to a font source that you run or choose:
+For labels (`place_p`, `water_label_p`, `housenumber_p`, road names from `road_l` via the field `name`) the style needs a `glyphs` entry. mapx serves fonts at `/v1/fonts/{fontstack}/{range}.pbf` (list: `GET /v1/fonts`, for example `Open Sans Semibold`, `Noto Sans Regular`). The `withToken` function from step 1 adds the token to these requests too:
 
 ```js
 style: {
   version: 8,
-  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // your own glyph source
+  glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
   sources: { streets: source },
   layers: [
     // ...
@@ -135,7 +139,7 @@ style: {
 }
 ```
 
-`text-font` must match a font that your glyph source serves.
+`text-font` must be a font that `GET /v1/fonts` lists.
 
 ## Next steps
 

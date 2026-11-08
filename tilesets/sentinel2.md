@@ -19,21 +19,21 @@ A satellite image of Austria that updates every day: each pixel shows a **robust
     layers: [{ id: "s2", type: "raster", source: "s2" }]
   }
 });`} />
-    TileJSON provides zoom range, bounds and attribution. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
+    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
   </TabItem>
   <TabItem label="Leaflet">
-    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
+    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
   attribution: "Contains modified Copernicus Sentinel data 2026"
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/sentinel2.json
-curl -s -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp`} />
   </TabItem>
 </Tabs>
 
-> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles` (cached for 5 minutes).
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
 
 ## TileJSON, zoom and update
 

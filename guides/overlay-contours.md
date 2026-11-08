@@ -4,7 +4,7 @@ Place contour lines with index lines and elevation labels over orthophoto or the
 
 **Goal:** Place contour lines of suitable density over aerial imagery, draw index lines more strongly and label them with their elevation.
 
-**Prerequisites:** a browser and a static web server. Labels need a font source (glyphs) that you provide yourself, see [Style the basemap](/guides/style-the-basemap/#labels-need-your-own-glyphs).
+**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](/start/access-and-limits/)). Labels use the mapx fonts, see [Style the basemap](/guides/style-the-basemap/#labels-and-fonts).
 
 The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `lvl` (generalisation level 10, 12, 14, 16). Lines exist from z10.
 
@@ -20,6 +20,9 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>
+     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
+     // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const sources = {
        ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        contours: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
@@ -72,17 +75,18 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    };
    ```
 
-   `text-font` must be a font of your glyph source. Without labels, drop this layer and `glyphs`.
+   `text-font` must be a font that `/v1/fonts` lists (`GET /v1/fonts`), for example `Open Sans Semibold` or `Noto Sans Regular`.
 
 4. **Start the map.**
 
    ```js
      new maplibregl.Map({
        container: "map",
+       transformRequest: withToken,
        center: [12.694, 47.074], zoom: 14,
        style: {
          version: 8,
-         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // your glyph source
+         glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: sources,
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...lineLayers, labels]
        }

@@ -21,7 +21,7 @@ Load the bundle from `https://map.mapx.at/sdk/v1/` (CORS is open) or download th
 <div id="map" style="height:100vh"></div>
 <script type="module">
   import mapx from "https://map.mapx.at/sdk/v1/mapx-gl.bundle.js";
-  const map = mapx.map({ container: "map", style: "streets", center: [15.33, 48.23], zoom: 12 });
+  const map = mapx.map({ accessToken: "YOUR_TOKEN", container: "map", style: "streets", center: [15.33, 48.23], zoom: 12 });
   map.addControl(new mapx.SearchControl(), "top-left");
   map.addControl(new mapx.RouteControl(), "top-right");
   map.addControl(new mapx.LayerControl(), "top-right");
@@ -32,7 +32,7 @@ A complete example is at [map.mapx.at/sdk/v1/example.html](https://map.mapx.at/s
 
 ## Map
 
-`mapx.map(options)` returns a MapLibre map. `style` is a short name (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) that becomes `https://api.mapx.at/v1/styles/{id}`, or any style URL or object. `terrain: true` turns on 3D terrain.
+`mapx.map(options)` returns a MapLibre map. `accessToken` is your public token ([Access and limits](/start/access-and-limits/)); it applies to the map and to all helpers. Without a map, call `mapx.setAccessToken("YOUR_TOKEN")` once. `style` is a short name (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) that becomes `https://api.mapx.at/v1/styles/{id}`, or any style URL or object. `terrain: true` turns on 3D terrain.
 
 ## What is in the box
 

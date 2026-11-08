@@ -2,7 +2,7 @@
 
 Find the cadastral parcel at a point, draw parcel boundaries and read their attributes.
 
-The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding.
+The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Use |
 |---|---|
@@ -14,7 +14,7 @@ The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an A
 ## Parcel at a point
 
 ```bash
-curl -s "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_number, cadastral_municipality_id, area_m2, is_building_land}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_number, cadastral_municipality_id, area_m2, is_building_land}'
 ```
 
 The result is a `FeatureCollection` with the parcel polygon. The area is computed from the boundary lines and deviates from the register value by per mille. A building returns its building parcel; the number then starts with a dot. Parcels that extend beyond the 2 km tile window around the point are missing, and the list is empty outside the cadastre data.
@@ -28,7 +28,7 @@ map.on("load", () => {
 });
 map.on("click", async (e) => {
   const { lng, lat } = e.lngLat;
-  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}`);
+  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}?access_token=YOUR_TOKEN`);
   const [parcel] = (await res.json()).features;
   if (!parcel) return;
   const p = parcel.properties;
@@ -44,7 +44,7 @@ Full example: [Parcel on click](/examples/parcel-on-click/). The cadastral munic
 Tilequery reads the vector tile at the highest zoom and returns the features nearest to the point (`radius` up to 2000 m).
 
 ```bash
-curl -s "https://api.mapx.at/v1/tilequery/cadastre/15.3294,48.2272.json?radius=30&limit=3" | jq '.features[].properties.tilequery'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/15.3294,48.2272.json?radius=30&limit=3" | jq '.features[].properties.tilequery'
 ```
 
 Combine tilesets with a comma, for example `streets,cadastre`. Each feature has `tilequery.distance` (m), `geometry` and `layer`.
@@ -54,17 +54,17 @@ Combine tilesets with a comma, for example `streets,cadastre`. Each feature has 
 Combine the parcel with a [static image](/guides/static-images/) using the polygon as GeoJSON overlay:
 
 ```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272")).json()).features[0];
+const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
 const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry }));
-const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp`;
+const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp?access_token=YOUR_TOKEN`;
 ```
 
 ## Parcel dossier
 
-`GET /v1/parcels/{id}` returns everything the open data say about one parcel in one call, for all roughly 10.2 million parcels of Austria (DKM key date in `reference_date`). The ID is `<KG number>-<parcel number>` with `/` written as `_`, building parcels with a leading dot (`14143-288_4`, `14143-.98`); it is `properties.parcel_id` in search results and in the point query.
+`GET /v1/parcels/{id}` returns everything the open data say about one parcel in one call, for all roughly 10.2 million parcels of Austria (DKM key date in `reference_date`). The ID is `<KG number>-<parcel number>` with `/` written as `_`, building parcels with a leading dot (`14143-473_1`, `14143-.98`); it is `properties.parcel_id` in search results and in the point query.
 
 ```bash
-curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14143-473_1" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
 ```
 
 | Field | Content |
@@ -86,9 +86,9 @@ The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns
 Geocoding and Search Box know `types=parcel` for all cadastral municipalities:
 
 ```bash
-curl -s "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exact hit
-curl -s "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
-curl -s "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # building parcel
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exact hit
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # building parcel
 ```
 
 `KG 14143 Gst 288/4`, `14143/288/4` and `14143 288/4` are unambiguous (a five-digit number next to a parcel number is the KG number, postcodes have four digits). `Melk 288/4` puts hits with that number first.

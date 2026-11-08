@@ -23,6 +23,8 @@ try {
 }
 ```
 
+Missing or rejected tokens arrive as `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `origin-not-allowed`, …), see [Access and limits](/start/access-and-limits/). Do not retry them.
+
 Branch on `code`, never on the text. Send `Accept-Language: de` through your own `fetch` if you need German messages; the helpers use the browser default.
 
 ## Retry with backoff

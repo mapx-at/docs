@@ -18,4 +18,4 @@ Each guide shows the common tasks of one product with code that runs as it is.
 
 ## Examples
 
-26 runnable maps with the complete code, a preview image and a filter by product: [Examples](/examples/).
+27 runnable maps with the complete code, a preview image and a filter by product: [Examples](/examples/).

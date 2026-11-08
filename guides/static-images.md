@@ -2,11 +2,11 @@
 
 Render map images as PNG or WebP with pins, paths and GeoJSON, for reports, emails and web pages.
 
-A static image is one HTTP request that returns a picture. Use it where an interactive map is not possible: PDFs, emails, listings, social previews.
+A static image is one HTTP request that returns a picture. Use it where an interactive map is not possible: PDFs, emails, listings, social previews. The token goes into the URL as `access_token`, because an image tag cannot send a header. For web pages use a public token (`mx_pk_…`) with your site as allowed origin; build images for e-mails and PDFs on your server with a secret token (`mx_sk_…`) so the secret does not end up in the message.
 
 ```html
 <img alt="Vienna city center" width="600" height="400"
-     src="https://api.mapx.at/v1/static/streets/16.3725,48.2085,14/600x400.png">
+     src="https://api.mapx.at/v1/static/streets/16.3725,48.2085,14/600x400.png?access_token=YOUR_TOKEN">
 ```
 
 ## URL format
@@ -36,7 +36,7 @@ Overlays come after the style, separated by commas (up to 50).
 | GeoJSON | `geojson({...})` with simplestyle properties (URL-encoded) |
 
 ```bash
-curl -s "https://api.mapx.at/v1/static/streets/pin-s+ff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400.png" -o vienna.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/streets/pin-s+ff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400.png" -o vienna.png
 ```
 
 ## Fit a route automatically
@@ -44,10 +44,10 @@ curl -s "https://api.mapx.at/v1/static/streets/pin-s+ff0000(16.3725,48.2085)/16.
 With `auto` instead of the view, the image shows all overlays.
 
 ```js
-const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified";
+const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified&access_token=YOUR_TOKEN";
 const { routes } = await (await fetch(dir)).json();
 const path = encodeURIComponent(routes[0].geometry); // encoded polyline, precision 5
-const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp`;
+const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=YOUR_TOKEN`;
 ```
 
 The route comes from [Directions](/guides/navigation/) with `geometries=polyline`.
@@ -57,7 +57,7 @@ The route comes from [Directions](/guides/navigation/) with `geometries=polyline
 `satellite` shows the orthophoto, `outdoors` adds contours and trails.
 
 ```
-https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp
+https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp?access_token=YOUR_TOKEN
 ```
 
 Show the data credit next to the image, see [Attribution](/reference/attribution/).

@@ -2,7 +2,7 @@
 
 One typed function per API: search, geocoding, routing, matrix, optimization, parcels, elevation, traffic, transit, weather and static images.
 
-Every helper is a plain `async` function that returns typed JSON and throws a [`MapxError`](/guides/sdk/errors/) on failure. Coordinates are `[lng, lat]`. Pass `signal` (an `AbortSignal`) to cancel a request. All examples run in the browser console on any page that has loaded `mapx` ([install](/guides/sdk/)).
+Every helper is a plain `async` function that returns typed JSON and throws a [`MapxError`](/guides/sdk/errors/) on failure. Coordinates are `[lng, lat]`. Pass `signal` (an `AbortSignal`) to cancel a request. All examples run in the browser console on any page that has loaded `mapx` ([install](/guides/sdk/)) and set a token with `mapx.setAccessToken("YOUR_TOKEN")`.
 
 ## Search and geocoding
 
@@ -12,8 +12,8 @@ const sessionToken = crypto.randomUUID();
 const hits = await mapx.searchSuggest("Stephansplatz", { sessionToken, proximity: [16.37, 48.21], types: ["poi", "street"], limit: 5 });
 const place = await mapx.searchRetrieve(hits[0].mapbox_id, { sessionToken });
 
-// Geocoding, also parcels: "KG 14105 Gst 102/3"
-const parcels = await mapx.geocode("14105/102/3", { types: ["parcel"], limit: 3 });
+// Geocoding, also parcels: "KG 14143 Gst 473/1"
+const parcels = await mapx.geocode("14143/473/1", { types: ["parcel"], limit: 3 });
 
 // Reverse geocoding: nearest address, street or place
 const [nearest] = await mapx.reverse([16.3725, 48.2085], { types: ["address"], limit: 1 });
@@ -33,7 +33,7 @@ const bus = await mapx.transitDirections(vienna, [16.4, 48.19], { departAt: "202
 console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0].steps.length);
 ```
 
-`exclude` works for the `driving` profile only, `truck` only for `driving-truck`. Both are validated: a wrong combination throws a `MapxError` with `code: "bad-request"`.
+`exclude` (`motorway`, `toll`) works for `driving`, `driving-traffic` and `driving-truck`, `truck` only for `driving-truck`. The server validates both: a wrong combination throws a `MapxError` with `code: "bad-request"`. The `ferry` exclusion is not part of the typed options yet; use the [Directions API](/api/directions/) for it.
 
 ```js
 // Reachability and travel times

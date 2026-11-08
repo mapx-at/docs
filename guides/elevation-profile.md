@@ -13,7 +13,7 @@ With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint retur
 1. **Test the request.** The line is made of `lon,lat` pairs separated by semicolons (longitude first). 50 sample points along a route at the Großglockner:
 
    ```bash
-   curl "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
+   curl -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
    The response is a GeoJSON `FeatureCollection`, one feature per sample with `elevation` (m) and `distance_m` (distance from the start).
@@ -32,7 +32,7 @@ With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint retur
    ```html
    <script type="module">
      const line = "12.69,47.07;12.70,47.08";
-     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm`;
+     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm&access_token=YOUR_TOKEN`;
      const data = await (await fetch(url)).json();
 
      // skip samples without elevation (outside the data)

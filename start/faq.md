@@ -4,7 +4,11 @@ Short answers on tokens, licence, freshness, offline use and common errors.
 
 ## Do I need a token or an account?
 
-Yes, a free account and API token. Register at [account.mapx.at](https://account.mapx.at/), create a token and send it as `Authorization: Bearer` or `access_token`. CORS is open. See [Access and limits](/start/access-and-limits/).
+Yes, a free account and API token. Register at [account.mapx.at](https://account.mapx.at/), create a token and send it as `Authorization: Bearer` (servers) or `access_token` (browsers, images). CORS is open. See [Access and limits](/start/access-and-limits/).
+
+## Why do I get 401 or 403?
+
+`401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`). The `code` in the error body names the reason. See [Access and limits](/start/access-and-limits/).
 
 ## What does it cost?
 
@@ -60,4 +64,4 @@ The former German style, tileset and category names work until 2027-05-31. See [
 
 ## Where do I report a problem?
 
-Open an issue in the [GitHub organization mapx-at](https://github.com/mapx-at).
+Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).

@@ -31,20 +31,20 @@ Clicking shows the flight block at the point (survey, flight period).
     layers: [{ id: "ortho", type: "raster", source: "ortho" }]
   }
 });`} />
-    TileJSON provides zoom range, bounds and attribution; with PMTiles directly use `url: "pmtiles://${url}"` (protocol as in the [Quickstart](/start/)).
+    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://${url}?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
   </TabItem>
   <TabItem label="Leaflet">
-    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp", {
+    <Code lang="js" code={`L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
   attribution: "BEV, CC BY 4.0"
 }).addTo(map);`} />
   </TabItem>
   <TabItem label="QGIS">
-    XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+    XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/orthophoto.json
-curl -s -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/orthophoto.json
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/orthophoto/14/8860/5730.webp`} />
   </TabItem>
 </Tabs>
 

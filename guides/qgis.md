@@ -2,7 +2,7 @@
 
 Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
 
-**Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download, with a free token (append `?access_token=YOUR_TOKEN` to the layer URLs).
+**Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download. You need a free token ([Access and limits](/start/access-and-limits/)); append `?access_token=YOUR_TOKEN` to every layer URL. Use a secret token (`mx_sk_…`) on your own computer: a public token only works for its allowed origins, and QGIS is not a website.
 
 **Prerequisites:** QGIS 3.x (3.32 or newer for direct PMTiles).
 
@@ -14,10 +14,10 @@ Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile c
 2. Name `mapx Orthophoto`, URL:
 
    ```
-   https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp
+   https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN
    ```
 
-3. **Min. Zoom Level** 5, **Max. Zoom Level** 18, **Tile Resolution** 512 (Mapbox style, 512 px). Leave **Referer** and **Authentication** empty.
+3. **Min. Zoom Level** 5, **Max. Zoom Level** 18, **Tile Resolution** 512 (Mapbox style, 512 px). Leave **Referer** and **Authentication** empty; the token in the URL is enough.
 4. Save with OK and load the connection into the map by double-click.
 
 </Steps>
@@ -29,10 +29,10 @@ The project CRS can be anything, QGIS reprojects the Web Mercator tiles.
 The elevation tiles are [Terrain-RGB](/reference/terrain-rgb/): the elevation is stored in the colour channels. Use the same kind of connection with the URL
 
 ```
-https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp
+https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN
 ```
 
-(max. zoom 16; use `dsm` instead of `dtm` for the surface model). The layer first shows the encoded colour. Get the elevation in the **Raster Calculator** from the three bands:
+(max. zoom 16; use `dsm` instead of `terrain-rgb` for the surface model). The layer first shows the encoded colour. Get the elevation in the **Raster Calculator** from the three bands:
 
 ```
 -10000 + ("Layer@1" * 65536 + "Layer@2" * 256 + "Layer@3") * 0.1
@@ -48,7 +48,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp
 2. Name `mapx Basemap`, URL:
 
    ```
-   https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf
+   https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN
    ```
 
 3. Enter **Min. Zoom Level** 0, **Max. Zoom Level** 16, OK.
@@ -65,7 +65,7 @@ Vector tilesets can also be opened directly as a PMTiles file from QGIS 3.32, lo
 <Steps>
 
 1. Browser panel, right-click **Vector Tiles**, **New Generic Connection**.
-2. Set the **Service type** to PMTiles (or pick a local file) and enter the file as URL: `https://tiles.mapx.at/<file>.pmtiles`.
+2. Set the **Service type** to PMTiles (or pick a local file) and enter the file as URL: `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
 3. Save with OK and load it into the map. QGIS reads only the required tiles via HTTP range.
 
 </Steps>

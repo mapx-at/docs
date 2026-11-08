@@ -2,21 +2,21 @@
 
 Parcels, address validation, transit departures and an embedded map for municipal websites and administration tools.
 
-Municipal tools work with parcels and addresses, need to be understood by residents and should not require a license. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
+Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](/start/access-and-limits/)); snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once, or `accessToken` in `mapx.map`. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
 
 ## Parcels
 
 The cadastre is available as a vector tileset for drawing and as an API for the parcel at a point.
 
 ```js
-const map = mapx.map({ container: "map", style: "satellite-streets", center: [15.3294, 48.2272], zoom: 17 });
+const map = mapx.map({ accessToken: "YOUR_TOKEN", container: "map", style: "satellite-streets", center: [15.3294, 48.2272], zoom: 17 });
 new mapx.ParcelPopup(map); // click: number, area, cadastral municipality, buildings
 ```
 
 Search for a parcel by its number (the cadastral municipality is part of the identity):
 
 ```bash
-curl -s "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
 ```
 
 The boundaries come from the BEV cadastral map (DKM). The area is computed from the boundary lines and deviates from the register by per mille. State this where the data is shown: for orientation, not legally binding.
@@ -27,7 +27,7 @@ Forms for registrations, applications and reports should accept only existing ad
 
 ```js
 const q = new URLSearchParams({ street: "Haubtplatz", housenumber: "1", postcode: "3390", place: "Melk" });
-const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}`)).json();
+const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}&access_token=YOUR_TOKEN`)).json();
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
@@ -47,7 +47,7 @@ Or add `new mapx.DeparturesPopup(map)` to a map. See [Transit departures](/guide
 
 ## Embed a map in the municipal website
 
-A map needs one HTML file, MapLibre and the style URL, a free token and no build ([Embed a map](/examples/embed-map/)). Host the page with your content management system, or embed the file as `<iframe>`:
+A map needs one HTML file, MapLibre and the style URL, a free public token and no build ([Embed a map](/examples/embed-map/)). Host the page with your content management system, or embed the file as `<iframe>`:
 
 ```html
 <iframe src="/karte.html" title="Map of our municipality" style="width:100%;height:480px;border:0" loading="lazy"></iframe>
@@ -57,10 +57,10 @@ For a plain picture without JavaScript (print, newsletter, page without scripts)
 
 ```html
 <img alt="Location of the town hall" width="600" height="400"
-     src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png">
+     src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=YOUR_TOKEN">
 ```
 
-Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](/examples/geojson-overlay/). Keep the attribution of the data visible ([Attribution](/reference/attribution/)).
+Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](/examples/geojson-overlay/). The `<img>` URL carries the token: use a public token (`mx_pk_…`) with your website as allowed origin. Keep the attribution of the data visible ([Attribution](/reference/attribution/)).
 
 ## Next steps
 

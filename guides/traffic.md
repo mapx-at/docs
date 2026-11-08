@@ -2,7 +2,7 @@
 
 Incident reports, motorway speed limits, a traffic layer on the map and traffic-aware routes.
 
-Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second.
+Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](/start/first-map/).
 
 | Task | Endpoint |
 |---|---|
@@ -16,7 +16,7 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 ## List incidents
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
+const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20&access_token=YOUR_TOKEN";
 const { features, total, next_cursor } = await (await fetch(url)).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
@@ -26,7 +26,7 @@ Filters: `bbox`, `road` (`A1`, `A 1` and `A01` are the same road), `road_class` 
 Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000) and `cursor`: pass `next_cursor` from the response, or follow `next`, until `next` is `null`. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
 ```
 
 ## Lane details on motorways
@@ -34,7 +34,7 @@ curl -s "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&li
 Roadworks on motorways and expressways carry `lanes` from ASFINAG: one entry per direction and carriageway with the closed lanes (`right`, `middle`, `left`, `hard_shoulder`), the number of open lanes (`open`) out of `original`, `contraflow`, `road_closed` and the temporary `speed_limit_kmh`. `direction` is `aligned` (with increasing road kilometers) or `opposite`. `sources` lists where a report comes from (`evis`, `asfinag`); `source` names the dataset (`evis-planned+asfinag` when both match, `asfinag-roadworks` for roadworks only ASFINAG reports). The text of an EVIS report is never changed.
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction";
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction&access_token=YOUR_TOKEN";
 const { features } = await (await fetch(url)).json();
 for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
@@ -44,7 +44,7 @@ for (const f of features) for (const l of f.properties.lanes) console.log(f.prop
 Pass the route as `route` (encoded polyline or GeoJSON). Results are sorted by position on the route. For long routes use `POST` with a JSON body.
 
 ```bash
-curl -s -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
   "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
   "type": "road_closure,construction", "buffer": 50
 }' | jq '.total'

@@ -31,14 +31,14 @@ The live map shows the layers with automatic colors; your own style defines the 
     layers: [{ id: "road_l", type: "line", source: "v", "source-layer": "road_l", paint: { "line-color": "#b5651d" } }]
   }
 });`} />
-    TileJSON provides zoom range, bounds and attribution; with PMTiles directly use `url: "pmtiles://${url}"` (protocol as in the [Quickstart](/start/)).
+    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. With PMTiles directly use `url: "pmtiles://${url}?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](/guides/self-host-pmtiles/)).
   </TabItem>
   <TabItem label="QGIS">
-    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+    Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
   </TabItem>
   <TabItem label="curl">
-    <Code lang="bash" code={`curl -s https://tiles.mapx.at/v1/tiles/streets.json
-curl -s -o kachel.pbf https://tiles.mapx.at/v1/tiles/streets/14/8860/5730.pbf`} />
+    <Code lang="bash" code={`curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/streets.json
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/streets/14/8860/5730.pbf`} />
   </TabItem>
 </Tabs>
 
@@ -69,7 +69,7 @@ Every field and value of each layer: [Basemap: layer reference](/reference/style
 
 - Not included: stops of private railways, subway and tram stops; ski areas as of 2017; small airfields only in part.
 - Abroad the map is practically empty (only Lake Constance and waters up to just beyond the border).
-- mapx does not provide glyphs and fonts for labels; the style needs its own.
+- The tileset contains no glyphs or sprites. The mapx styles load them from `https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf` and `/v1/styles/streets/sprite`; a style of your own needs a `glyphs` URL (for example the `/v1/fonts` endpoint, token included).
 
 ## Attribution
 

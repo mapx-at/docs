@@ -1,1 +1,0 @@
-function e(e){return e}var t=t=>({url:e(t)}),n=()=>({});export{t as n,e as r,n as t};

@@ -8,23 +8,23 @@ export const dtm = `https://tiles.mapx.at/${data.tilesets.relief.datei}`;
 
 **Prerequisites:** a server, S3-compatible storage or a CDN that supports HTTP range requests. A PMTiles file is a single static file; no tile server is needed.
 
-The files are openly available at `https://tiles.mapx.at/<file>.pmtiles` (file names per product under "Key figures" on the [product pages](/tilesets/)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](/reference/attribution/) you may redistribute and mirror the files.
+The files are free to download with a token ([Access and limits](/start/access-and-limits/)) at `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN` (file names per product under "Key figures" on the [product pages](/tilesets/)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](/reference/attribution/) you may redistribute and mirror the files.
 
 <Steps>
 
 1. **Download the file.** `curl -C -` resumes an interrupted download:
 
-   <Code lang="bash" code={`curl -C - -O ${dtm}`} />
+   <Code lang="bash" code={`curl -C - -O "${dtm}?access_token=YOUR_TOKEN"`} />
 
    The orthophoto and the elevation models are very large files; check storage and bandwidth before downloading. For sub-areas step 2 is easier.
 
 2. **Optional: fetch only a subset.** With the [`pmtiles`](https://github.com/protomaps/go-pmtiles) command line tool, `extract` reads only the tiles of an area from the online file using range requests:
 
    <Code lang="bash" code={`# subset by bounding box (west,south,east,north)
-pmtiles extract ${dtm} salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
+pmtiles extract "${dtm}?access_token=YOUR_TOKEN" salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
 
 # or only up to a zoom level
-pmtiles extract ${dtm} overview.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1`} />
+pmtiles extract "${dtm}?access_token=YOUR_TOKEN" overview.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1`} />
 
    The output is a complete PMTiles file that you serve like any other.
 
@@ -73,5 +73,5 @@ A file or subset is served independently of mapx, with the same look and accurac
 ## Next steps
 
 - File format and protocol: [PMTiles documentation](https://docs.protomaps.com/pmtiles/).
-- Display with MapLibre: [Quick start](/start/).
+- Display with MapLibre: [First map](/start/first-map/).
 - Do not forget the credit: [Attribution](/reference/attribution/).

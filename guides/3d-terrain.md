@@ -24,6 +24,10 @@ This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`)
 2. **Declare the sources.** The elevation model as `raster-dem`, the orthophoto as `raster`:
 
    ```js
+   const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
+   // adds the token to every request to mapx.at (TileJSON and tiles)
+   const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
+
    const sources = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
      ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
@@ -46,6 +50,7 @@ This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`)
    <script>
      const map = new maplibregl.Map({
        container: "map",
+       transformRequest: withToken,
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
        maxPitch: 80,
        style: {
@@ -59,7 +64,7 @@ This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`)
    </script>
    ```
 
-   The constants `sources` and `layers` from steps 2 and 3 must appear in the same `<script>` before `new maplibregl.Map`.
+   The constants from steps 2 and 3 (`TOKEN`, `withToken`, `sources`, `layers`) must appear in the same `<script>` before `new maplibregl.Map`.
 
 5. **Run it.** Run `npx serve` in the folder and open the printed address. Dragging with the right mouse button tilts and rotates the map.
 

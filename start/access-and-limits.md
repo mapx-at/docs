@@ -23,7 +23,7 @@ A public token is checked against the `Origin` header (for tiles and images with
 
 ## Send the token
 
-Either way works; use the header where you can and the query parameter where you cannot set headers (images, MapLibre tile URLs).
+Use the header in server code and scripts. In the browser use the query parameter: images and MapLibre tile URLs cannot set headers, and the CORS preflight does not allow the `Authorization` header.
 
 ```bash
 # header
@@ -34,7 +34,7 @@ curl -s "https://api.mapx.at/v1/geocode?q=Melk&limit=1&access_token=YOUR_TOKEN" 
 ```
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR_TOKEN"); // in the browser use access_token; Node can use the header
 ```
 
 **Maps with MapLibre GL JS.** The simplest way is a `transformRequest` that adds the token to every request to `mapx.at`, never to other hosts:
@@ -77,7 +77,7 @@ For bulk work, download the [PMTiles](/tilesets/) file once instead of requestin
 
 ## CORS and caching
 
-CORS allows every origin and the `Authorization` header, so you can call the APIs straight from the browser. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
+CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer of the API does not list the `Authorization` header yet, so in browser code send the token as `access_token` in the URL. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
 
 ## Attribution
 

@@ -15,7 +15,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
 const { features } = await res.json();
 console.log(features[0].place_name, features[0].center); // center is [lon, lat]
 ```
@@ -40,7 +40,7 @@ The response is a GeoJSON `FeatureCollection`. Each feature has `place_name`, `c
 Add this to the page from [First map](/start/first-map/) after `new maplibregl.Map(...)` (store the map in `const map`):
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
 const [hit] = (await res.json()).features;
 new maplibregl.Marker().setLngLat(hit.center).addTo(map);
 map.flyTo({ center: hit.center, zoom: 16 });

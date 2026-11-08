@@ -4,7 +4,7 @@ Show a mapx map, switch styles, add tilesets and overlays.
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
-**Before you start:** a page with MapLibre GL JS, see [First map](/start/first-map/). You need a free token ([Access and limits](/start/access-and-limits/)); the snippets show `YOUR_TOKEN` only where it matters, see there how to send it.
+**Before you start:** a page with MapLibre GL JS, see [First map](/start/first-map/). You need a free token ([Access and limits](/start/access-and-limits/)); the snippets show `YOUR_TOKEN` only where it matters. The map options below assume the `transformRequest` from First map, which adds the token to every request to `mapx.at`.
 
 ## Use a style
 
@@ -20,6 +20,7 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
+  transformRequest: withToken, // from First map: adds the token to every mapx.at request
   center: [12.694, 47.074], zoom: 12, // Grossglockner
 });
 ```
@@ -64,7 +65,7 @@ The traffic layer is a vector source, see [Traffic](/guides/traffic/). Example: 
 The style and TileJSON formats work in MapLibre, Mapbox GL JS clients that accept custom URLs, Leaflet with a vector plugin, OpenLayers and QGIS. For clients without vector support, [Static Tiles](/api/styles/) deliver the rendered style as raster tiles:
 
 ```
-https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}
+https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TOKEN
 ```
 
 ## Offline and bulk use

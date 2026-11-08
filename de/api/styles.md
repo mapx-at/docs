@@ -69,7 +69,7 @@ Style JSON (version 8), generated from the style generator. Old ids (`karte`, `k
 <details>
 <summary>Mehr</summary>
 
-Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` gives 304.
+Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` gives 304. With `sources=tilejson` the PMTiles vector/raster sources are replaced by https TileJSON URLs (`https://tiles.mapx.at/v1/tiles/<tileset>.json`), for clients without PMTiles support such as the MapLibre Native offline manager.
 
 </details>
 
@@ -78,6 +78,7 @@ Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at.
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `id` | path | string | ja | – | Style id, optionally with `.json` |
+| `sources` | query | `tilejson` |  | – | `tilejson`: replace pmtiles:// sources by https TileJSON URLs |
 
 **Beispiel**
 

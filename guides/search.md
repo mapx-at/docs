@@ -13,12 +13,12 @@ Pick the endpoint by what the user does.
 | Find the address at a point | [`/v1/reverse`](/api/geocoding/) |
 | Show places of a kind (pharmacy, station) | [`/v1/searchbox/category/{category}`](/api/search-box/) |
 
-All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second.
+All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
 
 ## Geocode an address
 
 ```js
-const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&types=address&limit=3";
+const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3&access_token=YOUR_TOKEN";
 const { features } = await (await fetch(url)).json();
 const [lon, lat] = features[0].center;
 ```
@@ -28,7 +28,7 @@ Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `regi
 ## Reverse geocode
 
 ```bash
-curl -s "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].place_name'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].place_name'
 ```
 
 ## Type-ahead search
@@ -37,9 +37,9 @@ Call `suggest` on every pause in typing (debounce 200 ms), then `retrieve` once 
 
 ```js
 const token = crypto.randomUUID();
-const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}`)).json();
+const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}&access_token=YOUR_TOKEN`)).json();
 const id = s.suggestions[0].mapbox_id;
-const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}`)).json();
+const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}&access_token=YOUR_TOKEN`)).json();
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
@@ -48,8 +48,8 @@ Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_
 ## Places by category
 
 ```bash
-curl -s "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` returns all category IDs with localized names (`language=de` or `en`).
@@ -59,14 +59,14 @@ curl -s "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48
 Autofill returns split fields that map to form inputs.
 
 ```js
-const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3")).json();
+const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3&access_token=YOUR_TOKEN")).json();
 const { address_line1, postcode, place, coordinates } = a.suggestions[0];
 ```
 
 Validation checks what the user typed:
 
 ```bash
-curl -s "https://api.mapx.at/v1/address/validate?q=Hauptstr.%2012a,%203390" | jq '{status, confidence, address}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
 `status` is `match`, `corrected`, `ambiguous` (then `candidates[]`) or `not_found`. Abbreviations, umlauts and `ß` are understood. Use POST with JSON for structured input.
