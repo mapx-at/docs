@@ -20,7 +20,7 @@ Search over the official address register, streets, places, municipalities, dist
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Search text (also path form `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi |
+| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14105 Gst 102/3`, `14105/102/3`, `Landeck .102`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat; ranks equal matches by distance |
 
@@ -108,7 +108,7 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 |---|---|---|---|---|---|
 | `q` | path | string | ja | – | Search text, URL-encoded |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi |
+| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14105 Gst 102/3`, `14105/102/3`, `Landeck .102`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 
