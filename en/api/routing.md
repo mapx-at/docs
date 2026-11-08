@@ -11,7 +11,7 @@ The basis is the Austrian transport network [GIP.at](https://www.gip.at) (CC BY 
 Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }, { v: "driving-truck", d: "truck over 3.5 t" }] },
+  { name: "profile", type: "string", required: true, desc: "Mode of transport", values: [{ v: "walking", d: "on foot" }, { v: "cycling", d: "bicycle" }, { v: "cycling-mtb", d: "mountain bike" }, { v: "driving", d: "car" }, { v: "driving-traffic", d: "car with live traffic and closures" }, { v: "driving-truck", d: "truck over 3.5 t" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optional intermediate points and destination as <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Geometry format, <code>geojson</code> returns a GeoJSON line." },
   { name: "overview", type: "string", desc: "Geometry: <code>simplified</code> (default, simplified as in Mapbox), <code>full</code> (every vertex) or <code>false</code> (no geometry)." },
@@ -28,11 +28,14 @@ Equivalent: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "width", type: "number", default: "2.55", desc: "<code>driving-truck</code> only: vehicle width in metres (1 to 3.5)." },
   { name: "length", type: "number", desc: "<code>driving-truck</code> only: vehicle length in metres (2 to 40). Without it, length limits are not checked." },
   { name: "truck_type", type: "string", default: "semi", desc: "<code>driving-truck</code> only: <code>semi</code> (semi-trailer), <code>rigid</code> (no trailer) or <code>trailer</code> (truck with trailer)." },
+  { name: "cycling_surface", type: "string", default: "any", desc: "<code>cycling</code> only. <code>any</code> rates unpaved and off-road sections worse without closing them. <code>paved</code> (close them completely) is currently unavailable and returns 400." },
 ]} />
 
 Response: `code` (`Ok`) and `routes[]` with `distance` (metres), `duration` (seconds), `legs` and `geometry`.
 
-**GIP attributes in steps:** `steps[].ref` (for example `A1`, `B83`), `steps[].destinations` (real signposted destinations from GIP, far destinations first), `steps[].milestone` (`{ref, km}`, road kilometre at the start of the step, numbered roads with kilometrage only), `steps[].maxspeed` (car only), `ascent_m`/`descent_m` and, for `cycling`/`walking`, `grade_pct` (mean grade). `routes[].summary` holds `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; heights come from GIP and are smoothed over 200 m.
+**GIP attributes in steps:** `steps[].ref` (for example `A1`, `B83`), `steps[].destinations` (real signposted destinations from GIP, far destinations first), `steps[].milestone` (`{ref, km}`, road kilometre at the start of the step, numbered roads with kilometrage only), `steps[].maxspeed` (car only), `ascent_m`/`descent_m` and, for `cycling`/`walking`, `grade_pct` (mean grade). For `cycling` and `cycling-mtb` also `steps[].bike_infrastructure` (`cycleway`, `lane`, `shared` or `none`, whichever applies to most of the step) and `steps[].surface` (`paved`, `cobblestone`, `unpaved`, `offroad` or `unknown`).
+
+**Bicycle profiles:** `cycling` prefers cycle paths, cycle lanes, bicycle streets and signposted cycle routes (GIP BIKE_HIKE), rates unpaved sections and gradients worse and avoids main roads. `cycling-mtb` prefers forest tracks and singletrails and takes the GIP MTB difficulty into account. Heights inside bridges and tunnels are not taken from the terrain model. `routes[].summary` holds `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; heights come from GIP and are smoothed over 200 m.
 
 **Alternatives** come from laterally offset via points: the router computes start → via point → destination for ten points along the fastest route and keeps paths that take at most 1.4 times as long, contain no U-turn and share at most 70 percent with the main route and with each other. `routes[0]` is always the fastest route, the others follow by duration. The request costs several times a plain route against the rate limit.
 

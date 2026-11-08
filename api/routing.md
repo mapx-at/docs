@@ -11,7 +11,7 @@ Grundlage ist das österreichische Verkehrsnetz [GIP.at](https://www.gip.at) (CC
 Gleichwertig: `GET /v1/directions?profile=…&coordinates=…`.
 
 <ParamTable params={[
-  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "walking", d: "zu Fuß" }, { v: "cycling", d: "Rad" }, { v: "driving", d: "Auto" }, { v: "driving-traffic", d: "Auto mit Verkehrslage und Sperren" }] },
+  { name: "profile", type: "string", required: true, desc: "Verkehrsmittel", values: [{ v: "walking", d: "zu Fuß" }, { v: "cycling", d: "Rad" }, { v: "cycling-mtb", d: "Mountainbike" }, { v: "driving", d: "Auto" }, { v: "driving-traffic", d: "Auto mit Verkehrslage und Sperren" }] },
   { name: "coordinates", type: "string", required: true, desc: "Start, optionale Zwischenpunkte und Ziel als <code>lon,lat;lon,lat;…</code>." },
   { name: "geometries", type: "string", desc: "Format der Geometrie, <code>geojson</code> liefert eine GeoJSON-Linie." },
   { name: "overview", type: "string", desc: "Geometrie: <code>simplified</code> (Standard, vereinfacht wie bei Mapbox), <code>full</code> (alle Stützpunkte) oder <code>false</code> (keine Geometrie)." },
@@ -28,11 +28,14 @@ Gleichwertig: `GET /v1/directions?profile=…&coordinates=…`.
   { name: "width", type: "number", default: "2,55", desc: "Nur <code>driving-truck</code>: Fahrzeugbreite in Metern (1 bis 3,5)." },
   { name: "length", type: "number", desc: "Nur <code>driving-truck</code>: Fahrzeuglänge in Metern (2 bis 40). Ohne Angabe werden Längenbeschränkungen nicht geprüft." },
   { name: "truck_type", type: "string", default: "semi", desc: "Nur <code>driving-truck</code>: <code>semi</code> (Sattelzug), <code>rigid</code> (Lkw ohne Anhänger) oder <code>trailer</code> (Lkw-Zug)." },
+  { name: "cycling_surface", type: "string", default: "any", desc: "Nur <code>cycling</code>. <code>any</code> bewertet unbefestigte und Gelände-Abschnitte schlechter, ohne sie zu sperren. <code>paved</code> (ganz sperren) ist derzeit nicht verfügbar und liefert 400." },
 ]} />
 
 Antwort: `code` (`Ok`) und `routes[]` mit `distance` (Meter), `duration` (Sekunden), `legs` und `geometry`.
 
-**GIP-Attribute in den Schritten:** `steps[].ref` (zum Beispiel `A1`, `B83`), `steps[].destinations` (echte Wegweiserziele der GIP, Fernziele zuerst), `steps[].milestone` (`{ref, km}`, Straßenkilometer am Schrittbeginn, nur kilometrierte Straßen mit Nummer), `steps[].maxspeed` (nur Pkw), `ascent_m`/`descent_m` und für `cycling`/`walking` `grade_pct` (mittlere Steigung). `routes[].summary` enthält `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; Höhen stammen aus der GIP und werden über 200 m geglättet.
+**GIP-Attribute in den Schritten:** `steps[].ref` (zum Beispiel `A1`, `B83`), `steps[].destinations` (echte Wegweiserziele der GIP, Fernziele zuerst), `steps[].milestone` (`{ref, km}`, Straßenkilometer am Schrittbeginn, nur kilometrierte Straßen mit Nummer), `steps[].maxspeed` (nur Pkw), `ascent_m`/`descent_m` und für `cycling`/`walking` `grade_pct` (mittlere Steigung). Für `cycling` und `cycling-mtb` zusätzlich `steps[].bike_infrastructure` (`cycleway`, `lane`, `shared` oder `none`, was auf dem größten Teil des Schritts gilt) und `steps[].surface` (`paved`, `cobblestone`, `unpaved`, `offroad` oder `unknown`).
+
+**Radprofile:** `cycling` bevorzugt Radwege, Radfahrstreifen, Fahrradstraßen und beschilderte Radrouten (GIP BIKE_HIKE), bewertet unbefestigte Abschnitte und Steigungen schlechter und meidet Hauptstraßen. `cycling-mtb` bevorzugt Forstwege und Singletrails, die MTB-Schwierigkeit der GIP fließt ein. Die Höhen im Inneren von Brücken und Tunneln werden nicht aus dem Geländemodell übernommen. `routes[].summary` enthält `ascent_m`, `descent_m`, `max_grade_pct`, `min_elevation_m`, `max_elevation_m`; Höhen stammen aus der GIP und werden über 200 m geglättet.
 
 **Alternativen** entstehen über seitlich versetzte Zwischenpunkte: Der Router rechnet Start → Zwischenpunkt → Ziel für zehn Punkte entlang der schnellsten Route und behält Wege, die höchstens 1,4-mal so lange dauern, keine Wende enthalten und sich zu höchstens 70 Prozent mit der Hauptroute und untereinander decken. `routes[0]` ist immer die schnellste Route, die übrigen folgen nach Dauer. Die Anfrage kostet ein Mehrfaches einer einfachen Route im Rate-Limit.
 
