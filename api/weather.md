@@ -1,6 +1,6 @@
 # Weather API
 
-Current observations, hourly forecast, warnings and weather tiles (GeoSphere Austria).
+Current observations, hourly forecast, precipitation nowcast, warnings and weather tiles (GeoSphere Austria).
 
 {/* Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. */}
 
@@ -173,13 +173,20 @@ data = res.json()
 
 `GET /v1/weather/tiles/{param}.json`
 
-param: temperature, precipitation, wind, humidity, cloud, pressure. `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+param: temperature, precipitation, wind, humidity, cloud, pressure, or the air quality layers aqi (daily index), no2, o3, pm10, pm25 (near-surface, EEA limits) and dust (Saharan dust load). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
+
+<details>
+<summary>More</summary>
+
+Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+</details>
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud or pressure, with .json |
+| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25 or dust, with .json |
 
 **Example**
 
@@ -241,7 +248,7 @@ Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud, pressure |
+| `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust |
 | `time` | path | string | yes | – | now or 2026-11-07T20:00Z |
 | `z` | path | integer | yes | – | 0 to 14 |
 | `x` | path | integer | yes | – | Column |
@@ -284,6 +291,102 @@ open("result.png", "wb").write(res.content)
 |---|---|
 | `400` | A parameter is missing or invalid |
 | `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Official weather warnings (GeoSphere Austria)
+
+`GET /v1/weather/warnings`
+
+Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` carry `de` and `en`.
+
+<details>
+<summary>More</summary>
+
+Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+
+</details>
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `lon` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
+| `lat` | query | string |  | – | Latitude |
+| `bbox` | query | string |  | – | west,south,east,north in degrees (WGS84): only warnings touching the box |
+| `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat or cold |
+| `min_level` | query | string |  | – | 1 (yellow, default) to 3 (red) |
+| `active` | query | string |  | – | now: only warnings valid right now; all (default): also upcoming |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s "https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1" | jq
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1");
+const data = await res.json();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1")
+data = res.json()
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**
+
+```json
+{
+  "type": "FeatureCollection",
+  "updated": "2026-11-08T08:00Z",
+  "attribution": "Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [
+            [
+              [
+                11.39,
+                47.26
+              ],
+              [
+                11.41,
+                47.26
+              ],
+              [
+                11.41,
+                47.28
+              ],
+              [
+                11.39,
+                47.26
+              ]
+            ]
+  …
+```
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `503` | Data temporarily unavailable |
 

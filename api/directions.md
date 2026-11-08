@@ -32,7 +32,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
 | `language` | query | string |  | – | de (default) or en |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
-| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation (comma-separated): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h} \| {unknown: true}]` (driving only), elevation = mean segment height in m |
+| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h} \| {unknown: true}]` (driving only), elevation = mean segment height in m |
 | `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
