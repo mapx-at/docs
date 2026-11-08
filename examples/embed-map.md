@@ -5,7 +5,7 @@ A map with the ready-made mapx style in an HTML page.
 The shortest way to a map: MapLibre GL JS, the pmtiles protocol and the style URL. Zoom, tilt and scale are added as controls.
 
 ```js
-// Karte einbetten: der fertige Stil von mapx, ein Aufruf.
+// Embed a map: the ready-made mapx style, one call.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });

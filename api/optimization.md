@@ -79,6 +79,8 @@ data = res.json()
 | Status | Meaning |
 |---|---|
 | `400` | A parameter is missing or invalid |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `422` | Valid request that cannot be answered (for example no route) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
@@ -220,6 +222,8 @@ data = res.json()
 | Status | Meaning |
 |---|---|
 | `400` | A parameter is missing or invalid |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `405` | Method not allowed |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |

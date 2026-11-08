@@ -26,6 +26,15 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 | `param` | Offending parameter (where applicable) |
 | `allowed` | Accepted values for enumerations (where applicable) |
 
+## Authentication errors
+
+Every request needs a token ([Access and limits](/start/access-and-limits/)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Anonymous requests are still served during the transition period; they carry `X-Mapx-Token-Warning: missing-token` and will get `401` later.
+
+```bash
+# with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
+curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Melk" | head -12
+```
+
 ## Language
 
 `title` and `detail` are English by default. Send `Accept-Language: de` to get German texts; `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
@@ -39,6 +48,15 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 | [`invalid-parameter`](#invalid-parameter) | 400 | Invalid parameter |
 | [`invalid-coordinates`](#invalid-coordinates) | 400 | Invalid coordinates |
 | [`invalid-body`](#invalid-body) | 400 | Invalid request body |
+| [`missing-token`](#missing-token) | 401 | Token missing |
+| [`invalid-token`](#invalid-token) | 401 | Invalid token |
+| [`token-expired`](#token-expired) | 401 | Token expired |
+| [`token-blocked`](#token-blocked) | 403 | Token blocked |
+| [`origin-not-allowed`](#origin-not-allowed) | 403 | Origin not allowed |
+| [`origin-missing`](#origin-missing) | 403 | Origin missing |
+| [`pk-not-allowed`](#pk-not-allowed) | 403 | Public token not allowed here |
+| [`app-not-allowed`](#app-not-allowed) | 403 | App not allowed |
+| [`ip-not-allowed`](#ip-not-allowed) | 403 | IP address not allowed |
 | [`unknown-path`](#unknown-path) | 404 | Unknown path |
 | [`not-found`](#not-found) | 404 | Not found |
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
@@ -94,6 +112,78 @@ What to do: Send `lon,lat` in WGS84 degrees (longitude -180 to 180, latitude -90
 The body of a POST request is not valid JSON or not in the expected shape.
 
 What to do: Check the JSON against the schema in the OpenAPI description.
+
+### missing-token
+
+**401** · Token missing
+
+The request carries no token. Today anonymous requests are still answered during the transition period and carry the header `X-Mapx-Token-Warning`; afterwards they get this error.
+
+What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`. See [Access and limits](/start/access-and-limits/).
+
+### invalid-token
+
+**401** · Invalid token
+
+The token is malformed or unknown (also after it was deleted or rotated).
+
+What to do: Copy the token again from your account, check for a stray space or line break, and use the current token. Tokens start with `mx_pk_` or `mx_sk_`.
+
+### token-expired
+
+**401** · Token expired
+
+The token is past its expiry date.
+
+What to do: Create or rotate a token in your account.
+
+### token-blocked
+
+**403** · Token blocked
+
+The token was blocked in your account.
+
+What to do: Unblock it in your account or use another token.
+
+### origin-not-allowed
+
+**403** · Origin not allowed
+
+A public token (`mx_pk_`) was used from a website whose `Origin` (or `Referer` host) is not in the allowed origins of the token.
+
+What to do: Add the origin to the token (for development also `localhost`), or call the API from your server with a secret token.
+
+### origin-missing
+
+**403** · Origin missing
+
+A public token was used without `Origin` and without `Referer`, so the site cannot be checked.
+
+What to do: Call from a browser page, or use a secret token on a server.
+
+### pk-not-allowed
+
+**403** · Public token not allowed here
+
+A public token only allows read access (`GET`, `HEAD`) to the public products.
+
+What to do: Use a secret token (`mx_sk_`) from a server for this request.
+
+### app-not-allowed
+
+**403** · App not allowed
+
+A public token bound to an Android app was used with a package name or signing certificate that does not match.
+
+What to do: Send the headers `X-Mapx-Android-Package` and `X-Mapx-Android-Cert` of the registered app, or fix the binding in your account.
+
+### ip-not-allowed
+
+**403** · IP address not allowed
+
+The secret token is restricted to IP ranges and the request comes from another address.
+
+What to do: Add the address (CIDR) to the token or send from an allowed host.
 
 ### unknown-path
 
@@ -179,7 +269,7 @@ What to do: Change the points or the time; read `detail`.
 
 **429** · Rate limit exceeded
 
-Too many requests from your IP address in this endpoint group. See [rate limits](/api/errors/#rate-limits).
+Too many requests from your token (without a valid token: your IP address) in this endpoint group. See [rate limits](/api/errors/#rate-limits).
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
 
@@ -219,7 +309,7 @@ See also: [Errors and limits](/api/errors/) for rate limits and caching.
 
 ## Rate limits
 
-Limits per zone are listed under [Access and limits](/start/access-and-limits/). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `404` and `422` unchanged.
+Limits per token and zone are listed under [Access and limits](/start/access-and-limits/). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
 
 ## Caching
 

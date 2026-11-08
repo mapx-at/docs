@@ -5,7 +5,7 @@ Add orthophoto and contours without a ready-made style.
 One TileJSON URL per product is enough: MapLibre reads tile URL, zoom range and attribution from it. Here a custom, minimal style.
 
 ```js
-// TileJSON einbinden: Orthophoto und Höhenlinien als Quellen ohne Dateinamen und ohne Stil.
+// Use TileJSON: orthophoto and contour lines as sources, without file names and without a style.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });

@@ -5,7 +5,7 @@ Parcel boundaries over aerial imagery, a click shows the number.
 The cadastre tileset contains boundary lines from zoom 16 with parcel number and cadastral municipality. `queryRenderedFeatures` reads them at the click point.
 
 ```js
-// Kataster: Ein Klick auf eine Grundstücksgrenze zeigt Grundstücksnummer und Katastralgemeinde.
+// Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -22,7 +22,7 @@ map.on('load', () => {
 map.on('click', (e) => {
   const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
   const f = map.queryRenderedFeatures(box, { layers: ['parcel'] })[0];
-  const text = f ? `Grundstück ${f.properties.gstnr}, KG ${f.properties.kgnr}` : 'Keine Grundstücksgrenze getroffen (ab Zoom 16 sichtbar).';
+  const text = f ? `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}` : 'No parcel boundary hit (visible from zoom 16).';
   new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
 });
 ```

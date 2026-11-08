@@ -5,7 +5,7 @@ Linie klicken, Profil sehen.
 Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `samples` gleichmäßig verteilte Messpunkte samt Auf- und Abstieg liefert. Ein Canvas zeichnet das Profil.
 
 ```js
-// Höhenprofil: Linie in die Karte klicken, /v1/elevation/profile liefert die Höhen, ein Canvas zeichnet das Profil.
+// Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });

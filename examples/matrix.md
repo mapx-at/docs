@@ -24,10 +24,10 @@ document.getElementById('los').addEventListener('click', async () => {
     const koordinaten = Object.values(ORTE).map((p) => p.join(',')).join(';');
     const r = await fetch(`https://api.mapx.at/v1/matrix/driving/${koordinaten}`, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const { durations } = await r.json(); // Sekunden, null = nicht routbar
+    const { durations } = await r.json(); // seconds, null = not routable
     tabelle.innerHTML = '<tr><th></th>' + namen.map((n) => `<th>${n}</th>`).join('') + '</tr>' +
       durations.map((zeile, i) => `<tr><th>${namen[i]}</th>` + zeile.map((s) => `<td>${s == null ? '–' : Math.round(s / 60) + ' min'}</td>`).join('') + '</tr>').join('');
-  } catch (err) { tabelle.textContent = 'Fehler: ' + err.message; }
+  } catch (err) { tabelle.textContent = 'Error: ' + err.message; }
 });
 ```
 

@@ -5,7 +5,7 @@ Search for places, addresses and peaks and fly to them.
 The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit has `place_name`, `center` and usually a `bbox` for zooming. No access token needed.
 
 ```js
-// Suche: Orte, Adressen, Gipfel und Grundstücke über /v1/geocode (GeoJSON im Mapbox-Stil).
+// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -36,7 +36,7 @@ eingabe.addEventListener('input', async () => {
       });
       li.append(b); liste.append(li);
     }
-  } catch (e) { liste.textContent = 'Fehler: ' + e.message; }
+  } catch (e) { liste.textContent = 'Error: ' + e.message; }
 });
 ```
 

@@ -5,7 +5,7 @@ Zwischen Karte, Luftbild und Gelände umschalten.
 Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt.
 
 ```js
-// Basiskarte wechseln: Karte, Luftbild und Gelände sind drei fertige Stile.
+// Switch the basemap: map, aerial imagery and terrain are three ready-made styles.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -22,7 +22,7 @@ map.addControl(new maplibregl.NavigationControl());
 
 for (const knopf of document.querySelectorAll('[data-stil]')) {
   knopf.addEventListener('click', () => {
-    map.setStyle(STILE[knopf.dataset.stil]); // Position und Zoom bleiben erhalten
+    map.setStyle(STILE[knopf.dataset.stil]); // position and zoom are kept
     for (const k of document.querySelectorAll('[data-stil]')) k.setAttribute('aria-pressed', String(k === knopf));
   });
 }

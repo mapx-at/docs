@@ -21,7 +21,7 @@ function tile(lon, lat, z) {
 tile(12.694, 47.074, 12);   // { z: 12, x: 2192, y: 1439 }
 ```
 
-A tile is served by `https://tiles.mapx.at/v1/{tileset}/{z}/{x}/{y}.{ext}`, see [Tiles](/api/tiles/).
+A tile is served by `https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`, see [Tiles](/api/tiles/).
 
 ## 512-pixel tiles
 

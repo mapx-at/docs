@@ -79,6 +79,8 @@ data = res.json()
 | Status | Bedeutung |
 |---|---|
 | `400` | Parameter fehlt oder ist ungültig |
+| `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `422` | Anfrage gültig, aber nicht beantwortbar (z. B. keine Route) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
@@ -220,6 +222,8 @@ data = res.json()
 | Status | Bedeutung |
 |---|---|
 | `400` | Parameter fehlt oder ist ungültig |
+| `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `405` | Methode nicht erlaubt |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |

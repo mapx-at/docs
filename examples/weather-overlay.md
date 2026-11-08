@@ -5,7 +5,7 @@ Temperature, precipitation or wind as an overlay on the map, hour chosen with a 
 The TileJSON `/v1/weather/tiles/{parameter}.json` lists the available hours under `mapx:time.times`. Each hour is its own tile source, loaded as a raster layer.
 
 ```js
-// Wetter-Overlay: Temperatur (oder Niederschlag, Wind ...) als Rasterkacheln über der Karte, Stunde wählbar.
+// Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -21,7 +21,7 @@ let times = [];
 async function laden() {
   const param = document.getElementById('param').value; // temperature, precipitation, wind ...
   const tj = await (await fetch(`${API}/weather/tiles/${param}.json`, AUTH)).json();
-  times = tj['mapx:time'].times; // verfügbare Stunden (UTC)
+  times = tj['mapx:time'].times; // available hours (UTC)
   const slider = document.getElementById('stunde');
   slider.max = times.length - 1;
   zeigen(param, Number(slider.value));

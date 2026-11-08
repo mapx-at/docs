@@ -5,7 +5,7 @@ Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animatio
 Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`.
 
 ```js
-// Niederschlagsradar: Nowcast-Kacheln (15-Minuten-Schritte, 3 Stunden) als Animation über der Karte.
+// Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -22,7 +22,7 @@ function zeigen(i) {
   const t = times[i];
   document.getElementById('zeit').value = i;
   document.getElementById('info').textContent = `Radar-Nowcast ${t} (UTC), Quelle: GeoSphere Austria, CC BY 4.0`;
-  // ein Layer je Zeitschritt, nur der gewählte ist sichtbar: so sind die Kacheln beim Abspielen schon geladen
+  // one layer per time step, only the selected one is visible: tiles are already loaded when playing
   times.forEach((_, k) => map.setLayoutProperty('radar-' + k, 'visibility', k === i ? 'visible' : 'none'));
 }
 

@@ -5,7 +5,7 @@ Start und Ziel klicken, Weg samt Länge und Dauer erhalten.
 Die Routing-API arbeitet auf dem GIP.at-Netz für Fuß, Rad, Mountainbike und Auto. Die Antwort hat die Mapbox-Form `routes[0]` mit `geometry` (GeoJSON-Linie), `distance` in Metern und `duration` in Sekunden.
 
 ```js
-// Route: Start und Ziel in die Karte klicken, die Directions-API liefert eine GeoJSON-Linie.
+// Route: click start and destination on the map, the Directions API returns a GeoJSON line.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -26,16 +26,16 @@ map.on('click', async (e) => {
   const p = [e.lngLat.lng, e.lngLat.lat];
   if (!a) { a = p; markerA = new maplibregl.Marker({ color: '#1d7f4e' }).setLngLat(p).addTo(map); return; }
   b = p; markerB = new maplibregl.Marker({ color: '#c8372d' }).setLngLat(p).addTo(map);
-  const profil = document.getElementById('profil').value; // walking, cycling, cycling-mtb oder driving
+  const profil = document.getElementById('profil').value; // walking, cycling, cycling-mtb or driving
   const url = `https://api.mapx.at/v1/directions/${profil}/${a.join(',')};${b.join(',')}?geometries=geojson&overview=full`;
   const info = document.getElementById('info');
   try {
     const r = await fetch(url, AUTH);
-    if (!r.ok) throw new Error('keine Route (HTTP ' + r.status + ')');
-    const route = (await r.json()).routes[0]; // Mapbox-Form: routes[0].geometry ist eine GeoJSON-Linie
+    if (!r.ok) throw new Error('no route (HTTP ' + r.status + ')');
+    const route = (await r.json()).routes[0]; // Mapbox shape: routes[0].geometry is a GeoJSON line
     map.getSource('route').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
     info.textContent = `${(route.distance / 1000).toFixed(2)} km, ${Math.round(route.duration / 60)} min`;
-  } catch (err) { info.textContent = 'Fehler: ' + err.message; }
+  } catch (err) { info.textContent = 'Error: ' + err.message; }
 });
 ```
 

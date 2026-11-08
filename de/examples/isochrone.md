@@ -5,7 +5,7 @@ Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPolygon, die größte Fläche zuerst.
 
 ```js
-// Isochronen: Flächen, die man in 5, 10 und 15 Minuten erreicht.
+// Isochrones: areas reachable in 5, 10 and 15 minutes.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -25,13 +25,13 @@ map.on('load', () => {
 map.on('click', (e) => abfragen([e.lngLat.lng, e.lngLat.lat]));
 
 async function abfragen(ort) {
-  const profil = document.getElementById('profil').value; // walking, cycling oder driving
+  const profil = document.getElementById('profil').value; // walking, cycling or driving
   const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
     const r = await fetch(url, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    map.getSource('iso').setData(await r.json()); // MultiPolygon je Stufe, größte zuerst
-  } catch (err) { document.getElementById('info').textContent = 'Fehler: ' + err.message; }
+    map.getSource('iso').setData(await r.json()); // one MultiPolygon per step, largest first
+  } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
 }
 ```
 

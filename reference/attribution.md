@@ -12,7 +12,7 @@ All mapx data is licensed under [CC BY 4.0](https://creativecommons.org/licenses
 MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right, "i" icon). You add nothing as long as you do not hide it. If you set `attributionControl: false` or use `tiles: [...]` without TileJSON, add the text yourself:
 
 ```js
-{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp"], tileSize: 512,
+{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
   maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
 ```
 

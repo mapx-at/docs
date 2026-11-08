@@ -17,7 +17,7 @@ A request using an old name returns the same response as with the new name, plus
 | `Link: <https://api.mapx.at/v1/styles/streets>; rel="successor-version"` | The same resource under the new name. |
 
 ```bash
-curl -sI https://api.mapx.at/v1/styles/karte | grep -iE '^(deprecation|sunset|link)'
+curl -sI -H "Authorization: Bearer YOUR_TOKEN" https://api.mapx.at/v1/styles/karte | grep -iE '^(deprecation|sunset|link)'
 ```
 
 The headers appear on styles (`/v1/styles/{id}` including sprites and static tiles), static images (`/v1/static/{style}/…`), tiles, TileJSON, tilequery, and on the Search Box when old category IDs are used. Responses with old field names (parcel, elevation) contain both names side by side; the old ones are marked deprecated in the [OpenAPI](https://api.mapx.at/v1/openapi.json).

@@ -5,7 +5,7 @@ Den Standardstil in vier Lichtstimmungen.
 Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dunkle Oberfläche genügt die Nacht-Variante.
 
 ```js
-// Tageszeit und Nachtmodus: die Standard-Stile gibt es für vier Lichtstimmungen.
+// Time of day and night mode: the standard styles come in four lighting moods.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });

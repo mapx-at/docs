@@ -75,6 +75,8 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
 ## TileJSON 3.0.0
@@ -142,6 +144,8 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
@@ -198,6 +202,8 @@ open("result.png", "wb").write(res.content)
 |---|---|
 | `304` | Not modified (with `If-None-Match`) |
 | `400` | A parameter is missing or invalid |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
