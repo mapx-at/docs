@@ -47,7 +47,7 @@ Or add `new mapx.DeparturesPopup(map)` to a map. See [Transit departures](/guide
 
 ## Embed a map in the municipal website
 
-A map needs one HTML file, MapLibre and the style URL, no key and no build ([Embed a map](/examples/embed-map/)). Host the page with your content management system, or embed the file as `<iframe>`:
+A map needs one HTML file, MapLibre and the style URL, a free token and no build ([Embed a map](/examples/embed-map/)). Host the page with your content management system, or embed the file as `<iframe>`:
 
 ```html
 <iframe src="/karte.html" title="Map of our municipality" style="width:100%;height:480px;border:0" loading="lazy"></iframe>

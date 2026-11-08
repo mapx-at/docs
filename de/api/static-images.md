@@ -35,14 +35,14 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400" -o result.png
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400");
+const res = await fetch("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -51,7 +51,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400")
+res = requests.get("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/600x400", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
@@ -98,14 +98,14 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400" -o result.png
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400");
+const res = await fetch("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -114,7 +114,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400")
+res = requests.get("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725,48.2085)/16.3725,48.2085,14/600x400", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 

@@ -1,14 +1,14 @@
 # FAQ
 
-Short answers on keys, licence, freshness, offline use and common errors.
+Short answers on tokens, licence, freshness, offline use and common errors.
 
-## Do I need a key or an account?
+## Do I need a token or an account?
 
-No. All APIs and tiles are public and CORS is open. See [Access and limits](/start/access-and-limits/).
+Yes, a free account and API token. Register at [account.mapx.at](https://account.mapx.at/), create a token and send it as `Authorization: Bearer` or `access_token`. CORS is open. See [Access and limits](/start/access-and-limits/).
 
 ## What does it cost?
 
-Nothing. Rate limits apply per IP address and zone.
+Nothing. Rate limits apply per token and zone.
 
 ## May I use it commercially?
 

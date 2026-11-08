@@ -1,10 +1,10 @@
 # mapx Docs
 
-> Maps and location APIs for Austria from official open data (CC BY 4.0). No key, open CORS. Every page is also available as Markdown (append .md to the path, for example /guides/maps.md). German pages live under /de/.
+> Maps and location APIs for Austria from official open data (CC BY 4.0). Free API token (account.mapx.at), open CORS. Every page is also available as Markdown (append .md to the path, for example /guides/maps.md). German pages live under /de/.
 
 ## Get started
 - [What is mapx](https://docs.mapx.at/start/what-is-mapx/)
-- [Access and limits](https://docs.mapx.at/start/access-and-limits/): no key, rate-limit zones, attribution
+- [Access and limits](https://docs.mapx.at/start/access-and-limits/): free API token, public and secret tokens, rate-limit zones, attribution
 - [First map in 5 minutes](https://docs.mapx.at/start/first-map/)
 - [First search](https://docs.mapx.at/start/first-search/)
 - [First route](https://docs.mapx.at/start/first-route/)

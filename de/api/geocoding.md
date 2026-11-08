@@ -37,14 +37,14 @@ Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address");
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -53,7 +53,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address")
+res = requests.get("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -125,14 +125,14 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3");
+const res = await fetch("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -141,7 +141,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3")
+res = requests.get("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -213,14 +213,14 @@ Nearest features around a point, nearest first. Use `types` to restrict (e.g. `a
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address");
+const res = await fetch("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -229,7 +229,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address")
+res = requests.get("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -316,6 +316,7 @@ At most 512 KB.
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/geocode/batch" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '[{"q":"Herrengasse 13 Wien","types":"address","limit":1},{"street":"Hauptplatz","housenumber":"3","postcode":"3390"}]' | jq
 ```
@@ -326,7 +327,7 @@ curl -s -X POST "https://api.mapx.at/v1/geocode/batch" \
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode/batch", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify([
     {
       "q": "Herrengasse 13 Wien",
@@ -348,7 +349,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.post("https://api.mapx.at/v1/geocode/batch", json=[
+res = requests.post("https://api.mapx.at/v1/geocode/batch", headers={"Authorization": "Bearer YOUR_TOKEN"}, json=[
     {
       "q": "Herrengasse 13 Wien",
       "types": "address",

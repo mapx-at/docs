@@ -316,6 +316,21 @@ Search Box, Schritt 1: Vorschläge während der Eingabe. Dasselbe `sessionToken`
 
 `Promise`\<[`Suggestion`](/reference/sdk/interfaces/suggestion/)[]\>
 
+### setAccessToken()
+
+> **setAccessToken**: (`token`) => `void`
+
+Zugriffstoken setzen (`mx_pk_…` im Browser, auf account.mapx.at erzeugt). Alle API-Anfragen senden ihn als `Authorization: Bearer`,
+Karten (Style, Kacheln, Schriften, Sprites) als `access_token`-Query, Static-Image-URLs ebenfalls. Er geht nur an `mapx.at`-Hosts.
+
+#### Parameters
+
+• **token**: `undefined` \| `null` \| `string`
+
+#### Returns
+
+`void`
+
 ### setApiBase()
 
 > **setApiBase**: (`url`) => `void`
@@ -352,7 +367,7 @@ Basis-URL der API ändern (z. B. Staging).
 
 > **staticImageUrl**: (`o`) => `string`
 
-URL eines Static Image (für `<img src>`, E-Mail, Exposé). Kein Request, nur Zeichenketten.
+URL eines Static Image (für `<img src>`, E-Mail, Exposé). Kein Request, nur Zeichenketten. Mit gesetztem Token enthält sie `access_token` (öffentlicher `mx_pk_`-Token, an Origins gebunden).
 
 #### Parameters
 
@@ -434,6 +449,24 @@ Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
 
 `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](/reference/sdk/interfaces/incident/)\>\>
 
+### transformRequest()
+
+> **transformRequest**: (`url`) => `object`
+
+`transformRequest` für MapLibre: hängt den Token an mapx.at-Anfragen. Verträgt eigene Funktionen über `createMap({ transformRequest })`.
+
+#### Parameters
+
+• **url**: `string`
+
+#### Returns
+
+`object`
+
+##### url
+
+> **url**: `string`
+
 ### transitDirections()
 
 > **transitDirections**: (`from`, `to`, `o`) => `Promise`\<`any`\>
@@ -495,3 +528,20 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 ##### reference\_time
 
 > **reference\_time**: `string`
+
+### withToken()
+
+> **withToken**: (`u`, `token`) => `string`
+
+URL mit `access_token` versehen, wenn ein Token gesetzt ist, die URL zu mapx.at gehört und noch keinen Token trägt.
+Bei `pmtiles://…/{z}/{x}/{y}` kommt er vor den Kachelpfad, bei Archiv-URLs ans Ende.
+
+#### Parameters
+
+• **u**: `string`
+
+• **token**: `string` = `API.token`
+
+#### Returns
+
+`string`

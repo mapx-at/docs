@@ -1,1 +1,0 @@
-maplibregl.addProtocol(`pmtiles`,new pmtiles.Protocol().tile);var e=new maplibregl.Map({container:`map`,style:`https://api.mapx.at/v1/styles/streets`,center:[13.04,47.8],zoom:12});e.addControl(new maplibregl.NavigationControl),e.addControl(new maplibregl.ScaleControl);

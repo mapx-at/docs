@@ -6,10 +6,15 @@ Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte u
 
 ```js
 // Niederschlagsradar: Nowcast-Kacheln (15-Minuten-Schritte, 3 Stunden) als Animation über der Karte.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const API = 'https://api.mapx.at/v1';
-const map = new maplibregl.Map({ container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
 let times = [], timer = null;
 
@@ -29,7 +34,7 @@ function abspielen() {
 }
 
 map.on('load', async () => {
-  const tj = await (await fetch(`${API}/weather/tiles/rr_nowcast.json`)).json();
+  const tj = await (await fetch(`${API}/weather/tiles/rr_nowcast.json`, AUTH)).json();
   times = tj['mapx:time'].times; // 15-Minuten-Schritte (UTC)
   document.getElementById('zeit').max = times.length - 1;
   times.forEach((t, k) => {

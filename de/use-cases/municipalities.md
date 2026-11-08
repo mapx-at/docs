@@ -47,7 +47,7 @@ Oder `new mapx.DeparturesPopup(map)` an eine Karte hängen. Siehe [ÖV-Abfahrten
 
 ## Karte in die Gemeinde-Website einbetten
 
-Eine Karte braucht eine HTML-Datei, MapLibre und die Style-URL, keinen Schlüssel und keinen Build ([Karte einbetten](/de/examples/embed-map/)). Die Seite im Content-Management-System ablegen oder die Datei als `<iframe>` einbinden:
+Eine Karte braucht eine HTML-Datei, MapLibre und die Style-URL, einen kostenlosen Token und keinen Build ([Karte einbetten](/de/examples/embed-map/)). Die Seite im Content-Management-System ablegen oder die Datei als `<iframe>` einbinden:
 
 ```html
 <iframe src="/karte.html" title="Karte unserer Gemeinde" style="width:100%;height:480px;border:0" loading="lazy"></iframe>

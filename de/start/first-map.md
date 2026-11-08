@@ -2,7 +2,7 @@
 
 Eine vollständige HTML-Datei mit mapx-Karte. Kopieren, speichern, öffnen.
 
-Den Code als `index.html` speichern und im Browser öffnen. Kein Key, kein Build-Schritt.
+Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](/de/start/access-and-limits/) ersetzen (erlaubter Origin: deine Seite, beim Testen `localhost`). Kein Build-Schritt.
 
 <Tabs syncKey="client">
 <TabItem label="MapLibre GL JS">
@@ -20,9 +20,12 @@ Den Code als `index.html` speichern und im Browser öffnen. Kein Key, kein Build
 <body>
   <div id="map"></div>
   <script>
+    const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
     new maplibregl.Map({
       container: "map",
       style: "https://api.mapx.at/v1/styles/streets",
+      // hängt den Token an jede Anfrage an mapx.at (Style, Tiles, Schriften, Sprites)
+      transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
       center: [16.3725, 48.2085], // Wien, lon,lat
       zoom: 13,
     });
@@ -50,7 +53,7 @@ Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `ma
   <div id="map"></div>
   <script type="module">
     import mapx from "./mapx-gl.bundle.js";
-    const map = mapx.map({ container: "map", style: "streets", center: [16.3725, 48.2085], zoom: 13 });
+    const map = mapx.map({ accessToken: "DEIN_TOKEN", container: "map", style: "streets", center: [16.3725, 48.2085], zoom: 13 });
     map.addControl(new mapx.SearchControl(), "top-left");
     map.addControl(new mapx.StyleSwitcherControl(), "top-right");
   </script>

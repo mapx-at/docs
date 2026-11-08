@@ -4,7 +4,7 @@ Höhenprofil für einen Weg über die Höhen-API abfragen und als SVG-Diagramm z
 
 **Ziel:** Für eine Wegstrecke ein Höhenprofil (Entfernung gegen Höhe) abfragen und als Diagramm darstellen.
 
-**Voraussetzungen:** ein Browser. Kein Schlüssel, kein Framework, keine Bibliothek.
+**Voraussetzungen:** ein Browser. Ein kostenloser Token, kein Framework, keine Bibliothek.
 
 Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
 

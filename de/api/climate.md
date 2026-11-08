@@ -34,14 +34,14 @@ Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow");
+const res = await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -50,7 +50,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow")
+res = requests.get("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

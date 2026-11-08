@@ -39,14 +39,14 @@ Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3");
+const res = await fetch("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -55,7 +55,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3")
+res = requests.get("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -125,14 +125,14 @@ Buildings return the building parcel (`parcel_number` starts with a dot). Parcel
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272");
+const res = await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -141,7 +141,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/parcel/15.3294,48.2272")
+res = requests.get("https://api.mapx.at/v1/parcel/15.3294,48.2272", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -216,14 +216,14 @@ The ID comes from `properties.parcel_id` of parcel search results and `/v1/parce
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/parcels/14143-288_4" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14143-288_4" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/parcels/14143-288_4");
+const res = await fetch("https://api.mapx.at/v1/parcels/14143-288_4", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -232,7 +232,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/parcels/14143-288_4")
+res = requests.get("https://api.mapx.at/v1/parcels/14143-288_4", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

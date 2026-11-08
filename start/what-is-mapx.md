@@ -2,7 +2,7 @@
 
 Maps and location APIs for Austria, built only on official open data.
 
-mapx is a set of maps and location APIs for Austria. All data comes from official open sources (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others), so there is no usage-based pricing, no account and no key.
+mapx is a set of maps and location APIs for Austria. All data comes from official open sources (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others), so there is no usage-based pricing. A free account and API token are required ([Access and limits](/start/access-and-limits/)).
 
 | Product | What you get | Start |
 |---|---|---|

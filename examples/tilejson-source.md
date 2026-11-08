@@ -6,7 +6,12 @@ One TileJSON URL per product is enough: MapLibre reads tile URL, zoom range and 
 
 ```js
 // TileJSON einbinden: Orthophoto und Höhenlinien als Quellen ohne Dateinamen und ohne Stil.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+
 const map = new maplibregl.Map({
+  transformRequest,
   container: 'map', center: [11.4, 47.27], zoom: 12.5, // Innsbruck
   style: {
     version: 8,

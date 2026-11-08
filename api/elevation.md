@@ -29,14 +29,14 @@ Either `points` (up to 512 points) or `path` (polyline on the sphere, split even
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm");
+const res = await fetch("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -45,7 +45,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm")
+res = requests.get("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -103,14 +103,14 @@ One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavaila
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/elevation/12.694,47.074" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/12.694,47.074" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/elevation/12.694,47.074");
+const res = await fetch("https://api.mapx.at/v1/elevation/12.694,47.074", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -119,7 +119,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/elevation/12.694,47.074")
+res = requests.get("https://api.mapx.at/v1/elevation/12.694,47.074", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -174,14 +174,14 @@ One GeoJSON line with z coordinate; properties: `distances`, `elevations`, `asce
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20");
+const res = await fetch("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -190,7 +190,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20")
+res = requests.get("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

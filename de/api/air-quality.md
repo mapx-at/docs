@@ -34,14 +34,14 @@ Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6");
+const res = await fetch("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -50,7 +50,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6")
+res = requests.get("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

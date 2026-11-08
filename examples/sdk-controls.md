@@ -8,7 +8,9 @@ Five controls of the [SDK `mapx-gl`](/guides/sdk/) give a complete map tool. `Ro
 // mapx-gl SDK: route planner (car, truck, bike, tolls, truck size), layer switcher from the style, search in a few lines.
 import mapx from "mapx-gl-sdk";
 
-const map = mapx.map({ container: "map", style: "streets", center: [15.33, 48.23], zoom: 11 });
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+
+const map = mapx.map({ accessToken: TOKEN, container: "map", style: "streets", center: [15.33, 48.23], zoom: 11 });
 map.addControl(new mapx.SearchControl(), "top-left");
 map.addControl(new mapx.RouteControl({ profile: "driving-truck" }), "top-right");
 map.addControl(new mapx.LayerControl({ groups: ["buildings", "parcels", "relief", "bike_routes"] }), "top-right");

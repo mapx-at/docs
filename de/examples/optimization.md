@@ -6,10 +6,16 @@ Die Optimization-API ordnet Stopps für ein oder mehrere Fahrzeuge, mit Servicez
 
 ```js
 // Tour planning: click stops (up to 9), the optimization API finds the shortest order from the depot and back.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+// Note: POST needs a secret token (mx_sk_…), public tokens are read-only. Run this call from your server, not from a web page.
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const depot = [15.3294, 48.2272]; // Melk
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: depot, zoom: 9 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: depot, zoom: 9 });
 map.addControl(new maplibregl.NavigationControl());
 const stops = [], markers = [];
 let timer;
@@ -35,12 +41,12 @@ document.getElementById('reset').addEventListener('click', () => {
 async function plan() {
   const body = { vehicles: [{ id: 1, start: depot, end: depot }], services: stops.map((location, i) => ({ id: i + 1, location, service: 300 })) };
   try {
-    let res = await fetch('https://api.mapx.at/v1/optimization', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    let res = await fetch('https://api.mapx.at/v1/optimization', { method: 'POST', headers: { ...AUTH.headers, 'content-type': 'application/json' }, body: JSON.stringify(body) });
     if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
     const tour = (await res.json()).routes[0];
     const order = tour.steps.map((s) => s.location);
     // The tour only lists the order; draw the roads with one directions request through all stops.
-    res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`);
+    res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`, AUTH);
     const route = (await res.json()).routes[0];
     map.getSource('tour').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
     document.getElementById('info').textContent = `Order: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min driving`;

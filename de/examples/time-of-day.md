@@ -6,11 +6,15 @@ Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dun
 
 ```js
 // Tageszeit und Nachtmodus: die Standard-Stile gibt es für vier Lichtstimmungen.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
 const stil = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}`;
-const map = new maplibregl.Map({ container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
 map.addControl(new maplibregl.NavigationControl());
 
 for (const knopf of document.querySelectorAll('[data-licht]')) {

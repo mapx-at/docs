@@ -1,14 +1,14 @@
 # FAQ
 
-Kurze Antworten zu Keys, Lizenz, Aktualität, Offline-Nutzung und häufigen Fehlern.
+Kurze Antworten zu Tokens, Lizenz, Aktualität, Offline-Nutzung und häufigen Fehlern.
 
-## Brauche ich einen Key oder ein Konto?
+## Brauche ich einen Token oder ein Konto?
 
-Nein. Alle APIs und Tiles sind öffentlich, CORS ist offen. Siehe [Zugang und Limits](/de/start/access-and-limits/).
+Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) registrieren, Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](/de/start/access-and-limits/).
 
 ## Was kostet es?
 
-Nichts. Rate Limits gelten pro IP-Adresse und Zone.
+Nichts. Rate Limits gelten pro Token und Zone.
 
 ## Ist kommerzielle Nutzung erlaubt?
 

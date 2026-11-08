@@ -2,7 +2,7 @@
 
 Twenty-six runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 
-Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (4.7.1) with pmtiles (3.2.1), no key and no build. Filter by product:
+Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (4.7.1) with pmtiles (3.2.1), a free token and no build. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product:
 
 <Galerie />
 

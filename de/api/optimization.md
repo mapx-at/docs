@@ -41,14 +41,14 @@ Expensive: zone `heavy`.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true");
+const res = await fetch("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -57,7 +57,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true")
+res = requests.get("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -109,6 +109,7 @@ Times in seconds. Expensive: zone `heavy`.
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/optimization" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"vehicles":[{"id":1,"start":[16.3725,48.2083],"end":[16.3725,48.2083]}],"services":[{"id":1,"location":[15.6256,48.2049],"service":300},{"id":2,"location":[14.2858,48.3069],"service":300}]}' | jq
 ```
@@ -119,7 +120,7 @@ curl -s -X POST "https://api.mapx.at/v1/optimization" \
 ```js
 const res = await fetch("https://api.mapx.at/v1/optimization", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify({
     "vehicles": [
       {
@@ -162,7 +163,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.post("https://api.mapx.at/v1/optimization", json={
+res = requests.post("https://api.mapx.at/v1/optimization", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
     "vehicles": [
       {
         "id": 1,

@@ -6,6 +6,10 @@ Eigene Daten liegen als GeoJSON-Quelle über dem mapx-Stil. Ein Filter auf den G
 
 ```js
 // Own data: add a GeoJSON layer (points, line, area) on top of the mapx style and show a popup on click.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const data = {
@@ -17,7 +21,7 @@ const data = {
     { type: 'Feature', properties: { name: 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
   ],
 };
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {

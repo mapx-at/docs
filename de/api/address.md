@@ -29,14 +29,14 @@ Official address register only (BEV). Completes street, house number, postcode a
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3");
+const res = await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -45,7 +45,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3")
+res = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -102,14 +102,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/autofill/retrieve/address-7065749" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/address-7065749" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/address-7065749");
+const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/address-7065749", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -118,7 +118,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/autofill/retrieve/address-7065749")
+res = requests.get("https://api.mapx.at/v1/autofill/retrieve/address-7065749", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -185,14 +185,14 @@ Checks an address against the official register. `status`: match | corrected | a
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien");
+const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -201,7 +201,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien")
+res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -265,6 +265,7 @@ Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `p
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/address/validate" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"street":"Hauptstr.","housenumber":"12a","postcode":"3390"}' | jq
 ```
@@ -275,7 +276,7 @@ curl -s -X POST "https://api.mapx.at/v1/address/validate" \
 ```js
 const res = await fetch("https://api.mapx.at/v1/address/validate", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify({
     "street": "Hauptstr.",
     "housenumber": "12a",
@@ -290,7 +291,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.post("https://api.mapx.at/v1/address/validate", json={
+res = requests.post("https://api.mapx.at/v1/address/validate", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
     "street": "Hauptstr.",
     "housenumber": "12a",
     "postcode": "3390"

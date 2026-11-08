@@ -4,7 +4,7 @@ Query an elevation profile for a route through the elevation API and draw it as 
 
 **Goal:** Query an elevation profile (distance against elevation) for a route and draw it as a chart.
 
-**Prerequisites:** a browser. No key, no framework, no library.
+**Prerequisites:** a browser. A free token, no framework, no library.
 
 With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint returns elevation values spaced evenly by length along the line.
 

@@ -2,7 +2,7 @@
 
 In wenigen Minuten von null zu einer funktionierenden Karte, Suche und Route.
 
-mapx braucht kein Konto und keinen Key. Eine Seite wählen und den Code kopieren.
+mapx braucht ein kostenloses Konto und einen API-Token ([in einer Minute holen](/de/start/access-and-limits/)). Eine Seite wählen und den Code kopieren. Die Codebeispiele verwenden `DEIN_TOKEN` als Platzhalter.
 
               
 ## Nächste Schritte

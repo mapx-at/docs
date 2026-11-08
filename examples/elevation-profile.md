@@ -6,9 +6,14 @@ The vertices go to `/v1/elevation/profile` as `coordinates`; it returns `samples
 
 ```js
 // Höhenprofil: Linie in die Karte klicken, /v1/elevation/profile liefert die Höhen, ein Canvas zeichnet das Profil.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
 let punkte = [[12.67, 47.065], [12.71, 47.09]];
 
@@ -26,7 +31,7 @@ async function zeichne() {
   g.clearRect(0, 0, canvas.width, canvas.height);
   if (punkte.length < 2) { document.getElementById('info').textContent = 'Mindestens zwei Punkte setzen.'; return; }
   const pfad = punkte.map((p) => p.map((v) => v.toFixed(5)).join(',')).join(';');
-  const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`);
+  const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`, AUTH);
   const { distances, elevations } = (await antwort.json()).properties;
   const pts = distances.map((d, i) => ({ d, h: elevations[i] })).filter((p) => p.h != null);
   const dMax = pts.at(-1).d, hMin = Math.min(...pts.map((p) => p.h)), hMax = Math.max(...pts.map((p) => p.h));

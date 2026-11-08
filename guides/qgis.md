@@ -2,7 +2,7 @@
 
 Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
 
-**Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download and without a key.
+**Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download, with a free token (append `?access_token=YOUR_TOKEN` to the layer URLs).
 
 **Prerequisites:** QGIS 3.x (3.32 or newer for direct PMTiles).
 

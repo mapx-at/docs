@@ -2,7 +2,7 @@
 
 Alle mapx-APIs: Endpunkte, Parameter, Beispiele und ein Live-Playground, generiert aus der OpenAPI-Beschreibung.
 
-Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen keinen Key. Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert und passen immer zum laufenden Dienst. Jede Seite hat einen Playground, der die Live-API aufruft.
+Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen API-Token ([Zugang und Limits](/de/start/access-and-limits/)). Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert und passen immer zum laufenden Dienst. Jede Seite hat einen Playground, der die Live-API aufruft.
 
 ## Konventionen
 

@@ -32,14 +32,14 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3");
+const res = await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -48,7 +48,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3")
+res = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -102,14 +102,14 @@ FeatureCollection with one feature (point, bbox, coordinates, context); 404 for 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/searchbox/retrieve/place-6456531" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/place-6456531" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/place-6456531");
+const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -118,7 +118,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/place-6456531")
+res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -177,14 +177,14 @@ Places of the category (several comma-separated), nearest first with `proximity`
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3");
+const res = await fetch("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -193,7 +193,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3")
+res = requests.get("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -249,14 +249,14 @@ Stable category ids (`canonical_id`), name and Maki icon.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/list/category?language=en");
+const res = await fetch("https://api.mapx.at/v1/searchbox/list/category?language=en", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -265,7 +265,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/searchbox/list/category?language=en")
+res = requests.get("https://api.mapx.at/v1/searchbox/list/category?language=en", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

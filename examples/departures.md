@@ -8,7 +8,9 @@ Click near a stop, see the next departures.
 // Departures: click near a stop to see the next departures. Uses the DeparturesPopup of the mapx-gl SDK.
 import mapx from "mapx-gl-sdk";
 
-const map = mapx.map({ container: "map", style: "streets", center: [16.3725, 48.2085], zoom: 15.5 });
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+
+const map = mapx.map({ accessToken: TOKEN, container: "map", style: "streets", center: [16.3725, 48.2085], zoom: 15.5 });
 new mapx.DeparturesPopup(map, { limit: 8, radius: 150 });
 
 // Show the stops of the visible area as dots.

@@ -6,16 +6,21 @@ Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden
 
 ```js
 // Wetter-Overlay: Temperatur (oder Niederschlag, Wind ...) als Rasterkacheln über der Karte, Stunde wählbar.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const API = 'https://api.mapx.at/v1';
-const map = new maplibregl.Map({ container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
 let times = [];
 
 async function laden() {
   const param = document.getElementById('param').value; // temperature, precipitation, wind ...
-  const tj = await (await fetch(`${API}/weather/tiles/${param}.json`)).json();
+  const tj = await (await fetch(`${API}/weather/tiles/${param}.json`, AUTH)).json();
   times = tj['mapx:time'].times; // verfügbare Stunden (UTC)
   const slider = document.getElementById('stunde');
   slider.max = times.length - 1;

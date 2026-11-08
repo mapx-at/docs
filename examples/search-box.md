@@ -6,9 +6,14 @@ Search Box works in two steps: `suggest` returns suggestions while the user type
 
 ```js
 // Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
 const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
 let marker, token = crypto.randomUUID();
@@ -19,7 +24,7 @@ input.addEventListener('input', async () => {
   const c = map.getCenter();
   const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${c.lng},${c.lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     for (const s of (await res.json()).suggestions) {
       const li = document.createElement('li'), b = document.createElement('button');
@@ -31,7 +36,7 @@ input.addEventListener('input', async () => {
 });
 
 async function pick(id) {
-  const res = await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${encodeURIComponent(id)}?session_token=${token}`);
+  const res = await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${encodeURIComponent(id)}?session_token=${token}`, AUTH);
   const f = (await res.json()).features[0];
   marker?.remove();
   marker = new maplibregl.Marker().setLngLat(f.geometry.coordinates).addTo(map);

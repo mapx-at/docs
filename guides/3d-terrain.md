@@ -1,10 +1,10 @@
 # 3D terrain with orthophoto
 
-A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and no key.
+A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.
 
 **Goal:** A map where the orthophoto is draped over real terrain, shaded for depth and tiltable in the browser.
 
-**Prerequisites:** a browser and any static web server (for example `npx serve`). No account, no key.
+**Prerequisites:** a browser and any static web server (for example `npx serve`). A free API token ([Access and limits](/start/access-and-limits/)).
 
 This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`) and the [orthophoto](/tilesets/orthophoto/) (imagery, type `raster`). Both tilesets are added via [TileJSON](/api/tiles/), so you never need a file name.
 

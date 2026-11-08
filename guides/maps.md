@@ -4,7 +4,7 @@ Show a mapx map, switch styles, add tilesets and overlays.
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
-**Before you start:** a page with MapLibre GL JS, see [First map](/start/first-map/). No key is needed.
+**Before you start:** a page with MapLibre GL JS, see [First map](/start/first-map/). You need a free token ([Access and limits](/start/access-and-limits/)); the snippets show `YOUR_TOKEN` only where it matters, see there how to send it.
 
 ## Use a style
 

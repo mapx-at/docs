@@ -20,14 +20,14 @@ Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/styles" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/styles");
+const res = await fetch("https://api.mapx.at/v1/styles", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -36,7 +36,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/styles")
+res = requests.get("https://api.mapx.at/v1/styles", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -85,14 +85,14 @@ Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/styles/streets" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/styles/streets");
+const res = await fetch("https://api.mapx.at/v1/styles/streets", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -101,7 +101,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/styles/streets")
+res = requests.get("https://api.mapx.at/v1/styles/streets", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -145,14 +145,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/styles/streets/sprite.json" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets/sprite.json" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/styles/streets/sprite.json");
+const res = await fetch("https://api.mapx.at/v1/styles/streets/sprite.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -161,7 +161,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json")
+res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -206,14 +206,14 @@ Zone `static`. `ETag`, `Cache-Control`.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420" -o result.png
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420");
+const res = await fetch("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -222,7 +222,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420")
+res = requests.get("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
@@ -253,14 +253,14 @@ Available font names.
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/fonts" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/fonts");
+const res = await fetch("https://api.mapx.at/v1/fonts", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -269,7 +269,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/fonts")
+res = requests.get("https://api.mapx.at/v1/fonts", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -311,14 +311,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf");
+const res = await fetch("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -327,7 +327,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf")
+res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.bin", "wb").write(res.content)
 ```
 
@@ -356,14 +356,14 @@ open("result.bin", "wb").write(res.content)
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/sprites" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/sprites" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/sprites");
+const res = await fetch("https://api.mapx.at/v1/sprites", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -372,7 +372,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/sprites")
+res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -405,14 +405,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/sprites/sprite.json" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/sprites/sprite.json" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/sprites/sprite.json");
+const res = await fetch("https://api.mapx.at/v1/sprites/sprite.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -421,7 +421,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/sprites/sprite.json")
+res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

@@ -1,6 +1,6 @@
 # mapx Docs
 
-Maps, search, navigation, elevation, transit, traffic and static images for Austria. Official open data, no key.
+Maps, search, navigation, elevation, transit, traffic and static images for Austria. Official open data, free API token.
 
 ## Choose your path
 

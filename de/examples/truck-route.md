@@ -6,9 +6,14 @@ Das Profil `driving-truck` mit Gewicht und Höhe wählen: Straßen mit passenden
 
 ```js
 // Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
 map.addControl(new maplibregl.NavigationControl());
 const $ = (id) => document.getElementById(id);
 const pts = [], markers = [];
@@ -31,7 +36,7 @@ async function route() {
   const exclude = ['toll', 'motorway'].filter((k) => $(k).checked);
   if (profile === 'driving' && exclude.length) q.set('exclude', exclude.join(','));
   try {
-    const res = await fetch(`https://api.mapx.at/v1/directions/${profile}/${pts.map((p) => p.join(',')).join(';')}?${q}`);
+    const res = await fetch(`https://api.mapx.at/v1/directions/${profile}/${pts.map((p) => p.join(',')).join(';')}?${q}`, AUTH);
     if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
     const { routes } = await res.json();
     map.getSource('routes').setData({ type: 'FeatureCollection', features: routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 ? 1 : 0 }, geometry: r.geometry })).reverse() });

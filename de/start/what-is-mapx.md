@@ -2,7 +2,7 @@
 
 Karten und Location-APIs für Österreich, ausschließlich auf offiziellen Open Data.
 
-mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten stammen aus offiziellen offenen Quellen (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB und weitere). Deshalb gibt es keine nutzungsabhängigen Preise, kein Konto und keinen Key.
+mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten stammen aus offiziellen offenen Quellen (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB und weitere). Deshalb gibt es keine nutzungsabhängigen Preise. Ein kostenloses Konto und ein API-Token sind nötig ([Zugang und Limits](/de/start/access-and-limits/)).
 
 | Produkt | Inhalt | Einstieg |
 |---|---|---|

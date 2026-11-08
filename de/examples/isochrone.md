@@ -6,9 +6,14 @@ Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPol
 
 ```js
 // Isochronen: Flächen, die man in 5, 10 und 15 Minuten erreicht.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 });
 map.addControl(new maplibregl.NavigationControl());
 
 map.on('load', () => {
@@ -23,7 +28,7 @@ async function abfragen(ort) {
   const profil = document.getElementById('profil').value; // walking, cycling oder driving
   const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
-    const r = await fetch(url);
+    const r = await fetch(url, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     map.getSource('iso').setData(await r.json()); // MultiPolygon je Stufe, größte zuerst
   } catch (err) { document.getElementById('info').textContent = 'Fehler: ' + err.message; }

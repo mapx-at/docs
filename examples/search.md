@@ -6,9 +6,14 @@ The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit h
 
 ```js
 // Suche: Orte, Adressen, Gipfel und Grundstücke über /v1/geocode (GeoJSON im Mapbox-Stil).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
 let marker;
 
@@ -18,7 +23,7 @@ eingabe.addEventListener('input', async () => {
   liste.replaceChildren();
   if (q.length < 2) return;
   try {
-    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`);
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     for (const f of (await r.json()).features) {
       const li = document.createElement('li'), b = document.createElement('button');

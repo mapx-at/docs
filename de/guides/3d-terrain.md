@@ -1,10 +1,10 @@
 # 3D-Gelände mit Orthophoto
 
-Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und ohne Schlüssel.
+Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und kostenlosem Token.
 
 **Ziel:** Eine Karte, auf der das Orthophoto über dem echten Gelände liegt, plastisch schattiert und im Browser kippbar.
 
-**Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Kein Konto, kein Schlüssel.
+**Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](/de/start/access-and-limits/)).
 
 Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) und das [Orthophoto](/de/tilesets/orthophoto/) (Bild, Typ `raster`). Beide Tilesets binden Sie über [TileJSON](/de/api/tiles/) ein, ohne einen Dateinamen zu kennen.
 

@@ -2,7 +2,7 @@
 
 From zero to a working map, search and route in a few minutes.
 
-mapx needs no account and no key. Pick a page and copy the code.
+mapx needs a free account and an API token ([get one in a minute](/start/access-and-limits/)). Pick a page and copy the code. Code samples use `YOUR_TOKEN` as a placeholder.
 
               
 ## Next

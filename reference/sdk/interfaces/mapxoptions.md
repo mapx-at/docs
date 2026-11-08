@@ -8,6 +8,14 @@ mapx-gl MapxOptions
 
 ## Properties
 
+### accessToken?
+
+> `optional` **accessToken**: `string`
+
+Öffentlicher Zugriffstoken (`mx_pk_…`, account.mapx.at). Gilt für alle weiteren Anfragen des SDK; alternativ `mapx.setAccessToken()`.
+
+***
+
 ### center?
 
 > `optional` **center**: [`LL`](/reference/sdk/type-aliases/ll/)

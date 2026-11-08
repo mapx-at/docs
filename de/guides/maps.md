@@ -4,7 +4,7 @@ Eine mapx-Karte anzeigen, Styles wechseln, Tilesets und Overlays hinzufügen.
 
 mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Style entsteht.
 
-**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](/de/start/first-map/). Es ist kein Key nötig.
+**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](/de/start/first-map/). Ein kostenloser Token ist nötig ([Zugang und Limits](/de/start/access-and-limits/)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt, die Übergabe steht dort.
 
 ## Einen Style verwenden
 

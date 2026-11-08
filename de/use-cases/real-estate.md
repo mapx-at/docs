@@ -2,7 +2,7 @@
 
 Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
 
-Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne) ohne Schlüssel. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
+Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne), nutzbar mit einem kostenlosen Token. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
 
 ## Grundstück finden
 

@@ -2,7 +2,7 @@
 
 DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung, Vektorkachel-Verbindung und PMTiles direkt.
 
-**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download und ohne Schlüssel.
+**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen).
 
 **Voraussetzungen:** QGIS 3.x (für PMTiles direkt ab 3.32).
 

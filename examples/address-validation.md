@@ -6,9 +6,14 @@ Validation compares the four address parts with the BEV address register. The re
 
 ```js
 // Address validation: check a typed address against the official register (BEV) and show the corrected result.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
+const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
+const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
 const out = document.getElementById('ergebnis');
 let marker;
@@ -17,7 +22,7 @@ document.getElementById('pruefen').addEventListener('click', async () => {
   const p = new URLSearchParams();
   for (const k of ['street', 'housenumber', 'postcode', 'place']) p.set(k, document.getElementById(k).value);
   try {
-    const res = await fetch('https://api.mapx.at/v1/address/validate?' + p);
+    const res = await fetch('https://api.mapx.at/v1/address/validate?' + p, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const r = await res.json(); // status: match, corrected, ambiguous, not_found
     const hit = r.address ? { text: r.address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };

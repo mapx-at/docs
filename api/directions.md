@@ -35,14 +35,14 @@ One LineString feature per road link in digitizing direction with `limit_kmh`, `
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23");
+const res = await fetch("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -51,7 +51,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23")
+res = requests.get("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -103,6 +103,67 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
 
+## Corridor graph for offline rerouting
+
+`GET /v1/corridor-graph`
+
+Compact binary subgraph of the road network around a route, for recomputing a route without network (for example in a dead zone after a wrong turn). `polyline` is the route as polyline6 (e.g. `routes[].geometry` with `geometries=polyline6`), `buffer` the radius around it in meters (default 3000, at most 5000).
+
+<details>
+<summary>More</summary>
+
+The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, no `Content-Encoding`) of a `MXCG` v1 file: a version header and the graph id of the server graph, nodes (microdegrees), directed arcs with travel time and weight in ms (the same values the router uses, so offline costs equal server costs), simplified link geometry, road name and reference, road class (FRC/FOW), maximum speed with a statutory flag, link flags (roundabout, ramp, toll, urban, motorway) and the turn restrictions between the arcs including derived U-turn bans. Arcs that cannot be driven are left out. Typically 1 to 3 MB per 100 km of route (compressed). Source: GIP.at (CC BY 4.0).
+
+</details>
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `polyline` | query | string | yes | – | Route as polyline6 (at most 20,000 points) |
+| `profile` | query | string |  | – | driving (default), cycling or walking |
+| `buffer` | query | string |  | `3000` | Meters around the route, 100 to 5000, default 3000 |
+
+**Example**
+
+<Tabs syncKey="lang">
+<TabItem label="curl">
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C_nDouS_pR_af@&buffer=1000" -o result.bin
+```
+
+</TabItem>
+<TabItem label="JavaScript">
+
+```js
+const res = await fetch("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C_nDouS_pR_af@&buffer=1000", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const blob = await res.blob();
+```
+
+</TabItem>
+<TabItem label="Python">
+
+```python
+
+res = requests.get("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C_nDouS_pR_af@&buffer=1000", headers={"Authorization": "Bearer YOUR_TOKEN"})
+open("result.bin", "wb").write(res.content)
+```
+
+</TabItem>
+</Tabs>
+
+**Example response**: `application/vnd.mapx.corridor-graph+gzip` · Corridor graph (gzip of MXCG v1)
+
+**Errors** (details: [error catalog](/api/errors/))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `502` | Upstream service unavailable |
+
 ## Routing
 
 `GET /v1/directions/{profile}/{coordinates}`
@@ -148,14 +209,14 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified");
+const res = await fetch("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -164,7 +225,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified")
+res = requests.get("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -239,14 +300,14 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272");
+const res = await fetch("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -255,7 +316,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272")
+res = requests.get("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -339,14 +400,14 @@ Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15");
+const res = await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -355,7 +416,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15")
+res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -429,14 +490,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance");
+const res = await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -445,7 +506,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance")
+res = requests.get("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -522,14 +583,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110");
+const res = await fetch("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -538,7 +599,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110")
+res = requests.get("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

@@ -26,14 +26,14 @@ Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No a
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5");
+const res = await fetch("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -42,7 +42,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5")
+res = requests.get("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -131,14 +131,14 @@ Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`)
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5");
+const res = await fetch("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -147,7 +147,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5")
+res = requests.get("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -232,6 +232,7 @@ Body: the same parameters as a JSON object; `route` as polyline string or GeoJSO
 
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"route":{"type":"LineString","coordinates":[[16.37,48.21],[16.3,48.19]]},"type":"road_closure,construction","limit":50}' | jq
 ```
@@ -242,7 +243,7 @@ curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/incidents", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify({
     "route": {
       "type": "LineString",
@@ -269,7 +270,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.post("https://api.mapx.at/v1/traffic/incidents", json={
+res = requests.post("https://api.mapx.at/v1/traffic/incidents", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
     "route": {
       "type": "LineString",
       "coordinates": [
@@ -354,14 +355,14 @@ Current state: speed limit, pictogram, additional text. Only installations with 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5");
+const res = await fetch("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -370,7 +371,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5")
+res = requests.get("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -426,14 +427,14 @@ Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incid
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/tiles.json" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles.json" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/tiles.json");
+const res = await fetch("https://api.mapx.at/v1/traffic/tiles.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -442,7 +443,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/tiles.json")
+res = requests.get("https://api.mapx.at/v1/traffic/tiles.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -488,14 +489,14 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf");
+const res = await fetch("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -504,7 +505,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf")
+res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.bin", "wb").write(res.content)
 ```
 
@@ -533,14 +534,14 @@ open("result.bin", "wb").write(res.content)
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/traffic/status" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/status" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/traffic/status");
+const res = await fetch("https://api.mapx.at/v1/traffic/status", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -549,7 +550,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/traffic/status")
+res = requests.get("https://api.mapx.at/v1/traffic/status", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

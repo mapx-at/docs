@@ -20,14 +20,14 @@ Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON 
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/tiles" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tiles");
+const res = await fetch("https://api.mapx.at/v1/tiles", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -36,7 +36,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/tiles")
+res = requests.get("https://api.mapx.at/v1/tiles", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -95,14 +95,14 @@ TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`La
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/tiles/streets.json" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets.json" | jq
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tiles/streets.json");
+const res = await fetch("https://api.mapx.at/v1/tiles/streets.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -111,7 +111,7 @@ const data = await res.json();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/tiles/streets.json")
+res = requests.get("https://api.mapx.at/v1/tiles/streets.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -167,14 +167,14 @@ data = res.json()
 <TabItem label="curl">
 
 ```bash
-curl -s "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
 ```
 
 </TabItem>
 <TabItem label="JavaScript">
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf");
+const res = await fetch("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const blob = await res.blob();
 ```
 
@@ -183,7 +183,7 @@ const blob = await res.blob();
 
 ```python
 
-res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf")
+res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
 open("result.png", "wb").write(res.content)
 ```
 
