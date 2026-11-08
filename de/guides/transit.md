@@ -30,6 +30,22 @@ for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.hea
 
 `time` ist ISO 8601 in Wiener Ortszeit. Mit `time=2026-11-09T08:00` lässt sich ein späterer Start setzen, mit `horizon` (Sekunden, bis zu 24 Stunden) das Zeitfenster. Außerhalb des Fahrplanzeitraums antwortet die API mit `422`.
 
+### Zugang mit Rad oder Auto (Bike & Ride, Park & Ride)
+
+Mit `access=bike` oder `access=car` wird der erste Abschnitt nicht gegangen, sondern mit dem Rad oder Auto zu einer Haltestelle zurückgelegt. Das Rad wird an **jeder** Haltestelle abgesperrt (+2 min), das Auto parkt an Haltestellen mit Bahn-, U-Bahn- oder Tramverkehr (+3 min, höchstens 25 min Fahrt); der Algorithmus nimmt die schnellste Kombination, der Bahnhof im eigenen Ort gewinnt also gegen die Weiterfahrt in die nächste Stadt, wenn der Zug früher fährt. Offizielle P+R-Anlagen der GIP kommen fürs Auto dazu (+2 min, dann Fußweg zur Haltestelle). Der Fußweg vom Start gilt weiter, es zählt das Minimum. Der Abgang am Ziel ist immer zu Fuß.
+
+```bash
+curl -s "https://api.mapx.at/v1/isochrone/transit/15.16,48.207?contours_minutes=45&depart_at=2026-11-09T07:00&access=car" | jq '.metadata | {access, access_stops_improved, sites: .access_sites[:3]}'
+```
+
+| Parameter | Werte | Bedeutung |
+|---|---|---|
+| `access` | `foot` (Standard), `bike`, `car` | Verkehrsmittel zur ersten Haltestelle |
+| `park` | `any` (Standard), `official` | `official`: Rad nur an Haltestellen im Umkreis von 200 m einer B+R-Anlage, Auto nur an offiziellen P+R-Anlagen |
+| `sites` | 1 bis 50 (Standard 10) | Einträge in `metadata.access_sites` |
+
+`metadata.access_sites` nennt die Zugänge, die den Fußweg schlagen, sortiert nach Fahrzeit: `source` (`site` = offizielle P+R-Anlage, `stop` = Parken an der Haltestelle), `kind`, `name`, `lon`, `lat`, `arrive_min` (Fahrzeit), `ready_min` (bereit zum Einsteigen inkl. Parken und Fußweg) und `stops_won`. Rad im Zug (`egress=bike`) gibt es nicht: die Fahrplandaten enthalten keine Fahrradmitnahme-Information.
+
 ## Verbindungssuche
 
 ```bash
