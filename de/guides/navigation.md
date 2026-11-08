@@ -56,6 +56,27 @@ Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkt
 
 Vignettenstraßen bleiben mit `exclude=toll` erlaubt. Quelle der Maut: ASFINAG, CC BY 4.0.
 
+`exclude` gilt für `driving`, `driving-traffic` und `driving-truck`. `ferry` wird nicht unterstützt.
+
+## Sperren
+
+Verbindliche Totalsperren aus den Verkehrsmeldungen (EVIS/ASFINAG) werden von `driving` und `driving-traffic` umfahren. Die betroffenen Straßen sind für die Routensuche gesperrt; `routes[].closures_avoided` listet die Sperren, die die Route ohne Sperren durchfahren hätte (`id`, `text`, `road`, `category`). Lässt sich eine Sperre nicht umfahren, führt die Route hindurch und `routes[].closures_unavoidable` nennt sie. Zeitlich bedingte Sperren (Wochentage, Uhrzeiten im Text) erschweren eine Straße nur und werden nicht gelistet. Quelle: ASFINAG, CC BY 4.0; Texte unverändert anzeigen.
+
+```bash
+curl -s "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
+```
+
+## Sprach- und Bannerhinweise
+
+Mit `steps=true` lassen sich `voice_instructions=true` und `banner_instructions=true` (Fahrprofile) ergänzen. Das Format folgt Mapbox: Jeder Schritt trägt die Hinweise für das Manöver an seinem Ende.
+
+```bash
+curl -s "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?steps=true&voice_instructions=true&banner_instructions=true&language=de&overview=false" | jq '.routes[0].legs[0].steps[1] | {voiceInstructions, bannerInstructions}'
+```
+
+- `voiceInstructions[]`: `distanceAlongGeometry` (Meter vor dem Ende des Schritts, ab dem angesagt wird), `announcement` und `ssmlAnnouncement`. Die Ansagedistanzen hängen vom Tempo ab: auf Autobahnen 2 km, 1 km und 300 m vorher, auf Landstraßen 1 km, 400 m und 120 m, im Ort 400 m und 150 m; die letzte Ansage kommt ohne Entfernung. Der erste Schritt kündigt auch die Abfahrt an. `language=de|en` wählt die Sprache.
+- `bannerInstructions[]`: `primary` und optional `secondary` mit `text`, `components[]` (`type` `icon` für die Straßennummer, `text` für Namen und Zielwegweisung), `type`, `modifier`. Mit Zielwegweisung ist das Ziel der Haupttext und die Straße die Nebenzeile.
+
 ## Isochronen, Matrix, Matching
 
 ```js

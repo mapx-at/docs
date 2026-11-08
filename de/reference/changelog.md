@@ -7,6 +7,7 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 ## 2026-11-08
 
 ### Neu
+- Directions: `driving` und `driving-traffic` umfahren verbindliche Sperren (EVIS/ASFINAG) und listen sie in `routes[].closures_avoided`; `exclude` auch für `driving-truck` und `driving-traffic`; `voice_instructions` und `banner_instructions` (Mapbox-Form).
 - Header `Server-Timing`, `ETag`, `Last-Modified` (Styles, TileJSON, OpenAPI; bedingte Anfragen antworten mit `304`) und `RateLimit-Policy` je Endpunktgruppe.
 - Lkw-Profil `driving-truck` mit `weight`, `height`, `width`, `length` und `truck_type`.
 - Fehlerkatalog mit stabilem `code` je Fehler: [Fehler und Limits](/de/api/errors/).

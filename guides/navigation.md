@@ -56,6 +56,27 @@ Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products 
 
 Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4.0.
 
+`exclude` works for `driving`, `driving-traffic` and `driving-truck`. `ferry` is not supported.
+
+## Closures
+
+Binding full closures from the traffic reports (EVIS/ASFINAG) are avoided by `driving` and `driving-traffic`. The roads concerned are blocked for the route search; `routes[].closures_avoided` lists the closures that the route without closures would have driven through (`id`, `text`, `road`, `category`). If a closure cannot be avoided, the route runs through it and `routes[].closures_unavoidable` lists it. Conditional closures (weekdays, hours in the text) only discourage a road and are not listed. Source: ASFINAG, CC BY 4.0; show the texts unchanged.
+
+```bash
+curl -s "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
+```
+
+## Voice and banner instructions
+
+With `steps=true` you can add `voice_instructions=true` and `banner_instructions=true` (driving profiles). The format follows Mapbox: each step carries the instructions for the maneuver at its end.
+
+```bash
+curl -s "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?steps=true&voice_instructions=true&banner_instructions=true&language=en&overview=false" | jq '.routes[0].legs[0].steps[1] | {voiceInstructions, bannerInstructions}'
+```
+
+- `voiceInstructions[]`: `distanceAlongGeometry` (meters before the end of the step at which to speak), `announcement` and `ssmlAnnouncement`. Announcement distances depend on speed: on motorways 2 km, 1 km and 300 m ahead, on rural roads 1 km, 400 m and 120 m, in town 400 m and 150 m; the last one is spoken without a distance. The first step also announces the departure. `language=de|en` selects the language.
+- `bannerInstructions[]`: `primary` and optional `secondary` with `text`, `components[]` (`type` `icon` for the road number, `text` for names and destination signage), `type`, `modifier`. With destination signage, the destination is the primary text and the road the secondary line.
+
 ## Isochrones, matrix, matching
 
 ```js
