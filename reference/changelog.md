@@ -7,6 +7,8 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 ## 2026-11-08
 
 ### Added
+- Speed limits: `GET /v1/speedlimits` (`bbox` or `corridor` as polyline6 plus `buffer`): statutory GIP limits as compact GeoJSON.
+- Directions: `exclude=ferry` for all profiles; `voice_instructions` and `banner_instructions` also for `cycling`, `cycling-mtb` and `walking`; `maxspeed` carries `legal` (`false` marks a modeled speed that is not a limit).
 - Climate: `GET /v1/climate/{lon},{lat}` and the section `climate` in the parcel dossier: solar potential (kWh/m² and sunshine hours per year), temperature and precipitation normals with trend, hot, frost and snow days, drought index SPEI (GeoSphere Austria, CC BY 4.0).
 - Directions: `driving` and `driving-traffic` avoid binding closures (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `exclude` also for `driving-truck` and `driving-traffic`; `voice_instructions` and `banner_instructions` (Mapbox form).
 - Headers `Server-Timing`, `ETag`, `Last-Modified` (styles, TileJSON, OpenAPI; conditional requests answer `304`) and `RateLimit-Policy` per endpoint group.

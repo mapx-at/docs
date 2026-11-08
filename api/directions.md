@@ -221,7 +221,7 @@ Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`
 <details>
 <summary>More</summary>
 
-The other profiles reject `depart_at` (400).
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400).
 
 </details>
 
@@ -234,6 +234,9 @@ The other profiles reject `depart_at` (400).
 | `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
 | `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
 | `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
+| `access` | query | string |  | – | Only `transit`: foot (default) \| bike (Bike & Ride) \| car (Park & Ride) |
+| `park` | query | string |  | `bike every stop` | Only `transit` with bike/car: any (default: bike every stop, car rail stops) \| official (only official P+R/B+R sites) |
+| `sites` | query | string |  | `10` | Only `transit` with bike/car: number of access entries in `metadata.access_sites` (default 10, max 50) |
 
 **Example**
 

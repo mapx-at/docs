@@ -35,7 +35,20 @@ const r = routes[0];
 console.log(r.distance, "m", r.duration, "s");
 ```
 
-`overview=simplified` (default) returns a light geometry, `full` every vertex, `false` none. `steps=true` adds turn-by-turn steps. `alternatives=true` adds up to two more `routes[]`. `annotations=duration,distance,speed,maxspeed,elevation` adds values per segment. With `cycling_surface=any` (default) unpaved sections are rated worse but stay allowed. Heights inside bridges and tunnels are not taken from the terrain model. Cycling and walking steps carry `grade_pct`; the route summary has ascent, descent and elevation range.
+`overview=simplified` (default) returns a light geometry, `full` every vertex, `false` none. `steps=true` adds turn-by-turn steps. `alternatives=true` adds up to two more `routes[]`. `annotations=duration,distance,speed,maxspeed,elevation` adds values per segment. With `cycling_surface=any` (default) unpaved sections are rated worse but stay allowed. Heights inside bridges and tunnels are not taken from the terrain model. `maxspeed` (step and annotation) is `{speed, unit, legal}`: `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed such as 53 or 84 km/h, which is a routing speed and not a limit and must not be shown as a speed sign. `{unknown: true}` means no value (many motorways). Existing clients that only read `speed` and `unit` keep working. Cycling and walking steps carry `grade_pct`; the route summary has ascent, descent and elevation range.
+
+## Speed limits along a route
+
+`GET /v1/speedlimits` returns the statutory limits of the road network as compact GeoJSON, either in a box (`bbox`, at most 0.08 square degrees, about 28 by 28 km) or in a corridor around a route (`corridor` as polyline6 plus `buffer` in meters, default 30). Each road link is a `LineString` (digitizing direction) with `limit_kmh`, `direction` (`both`, `forward`, `backward`) and `id`. Links without a statutory limit are left out, so the sign display never shows a modeled speed.
+
+```bash
+# route as polyline6, then the limits in a 30 m corridor
+curl -s "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq '.features | length'
+curl -s "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -r '.routes[0].geometry' > route.txt
+curl -s -G "https://api.mapx.at/v1/speedlimits" --data-urlencode "corridor@route.txt" -d buffer=30 | jq '.features | length'
+```
+
+Long routes can exceed the URL length of a GET request; split them into sections of about 500 points. Source: GIP.at, CC BY 4.0.
 
 ## Truck routes
 
@@ -56,7 +69,9 @@ Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products 
 
 Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4.0.
 
-`exclude` works for `driving`, `driving-traffic` and `driving-truck`. `ferry` is not supported.
+`exclude=motorway` and `exclude=toll` work for `driving`, `driving-traffic` and `driving-truck`.
+
+`exclude=ferry` closes all ferry links and works for every profile (`driving`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`) alone or combined, e.g. `exclude=toll,ferry`; `driving-traffic` returns 400. Because this variant is computed without contraction hierarchies, the response takes some tens of milliseconds longer. If a destination can only be reached by ferry (an island, for example), the request returns no route.
 
 ## Closures
 
@@ -68,13 +83,13 @@ curl -s "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overvi
 
 ## Voice and banner instructions
 
-With `steps=true` you can add `voice_instructions=true` and `banner_instructions=true` (driving profiles). The format follows Mapbox: each step carries the instructions for the maneuver at its end.
+With `steps=true` you can add `voice_instructions=true` and `banner_instructions=true` (all road profiles: driving, driving-truck, cycling, cycling-mtb and walking). The format follows Mapbox: each step carries the instructions for the maneuver at its end.
 
 ```bash
 curl -s "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?steps=true&voice_instructions=true&banner_instructions=true&language=en&overview=false" | jq '.routes[0].legs[0].steps[1] | {voiceInstructions, bannerInstructions}'
 ```
 
-- `voiceInstructions[]`: `distanceAlongGeometry` (meters before the end of the step at which to speak), `announcement` and `ssmlAnnouncement`. Announcement distances depend on speed: on motorways 2 km, 1 km and 300 m ahead, on rural roads 1 km, 400 m and 120 m, in town 400 m and 150 m; the last one is spoken without a distance. The first step also announces the departure. `language=de|en` selects the language.
+- `voiceInstructions[]`: `distanceAlongGeometry` (meters before the end of the step at which to speak), `announcement` and `ssmlAnnouncement`. Announcement distances depend on speed: on motorways 2 km, 1 km and 300 m ahead, on rural roads 1 km, 400 m and 120 m, in town 400 m and 150 m; the last one is spoken without a distance. On foot the announcements come 100 m and 40 m ahead, by bike 250 m and 80 m ahead. The texts follow `language` (`de` or `en`) for every profile. The first step also announces the departure. `language=de|en` selects the language.
 - `bannerInstructions[]`: `primary` and optional `secondary` with `text`, `components[]` (`type` `icon` for the road number, `text` for names and destination signage), `type`, `modifier`. With destination signage, the destination is the primary text and the road the secondary line.
 
 ## Isochrones, matrix, matching
