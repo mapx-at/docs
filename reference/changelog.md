@@ -7,6 +7,7 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 ## 2026-11-08
 
 ### Added
+- Corridor graph: `GET /v1/corridor-graph` (`polyline` as polyline6, `buffer` 100 to 5000 m, `profile` driving, cycling or walking): compact gzip subgraph of the road network around a route (nodes, directed arcs with travel time and weight, geometry, names, road class, statutory speed limits, turn restrictions) for recomputing a route offline.
 - Speed limits: `GET /v1/speedlimits` (`bbox` or `corridor` as polyline6 plus `buffer`): statutory GIP limits as compact GeoJSON.
 - Directions: `exclude=ferry` for all profiles; `voice_instructions` and `banner_instructions` also for `cycling`, `cycling-mtb` and `walking`; `maxspeed` carries `legal` (`false` marks a modeled speed that is not a limit).
 - Climate: `GET /v1/climate/{lon},{lat}` and the section `climate` in the parcel dossier: solar potential (kWh/m² and sunshine hours per year), temperature and precipitation normals with trend, hot, frost and snow days, drought index SPEI (GeoSphere Austria, CC BY 4.0).
