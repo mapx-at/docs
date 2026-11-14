@@ -12,8 +12,8 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
 <head>
   <meta charset="utf-8">
   <title>First mapx map</title>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css">
-  <script src="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+  <script src="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.js"></script>
   <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
 <body>
@@ -44,7 +44,7 @@ Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `ma
 <head>
   <meta charset="utf-8">
   <title>First mapx map</title>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
   <link rel="stylesheet" href="./mapx-gl.css">
   <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
