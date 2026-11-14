@@ -13,8 +13,8 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
-   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css">
+   <script src="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.js"></script>
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script>

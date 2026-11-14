@@ -15,7 +15,7 @@ Load the bundle from `https://map.mapx.at/sdk/v1/` (CORS is open) or download th
 | `mapx-gl.d.ts` | TypeScript types |
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css">
 <link rel="stylesheet" href="https://map.mapx.at/sdk/v1/mapx-gl.css">
 <div id="map" style="height:100vh"></div>
 <script type="module">
