@@ -13,12 +13,12 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
   <meta charset="utf-8">
   <title>First mapx map</title>
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
-  <script src="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.js"></script>
   <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
 <body>
   <div id="map"></div>
-  <script>
+  <script type="module">
+    import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
     new maplibregl.Map({
       container: "map",
@@ -36,7 +36,7 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
 **SDK mapx-gl**
 
 
-Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `mapx-gl.bundle.js` und `mapx-gl.css` von `https://map.mapx.at/sdk/v1/` herunterladen und neben der Seite ausliefern.
+Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `mapx-gl.bundle.js`, `maplibre-gl-worker.js` und `mapx-gl.css` von `https://map.mapx.at/sdk/v1/` herunterladen und neben der Seite ausliefern (der Worker muss im selben Verzeichnis wie das Bundle liegen).
 
 ```html
 <!doctype html>

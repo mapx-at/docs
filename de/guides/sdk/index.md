@@ -10,6 +10,7 @@ Das Bundle von `https://map.mapx.at/sdk/v1/` laden (CORS ist offen) oder die Dat
 | Datei | Verwendung |
 |---|---|
 | `mapx-gl.bundle.js` | Alles enthalten, als `<script type="module">` laden |
+| `maplibre-gl-worker.js` | Worker von MapLibre GL JS {V.maplibre}, lädt das Bundle selbst; beim Herunterladen ins selbe Verzeichnis wie `mapx-gl.bundle.js` legen |
 | `mapx-gl.js` | Ohne Peers, für Projekte mit eigenem Build |
 | `mapx-gl.css` | Stile der Controls, nach `maplibre-gl.css` laden |
 | `mapx-gl.d.ts` | TypeScript-Typen |

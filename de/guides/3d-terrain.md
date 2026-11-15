@@ -14,7 +14,6 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
    <!doctype html>
    <meta charset="utf-8">
    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
-   <script src="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.js"></script>
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    ```
@@ -41,7 +40,8 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
 4. **Gelände einschalten.** `terrain` hebt alle Ebenen auf die Höhe des DTM. `pitch` kippt die Ansicht:
 
    ```html
-   <script>
+   <script type="module">
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
      const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const map = new maplibregl.Map({
        container: "map",

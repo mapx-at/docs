@@ -14,10 +14,10 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    <!doctype html>
    <meta charset="utf-8">
    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
-   <script src="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.js"></script>
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
-   <script>
+   <script type="module">
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
