@@ -114,5 +114,5 @@ Basis-URL: …
 
 
 ---
-Generated on 2026-11-15 08:57:33 UTC
+Generated on 2026-11-15 09:51:06 UTC
 Site: https://docs.mapx.at/

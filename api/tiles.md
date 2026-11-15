@@ -149,7 +149,14 @@ data = res.json()
 
 `GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
 
-`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Missing tile or wrong extension: 404 problem+json. Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
+`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
+
+<details>
+<summary>More</summary>
+
+Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
+
+</details>
 
 **Parameters**
 
@@ -195,6 +202,7 @@ open("result.png", "wb").write(res.content)
 
 | Status | Meaning |
 |---|---|
+| `204` | No data for this tile (empty) |
 | `304` | Not modified (with `If-None-Match`) |
 | `400` | A parameter is missing or invalid |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
