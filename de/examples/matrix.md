@@ -1,9 +1,16 @@
-# Fahrzeitmatrix
+# Fahrzeitmatrix: Beispiel
 
+Source: https://docs.mapx.at/de/examples/matrix/
+
+> Fahrzeiten zwischen mehreren Orten in einer Anfrage mit der mapx-Matrix-API berechnen (Fahrzeitmatrix): lauffähiges Beispiel zum Kopieren.
 
 Die Matrix-API nimmt Quellen (und optional Ziele) und liefert Dauer (und optional Distanz) für alle Paare, `null` heißt nicht routbar.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Matrix: Fahrzeiten zwischen mehreren Orten in einer Anfrage.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -28,9 +35,8 @@ document.getElementById('los').addEventListener('click', async () => {
       durations.map((zeile, i) => `<tr><th>${namen[i]}</th>` + zeile.map((s) => `<td>${s == null ? '–' : Math.round(s / 60) + ' min'}</td>`).join('') + '</tr>').join('');
   } catch (err) { tabelle.textContent = 'Error: ' + err.message; }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Routing](/de/api/directions/#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
-
+- [Routing](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`

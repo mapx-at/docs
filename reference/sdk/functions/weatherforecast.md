@@ -1,14 +1,18 @@
 # weatherForecast
 
+Source: https://docs.mapx.at/reference/sdk/functions/weatherforecast/
+
+> mapx-gl weatherForecast
+
 > **weatherForecast**(`point`, `o`): `Promise`\<`object`\>
 
 Stundenvorhersage (AROME 1 km) für einen Punkt.
 
 ## Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`Common`](/reference/sdk/interfaces/common/) & `object` = `{}`
+• **o**: [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md) & `object` = `{}`
 
 ## Returns
 
@@ -16,7 +20,7 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 
 ### hours
 
-> **hours**: [`WeatherHour`](/reference/sdk/interfaces/weatherhour/)[]
+> **hours**: [`WeatherHour`](https://docs.mapx.at/reference/sdk/interfaces/weatherhour.md)[]
 
 ### model
 
@@ -25,4 +29,3 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 ### reference\_time
 
 > **reference\_time**: `string`
-

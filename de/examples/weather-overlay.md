@@ -1,9 +1,16 @@
-# Wetter-Overlay
+# Wetter-Overlay: Beispiel
 
+Source: https://docs.mapx.at/de/examples/weather-overlay/
+
+> Temperatur, Niederschlag oder Wind als Overlay über der Karte, Stunde per Regler: Wetterkacheln von GeoSphere Austria, lauffähiger Code.
 
 Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Raster-Layer.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -42,12 +49,10 @@ function zeigen(param, i) {
 map.on('load', laden);
 document.getElementById('param').addEventListener('change', () => { document.getElementById('stunde').value = 0; laden(); });
 document.getElementById('stunde').addEventListener('input', (e) => zeigen(document.getElementById('param').value, Number(e.target.value)));
-```
+````
 
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
 
-
 ## Verwendete APIs
 
-- [Wetter](/de/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`
-
+- [Wetter](https://docs.mapx.at/de/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`

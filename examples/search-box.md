@@ -1,9 +1,16 @@
-# Search Box with suggestions
+# Search Box example with suggestions
 
+Source: https://docs.mapx.at/examples/search-box/
+
+> Suggestions while typing, position after the click and a type filter: type-ahead search with the mapx Search Box API, runnable code.
 
 Search Box works in two steps: `suggest` returns suggestions while the user types, `retrieve` returns the position of the chosen one. Use the same `session_token` for both calls and a new one for the next search. The type filter limits the suggestions.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -43,10 +50,9 @@ async function pick(id) {
   list.replaceChildren();
   token = crypto.randomUUID(); // the session ends with retrieve
 }
-```
+````
 
 ## APIs used
 
-- [Search Box](/api/search-box/) `GET api.mapx.at/v1/searchbox/suggest`
-- [Search Box](/api/search-box/) `GET api.mapx.at/v1/searchbox/retrieve/{id}`
-
+- [Search Box](https://docs.mapx.at/api/search-box.md) `GET api.mapx.at/v1/searchbox/suggest`
+- [Search Box](https://docs.mapx.at/api/search-box.md) `GET api.mapx.at/v1/searchbox/retrieve/{id}`

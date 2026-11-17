@@ -1,10 +1,12 @@
-# First map in 5 minutes
+# First map with MapLibre in 5 minutes
 
+Source: https://docs.mapx.at/start/first-map/
 
-Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` with a public token from [account.mapx.at](/start/access-and-limits/) (allowed origin: your site, or `localhost` while testing). No build step.
+> Build your first mapx web map: a complete HTML file with MapLibre GL JS or the mapx-gl SDK and a public token. Copy, save and open it in a browser.
+
+Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` with a public token from [account.mapx.at](https://docs.mapx.at/start/access-and-limits.md) (allowed origin: your site, or `localhost` while testing). No build step.
 
 **MapLibre GL JS**
-
 
 ```html
 <!doctype html>
@@ -35,8 +37,7 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 
 **SDK mapx-gl**
 
-
-The [SDK](/guides/sdk/) adds a search box and a style switcher. Download `mapx-gl.bundle.js`, `maplibre-gl-worker.js` and `mapx-gl.css` from `https://map.mapx.at/sdk/v1/` and serve them next to your page (the worker must sit in the same directory as the bundle).
+The [SDK](https://docs.mapx.at/guides/sdk/index.md) adds a search box and a style switcher. Download `mapx-gl.bundle.js`, `maplibre-gl-worker.js` and `mapx-gl.css` from `https://map.mapx.at/sdk/v1/` and serve them next to your page (the worker must sit in the same directory as the bundle).
 
 ```html
 <!doctype html>
@@ -60,14 +61,12 @@ The [SDK](/guides/sdk/) adds a search box and a style switcher. Download `mapx-g
 </html>
 ```
 
-
-The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](/api/styles/).
+The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](https://docs.mapx.at/api/styles.md).
 
 MapLibre GL JS {V.maplibre} is the version these examples are tested with.
 
 ## Next
 
-- [First search](/start/first-search/)
-- [Maps guide](/guides/maps/): styles, terrain, overlays
-- [Examples](/examples/)
-
+- [First search](https://docs.mapx.at/start/first-search.md)
+- [Maps guide](https://docs.mapx.at/guides/maps.md): styles, terrain, overlays
+- [Examples](https://docs.mapx.at/examples/index.md)

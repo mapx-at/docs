@@ -1,9 +1,16 @@
-# Weather overlay
+# Weather overlay example
 
+Source: https://docs.mapx.at/examples/weather-overlay/
+
+> Temperature, precipitation or wind as an overlay on the map, hour chosen with a slider: weather tiles of GeoSphere Austria, runnable code.
 
 The TileJSON `/v1/weather/tiles/{parameter}.json` lists the available hours under `mapx:time.times`. Each hour is its own tile source, loaded as a raster layer.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -42,12 +49,10 @@ function zeigen(param, i) {
 map.on('load', laden);
 document.getElementById('param').addEventListener('change', () => { document.getElementById('stunde').value = 0; laden(); });
 document.getElementById('stunde').addEventListener('input', (e) => zeigen(document.getElementById('param').value, Number(e.target.value)));
-```
+````
 
 > Data source: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution is required.
 
-
 ## APIs used
 
-- [Weather](/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`
-
+- [Weather](https://docs.mapx.at/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`

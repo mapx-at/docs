@@ -1,43 +1,65 @@
-# Kataster
+# Kataster-Tileset: Grundstücksgrenzen
 
+Source: https://docs.mapx.at/de/tilesets/cadastre/
+
+> Grundstücksgrenzen aus der Digitalen Katastralmappe des BEV als Vektorkacheln, z16, mit Katastralgemeinde und Grundstücksnummer.
 
 Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grundstücksnummer, aus der Digitalen Katastralmappe des BEV. Das Tileset hat nur z16; Clients zoomen darüber auf.
 
+**Nutzungen**
 
+- **Grundstückssuche**: Grenzen und Nummern auf der Karte
+- **Planung und Vorprüfung**: Grundstücksgrenzen über Orthophoto legen
+- **Immobilien- und Standortkarten**: Parzellen als Kartenebene
+- **Überlagerung**: Kataster über Basiskarte oder Luftbild (https://docs.mapx.at/de/guides/style-the-basemap/)
+- **QGIS**: Vektorkacheln im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
+**Tileset `mapx-kataster`**
 
+| Kennwert | Wert |
+|---|---|
+| Datei | `mapx-kataster-20260401-e4504d72.pmtiles` |
+| Stichtag | `01.04.2026` |
+| Format | `mvt` |
+| Zoomstufen | `z16–z16` |
+| Gebiet (WGS84) | `9,5251 / 46,3697 / 17,1661 / 49,0235 (W/S/O/N)` |
+| Lizenz | `CC BY 4.0` |
 
 ## Live-Karte
 
-
-
 ## Einbinden
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    new maplibregl.Map({
-      container: "map",
-      style: {
-        version: 8,
-        sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" } },
-        layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
-      }
-    });
-    ```
-    TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles"` (Protokoll wie im [Schnellstart](/de/start/)).
-    **QGIS**
+```js
+new maplibregl.Map({
+  container: "map",
+  style: {
+    version: 8,
+    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" } },
+    layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
+  }
+});
+```
+TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles"` (Protokoll wie im [Schnellstart](https://docs.mapx.at/de/start/index.md)).
 
-    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
-    **curl**
-
-    ```bash
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/cadastre.json
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/cadastre/14/8860/5730.pbf
-    ```
   
+
+**QGIS**
+
+Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+
+  
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/cadastre.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/cadastre/14/8860/5730.pbf
+```
+
 Weil es nur z16 gibt, im Style `minzoom: 16` setzen; die Quelle mit `maxzoom: 16` überzoomt automatisch.
 
 ## Layer-Referenz
@@ -46,7 +68,12 @@ Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und lie
 
 ### parcel_l
 
+Geometrie: **Linie**, Zoom: **z16–16**, Layer: `parcel_l`. Grundstücksgrenzen (Linien).
 
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `gstnr` | `string` | Grundstücksnummer. |
+| `kgnr` | `number` | Nummer der Katastralgemeinde. |
 
 ## Quelle und Aktualität
 
@@ -54,8 +81,7 @@ Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und lie
 
 ## Hinweise
 
-> Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.
-
+> **Achtung:** Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.
 
 - Die Abbildung der Grenzen ist nicht rechtsverbindlich, maßgeblich ist der Kataster beim Vermessungsamt.
 - Unter z16 gibt es keine Kacheln.
@@ -64,7 +90,8 @@ Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und lie
 
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
 
-{{< attribution ts="kataster" >}}
+```html
+Datenquelle: BEV – DKM, CC BY 4.0
+```
 
-Mehr: [Lizenz](/de/reference/attribution/).
-
+Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

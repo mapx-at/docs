@@ -1,5 +1,8 @@
-# Navigation
+# Routing-Guide: Auto, Lkw, Rad, Fuß
 
+Source: https://docs.mapx.at/de/guides/navigation/
+
+> Routen für Auto, Lkw, Rad und zu Fuß in Österreich planen: Maut, Isochronen, Fahrzeitmatrizen, Map Matching und Tourenplanung.
 
 Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`.
 
@@ -23,7 +26,7 @@ Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinat
 | `cycling-mtb` | Mountainbike: bevorzugt Forststraßen und Singletrails, berücksichtigt die MTB-Schwierigkeit |
 | `walking` | Zu Fuß |
 
-Öffentlicher Verkehr ist eine eigene API: [Transit](/de/guides/transit/).
+Öffentlicher Verkehr ist eine eigene API: [Transit](https://docs.mapx.at/de/guides/transit.md).
 
 ## Eine Route
 
@@ -101,7 +104,7 @@ const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725
 const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 ```
 
-Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte zuerst. Mit einem `fill`-Layer anzeigen; siehe [Isochrone](/de/examples/isochrone/) und [Matrix](/de/examples/matrix/). Map Matching nimmt eine GPS-Spur und liefert die eingerastete Route.
+Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte zuerst. Mit einem `fill`-Layer anzeigen; siehe [Isochrone](https://docs.mapx.at/de/examples/isochrone.md) und [Matrix](https://docs.mapx.at/de/examples/matrix.md). Map Matching nimmt eine GPS-Spur und liefert die eingerastete Route.
 
 ## Tourenplanung
 
@@ -117,11 +120,10 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/opt
 
 ## Fehler behandeln
 
-`422` heißt: Die Anfrage ist gültig, aber nicht beantwortbar, zum Beispiel keine Route zwischen den Punkten. `400` nennt den fehlerhaften Parameter in `param`. `429` nach `Retry-After` Sekunden wiederholen. Siehe [Fehler und Limits](/de/api/errors/).
+`422` heißt: Die Anfrage ist gültig, aber nicht beantwortbar, zum Beispiel keine Route zwischen den Punkten. `400` nennt den fehlerhaften Parameter in `param`. `429` nach `Retry-After` Sekunden wiederholen. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 ## Nächste Schritte
 
-- [Directions API](/de/api/directions/), [Optimization API](/de/api/optimization/)
-- [Verkehr](/de/guides/traffic/): Störungen entlang einer Route
-- [Routen-Beispiel](/de/examples/route/)
-
+- [Directions API](https://docs.mapx.at/de/api/directions.md), [Optimization API](https://docs.mapx.at/de/api/optimization.md)
+- [Verkehr](https://docs.mapx.at/de/guides/traffic.md): Störungen entlang einer Route
+- [Routen-Beispiel](https://docs.mapx.at/de/examples/route.md)

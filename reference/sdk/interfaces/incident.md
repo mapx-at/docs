@@ -1,5 +1,9 @@
 # Incident
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/incident/
+
+> mapx-gl Incident
+
 ## Properties
 
 ### category?
@@ -53,4 +57,3 @@
 ### type
 
 > **type**: `string`
-

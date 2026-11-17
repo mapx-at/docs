@@ -1,14 +1,18 @@
 # GeocodeOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/geocodeoptions/
+
+> mapx-gl GeocodeOptions
+
 ## Extends
 
-- [`Common`](/reference/sdk/interfaces/common/)
+- [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md)
 
 ## Properties
 
 ### bbox?
 
-> `optional` **bbox**: [`BBox`](/reference/sdk/type-aliases/bbox/)
+> `optional` **bbox**: [`BBox`](https://docs.mapx.at/reference/sdk/type-aliases/bbox.md)
 
 ***
 
@@ -20,7 +24,7 @@
 
 ### proximity?
 
-> `optional` **proximity**: [`LL`](/reference/sdk/type-aliases/ll/)
+> `optional` **proximity**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 ***
 
@@ -30,11 +34,10 @@
 
 #### Inherited from
 
-[`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+[`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md).[`signal`](https://docs.mapx.at/reference/sdk/interfaces/common.md#signal)
 
 ***
 
 ### types?
 
-> `optional` **types**: `string` \| [`GeocodeType`](/reference/sdk/type-aliases/geocodetype/)[]
-
+> `optional` **types**: `string` \| [`GeocodeType`](https://docs.mapx.at/reference/sdk/type-aliases/geocodetype.md)[]

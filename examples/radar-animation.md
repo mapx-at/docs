@@ -1,9 +1,16 @@
-# Precipitation radar animation
+# Precipitation radar animation example
 
+Source: https://docs.mapx.at/examples/radar-animation/
+
+> Rain and snow of the next three hours in 15-minute steps, played as an animation on the map: weather nowcast of GeoSphere Austria, runnable code.
 
 The TileJSON `/v1/weather/tiles/rr_nowcast.json` lists the 15-minute steps under `mapx:time.times`. The example adds one raster layer per step and switches their visibility, so the animation does not wait for tiles. For a single point use `GET /v1/weather/nowcast/{lon},{lat}`.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -48,13 +55,11 @@ map.on('load', async () => {
 });
 document.getElementById('play').addEventListener('click', abspielen);
 document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
-```
+````
 
 > Data source: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution is required.
 
-
 ## APIs used
 
-- [Weather](/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
-- [Precipitation nowcast](/api/weather/) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
-
+- [Weather](https://docs.mapx.at/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
+- [Precipitation nowcast](https://docs.mapx.at/api/weather.md) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`

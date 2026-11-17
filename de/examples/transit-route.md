@@ -1,9 +1,16 @@
-# ÖV-Verbindung
+# ÖV-Verbindung: Beispiel
 
+Source: https://docs.mapx.at/de/examples/transit-route/
+
+> Start und Ziel anklicken und die Fuß- und Fahrabschnitte einer ÖV-Verbindung in Österreich mit der mapx-ÖV-API erhalten; lauffähiger Code.
 
 Die Transit-API kombiniert Fußwege auf dem Wegenetz mit Fahrten aus dem Fahrplan. Ohne `depart_at` wird für jetzt geplant, `arrive_by` plant rückwärts. Fußabschnitte sind gestrichelt gezeichnet, Fahrten durchgezogen.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Public transit: click start and destination, get walking and riding legs for the next departure.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -36,9 +43,8 @@ map.on('click', async (e) => {
     info.textContent = `${route.departure.slice(11, 16)} to ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} transfer(s): ` + route.legs.map((l) => l.summary).join(' > ');
   } catch (err) { info.textContent = 'Error: ' + err.message; }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/directions/transit/{coordinates}`
-
+- [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/directions/transit/{coordinates}`

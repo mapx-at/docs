@@ -1,5 +1,9 @@
 # DirectionsResponse
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/directionsresponse/
+
+> mapx-gl DirectionsResponse
+
 ## Properties
 
 ### code
@@ -10,11 +14,10 @@
 
 ### routes
 
-> **routes**: [`Route`](/reference/sdk/interfaces/route/)[]
+> **routes**: [`Route`](https://docs.mapx.at/reference/sdk/interfaces/route.md)[]
 
 ***
 
 ### waypoints
 
 > **waypoints**: `object`[]
-

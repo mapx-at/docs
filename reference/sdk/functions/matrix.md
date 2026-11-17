@@ -1,18 +1,21 @@
 # matrix
 
-> **matrix**(`profile`, `points`, `o`): `Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
+Source: https://docs.mapx.at/reference/sdk/functions/matrix/
+
+> mapx-gl matrix
+
+> **matrix**(`profile`, `points`, `o`): `Promise`\<[`MatrixResponse`](https://docs.mapx.at/reference/sdk/interfaces/matrixresponse.md)\>
 
 Fahrzeit-/Distanzmatrix für mehrere Punkte in einer Anfrage.
 
 ## Parameters
 
-• **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **points**: [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **points**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
-• **o**: [`MatrixOptions`](/reference/sdk/interfaces/matrixoptions/) = `{}`
+• **o**: [`MatrixOptions`](https://docs.mapx.at/reference/sdk/interfaces/matrixoptions.md) = `{}`
 
 ## Returns
 
-`Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
-
+`Promise`\<[`MatrixResponse`](https://docs.mapx.at/reference/sdk/interfaces/matrixresponse.md)\>

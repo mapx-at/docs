@@ -1,8 +1,12 @@
 # DirectionsOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/directionsoptions/
+
+> mapx-gl DirectionsOptions
+
 ## Extends
 
-- [`Common`](/reference/sdk/interfaces/common/)
+- [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md)
 
 ## Properties
 
@@ -58,7 +62,7 @@ Autobahn und/oder mautpflichtige Abschnitte meiden (nur Profil `driving`).
 
 #### Inherited from
 
-[`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+[`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md).[`signal`](https://docs.mapx.at/reference/sdk/interfaces/common.md#signal)
 
 ***
 
@@ -93,4 +97,3 @@ Nur `driving-truck`: Gesamtgewicht t (0,5–60), Höhe m (1,5–5), Breite m (1�
 #### width?
 
 > `optional` **width**: `number`
-

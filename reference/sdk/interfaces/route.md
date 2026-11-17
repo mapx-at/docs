@@ -1,5 +1,9 @@
 # Route
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/route/
+
+> mapx-gl Route
+
 ## Indexable
 
  \[`k`: `string`\]: `unknown`
@@ -45,4 +49,3 @@
 ### truck?
 
 > `optional` **truck**: `any`
-

@@ -1,5 +1,8 @@
-# Terrain-RGB
+# Terrain-RGB: Höhenkodierung
 
+Source: https://docs.mapx.at/de/reference/terrain-rgb/
+
+> Wie mapx Höhen in Terrain-RGB-Kacheln als Farbe kodiert (Mapbox-Kodierung, 0,1 m): Wertebereich, Rundung und Dekodierfunktionen.
 
 Terrain-RGB speichert eine Höhe pro Pixel in den drei Farbkanälen eines Bildes. So lassen sich Höhenkacheln mit gewöhnlichen
 Bildformaten ausliefern, und Clients wie MapLibre berechnen daraus Schummerung und 3D-Gelände.
@@ -29,5 +32,4 @@ hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als
 - **Mapbox-kompatibel.** `encoding: "mapbox"` in MapLibre. Terrarium (`R·256 + G + B/256 − 32768`) ist eine andere Kodierung und wird von mapx nicht ausgeliefert.
 - **512 Pixel, kein Rand.** `tileSize: 512`.
 
-Anwendung: [DTM Geländemodell](/de/tilesets/terrain-rgb/).
-
+Anwendung: [DTM Geländemodell](https://docs.mapx.at/de/tilesets/terrain-rgb.md).

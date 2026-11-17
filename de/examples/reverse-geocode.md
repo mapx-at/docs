@@ -1,9 +1,16 @@
-# Reverse Geocoding
+# Reverse Geocoding: Beispiel
 
+Source: https://docs.mapx.at/de/examples/reverse-geocode/
+
+> Karte anklicken und die nächste Adresse erhalten: Reverse Geocoding mit der mapx-Geocoding-API für Österreich, lauffähiger Code mit MapLibre GL JS.
 
 Reverse Geocoding macht aus einer Koordinate die nächste Adresse, Straße oder den nächsten Ort. `types` begrenzt die Art des Ergebnisses, `radius` die Suchdistanz in Metern.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Reverse geocoding: click the map, get the nearest address, street or place.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -25,9 +32,8 @@ map.on('click', async (e) => {
     popup.setLngLat(e.lngLat).setText(f ? f.place_name : 'Nothing found nearby').addTo(map);
   } catch (err) { popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map); }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Geocoding](/de/api/geocoding/) `GET api.mapx.at/v1/reverse`
-
+- [Geocoding](https://docs.mapx.at/de/api/geocoding.md) `GET api.mapx.at/v1/reverse`

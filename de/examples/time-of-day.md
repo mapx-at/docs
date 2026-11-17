@@ -1,9 +1,16 @@
-# Tageszeit und Nachtmodus
+# Tageszeit und Nachtmodus: Beispiel
 
+Source: https://docs.mapx.at/de/examples/time-of-day/
+
+> Den mapx-Standardstil in vier Lichtstimmungen samt Nachtmodus mit MapLibre GL JS zeigen: lauffähiger Beispielcode zum Kopieren.
 
 Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dunkle Oberfläche genügt die Nacht-Variante.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Time of day and night mode: the standard styles come in four lighting moods.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -22,9 +29,8 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
     for (const k of document.querySelectorAll('[data-licht]')) k.setAttribute('aria-pressed', String(k === knopf));
   });
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{streets-dawn|streets|streets-dusk|streets-night}`
-
+- [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{streets-dawn|streets|streets-dusk|streets-night}`

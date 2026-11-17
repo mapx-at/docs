@@ -1,12 +1,16 @@
-# Traffic
+# Traffic guide: incidents and layer
 
-Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](/start/first-map/).
+Source: https://docs.mapx.at/guides/traffic/
+
+> Show traffic incidents, motorway speed limits and a traffic layer on the map and use traffic-aware routes, with the mapx traffic API.
+
+Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](https://docs.mapx.at/start/first-map.md).
 
 | Task | Endpoint |
 |---|---|
-| List incidents, roadworks and closures | [`/v1/traffic/incidents`](/api/traffic/) |
-| Speed limits on variable message signs | [`/v1/traffic/flow`](/api/traffic/) |
-| Positions of the signs | [`/v1/traffic/signs`](/api/traffic/) |
+| List incidents, roadworks and closures | [`/v1/traffic/incidents`](https://docs.mapx.at/api/traffic.md) |
+| Speed limits on variable message signs | [`/v1/traffic/flow`](https://docs.mapx.at/api/traffic.md) |
+| Positions of the signs | [`/v1/traffic/signs`](https://docs.mapx.at/api/traffic.md) |
 | Draw traffic on a map | `/v1/traffic/tiles.json` |
 | Check whether the data is fresh | `/v1/traffic/status` |
 | Route around closures | profile `driving-traffic` |
@@ -72,7 +76,6 @@ The route avoids current closures and lists incidents in `legs[].incidents`. Use
 
 ## Next
 
-- [Traffic API](/api/traffic/)
-- [Navigation](/guides/navigation/): tolls, trucks, alternatives
-- [Attribution](/reference/attribution/): credit ASFINAG and GIP.at
-
+- [Traffic API](https://docs.mapx.at/api/traffic.md)
+- [Navigation](https://docs.mapx.at/guides/navigation.md): tolls, trucks, alternatives
+- [Attribution](https://docs.mapx.at/reference/attribution.md): credit ASFINAG and GIP.at

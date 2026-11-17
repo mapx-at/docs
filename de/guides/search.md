@@ -1,18 +1,21 @@
-# Suche
+# Adresssuche: Geocoding und Autofill
 
+Source: https://docs.mapx.at/de/guides/search/
+
+> Adress- und Ortssuche für Österreich in die eigene App einbauen: Geocoding, Search Box mit Vorschlägen beim Tippen, Adress-Autofill und Adressvalidierung.
 
 Den Endpunkt nach der Aktion der Nutzer wählen.
 
 | Aufgabe | Endpunkt |
 |---|---|
-| Eine eingetippte Adresse oder einen Ort in Koordinaten umwandeln | [`/v1/geocode`](/de/api/geocoding/) |
-| Vorschläge während der Eingabe zeigen | [`/v1/searchbox/suggest`](/de/api/search-box/) |
-| Ein Postadress-Formular ausfüllen | [`/v1/autofill/suggest`](/de/api/address/) |
-| Eine Adresse prüfen | [`/v1/address/validate`](/de/api/address/) |
-| Die Adresse an einem Punkt finden | [`/v1/reverse`](/de/api/geocoding/) |
-| Orte einer Art zeigen (Apotheke, Bahnhof) | [`/v1/searchbox/category/{category}`](/de/api/search-box/) |
+| Eine eingetippte Adresse oder einen Ort in Koordinaten umwandeln | [`/v1/geocode`](https://docs.mapx.at/de/api/geocoding.md) |
+| Vorschläge während der Eingabe zeigen | [`/v1/searchbox/suggest`](https://docs.mapx.at/de/api/search-box.md) |
+| Ein Postadress-Formular ausfüllen | [`/v1/autofill/suggest`](https://docs.mapx.at/de/api/address.md) |
+| Eine Adresse prüfen | [`/v1/address/validate`](https://docs.mapx.at/de/api/address.md) |
+| Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
+| Orte einer Art zeigen (Apotheke, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
-Alle Endpunkte brauchen einen Token ([Zugang und Limits](/de/start/access-and-limits/)). Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 ## Eine Adresse geocodieren
 
@@ -42,7 +45,7 @@ const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?se
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
-Vorschläge tragen eine Kategorie (`poi_category_ids`, zum Beispiel `place_of_worship_church`) und den Verwaltungskontext. Die vorige Anfrage abbrechen, wenn eine neue Taste gedrückt wird (`AbortController`). Beispiel: [Suche](/de/examples/search/).
+Vorschläge tragen eine Kategorie (`poi_category_ids`, zum Beispiel `place_of_worship_church`) und den Verwaltungskontext. Die vorige Anfrage abbrechen, wenn eine neue Taste gedrückt wird (`AbortController`). Beispiel: [Suche](https://docs.mapx.at/de/examples/search.md).
 
 ## Orte nach Kategorie
 
@@ -76,7 +79,6 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/va
 
 ## Nächste Schritte
 
-- [Geocoding API](/de/api/geocoding/), [Search Box API](/de/api/search-box/), [Address API](/de/api/address/)
-- [Grundstücke](/de/guides/parcels/): Suchergebnisse vom Typ parcel
-- [Fehler und Limits](/de/api/errors/)
-
+- [Geocoding API](https://docs.mapx.at/de/api/geocoding.md), [Search Box API](https://docs.mapx.at/de/api/search-box.md), [Address API](https://docs.mapx.at/de/api/address.md)
+- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Suchergebnisse vom Typ parcel
+- [Fehler und Limits](https://docs.mapx.at/de/api/errors.md)

@@ -1,12 +1,14 @@
-# Höhenprofil entlang einer Linie
+# Höhenprofil als Diagramm in JavaScript
 
+Source: https://docs.mapx.at/de/guides/elevation-profile/
+
+> Höhenprofil für einen Weg über die Höhen-API abfragen und als SVG-Diagramm zeichnen, in reinem JavaScript ohne zusätzliche Bibliothek.
 
 **Ziel:** Für eine Wegstrecke ein Höhenprofil (Entfernung gegen Höhe) abfragen und als Diagramm darstellen.
 
-**Voraussetzungen:** ein Browser. Ein kostenloser Token ([Zugang und Limits](/de/start/access-and-limits/)), kein Framework, keine Bibliothek.
+**Voraussetzungen:** ein Browser. Ein kostenloser Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)), kein Framework, keine Bibliothek.
 
-Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
-
+Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
 
 1. **Anfrage testen.** Die Linie besteht aus `lon,lat`-Paaren, getrennt durch Semikolon (Länge vor Breite). 50 Messpunkte entlang einer Strecke am Großglockner:
 
@@ -70,17 +72,14 @@ Der Endpunkt [`/v1/elevation`](/de/api/elevation/) liefert bei `path` und `sampl
 
 4. **Öffnen.** `profil.html` über einen statischen Server öffnen (`npx serve`); der Browser darf die API direkt abfragen. Für Webseiten dazu einen öffentlichen Token (`mx_pk_…`) mit der eigenen Origin verwenden, `localhost` nur während der Entwicklung erlauben.
 
-
 ## Ergebnis
 
 Ein SVG-Diagramm mit Fläche und Linie der Höhe über der Strecke und darunter Länge, Aufstieg und Abstieg.
 
-> Je mehr `samples`, desto genauer der Auf- und Abstieg, aber desto mehr Rauschen. Mit `model=dsm` zeigt das Profil die Oberfläche (Bäume, Gebäude) statt des Geländes, siehe [DTM und DSM](/de/start/faq/#was-ist-der-unterschied-zwischen-dtm-und-dsm). Ein Pfad hat 2 bis 512 Stützpunkte, `samples` 2 bis 1024.
-
+> Je mehr `samples`, desto genauer der Auf- und Abstieg, aber desto mehr Rauschen. Mit `model=dsm` zeigt das Profil die Oberfläche (Bäume, Gebäude) statt des Geländes, siehe [DTM und DSM](https://docs.mapx.at/de/start/faq.md#was-ist-der-unterschied-zwischen-dtm-und-dsm). Ein Pfad hat 2 bis 512 Stützpunkte, `samples` 2 bis 1024.
 
 ## Nächste Schritte
 
-- Alle Parameter und Antwortfelder: [Höhe und Profil](/de/api/elevation/).
-- Linie aus einem GPX-Track: Koordinaten als `lon,lat;lon,lat` zusammensetzen, Reihenfolge siehe [Koordinaten](/de/reference/coordinates/).
-- Limits bei vielen Abfragen: [Fehler und Limits](/de/api/errors/).
-
+- Alle Parameter und Antwortfelder: [Höhe und Profil](https://docs.mapx.at/de/api/elevation.md).
+- Linie aus einem GPX-Track: Koordinaten als `lon,lat;lon,lat` zusammensetzen, Reihenfolge siehe [Koordinaten](https://docs.mapx.at/de/reference/coordinates.md).
+- Limits bei vielen Abfragen: [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).

@@ -1,8 +1,12 @@
-# Tourismus
+# Tourismus: Radrouten und Höhenprofil
+
+Source: https://docs.mapx.at/de/use-cases/tourism/
+
+> Rad- und MTB-Routen, Radrouten-Ebene, Höhenprofil und Wetter für Touren und Gästeinformation: Anwendungsfall Tourismus mit den mapx-APIs.
 
 Gäste fragen „Welchen Weg mit dem Rad, wie steil ist er, und wie wird das Wetter?“. Die Antworten kommen aus derselben API: Routen mit den Profilen `cycling` und `cycling-mtb`, ein Höhenprofil, die beschilderten Radrouten auf der Karte und die Vorhersage für das Ziel.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
 
 ## Routen für Räder
 
@@ -28,7 +32,7 @@ map.addControl(new mapx.LayerControl({ groups: ["bike_routes", "relief"] }), "to
 map.addControl(new mapx.RouteControl({ profiles: ["cycling", "cycling-mtb", "walking"] }), "top-right");
 ```
 
-Das [SDK-Beispiel](/de/examples/sdk-controls/) zeigt beide Controls zusammen.
+Das [SDK-Beispiel](https://docs.mapx.at/de/examples/sdk-controls.md) zeigt beide Controls zusammen.
 
 ## Höhenprofil
 
@@ -42,7 +46,7 @@ console.log(`Anstieg ${Math.round(p.ascent)} m, Abstieg ${Math.round(p.descent)}
 // p.distances[i] (m ab Start) und p.elevations[i] (m) ergeben das Diagramm
 ```
 
-Das Höhenmodell ist das amtliche DGM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](/de/guides/elevation-profile/), dazu das [Live-Beispiel](/de/examples/elevation-profile/).
+Das Höhenmodell ist das amtliche DGM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md), dazu das [Live-Beispiel](https://docs.mapx.at/de/examples/elevation-profile.md).
 
 ## Erreichbarkeit für die Region
 
@@ -54,7 +58,7 @@ map.addSource("reach", { type: "geojson", data: iso });
 map.addLayer({ id: "reach", type: "fill", source: "reach", paint: { "fill-color": "#2346d8", "fill-opacity": 0.12 } });
 ```
 
-Für den öffentlichen Verkehr zum Ausgangspunkt der Tour [`transitDirections`](/de/guides/sdk/helpers/) mit `bike: true` nutzen, um mit dem Rad zur Haltestelle zu fahren.
+Für den öffentlichen Verkehr zum Ausgangspunkt der Tour [`transitDirections`](https://docs.mapx.at/de/guides/sdk/helpers.md) mit `bike: true` nutzen, um mit dem Rad zur Haltestelle zu fahren.
 
 ## Wetter am Ziel
 
@@ -63,11 +67,10 @@ const f = await mapx.weatherForecast([12.694, 47.074], { hours: 12 }); // Großg
 console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`weatherCurrent` liefert die Messwerte der nächsten Stationen. Als Kartenebene siehe das [Wetter-Overlay](/de/examples/weather-overlay/). Wetterdaten: GeoSphere Austria (CC BY 4.0).
+`weatherCurrent` liefert die Messwerte der nächsten Stationen. Als Kartenebene siehe das [Wetter-Overlay](https://docs.mapx.at/de/examples/weather-overlay.md). Wetterdaten: GeoSphere Austria (CC BY 4.0).
 
 ## Nächste Schritte
 
-- [Navigation](/de/guides/navigation/) und [Höhe und Gelände](/de/guides/elevation/)
-- [3D-Gelände](/de/guides/3d-terrain/) für eine eindrucksvolle Tourenkarte
-- [Statische Bilder](/de/guides/static-images/) für Prospekte und Newsletter
-
+- [Navigation](https://docs.mapx.at/de/guides/navigation.md) und [Höhe und Gelände](https://docs.mapx.at/de/guides/elevation.md)
+- [3D-Gelände](https://docs.mapx.at/de/guides/3d-terrain.md) für eine eindrucksvolle Tourenkarte
+- [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md) für Prospekte und Newsletter

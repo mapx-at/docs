@@ -1,5 +1,9 @@
 # ParcelPopupOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/parcelpopupoptions/
+
+> mapx-gl ParcelPopupOptions
+
 ## Properties
 
 ### dossier?
@@ -24,9 +28,8 @@ Parzellenumriss auf der Karte hervorheben. Standard `true`.
 
 #### Parameters
 
-• **p**: [`Dossier`](/reference/sdk/interfaces/dossier/) \| `Feature`\<`Geometry`, `GeoJsonProperties`\>
+• **p**: [`Dossier`](https://docs.mapx.at/reference/sdk/interfaces/dossier.md) \| `Feature`\<`Geometry`, `GeoJsonProperties`\>
 
 #### Returns
 
 `void`
-

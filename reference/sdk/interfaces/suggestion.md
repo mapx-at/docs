@@ -1,5 +1,9 @@
 # Suggestion
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/suggestion/
+
+> mapx-gl Suggestion
+
 ## Properties
 
 ### context?
@@ -53,4 +57,3 @@
 ### stop\_id?
 
 > `optional` **stop\_id**: `string`
-

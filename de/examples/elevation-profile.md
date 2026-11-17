@@ -1,9 +1,16 @@
-# Höhenprofil
+# Höhenprofil: Beispiel auf der Karte
 
+Source: https://docs.mapx.at/de/examples/elevation-profile/
+
+> Eine Linie auf der Karte klicken und das Höhenprofil sehen: Höhenprofil-API mit lauffähigem MapLibre-GL-JS-Code zum Kopieren.
 
 Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `samples` gleichmäßig verteilte Messpunkte samt Auf- und Abstieg liefert. Ein Canvas zeichnet das Profil.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -42,9 +49,8 @@ async function zeichne() {
   let auf = 0, ab = 0; pts.forEach((p, i) => { if (i) { const dh = p.h - pts[i - 1].h; dh > 0 ? (auf += dh) : (ab -= dh); } });
   document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, Aufstieg ${Math.round(auf)} m, Abstieg ${Math.round(ab)} m`;
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Höhe und Profil](/de/api/elevation/#elevation-profile-along-a-line) `GET api.mapx.at/v1/elevation/profile`
-
+- [Höhe und Profil](https://docs.mapx.at/de/api/elevation.md#elevation-profile-along-a-line) `GET api.mapx.at/v1/elevation/profile`

@@ -1,55 +1,81 @@
-# DSM Oberflächenmodell
+# DSM-Oberflächenmodell (Tileset)
 
+Source: https://docs.mapx.at/de/tilesets/dsm/
 
-Das DSM ist das Gegenstück zum [DTM](/de/tilesets/terrain-rgb/): Es zeigt die Oberfläche mit Gebäuden, Bäumen und Brücken. Kodierung, Kachelgröße und Zoomstufen sind identisch, alle Clients und Formeln des DTM gelten unverändert.
+> Digitales Oberflächenmodell Österreich mit Gebäuden und Bewuchs als Terrain-RGB (0,1 m), z5 bis z16, aus dem BEV ALS-DOM 1 m.
 
+Das DSM ist das Gegenstück zum [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Es zeigt die Oberfläche mit Gebäuden, Bäumen und Brücken. Kodierung, Kachelgröße und Zoomstufen sind identisch, alle Clients und Formeln des DTM gelten unverändert.
 
+**Nutzungen**
+
+- **Gebäude- und Bewuchshöhe**: nDSM aus DSM minus DTM im Client
+- **Solarplanung**: Dach- und Verschattungshöhen als Grundlage
+- **Sichtbarkeit und Verschattung**: Oberfläche inklusive Bebauung und Wald
+- **3D-Stadt- und Landschaftsansicht**: Oberfläche als Terrain im Browser (https://docs.mapx.at/de/guides/3d-terrain/)
+- **Höhenprofile**: Profil über der Oberfläche (https://docs.mapx.at/de/guides/elevation-profile/)
 
 ## Kennwerte
 
+**Tileset `relief-dsm-terrainrgb`**
 
+| Kennwert | Wert |
+|---|---|
+| Datei | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
+| Stichtag | `15.09.2025` |
+| Format | `webp, Kodierung mapbox, 512 px` |
+| Zoomstufen | `z5–z16` |
+| Gebiet (WGS84) | `9,5306 / 46,3697 / 17,1661 / 49,0235 (W/S/O/N)` |
+| Vertikale Auflösung | `0,1 m (Terrain-RGB)` |
+| Lizenz | `CC BY 4.0` |
 
 ## Live-Karte
 
-
-
-Der Klick dekodiert das Pixel der Kachel (Formel unter [Terrain-RGB](/de/reference/terrain-rgb/)).
+Der Klick dekodiert das Pixel der Kachel (Formel unter [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md)).
 
 ## Einbinden
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    new maplibregl.Map({
-      container: "map",
-      style: {
-        version: 8,
-        sources: { dsm: { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/dsm.json", tileSize: 512, encoding: "mapbox" } },
-        terrain: { source: "dsm", exaggeration: 1.2 },
-        layers: [{ id: "hill", type: "hillshade", source: "dsm" }]
-      }
-    });
-    ```
-    TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles"` (Protokoll wie im [Schnellstart](/de/start/)).
-    **Leaflet**
+```js
+new maplibregl.Map({
+  container: "map",
+  style: {
+    version: 8,
+    sources: { dsm: { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/dsm.json", tileSize: 512, encoding: "mapbox" } },
+    terrain: { source: "dsm", exaggeration: 1.2 },
+    layers: [{ id: "hill", type: "hillshade", source: "dsm" }]
+  }
+});
+```
+TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles"` (Protokoll wie im [Schnellstart](https://docs.mapx.at/de/start/index.md)).
 
-    ```js
-    L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp", {
-      tileSize: 512, zoomOffset: -1, crossOrigin: true,
-      attribution: "BEV, CC BY 4.0"
-    }).addTo(map);
-    ```
-    **QGIS**
-
-    XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
-    **curl**
-
-    ```bash
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/dsm.json
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/dsm/14/8860/5730.webp
-    ```
   
-Höhe per HTTP: [Höhe und Profil](/de/api/elevation/) mit `model=dsm`.
+
+**Leaflet**
+
+```js
+L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp", {
+  tileSize: 512, zoomOffset: -1, crossOrigin: true,
+  attribution: "BEV, CC BY 4.0"
+}).addTo(map);
+```
+
+  
+
+**QGIS**
+
+XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+
+  
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/dsm.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/dsm/14/8860/5730.webp
+```
+
+Höhe per HTTP: [Höhe und Profil](https://docs.mapx.at/de/api/elevation.md) mit `model=dsm`.
 
 ## Quelle und Aktualität
 
@@ -70,7 +96,8 @@ Das DSM entsteht aus dem ALS-DOM 1 m des BEV (Airborne Laserscanning, Oberfläch
 
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
 
-{{< attribution ts="dsm" >}}
+```html
+Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/cced2282-cfc5-42eb-9acb-b1c799522fcd">BEV – ALS-DOM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+```
 
-Mehr: [Lizenz](/de/reference/attribution/).
-
+Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

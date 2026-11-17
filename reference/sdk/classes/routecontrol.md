@@ -1,5 +1,9 @@
 # RouteControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/routecontrol/
+
+> mapx-gl RouteControl
+
 Routenplaner: Start/Ziel per Klick, Profile inkl. Lkw und MTB, Maut/Autobahn meiden, Lkw-Maße. Ergebnis in `last` und `onRoute`.
 
 ## Implements
@@ -10,21 +14,21 @@ Routenplaner: Start/Ziel per Klick, Profile inkl. Lkw und MTB, Maut/Autobahn mei
 
 ### new RouteControl()
 
-> **new RouteControl**(`o`): [`RouteControl`](/reference/sdk/classes/routecontrol/)
+> **new RouteControl**(`o`): [`RouteControl`](https://docs.mapx.at/reference/sdk/classes/routecontrol.md)
 
 #### Parameters
 
-• **o**: [`RouteOptions`](/reference/sdk/interfaces/routeoptions/) = `{}`
+• **o**: [`RouteOptions`](https://docs.mapx.at/reference/sdk/interfaces/routeoptions.md) = `{}`
 
 #### Returns
 
-[`RouteControl`](/reference/sdk/classes/routecontrol/)
+[`RouteControl`](https://docs.mapx.at/reference/sdk/classes/routecontrol.md)
 
 ## Properties
 
 ### last
 
-> **last**: `null` \| [`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/) = `null`
+> **last**: `null` \| [`DirectionsResponse`](https://docs.mapx.at/reference/sdk/interfaces/directionsresponse.md) = `null`
 
 ## Methods
 
@@ -93,11 +97,10 @@ Start und Ziel setzen und sofort rechnen.
 
 #### Parameters
 
-• **from**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **from**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **to**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **to**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 #### Returns
 
 `Promise`\<`void`\>
-

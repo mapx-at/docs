@@ -1,9 +1,16 @@
-# Elevation on click
+# Elevation on click example
 
+Source: https://docs.mapx.at/examples/elevation-on-click/
+
+> A map click queries the elevation at a point, either terrain height or surface height including buildings, with the mapx elevation API.
 
 The elevation API returns GeoJSON with `elevation` in metres. The DTM shows the terrain, the DSM buildings and vegetation.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Query elevation: a click asks /v1/elevation (DTM or DSM) for the point.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -27,9 +34,8 @@ map.on('click', async (e) => {
     popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map);
   }
 });
-```
+````
 
 ## APIs used
 
-- [Elevation](/api/elevation/) `GET /v1/elevation`
-
+- [Elevation](https://docs.mapx.at/api/elevation.md) `GET /v1/elevation`

@@ -1,5 +1,9 @@
 # ElevationProfileControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/elevationprofilecontrol/
+
+> mapx-gl ElevationProfileControl
+
 Linie klicken, Höhenprofil (Auf-/Abstieg, Diagramm) über /v1/elevation/profile.
 
 ## Extends
@@ -10,11 +14,11 @@ Linie klicken, Höhenprofil (Auf-/Abstieg, Diagramm) über /v1/elevation/profile
 
 ### new ElevationProfileControl()
 
-> **new ElevationProfileControl**(): [`ElevationProfileControl`](/reference/sdk/classes/elevationprofilecontrol/)
+> **new ElevationProfileControl**(): [`ElevationProfileControl`](https://docs.mapx.at/reference/sdk/classes/elevationprofilecontrol.md)
 
 #### Returns
 
-[`ElevationProfileControl`](/reference/sdk/classes/elevationprofilecontrol/)
+[`ElevationProfileControl`](https://docs.mapx.at/reference/sdk/classes/elevationprofilecontrol.md)
 
 #### Inherited from
 
@@ -24,7 +28,7 @@ Linie klicken, Höhenprofil (Auf-/Abstieg, Diagramm) über /v1/elevation/profile
 
 ### last
 
-> **last**: `null` \| [`ElevationProfile`](/reference/sdk/interfaces/elevationprofile/) = `null`
+> **last**: `null` \| [`ElevationProfile`](https://docs.mapx.at/reference/sdk/interfaces/elevationprofile.md) = `null`
 
 Letztes Profil (für eigene Auswertung).
 
@@ -63,4 +67,3 @@ internally.
 #### Inherited from
 
 `DrawControl.onRemove`
-

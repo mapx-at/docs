@@ -1,6 +1,10 @@
-# SDK helpers for the APIs
+# SDK helpers: one function per API
 
-Every helper is a plain `async` function that returns typed JSON and throws a [`MapxError`](/guides/sdk/errors/) on failure. Coordinates are `[lng, lat]`. Pass `signal` (an `AbortSignal`) to cancel a request. All examples run in the browser console on any page that has loaded `mapx` ([install](/guides/sdk/)) and set a token with `mapx.setAccessToken("YOUR_TOKEN")`.
+Source: https://docs.mapx.at/guides/sdk/helpers/
+
+> One typed function per API: search, geocoding, routing, matrix, optimization, parcels, elevation, traffic, transit, weather and static images.
+
+Every helper is a plain `async` function that returns typed JSON and throws a [`MapxError`](https://docs.mapx.at/guides/sdk/errors.md) on failure. Coordinates are `[lng, lat]`. Pass `signal` (an `AbortSignal`) to cancel a request. All examples run in the browser console on any page that has loaded `mapx` ([install](https://docs.mapx.at/guides/sdk/index.md)) and set a token with `mapx.setAccessToken("YOUR_TOKEN")`.
 
 ## Search and geocoding
 
@@ -31,7 +35,7 @@ const bus = await mapx.transitDirections(vienna, [16.4, 48.19], { departAt: "202
 console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0].steps.length);
 ```
 
-`exclude` (`motorway`, `toll`) works for `driving`, `driving-traffic` and `driving-truck`, `truck` only for `driving-truck`. The server validates both: a wrong combination throws a `MapxError` with `code: "bad-request"`. The `ferry` exclusion is not part of the typed options yet; use the [Directions API](/api/directions/) for it.
+`exclude` (`motorway`, `toll`) works for `driving`, `driving-traffic` and `driving-truck`, `truck` only for `driving-truck`. The server validates both: a wrong combination throws a `MapxError` with `code: "bad-request"`. The `ferry` exclusion is not part of the typed options yet; use the [Directions API](https://docs.mapx.at/api/directions.md) for it.
 
 ```js
 // Reachability and travel times
@@ -99,7 +103,6 @@ Use `mapx.geojsonOverlay(feature)` to draw a polygon (for example a parcel) with
 
 ## Next
 
-- [Controls and popups](/guides/sdk/controls/)
-- [Errors and retries](/guides/sdk/errors/)
-- [SDK reference](/reference/sdk/) with all types
-
+- [Controls and popups](https://docs.mapx.at/guides/sdk/controls.md)
+- [Errors and retries](https://docs.mapx.at/guides/sdk/errors.md)
+- [SDK reference](https://docs.mapx.at/reference/sdk/index.md) with all types

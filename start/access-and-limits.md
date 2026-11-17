@@ -1,4 +1,8 @@
-# Access and limits
+# API token, access and rate limits
+
+Source: https://docs.mapx.at/start/access-and-limits/
+
+> Get a free mapx API token, learn the difference between public and secret tokens, how to send them, rate limits per zone, CORS and caching.
 
 ## Get a token
 
@@ -59,13 +63,13 @@ const map = new maplibregl.Map({
 
 When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites). Clients that cannot set `transformRequest` then work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"`. Such a response is `private` and must not be shared.
 
-**With the SDK.** `mapx.map({ accessToken: "YOUR_TOKEN", … })` or `mapx.setAccessToken("YOUR_TOKEN")` once; all helpers, styles, tiles and `staticImageUrl()` then carry the token. See [SDK](/guides/sdk/).
+**With the SDK.** `mapx.map({ accessToken: "YOUR_TOKEN", … })` or `mapx.setAccessToken("YOUR_TOKEN")` once; all helpers, styles, tiles and `staticImageUrl()` then carry the token. See [SDK](https://docs.mapx.at/guides/sdk/index.md).
 
 **PMTiles files.** Append the token to the file URL: `pmtiles://https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
 
 **Android.** Send `Authorization: Bearer <public token>` plus `X-Mapx-Android-Package` (package name) and `X-Mapx-Android-Cert` (SHA-256 of the signing certificate, read at run time with `PackageManager`).
 
-Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](/api/errors/). During the transition period the token may still be optional: requests without one succeed and carry the header `X-Mapx-Token-Warning`.
+Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md). During the transition period the token may still be optional: requests without one succeed and carry the header `X-Mapx-Token-Warning`.
 
 ## Rate limits
 
@@ -80,7 +84,7 @@ Limits apply per token and zone (requests without a valid token count per IP add
 | `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
 | `heavy` | 30/min, burst 5 | static images, isochrone, matrix, matching, optimization, batch geocoding |
 
-For bulk work, download the [PMTiles](/tilesets/) file once instead of requesting millions of tiles. Details and retry advice: [Errors and limits](/api/errors/).
+For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) file once instead of requesting millions of tiles. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## CORS and caching
 
@@ -88,10 +92,9 @@ CORS allows every origin, so you can call the APIs straight from the browser. Th
 
 ## Attribution
 
-Show the source of the data wherever the map or result is visible. MapLibre adds the text for you when you load a style or TileJSON. See [Attribution](/reference/attribution/).
+Show the source of the data wherever the map or result is visible. MapLibre adds the text for you when you load a style or TileJSON. See [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 
-- [First map in 5 minutes](/start/first-map/)
-- [Errors and limits](/api/errors/)
-
+- [First map in 5 minutes](https://docs.mapx.at/start/first-map.md)
+- [Errors and limits](https://docs.mapx.at/api/errors.md)

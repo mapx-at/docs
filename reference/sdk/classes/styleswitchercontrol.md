@@ -1,5 +1,9 @@
 # StyleSwitcherControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/styleswitchercontrol/
+
+> mapx-gl StyleSwitcherControl
+
 Dropdown zum Umschalten der Styles (Kurznamen aus /v1/styles). Gelände bleibt erhalten.
 
 ## Implements
@@ -10,7 +14,7 @@ Dropdown zum Umschalten der Styles (Kurznamen aus /v1/styles). Gelände bleibt e
 
 ### new StyleSwitcherControl()
 
-> **new StyleSwitcherControl**(`o`): [`StyleSwitcherControl`](/reference/sdk/classes/styleswitchercontrol/)
+> **new StyleSwitcherControl**(`o`): [`StyleSwitcherControl`](https://docs.mapx.at/reference/sdk/classes/styleswitchercontrol.md)
 
 #### Parameters
 
@@ -18,7 +22,7 @@ Dropdown zum Umschalten der Styles (Kurznamen aus /v1/styles). Gelände bleibt e
 
 #### Returns
 
-[`StyleSwitcherControl`](/reference/sdk/classes/styleswitchercontrol/)
+[`StyleSwitcherControl`](https://docs.mapx.at/reference/sdk/classes/styleswitchercontrol.md)
 
 ## Methods
 
@@ -66,4 +70,3 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
-

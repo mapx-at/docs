@@ -1,4 +1,8 @@
-# Coordinates
+# Coordinates: lon,lat, WGS84, Web Mercator
+
+Source: https://docs.mapx.at/reference/coordinates/
+
+> Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
 
 ## Order: longitude first
 
@@ -8,7 +12,7 @@ All mapx interfaces, TileJSON, MapLibre and GeoJSON use **`lon, lat`** (longitud
 12.694,47.074      // lon,lat: Großglockner area
 ```
 
-Many map apps and GPS devices show `lat, lon` instead. Swapped values end up in the Indian Ocean, not in Austria. The [elevation API](/api/elevation/) expects `points=lon,lat;lon,lat`. Leaflet takes `[lat, lon]` in `L.latLng`, MapLibre and OpenLayers `[lon, lat]`.
+Many map apps and GPS devices show `lat, lon` instead. Swapped values end up in the Indian Ocean, not in Austria. The [elevation API](https://docs.mapx.at/api/elevation.md) expects `points=lon,lat;lon,lat`. Leaflet takes `[lat, lon]` in `L.latLng`, MapLibre and OpenLayers `[lon, lat]`.
 
 ## EPSG:4326 and EPSG:3857
 
@@ -18,7 +22,7 @@ Many map apps and GPS devices show `lat, lon` instead. Swapped values end up in 
 | Used for | input and output of the APIs, GeoJSON, GPS | tile scheme of maps |
 | Example | `12.694, 47.074` | `1413090, 5954161` |
 
-Inputs to the APIs are always **WGS84 (EPSG:4326)**. Tiles are in **Web Mercator (EPSG:3857)**, see [Tile scheme](/reference/tile-scheme/). Clients convert between them themselves; you do not need to compute tile coordinates.
+Inputs to the APIs are always **WGS84 (EPSG:4326)**. Tiles are in **Web Mercator (EPSG:3857)**, see [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md). Clients convert between them themselves; you do not need to compute tile coordinates.
 
 Web Mercator distances in Austria are about 50 % larger than true metres (factor `1 / cos(latitude)`). Do not measure lengths and areas in EPSG:3857; use geodesic measurement or a local system such as EPSG:31287 (MGI / Austria Lambert) or EPSG:3035 (ETRS89-LAEA).
 
@@ -30,6 +34,5 @@ The authorities' source data uses different systems: Austrian national survey (M
 
 ## Further reading
 
-- [Tile scheme](/reference/tile-scheme/)
-- [Elevation and profile](/api/elevation/)
-
+- [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md)
+- [Elevation and profile](https://docs.mapx.at/api/elevation.md)

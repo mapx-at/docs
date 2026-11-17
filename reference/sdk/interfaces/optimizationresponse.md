@@ -1,5 +1,9 @@
 # OptimizationResponse
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/optimizationresponse/
+
+> mapx-gl OptimizationResponse
+
 ## Properties
 
 ### code
@@ -43,4 +47,3 @@
 ### unassigned
 
 > **unassigned**: `object`[]
-

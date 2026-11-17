@@ -1,5 +1,9 @@
 # MapxError
 
+Source: https://docs.mapx.at/reference/sdk/classes/mapxerror/
+
+> mapx-gl MapxError
+
 Fehler der mapx-API (`application/problem+json`, RFC 9457). Auf `code` verzweigen, nie auf den Text.
 
 ## Extends
@@ -10,7 +14,7 @@ Fehler der mapx-API (`application/problem+json`, RFC 9457). Auf `code` verzweige
 
 ### new MapxError()
 
-> **new MapxError**(`init`): [`MapxError`](/reference/sdk/classes/mapxerror/)
+> **new MapxError**(`init`): [`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)
 
 #### Parameters
 
@@ -34,7 +38,7 @@ Fehler der mapx-API (`application/problem+json`, RFC 9457). Auf `code` verzweige
 
 #### Returns
 
-[`MapxError`](/reference/sdk/classes/mapxerror/)
+[`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)
 
 #### Overrides
 
@@ -100,7 +104,7 @@ URI des Fehlertyps (Anker auf docs.mapx.at/api/errors/).
 
 ### fromResponse()
 
-> `static` **fromResponse**(`r`): `Promise`\<[`MapxError`](/reference/sdk/classes/mapxerror/)\>
+> `static` **fromResponse**(`r`): `Promise`\<[`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)\>
 
 Fehler aus einer Antwort lesen (auch wenn der Body kein problem+json ist).
 
@@ -110,5 +114,4 @@ Fehler aus einer Antwort lesen (auch wenn der Body kein problem+json ist).
 
 #### Returns
 
-`Promise`\<[`MapxError`](/reference/sdk/classes/mapxerror/)\>
-
+`Promise`\<[`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)\>

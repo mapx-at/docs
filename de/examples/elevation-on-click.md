@@ -1,9 +1,16 @@
-# Höhe per Klick
+# Höhe per Klick: Beispiel
 
+Source: https://docs.mapx.at/de/examples/elevation-on-click/
+
+> Ein Klick auf die Karte fragt die Höhe an einem Punkt ab, wahlweise Geländehöhe oder Oberflächenhöhe samt Gebäuden, mit der mapx-Höhen-API.
 
 Die Höhen-API liefert GeoJSON mit `elevation` in Metern. DTM zeigt das Gelände, DSM Gebäude und Bewuchs.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Query elevation: a click asks /v1/elevation (DTM or DSM) for the point.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -27,9 +34,8 @@ map.on('click', async (e) => {
     popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map);
   }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Höhe](/de/api/elevation/) `GET /v1/elevation`
-
+- [Höhe](https://docs.mapx.at/de/api/elevation.md) `GET /v1/elevation`

@@ -1,12 +1,14 @@
-# Overlay contour lines
+# Contour lines over orthophoto
 
+Source: https://docs.mapx.at/guides/overlay-contours/
+
+> Place contour lines (Höhenlinien) with index lines and elevation labels over the orthophoto or the basemap in MapLibre GL JS.
 
 **Goal:** Place contour lines of suitable density over aerial imagery, draw index lines more strongly and label them with their elevation.
 
-**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](/start/access-and-limits/)). Labels use the mapx fonts, see [Style the basemap](/guides/style-the-basemap/#labels-and-fonts).
+**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Labels use the mapx fonts, see [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md#labels-and-fonts).
 
-The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `lvl` (generalisation level 10, 12, 14, 16). Lines exist from z10.
-
+The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `lvl` (generalisation level 10, 12, 14, 16). Lines exist from z10.
 
 1. **Page with background.** The orthophoto as base, the contours as a vector source:
 
@@ -92,19 +94,16 @@ The [contour lines](/tilesets/contours/) tileset has a layer `contour_l` with th
    </script>
    ```
 
-
 ## Result
 
 Fine contour lines lie over the aerial imagery, their interval follows the zoom (100 m to 10 m). Index lines are strong and carry the elevation in metres.
 
-For a map instead of imagery, replace the orthophoto layer with the layers from [Style the basemap](/guides/style-the-basemap/); put the contours on top.
+For a map instead of imagery, replace the orthophoto layer with the layers from [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md); put the contours on top.
 
-> Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](/guides/3d-terrain/).
-
+> Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](https://docs.mapx.at/guides/3d-terrain.md).
 
 ## Next steps
 
-- Fields and levels in detail: [Contour lines](/tilesets/contours/).
-- Three-dimensional terrain: [3D terrain](/guides/3d-terrain/).
-- Credits: [Attribution](/reference/attribution/).
-
+- Fields and levels in detail: [Contour lines](https://docs.mapx.at/tilesets/contours.md).
+- Three-dimensional terrain: [3D terrain](https://docs.mapx.at/guides/3d-terrain.md).
+- Credits: [Attribution](https://docs.mapx.at/reference/attribution.md).

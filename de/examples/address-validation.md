@@ -1,9 +1,16 @@
-# Adressvalidierung
+# Adressvalidierung: Beispiel
 
+Source: https://docs.mapx.at/de/examples/address-validation/
+
+> Eine Adresse mit der Adressvalidierungs-API gegen das amtliche österreichische Adressregister prüfen und das korrigierte Ergebnis zeigen. Lauffähiger Code.
 
 Die Validierung gleicht die vier Adressteile mit dem Adressregister des BEV ab. Das Ergebnis hat einen `status` (`match`, `corrected`, `ambiguous`, `not_found`), die Liste der `deviations` und entweder die passende `address` mit Koordinaten oder eine Liste von `candidates`. Die vorbelegte Adresse enthält absichtlich einen Tippfehler.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Address validation: check a typed address against the official register (BEV) and show the corrected result.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -30,9 +37,8 @@ document.getElementById('pruefen').addEventListener('click', async () => {
     if (hit) { marker = new maplibregl.Marker().setLngLat(hit.at).addTo(map); map.flyTo({ center: hit.at, zoom: 16 }); }
   } catch (e) { out.textContent = 'Error: ' + e.message; }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Adressen](/de/api/address/) `GET api.mapx.at/v1/address/validate`
-
+- [Adressen](https://docs.mapx.at/de/api/address.md) `GET api.mapx.at/v1/address/validate`

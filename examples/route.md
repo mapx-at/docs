@@ -1,9 +1,16 @@
-# Route
+# Route example: start and destination
 
+Source: https://docs.mapx.at/examples/route/
+
+> Click a start and a destination on the map and get the route with length and duration from the mapx routing API; runnable code to copy.
 
 The routing API works on the GIP.at network for walking, cycling, mountain biking and driving. The response has the Mapbox shape `routes[0]` with `geometry` (GeoJSON line), `distance` in metres and `duration` in seconds.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Route: click start and destination on the map, the Directions API returns a GeoJSON line.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -36,9 +43,8 @@ map.on('click', async (e) => {
     info.textContent = `${(route.distance / 1000).toFixed(2)} km, ${Math.round(route.duration / 60)} min`;
   } catch (err) { info.textContent = 'Error: ' + err.message; }
 });
-```
+````
 
 ## APIs used
 
-- [Routing](/api/directions/#routing) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
-
+- [Routing](https://docs.mapx.at/api/directions.md#routing) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`

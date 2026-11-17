@@ -1,12 +1,14 @@
 # PMTiles selbst hosten
 
+Source: https://docs.mapx.at/de/guides/self-host-pmtiles/
+
+> PMTiles-Dateien herunterladen oder spiegeln und mit Range-Requests, CORS und Caching vom eigenen Server, S3 oder CDN ausliefern.
 
 **Ziel:** Eine mapx-PMTiles-Datei auf eigener Infrastruktur betreiben, zum Beispiel für Ausfallsicherheit, interne Netze oder eigene Domain, oder einen Ausschnitt davon.
 
 **Voraussetzungen:** ein Server, S3-kompatibler Speicher oder CDN mit Unterstützung für HTTP-Range-Anfragen. Eine PMTiles-Datei ist eine einzelne statische Datei; ein Tile-Server ist nicht nötig.
 
-Die Dateien liegen unter `https://tiles.mapx.at/<datei>.pmtiles` (Token als `?access_token=DEIN_TOKEN` anhängen, siehe [Zugang und Limits](/de/start/access-and-limits/); Dateinamen je Produkt unter „Kennwerte“ auf den [Produktseiten](/de/tilesets/)). Der Dateiname enthält den Stichtag und ändert sich nie, ein neuer Stand bekommt einen neuen Namen. Mit Quellenangabe nach [CC BY 4.0](/de/reference/attribution/) dürfen die Dateien weitergegeben und gespiegelt werden.
-
+Die Dateien liegen unter `https://tiles.mapx.at/<datei>.pmtiles` (Token als `?access_token=DEIN_TOKEN` anhängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md); Dateinamen je Produkt unter „Kennwerte“ auf den [Produktseiten](https://docs.mapx.at/de/tilesets/index.md)). Der Dateiname enthält den Stichtag und ändert sich nie, ein neuer Stand bekommt einen neuen Namen. Mit Quellenangabe nach [CC BY 4.0](https://docs.mapx.at/de/reference/attribution.md) dürfen die Dateien weitergegeben und gespiegelt werden.
 
 1. **Datei herunterladen.** `curl -C -` setzt einen abgebrochenen Download fort:
 
@@ -58,21 +60,18 @@ Die Dateien liegen unter `https://tiles.mapx.at/<datei>.pmtiles` (Token als `?ac
    curl -s -D - -o /dev/null -r 0-16383 https://tiles.example.com/salzburg.pmtiles
    ```
 
-
 ## Caching
 
-Weil Dateinamen unveränderlich sind, ist `Cache-Control: public, max-age=31536000, immutable` richtig. Ein neuer Stand wird unter neuem Namen veröffentlicht; die eigene Seite wechselt, indem sie die neue URL einträgt. Details zum Caching der mapx-Dienste: [Fehler, Limits und Betrieb](/de/api/errors/).
+Weil Dateinamen unveränderlich sind, ist `Cache-Control: public, max-age=31536000, immutable` richtig. Ein neuer Stand wird unter neuem Namen veröffentlicht; die eigene Seite wechselt, indem sie die neue URL einträgt. Details zum Caching der mapx-Dienste: [Fehler, Limits und Betrieb](https://docs.mapx.at/de/api/errors.md).
 
 ## Ergebnis
 
 Eine Datei oder ein Ausschnitt wird unabhängig von mapx ausgeliefert, mit demselben Aussehen und derselben Genauigkeit wie die Originalkacheln.
 
-> Eine Alternative ohne eigene Dateien: die [TileJSON-Adresse](/de/api/tiles/) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Sie zeigt immer auf den aktuellen Stand.
-
+> Eine Alternative ohne eigene Dateien: die [TileJSON-Adresse](https://docs.mapx.at/de/api/tiles.md) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Sie zeigt immer auf den aktuellen Stand.
 
 ## Nächste Schritte
 
 - Dateiformat und Protokoll: [PMTiles-Dokumentation](https://docs.protomaps.com/pmtiles/).
-- Anzeigen mit MapLibre: [Schnellstart](/de/start/).
-- Quellenangabe nicht vergessen: [Attribution](/de/reference/attribution/).
-
+- Anzeigen mit MapLibre: [Schnellstart](https://docs.mapx.at/de/start/index.md).
+- Quellenangabe nicht vergessen: [Attribution](https://docs.mapx.at/de/reference/attribution.md).

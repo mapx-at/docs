@@ -1,22 +1,26 @@
 # ParcelPopup
 
+Source: https://docs.mapx.at/reference/sdk/classes/parcelpopup/
+
+> mapx-gl ParcelPopup
+
 Klick auf die Karte öffnet ein Popup mit dem Grundstück an dieser Stelle (Nummer, KG, Fläche, Gebäude, Höhe).
 
 ## Constructors
 
 ### new ParcelPopup()
 
-> **new ParcelPopup**(`map`, `o`): [`ParcelPopup`](/reference/sdk/classes/parcelpopup/)
+> **new ParcelPopup**(`map`, `o`): [`ParcelPopup`](https://docs.mapx.at/reference/sdk/classes/parcelpopup.md)
 
 #### Parameters
 
 • **map**: `Map$1`
 
-• **o**: [`ParcelPopupOptions`](/reference/sdk/interfaces/parcelpopupoptions/) = `{}`
+• **o**: [`ParcelPopupOptions`](https://docs.mapx.at/reference/sdk/interfaces/parcelpopupoptions.md) = `{}`
 
 #### Returns
 
-[`ParcelPopup`](/reference/sdk/classes/parcelpopup/)
+[`ParcelPopup`](https://docs.mapx.at/reference/sdk/classes/parcelpopup.md)
 
 ## Methods
 
@@ -27,4 +31,3 @@ Klick auf die Karte öffnet ein Popup mit dem Grundstück an dieser Stelle (Numm
 #### Returns
 
 `void`
-

@@ -1,5 +1,9 @@
 # mapx
 
+Source: https://docs.mapx.at/reference/sdk/variables/mapx/
+
+> mapx-gl mapx
+
 > `const` **mapx**: `object`
 
 Namespace-Objekt: `mapx.map({...})`, `mapx.directions(...)`.
@@ -8,41 +12,41 @@ Namespace-Objekt: `mapx.map({...})`, `mapx.directions(...)`.
 
 ### departures()
 
-> **departures**: (`stop`, `o`) => `Promise`\<[`Departure`](/reference/sdk/interfaces/departure/)[]\>
+> **departures**: (`stop`, `o`) => `Promise`\<[`Departure`](https://docs.mapx.at/reference/sdk/interfaces/departure.md)[]\>
 
 Abfahrten (Soll-Fahrplan) an einer Haltestelle (`at:49:1320`) oder rund um eine Koordinate.
 
 #### Parameters
 
-• **stop**: `string` \| [`LL`](/reference/sdk/type-aliases/ll/)
+• **stop**: `string` \| [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`DeparturesOptions`](/reference/sdk/interfaces/departuresoptions/) = `{}`
+• **o**: [`DeparturesOptions`](https://docs.mapx.at/reference/sdk/interfaces/departuresoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`Departure`](/reference/sdk/interfaces/departure/)[]\>
+`Promise`\<[`Departure`](https://docs.mapx.at/reference/sdk/interfaces/departure.md)[]\>
 
 ### DeparturesPopup
 
-> **DeparturesPopup**: *typeof* [`DeparturesPopup`](/reference/sdk/classes/departurespopup/)
+> **DeparturesPopup**: *typeof* [`DeparturesPopup`](https://docs.mapx.at/reference/sdk/classes/departurespopup.md)
 
 ### directions()
 
-> **directions**: (`profile`, `waypoints`, `o`) => `Promise`\<[`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/)\>
+> **directions**: (`profile`, `waypoints`, `o`) => `Promise`\<[`DirectionsResponse`](https://docs.mapx.at/reference/sdk/interfaces/directionsresponse.md)\>
 
 Routing (Mapbox-Directions-Antwort, Geometrie als GeoJSON). Profile: driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking.
 
 #### Parameters
 
-• **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **waypoints**: [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **waypoints**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
-• **o**: [`DirectionsOptions`](/reference/sdk/interfaces/directionsoptions/) = `{}`
+• **o**: [`DirectionsOptions`](https://docs.mapx.at/reference/sdk/interfaces/directionsoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/)\>
+`Promise`\<[`DirectionsResponse`](https://docs.mapx.at/reference/sdk/interfaces/directionsresponse.md)\>
 
 ### elevation()
 
@@ -52,7 +56,7 @@ Höhe (m) für einen oder mehrere Punkte; null außerhalb der Daten. `dsm` = Obe
 
 #### Parameters
 
-• **points**: [`LL`](/reference/sdk/type-aliases/ll/) \| [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **points**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md) \| [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
 • **model**: `"dtm"` \| `"dsm"` = `'dtm'`
 
@@ -62,13 +66,13 @@ Höhe (m) für einen oder mehrere Punkte; null außerhalb der Daten. `dsm` = Obe
 
 ### elevationProfile()
 
-> **elevationProfile**: (`line`, `samples`, `model`, `signal`?) => `Promise`\<[`ElevationProfile`](/reference/sdk/interfaces/elevationprofile/)\>
+> **elevationProfile**: (`line`, `samples`, `model`, `signal`?) => `Promise`\<[`ElevationProfile`](https://docs.mapx.at/reference/sdk/interfaces/elevationprofile.md)\>
 
 Höhenprofil entlang einer Linie (2 bis 512 Stützpunkte).
 
 #### Parameters
 
-• **line**: [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **line**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
 • **samples**: `number` = `100`
 
@@ -78,15 +82,15 @@ Höhenprofil entlang einer Linie (2 bis 512 Stützpunkte).
 
 #### Returns
 
-`Promise`\<[`ElevationProfile`](/reference/sdk/interfaces/elevationprofile/)\>
+`Promise`\<[`ElevationProfile`](https://docs.mapx.at/reference/sdk/interfaces/elevationprofile.md)\>
 
 ### ElevationProfileControl
 
-> **ElevationProfileControl**: *typeof* [`ElevationProfileControl`](/reference/sdk/classes/elevationprofilecontrol/)
+> **ElevationProfileControl**: *typeof* [`ElevationProfileControl`](https://docs.mapx.at/reference/sdk/classes/elevationprofilecontrol.md)
 
 ### geocode()
 
-> **geocode**: (`q`, `o`) => `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+> **geocode**: (`q`, `o`) => `Promise`\<[`GeocodeFeature`](https://docs.mapx.at/reference/sdk/interfaces/geocodefeature.md)[]\>
 
 Geocoding: Adressen, Orte, Gipfel und mit `types: ['parcel']` Grundstücke (`KG 14105 Gst 102/3`).
 
@@ -94,11 +98,11 @@ Geocoding: Adressen, Orte, Gipfel und mit `types: ['parcel']` Grundstücke (`KG 
 
 • **q**: `string`
 
-• **o**: [`GeocodeOptions`](/reference/sdk/interfaces/geocodeoptions/) = `{}`
+• **o**: [`GeocodeOptions`](https://docs.mapx.at/reference/sdk/interfaces/geocodeoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+`Promise`\<[`GeocodeFeature`](https://docs.mapx.at/reference/sdk/interfaces/geocodefeature.md)[]\>
 
 ### geojsonOverlay()
 
@@ -122,11 +126,11 @@ Isochronen als GeoJSON-FeatureCollection (größte Fläche zuerst).
 
 #### Parameters
 
-• **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **center**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **center**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`IsochroneOptions`](/reference/sdk/interfaces/isochroneoptions/) = `{}`
+• **o**: [`IsochroneOptions`](https://docs.mapx.at/reference/sdk/interfaces/isochroneoptions.md) = `{}`
 
 #### Returns
 
@@ -134,7 +138,7 @@ Isochronen als GeoJSON-FeatureCollection (größte Fläche zuerst).
 
 ### LayerControl
 
-> **LayerControl**: *typeof* [`LayerControl`](/reference/sdk/classes/layercontrol/)
+> **LayerControl**: *typeof* [`LayerControl`](https://docs.mapx.at/reference/sdk/classes/layercontrol.md)
 
 ### map()
 
@@ -144,7 +148,7 @@ Karte mit mapx-Style anlegen. Registriert das pmtiles-Protokoll.
 
 #### Parameters
 
-• **o**: [`MapxOptions`](/reference/sdk/interfaces/mapxoptions/)
+• **o**: [`MapxOptions`](https://docs.mapx.at/reference/sdk/interfaces/mapxoptions.md)
 
 #### Returns
 
@@ -152,45 +156,45 @@ Karte mit mapx-Style anlegen. Registriert das pmtiles-Protokoll.
 
 ### MapxError
 
-> **MapxError**: *typeof* [`MapxError`](/reference/sdk/classes/mapxerror/)
+> **MapxError**: *typeof* [`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)
 
 ### matrix()
 
-> **matrix**: (`profile`, `points`, `o`) => `Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
+> **matrix**: (`profile`, `points`, `o`) => `Promise`\<[`MatrixResponse`](https://docs.mapx.at/reference/sdk/interfaces/matrixresponse.md)\>
 
 Fahrzeit-/Distanzmatrix für mehrere Punkte in einer Anfrage.
 
 #### Parameters
 
-• **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **points**: [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **points**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
-• **o**: [`MatrixOptions`](/reference/sdk/interfaces/matrixoptions/) = `{}`
+• **o**: [`MatrixOptions`](https://docs.mapx.at/reference/sdk/interfaces/matrixoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`MatrixResponse`](/reference/sdk/interfaces/matrixresponse/)\>
+`Promise`\<[`MatrixResponse`](https://docs.mapx.at/reference/sdk/interfaces/matrixresponse.md)\>
 
 ### MeasureControl
 
-> **MeasureControl**: *typeof* [`MeasureControl`](/reference/sdk/classes/measurecontrol/)
+> **MeasureControl**: *typeof* [`MeasureControl`](https://docs.mapx.at/reference/sdk/classes/measurecontrol.md)
 
 ### optimization()
 
-> **optimization**: (`body`, `signal`?) => `Promise`\<[`OptimizationResponse`](/reference/sdk/interfaces/optimizationresponse/)\>
+> **optimization**: (`body`, `signal`?) => `Promise`\<[`OptimizationResponse`](https://docs.mapx.at/reference/sdk/interfaces/optimizationresponse.md)\>
 
 Tourenplanung (Fahrzeuge, Aufträge, Zeitfenster). Höchstens 10 Fahrzeuge und 50 Aufträge; Zeiten in Sekunden.
 
 #### Parameters
 
-• **body**: [`OptimizationRequest`](/reference/sdk/interfaces/optimizationrequest/)
+• **body**: [`OptimizationRequest`](https://docs.mapx.at/reference/sdk/interfaces/optimizationrequest.md)
 
 • **signal?**: `AbortSignal`
 
 #### Returns
 
-`Promise`\<[`OptimizationResponse`](/reference/sdk/interfaces/optimizationresponse/)\>
+`Promise`\<[`OptimizationResponse`](https://docs.mapx.at/reference/sdk/interfaces/optimizationresponse.md)\>
 
 ### parcel()
 
@@ -200,9 +204,9 @@ Grundstück an einem Punkt (BEV DKM). Mit `dossier: true` liefert jedes Feature 
 
 #### Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`ParcelOptions`](/reference/sdk/interfaces/parceloptions/) & `object`
+• **o**: [`ParcelOptions`](https://docs.mapx.at/reference/sdk/interfaces/parceloptions.md) & `object`
 
 #### Returns
 
@@ -210,9 +214,9 @@ Grundstück an einem Punkt (BEV DKM). Mit `dossier: true` liefert jedes Feature 
 
 #### Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o?**: [`ParcelOptions`](/reference/sdk/interfaces/parceloptions/) & `object`
+• **o?**: [`ParcelOptions`](https://docs.mapx.at/reference/sdk/interfaces/parceloptions.md) & `object`
 
 #### Returns
 
@@ -220,7 +224,7 @@ Grundstück an einem Punkt (BEV DKM). Mit `dossier: true` liefert jedes Feature 
 
 ### parcelDossier()
 
-> **parcelDossier**: (`id`, `signal`?) => `Promise`\<[`Dossier`](/reference/sdk/interfaces/dossier/)\>
+> **parcelDossier**: (`id`, `signal`?) => `Promise`\<[`Dossier`](https://docs.mapx.at/reference/sdk/interfaces/dossier.md)\>
 
 Parzellen-Dossier: Fläche, Nutzung, Gebäude, Gelände, Adressen, nächste Haltestelle, Flugjahr, Static-Image-Link. ID aus `parcel_id`, z. B. `14143-473_1`.
 
@@ -232,11 +236,11 @@ Parzellen-Dossier: Fläche, Nutzung, Gebäude, Gelände, Adressen, nächste Halt
 
 #### Returns
 
-`Promise`\<[`Dossier`](/reference/sdk/interfaces/dossier/)\>
+`Promise`\<[`Dossier`](https://docs.mapx.at/reference/sdk/interfaces/dossier.md)\>
 
 ### ParcelPopup
 
-> **ParcelPopup**: *typeof* [`ParcelPopup`](/reference/sdk/classes/parcelpopup/)
+> **ParcelPopup**: *typeof* [`ParcelPopup`](https://docs.mapx.at/reference/sdk/classes/parcelpopup.md)
 
 ### pin()
 
@@ -246,7 +250,7 @@ Marker-Overlay: `pin([16.37,48.2], { color: 'e11d48', size: 'l' })`.
 
 #### Parameters
 
-• **at**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **at**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 • **o** = `{}`
 
@@ -260,27 +264,27 @@ Marker-Overlay: `pin([16.37,48.2], { color: 'e11d48', size: 'l' })`.
 
 ### reverse()
 
-> **reverse**: (`point`, `o`) => `Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+> **reverse**: (`point`, `o`) => `Promise`\<[`GeocodeFeature`](https://docs.mapx.at/reference/sdk/interfaces/geocodefeature.md)[]\>
 
 Reverse Geocoding: nächstes Objekt zu einem Punkt (`lon,lat`).
 
 #### Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`ReverseOptions`](/reference/sdk/interfaces/reverseoptions/) = `{}`
+• **o**: [`ReverseOptions`](https://docs.mapx.at/reference/sdk/interfaces/reverseoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`GeocodeFeature`](/reference/sdk/interfaces/geocodefeature/)[]\>
+`Promise`\<[`GeocodeFeature`](https://docs.mapx.at/reference/sdk/interfaces/geocodefeature.md)[]\>
 
 ### RouteControl
 
-> **RouteControl**: *typeof* [`RouteControl`](/reference/sdk/classes/routecontrol/)
+> **RouteControl**: *typeof* [`RouteControl`](https://docs.mapx.at/reference/sdk/classes/routecontrol.md)
 
 ### SearchControl
 
-> **SearchControl**: *typeof* [`SearchControl`](/reference/sdk/classes/searchcontrol/)
+> **SearchControl**: *typeof* [`SearchControl`](https://docs.mapx.at/reference/sdk/classes/searchcontrol.md)
 
 ### searchRetrieve()
 
@@ -292,7 +296,7 @@ Search Box, Schritt 2: Koordinate und Details zu einem Vorschlag (`mapbox_id`).
 
 • **id**: `string`
 
-• **o**: `Pick`\<[`SearchOptions`](/reference/sdk/interfaces/searchoptions/), `"proximity"` \| `"sessionToken"` \| `"signal"`\> = `{}`
+• **o**: `Pick`\<[`SearchOptions`](https://docs.mapx.at/reference/sdk/interfaces/searchoptions.md), `"proximity"` \| `"sessionToken"` \| `"signal"`\> = `{}`
 
 #### Returns
 
@@ -300,7 +304,7 @@ Search Box, Schritt 2: Koordinate und Details zu einem Vorschlag (`mapbox_id`).
 
 ### searchSuggest()
 
-> **searchSuggest**: (`q`, `o`) => `Promise`\<[`Suggestion`](/reference/sdk/interfaces/suggestion/)[]\>
+> **searchSuggest**: (`q`, `o`) => `Promise`\<[`Suggestion`](https://docs.mapx.at/reference/sdk/interfaces/suggestion.md)[]\>
 
 Search Box, Schritt 1: Vorschläge während der Eingabe. Dasselbe `sessionToken` für suggest und retrieve verwenden.
 
@@ -308,11 +312,11 @@ Search Box, Schritt 1: Vorschläge während der Eingabe. Dasselbe `sessionToken`
 
 • **q**: `string`
 
-• **o**: [`SearchOptions`](/reference/sdk/interfaces/searchoptions/) = `{}`
+• **o**: [`SearchOptions`](https://docs.mapx.at/reference/sdk/interfaces/searchoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`Suggestion`](/reference/sdk/interfaces/suggestion/)[]\>
+`Promise`\<[`Suggestion`](https://docs.mapx.at/reference/sdk/interfaces/suggestion.md)[]\>
 
 ### setAccessToken()
 
@@ -369,7 +373,7 @@ URL eines Static Image (für `<img src>`, E-Mail, Exposé). Kein Request, nur Ze
 
 #### Parameters
 
-• **o**: [`StaticOptions`](/reference/sdk/interfaces/staticoptions/)
+• **o**: [`StaticOptions`](https://docs.mapx.at/reference/sdk/interfaces/staticoptions.md)
 
 #### Returns
 
@@ -377,17 +381,17 @@ URL eines Static Image (für `<img src>`, E-Mail, Exposé). Kein Request, nur Ze
 
 ### stops()
 
-> **stops**: (`o`) => `Promise`\<[`Stop`](/reference/sdk/interfaces/stop/)[]\>
+> **stops**: (`o`) => `Promise`\<[`Stop`](https://docs.mapx.at/reference/sdk/interfaces/stop.md)[]\>
 
 Haltestellen im Fenster oder um einen Punkt.
 
 #### Parameters
 
-• **o**: [`StopsOptions`](/reference/sdk/interfaces/stopsoptions/) = `{}`
+• **o**: [`StopsOptions`](https://docs.mapx.at/reference/sdk/interfaces/stopsoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<[`Stop`](/reference/sdk/interfaces/stop/)[]\>
+`Promise`\<[`Stop`](https://docs.mapx.at/reference/sdk/interfaces/stop.md)[]\>
 
 ### styles
 
@@ -395,7 +399,7 @@ Haltestellen im Fenster oder um einen Punkt.
 
 ### StyleSwitcherControl
 
-> **StyleSwitcherControl**: *typeof* [`StyleSwitcherControl`](/reference/sdk/classes/styleswitchercontrol/)
+> **StyleSwitcherControl**: *typeof* [`StyleSwitcherControl`](https://docs.mapx.at/reference/sdk/classes/styleswitchercontrol.md)
 
 ### styleUrl()
 
@@ -413,7 +417,7 @@ Kurzname -> Style-URL; volle URLs und Style-Objekte bleiben unverändert.
 
 ### Terrain3DControl
 
-> **Terrain3DControl**: *typeof* [`Terrain3DControl`](/reference/sdk/classes/terrain3dcontrol/)
+> **Terrain3DControl**: *typeof* [`Terrain3DControl`](https://docs.mapx.at/reference/sdk/classes/terrain3dcontrol.md)
 
 ### tilequery()
 
@@ -425,9 +429,9 @@ Vektorkachel-Abfrage: nächste Objekte um einen Punkt (`radius` bis 2000 m). `ti
 
 • **tilesets**: `string`[]
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`TilequeryOptions`](/reference/sdk/interfaces/tilequeryoptions/) = `{}`
+• **o**: [`TilequeryOptions`](https://docs.mapx.at/reference/sdk/interfaces/tilequeryoptions.md) = `{}`
 
 #### Returns
 
@@ -435,17 +439,17 @@ Vektorkachel-Abfrage: nächste Objekte um einen Punkt (`radius` bis 2000 m). `ti
 
 ### trafficIncidents()
 
-> **trafficIncidents**: (`o`) => `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](/reference/sdk/interfaces/incident/)\>\>
+> **trafficIncidents**: (`o`) => `Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](https://docs.mapx.at/reference/sdk/interfaces/incident.md)\>\>
 
 Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
 
 #### Parameters
 
-• **o**: [`IncidentOptions`](/reference/sdk/interfaces/incidentoptions/) = `{}`
+• **o**: [`IncidentOptions`](https://docs.mapx.at/reference/sdk/interfaces/incidentoptions.md) = `{}`
 
 #### Returns
 
-`Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](/reference/sdk/interfaces/incident/)\>\>
+`Promise`\<`GeoJSON.FeatureCollection`\<`GeoJSON.Geometry`, [`Incident`](https://docs.mapx.at/reference/sdk/interfaces/incident.md)\>\>
 
 ### transformRequest()
 
@@ -473,11 +477,11 @@ Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
 
 #### Parameters
 
-• **from**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **from**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **to**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **to**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`TransitOptions`](/reference/sdk/interfaces/transitoptions/) = `{}`
+• **o**: [`TransitOptions`](https://docs.mapx.at/reference/sdk/interfaces/transitoptions.md) = `{}`
 
 #### Returns
 
@@ -485,19 +489,19 @@ Verkehrsmeldungen (ASFINAG/EVIS), gefiltert nach Fenster, Straße, Typ.
 
 ### weatherCurrent()
 
-> **weatherCurrent**: (`point`, `o`) => `Promise`\<[`WeatherStation`](/reference/sdk/interfaces/weatherstation/)[]\>
+> **weatherCurrent**: (`point`, `o`) => `Promise`\<[`WeatherStation`](https://docs.mapx.at/reference/sdk/interfaces/weatherstation.md)[]\>
 
 Aktuelle Messwerte der nächsten Stationen.
 
 #### Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`Common`](/reference/sdk/interfaces/common/) & `object` = `{}`
+• **o**: [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md) & `object` = `{}`
 
 #### Returns
 
-`Promise`\<[`WeatherStation`](/reference/sdk/interfaces/weatherstation/)[]\>
+`Promise`\<[`WeatherStation`](https://docs.mapx.at/reference/sdk/interfaces/weatherstation.md)[]\>
 
 ### weatherForecast()
 
@@ -507,9 +511,9 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 
 #### Parameters
 
-• **point**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **point**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`Common`](/reference/sdk/interfaces/common/) & `object` = `{}`
+• **o**: [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md) & `object` = `{}`
 
 #### Returns
 
@@ -517,7 +521,7 @@ Stundenvorhersage (AROME 1 km) für einen Punkt.
 
 ##### hours
 
-> **hours**: [`WeatherHour`](/reference/sdk/interfaces/weatherhour/)[]
+> **hours**: [`WeatherHour`](https://docs.mapx.at/reference/sdk/interfaces/weatherhour.md)[]
 
 ##### model
 
@@ -543,4 +547,3 @@ Bei `pmtiles://…/{z}/{x}/{y}` kommt er vor den Kachelpfad, bei Archiv-URLs ans
 #### Returns
 
 `string`
-

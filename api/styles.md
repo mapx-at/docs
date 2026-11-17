@@ -1,10 +1,12 @@
-# Styles API
+# Map styles API: MapLibre styles
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/styles/
+
+> Styles API: ready-made MapLibre styles, glyphs (fonts), sprites and rendered raster tiles (Static Tiles) for Austria, with parameters and examples.
 
 Ready-made styles for MapLibre GL JS and compatible clients, plus the fonts and sprites they use. Static Tiles render a style into raster tiles for clients without vector support.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s), `static` (5/s) · Guide: [Maps](/guides/maps/)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s), `static` (5/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## List styles
 
@@ -16,13 +18,11 @@ Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/styles", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -31,14 +31,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/styles", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -51,7 +49,7 @@ data = res.json()
 ]
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -65,12 +63,7 @@ data = res.json()
 
 Style JSON (version 8), generated from the style generator. Old ids (`karte`, `karte-morgen`, `karte-abend`, `karte-nacht`, `karte-verkehr`, `luftbild`, `hybrid`, `gelaende`) are aliases until 2027-05-31 (`Deprecation`, `Sunset`, `Link rel=successor-version`).
 
-<details>
-<summary>More</summary>
-
 Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` gives 304. With `sources=tilejson` the PMTiles vector/raster sources are replaced by https TileJSON URLs (`https://tiles.mapx.at/v1/tiles/<tileset>.json`), for clients without PMTiles support such as the MapLibre Native offline manager.
-
-</details>
 
 **Parameters**
 
@@ -83,13 +76,11 @@ Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at.
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/styles/streets", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -98,14 +89,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/styles/streets", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -118,7 +107,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -144,13 +133,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets/sprite.json" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/styles/streets/sprite.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -159,7 +146,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -167,10 +153,9 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-
 **Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -185,12 +170,7 @@ data = res.json()
 
 Styles streets*, satellite, satellite-streets, outdoors (old ids as alias). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`. Labels are rendered with a margin and clipped. No data or below minimum zoom: 404.
 
-<details>
-<summary>More</summary>
-
 Zone `static`. `ETag`, `Cache-Control`.
-
-</details>
 
 **Parameters**
 
@@ -206,13 +186,11 @@ Zone `static`. `ETag`, `Cache-Control`.
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420" -o result.png
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -221,7 +199,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -229,10 +206,9 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420
 open("result.png", "wb").write(res.content)
 ```
 
-
 **Example response**: `image/png`, `image/webp` · Image
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -254,13 +230,11 @@ Available font names.
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/fonts", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -269,14 +243,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/fonts", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -288,7 +260,7 @@ data = res.json()
 ]
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -313,13 +285,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -328,7 +298,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -336,10 +305,9 @@ res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf
 open("result.bin", "wb").write(res.content)
 ```
 
-
 **Example response**: `application/x-protobuf` · Glyph PBF
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -359,13 +327,11 @@ open("result.bin", "wb").write(res.content)
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/sprites" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/sprites", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -374,7 +340,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -382,10 +347,9 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-
 **Example response**: `application/json` · Sprite list
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -397,8 +361,6 @@ data = res.json()
 
 `GET /v1/sprites/{file}`
 
-
-
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
@@ -409,13 +371,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/sprites/sprite.json" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/sprites/sprite.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -424,7 +384,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -432,10 +391,9 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-
 **Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -445,6 +403,3 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
 ## Playground
-
-
-

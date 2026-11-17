@@ -1,9 +1,16 @@
-# TileJSON-Quellen
+# TileJSON-Quellen: Beispiel
 
+Source: https://docs.mapx.at/de/examples/tilejson-source/
+
+> Orthophoto und Höhenlinien von mapx als TileJSON-Quellen ohne fertigen Stil in MapLibre GL JS einbinden: lauffähiger Beispielcode zum Kopieren.
 
 Eine TileJSON-URL pro Produkt genügt: MapLibre liest Kachel-URL, Zoombereich und Attribution daraus. Hier ein eigener, minimaler Stil.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Use TileJSON: orthophoto and contour lines as sources, without file names and without a style.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -26,9 +33,8 @@ const map = new maplibregl.Map({
 });
 map.addControl(new maplibregl.NavigationControl());
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
-```
+````
 
 ## Verwendete APIs
 
-- [TileJSON](/de/api/tiles/) `orthophoto`, `contours`
-
+- [TileJSON](https://docs.mapx.at/de/api/tiles.md) `orthophoto`, `contours`

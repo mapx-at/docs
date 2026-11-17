@@ -1,9 +1,16 @@
-# Verkehrslage und Meldungen
+# Verkehrslage und Meldungen: Beispiel
 
+Source: https://docs.mapx.at/de/examples/traffic/
+
+> Verkehrsstil plus die aktiven Meldungen im sichtbaren Kartenausschnitt: Verkehrslage und Störungen in Österreich mit der mapx-Verkehrs-API.
 
 Der Stil `traffic-day` färbt das Straßennetz nach der aktuellen Verkehrslage. Meldungen (Unfälle, Baustellen, Sperren) kommen von `/v1/traffic/incidents`; das Beispiel lädt die aktiven für den sichtbaren Ausschnitt und zeichnet sie darüber. Eine Linie anklicken zeigt den Text.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Traffic: live traffic flow as a style plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -31,10 +38,9 @@ map.on('load', () => {
   map.on('moveend', load);
   load();
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Verkehr](/de/api/traffic/) `GET api.mapx.at/v1/traffic/incidents`
-- [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/traffic-day`
-
+- [Verkehr](https://docs.mapx.at/de/api/traffic.md) `GET api.mapx.at/v1/traffic/incidents`
+- [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/traffic-day`

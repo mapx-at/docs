@@ -1,9 +1,16 @@
-# Static image for a listing
+# Static image example for a listing
 
+Source: https://docs.mapx.at/examples/static-image/
+
+> Click a place and get a ready-made static map image URL with a pin, for example for a real estate listing: static images API, runnable code.
 
 A static image is a plain URL that returns a PNG or WebP: for listings, e-mails, PDFs and places without JavaScript. Style, pin, view and size are part of the path. Click the map to move the pin; the image below is the URL shown under it.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Static image: click the map, get a ready-made PNG of that place for a listing, e-mail or PDF. No JavaScript map needed on the target page.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -24,9 +31,8 @@ function update() {
 map.on('click', (e) => { at = [e.lngLat.lng, e.lngLat.lat]; update(); });
 style.addEventListener('change', update);
 update();
-```
+````
 
 ## APIs used
 
-- [Static Images](/api/static-images/) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`
-
+- [Static Images](https://docs.mapx.at/api/static-images.md) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`

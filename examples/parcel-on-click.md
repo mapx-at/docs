@@ -1,9 +1,16 @@
-# Cadastre: parcel on click
+# Cadastre example: parcel on click
 
+Source: https://docs.mapx.at/examples/parcel-on-click/
+
+> Show parcel boundaries (Kataster) over aerial imagery; a click names the parcel number. Cadastre tileset and parcel API, runnable code.
 
 The cadastre tileset contains boundary lines from zoom 16 with parcel number and cadastral municipality. `queryRenderedFeatures` reads them at the click point.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -24,9 +31,8 @@ map.on('click', (e) => {
   const text = f ? `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}` : 'No parcel boundary hit (visible from zoom 16).';
   new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
 });
-```
+````
 
 ## APIs used
 
-- [Cadastre](/tilesets/cadastre/) (vector tiles in the `satellite` style)
-
+- [Cadastre](https://docs.mapx.at/tilesets/cadastre.md) (vector tiles in the `satellite` style)

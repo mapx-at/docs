@@ -1,5 +1,9 @@
 # MeasureControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/measurecontrol/
+
+> mapx-gl MeasureControl
+
 Strecken- und Flächenmessung per Klick (Kugelgeometrie, wie im Viewer).
 
 ## Extends
@@ -10,11 +14,11 @@ Strecken- und Flächenmessung per Klick (Kugelgeometrie, wie im Viewer).
 
 ### new MeasureControl()
 
-> **new MeasureControl**(): [`MeasureControl`](/reference/sdk/classes/measurecontrol/)
+> **new MeasureControl**(): [`MeasureControl`](https://docs.mapx.at/reference/sdk/classes/measurecontrol.md)
 
 #### Returns
 
-[`MeasureControl`](/reference/sdk/classes/measurecontrol/)
+[`MeasureControl`](https://docs.mapx.at/reference/sdk/classes/measurecontrol.md)
 
 #### Inherited from
 
@@ -55,4 +59,3 @@ internally.
 #### Inherited from
 
 `DrawControl.onRemove`
-

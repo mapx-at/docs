@@ -1,10 +1,12 @@
-# Tiles API
+# Tiles API: TileJSON and XYZ tiles
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/tiles/
 
-Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. The whole product is also available as one [PMTiles](https://docs.protomaps.com/pmtiles/) file; see [Tilesets](/tilesets/).
+> Tiles API for Austria: tileset list, TileJSON and XYZ tiles as vector, raster and elevation (Terrain-RGB), with parameters and examples.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s) · Guide: [Maps](/guides/maps/)
+Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. The whole product is also available as one [PMTiles](https://docs.protomaps.com/pmtiles/) file; see [Tilesets](https://docs.mapx.at/tilesets/index.md).
+
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## List tilesets
 
@@ -16,13 +18,11 @@ Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -31,14 +31,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -68,7 +66,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -92,13 +90,11 @@ TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`La
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets.json" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles/streets.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -107,14 +103,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -136,7 +130,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -151,12 +145,7 @@ data = res.json()
 
 `ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
 
-<details>
-<summary>More</summary>
-
 Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
-
-</details>
 
 **Parameters**
 
@@ -172,13 +161,11 @@ Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -187,7 +174,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -195,10 +181,9 @@ res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", head
 open("result.png", "wb").write(res.content)
 ```
 
-
 **Example response**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -211,6 +196,3 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
 ## Playground
-
-
-

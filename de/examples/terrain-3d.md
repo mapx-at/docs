@@ -1,9 +1,16 @@
-# 3D-Gelände
+# 3D-Gelände: Beispiel mit Orthophoto
 
+Source: https://docs.mapx.at/de/examples/terrain-3d/
+
+> Luftbild über dem Geländemodell, geneigt und überhöht: 3D-Gelände in MapLibre GL JS mit mapx-Terrain-RGB-Kacheln, lauffähiger Code.
 
 Das Terrain-RGB-Tileset per TileJSON als `raster-dem`-Quelle, `map.setTerrain()` und ein Regler für die Überhöhung.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // 3D terrain: mapx Terrain-RGB tiles via TileJSON as elevation source.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -28,10 +35,9 @@ map.on('load', () => {
 document.getElementById('ueberhoehung').addEventListener('input', (e) => {
   map.setTerrain({ source: 'hoehe', exaggeration: Number(e.target.value) });
 });
-```
+````
 
 ## Verwendete APIs
 
-- [TileJSON](/de/api/tiles/) `dtm`
+- [TileJSON](https://docs.mapx.at/de/api/tiles.md) `dtm`
 - Stil `satellite`
-

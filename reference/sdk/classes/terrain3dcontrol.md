@@ -1,5 +1,9 @@
 # Terrain3DControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/terrain3dcontrol/
+
+> mapx-gl Terrain3DControl
+
 Schalter für 3D-Gelände (Quelle `relief-terrain` des mapx-Styles).
 
 ## Implements
@@ -10,7 +14,7 @@ Schalter für 3D-Gelände (Quelle `relief-terrain` des mapx-Styles).
 
 ### new Terrain3DControl()
 
-> **new Terrain3DControl**(`o`): [`Terrain3DControl`](/reference/sdk/classes/terrain3dcontrol/)
+> **new Terrain3DControl**(`o`): [`Terrain3DControl`](https://docs.mapx.at/reference/sdk/classes/terrain3dcontrol.md)
 
 #### Parameters
 
@@ -22,7 +26,7 @@ Schalter für 3D-Gelände (Quelle `relief-terrain` des mapx-Styles).
 
 #### Returns
 
-[`Terrain3DControl`](/reference/sdk/classes/terrain3dcontrol/)
+[`Terrain3DControl`](https://docs.mapx.at/reference/sdk/classes/terrain3dcontrol.md)
 
 ## Methods
 
@@ -70,4 +74,3 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
-

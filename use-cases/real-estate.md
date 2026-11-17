@@ -1,7 +1,10 @@
-# Real estate
+# Real estate: parcel, solar, listing maps
 
+Source: https://docs.mapx.at/use-cases/real-estate/
 
-For a listing you need three things: facts about the parcel, a picture that shows where it lies, and an answer to "how well can I reach it". All of it comes from official open data (BEV cadastre, orthophoto, GIP, timetables). You need a free API token ([Access and limits](/start/access-and-limits/)); the samples show it as `YOUR_TOKEN`. The data is for orientation and not legally binding.
+> Parcel dossier, solar, heat and snow at the site, a static image for the listing and reachability of an address, with code that runs as it is.
+
+For a listing you need three things: facts about the parcel, a picture that shows where it lies, and an answer to "how well can I reach it". All of it comes from official open data (BEV cadastre, orthophoto, GIP, timetables). You need a free API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples show it as `YOUR_TOKEN`. The data is for orientation and not legally binding.
 
 ## Find the parcel
 
@@ -29,7 +32,7 @@ console.log(
 );
 ```
 
-Missing data are `null` or empty lists, never absent. With the [SDK](/guides/sdk/helpers/): `mapx.parcelDossier(id)` or `mapx.parcel(point, { dossier: true })`. For a map click use `new mapx.ParcelPopup(map)`.
+Missing data are `null` or empty lists, never absent. With the [SDK](https://docs.mapx.at/guides/sdk/helpers.md): `mapx.parcelDossier(id)` or `mapx.parcel(point, { dossier: true })`. For a map click use `new mapx.ParcelPopup(map)`.
 
 ## A picture for the listing
 
@@ -42,7 +45,7 @@ const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponen
 document.querySelector("#expose").src = img; // also fine in e-mails and PDFs
 ```
 
-Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](/guides/static-images/). The image URL contains the token, so use a public token (`mx_pk_…`) with your site as allowed origin for images on web pages, and render images for e-mails and PDFs on your server with a secret token (`mx_sk_…`). The image carries the attribution of its data; keep it visible in the layout ([Attribution](/reference/attribution/)).
+Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](https://docs.mapx.at/guides/static-images.md). The image URL contains the token, so use a public token (`mx_pk_…`) with your site as allowed origin for images on web pages, and render images for e-mails and PDFs on your server with a secret token (`mx_sk_…`). The image carries the attribution of its data; keep it visible in the layout ([Attribution](https://docs.mapx.at/reference/attribution.md)).
 
 ## Sun, heat and snow at the site
 
@@ -59,7 +62,7 @@ console.log(
 );
 ```
 
-A rough photovoltaic estimate is the radiation on the roof times the module efficiency and a performance ratio (about 0.8); the value is for orientation and replaces no yield study. The first request for an area that nobody has asked for can take up to 20 seconds, later ones answer from a cache. In the dossier the section is `null` with `status: "partial"` until the data are loaded; ask again after `retry_after_s`. Reference: [Climate API](/api/climate/). Show the credit: GeoSphere Austria, CC BY 4.0 ([Attribution](/reference/attribution/)).
+A rough photovoltaic estimate is the radiation on the roof times the module efficiency and a performance ratio (about 0.8); the value is for orientation and replaces no yield study. The first request for an area that nobody has asked for can take up to 20 seconds, later ones answer from a cache. In the dossier the section is `null` with `status: "partial"` until the data are loaded; ask again after `retry_after_s`. Reference: [Climate API](https://docs.mapx.at/api/climate.md). Show the credit: GeoSphere Austria, CC BY 4.0 ([Attribution](https://docs.mapx.at/reference/attribution.md)).
 
 ## How well can I reach it
 
@@ -74,17 +77,15 @@ const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map
 console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 ```
 
-For public transport use the next stop from the dossier and its [departures](/guides/transit/): `GET /v1/departures?stop=<stop id>&limit=5`.
+For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`.
 
 **curl**
-
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
 **Python**
-
 
 ```python
 import requests
@@ -93,10 +94,8 @@ r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:132
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
 
-
 ## Next steps
 
-- [Parcels](/guides/parcels/) and the [Parcel on click](/examples/parcel-on-click/) example
-- [Static images](/guides/static-images/) with markers and paths
-- [Navigation](/guides/navigation/) for isochrones and matrices
-
+- [Parcels](https://docs.mapx.at/guides/parcels.md) and the [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md) example
+- [Static images](https://docs.mapx.at/guides/static-images.md) with markers and paths
+- [Navigation](https://docs.mapx.at/guides/navigation.md) for isochrones and matrices

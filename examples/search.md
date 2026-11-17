@@ -1,9 +1,16 @@
-# Search
+# Place search example (geocoding)
 
+Source: https://docs.mapx.at/examples/search/
+
+> Search for places, addresses and peaks in Austria and fly to the hit on the map: geocoding API example with MapLibre GL JS and runnable code.
 
 The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit has `place_name`, `center` and usually a `bbox` for zooming. No access token needed.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -37,9 +44,8 @@ eingabe.addEventListener('input', async () => {
     }
   } catch (e) { liste.textContent = 'Error: ' + e.message; }
 });
-```
+````
 
 ## APIs used
 
-- [Geocoding](/api/geocoding/) `GET api.mapx.at/v1/geocode`
-
+- [Geocoding](https://docs.mapx.at/api/geocoding.md) `GET api.mapx.at/v1/geocode`

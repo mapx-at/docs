@@ -1,9 +1,16 @@
-# Address autofill in a form
+# Address autofill example for forms
 
+Source: https://docs.mapx.at/examples/autofill/
+
+> Type a street, pick a suggestion and the form fields fill themselves: address autofill for Austrian addresses with the mapx autofill API. Runnable code.
 
 Autofill is made for checkout and registration forms: one text field, one suggestion list, and the other fields (house number, postcode, place) are filled from the chosen suggestion. Each suggestion already carries its coordinates.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Address autofill: type a street and number, pick a suggestion, the form fields fill themselves.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -38,9 +45,8 @@ f.street.addEventListener('input', async () => {
     }
   } catch (e) { list.textContent = 'Error: ' + e.message; }
 });
-```
+````
 
 ## APIs used
 
-- [Address](/api/address/) `GET api.mapx.at/v1/autofill/suggest`
-
+- [Address](https://docs.mapx.at/api/address.md) `GET api.mapx.at/v1/autofill/suggest`

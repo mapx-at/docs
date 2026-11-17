@@ -1,18 +1,21 @@
 # isochrone
 
+Source: https://docs.mapx.at/reference/sdk/functions/isochrone/
+
+> mapx-gl isochrone
+
 > **isochrone**(`profile`, `center`, `o`): `Promise`\<`GeoJSON.FeatureCollection`\>
 
 Isochronen als GeoJSON-FeatureCollection (größte Fläche zuerst).
 
 ## Parameters
 
-• **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **center**: [`LL`](/reference/sdk/type-aliases/ll/)
+• **center**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
-• **o**: [`IsochroneOptions`](/reference/sdk/interfaces/isochroneoptions/) = `{}`
+• **o**: [`IsochroneOptions`](https://docs.mapx.at/reference/sdk/interfaces/isochroneoptions.md) = `{}`
 
 ## Returns
 
 `Promise`\<`GeoJSON.FeatureCollection`\>
-

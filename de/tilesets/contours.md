@@ -1,43 +1,65 @@
-# Höhenlinien
+# Höhenlinien-Tileset für Österreich
 
+Source: https://docs.mapx.at/de/tilesets/contours/
 
-Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](/de/tilesets/terrain-rgb/). Es gibt vier Generalisierungsstufen mit eigenem Linienabstand, eigener Glättung und eigenen Indexlinien.
+> Höhenlinien für Österreich als Vektorkacheln, z10 bis z16, 100 m bis 10 m Abstand, abgeleitet aus dem BEV ALS-DTM 1 m.
 
+Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md). Es gibt vier Generalisierungsstufen mit eigenem Linienabstand, eigener Glättung und eigenen Indexlinien.
 
+**Nutzungen**
+
+- **Wander- und Outdoorkarten**: Höhenlinien mit Beschriftung der Indexlinien (https://docs.mapx.at/de/guides/overlay-contours/)
+- **Überlagerung**: Linien über Basiskarte oder Orthophoto (https://docs.mapx.at/de/guides/overlay-contours/)
+- **Routenplanung**: Steigung und Geländeform lesen
+- **Planungskarten**: Höhenschichten in Fachkarten
+- **QGIS**: Vektorkacheln im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
+**Tileset `hoehenlinien`**
 
+| Kennwert | Wert |
+|---|---|
+| Datei | `hoehenlinien-20250915-2037a3df.pmtiles` |
+| Stichtag | `15.09.2025` |
+| Format | `mvt` |
+| Zoomstufen | `z10–z16` |
+| Gebiet (WGS84) | `9,5311 / 46,3723 / 17,1605 / 49,0210 (W/S/O/N)` |
+| Lizenz | `CC BY 4.0` |
 
 ## Live-Karte
 
-
-
 ## Einbinden
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    new maplibregl.Map({
-      container: "map",
-      style: {
-        version: 8,
-        sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" } },
-        layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
-      }
-    });
-    ```
-    TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles"` (Protokoll wie im [Schnellstart](/de/start/)).
-    **QGIS**
+```js
+new maplibregl.Map({
+  container: "map",
+  style: {
+    version: 8,
+    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" } },
+    layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
+  }
+});
+```
+TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles"` (Protokoll wie im [Schnellstart](https://docs.mapx.at/de/start/index.md)).
 
-    Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
-    **curl**
-
-    ```bash
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/contours.json
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf
-    ```
   
+
+**QGIS**
+
+Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf`, Stil-URL leer lassen. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+
+  
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/contours.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf
+```
+
 ## Layer-Referenz
 
 | `lvl` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß-σ) | Mindestlänge |
@@ -60,7 +82,13 @@ falls der Client überzoomt.
 
 ### contour_l
 
+Geometrie: **Linie**, Zoom: **z10–16**, Layer: `contour_l`. Höhenlinien (Isolinien) in vier Detailstufen.
 
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `ele` | `number` | Höhe der Linie in Metern über Adria. |
+| `index` | `number` | 1 bei Hauptlinien (Zählkurven), sonst 0. Werte: `0` = Normale Höhenlinie; `1` = Hauptlinie (Zählkurve, meist beschriftet) |
+| `lvl` | `number` | Detailstufe der Höhenlinie; entspricht der Kartenzoomstufe, ab der sie gezeigt wird (Äquidistanz 100 m, 50 m, 20 m, 10 m). Werte: `10` = Zoom 10–11, Äquidistanz 100 m (Hauptlinie alle 500 m); `12` = Zoom 12–13, Äquidistanz 50 m (Hauptlinie alle 200 m); `14` = Zoom 14–15, Äquidistanz 20 m (Hauptlinie alle 100 m); `16` = Zoom 16, Äquidistanz 10 m (Hauptlinie alle 50 m) |
 
 ## Quelle und Aktualität
 
@@ -77,7 +105,8 @@ falls der Client überzoomt.
 
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
 
-{{< attribution ts="hoehenlinien" >}}
+```html
+Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+```
 
-Mehr: [Lizenz](/de/reference/attribution/).
-
+Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

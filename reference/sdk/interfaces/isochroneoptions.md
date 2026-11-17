@@ -1,8 +1,12 @@
 # IsochroneOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/isochroneoptions/
+
+> mapx-gl IsochroneOptions
+
 ## Extends
 
-- [`Common`](/reference/sdk/interfaces/common/)
+- [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md)
 
 ## Properties
 
@@ -24,5 +28,4 @@
 
 #### Inherited from
 
-[`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
-
+[`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md).[`signal`](https://docs.mapx.at/reference/sdk/interfaces/common.md#signal)

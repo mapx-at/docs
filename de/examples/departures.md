@@ -1,11 +1,16 @@
-# Abfahrten an einer Haltestelle
+# Abfahrten an einer Haltestelle: Beispiel
 
+Source: https://docs.mapx.at/de/examples/departures/
 
-`DeparturesPopup` aus dem [SDK](/de/guides/sdk/) sucht die nächste Haltestelle zum Klick und listet die nächsten Abfahrten aus dem Soll-Fahrplan (keine Echtzeitdaten). Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
+> Nahe an eine ÖV-Haltestelle in Österreich klicken und die nächsten Abfahrten sehen: ÖV-Abfahrts-API mit Live-Karte und lauffähigem Code.
 
-```js
+`DeparturesPopup` aus dem [SDK](https://docs.mapx.at/de/guides/sdk/index.md) sucht die nächste Haltestelle zum Klick und listet die nächsten Abfahrten aus dem Soll-Fahrplan (keine Echtzeitdaten). Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
+
+## Code
+
+````js
 // Departures: click near a stop to see the next departures. Uses the DeparturesPopup of the mapx-gl SDK.
-import mapx from "mapx-gl-sdk";
+import mapx from "https://map.mapx.at/sdk/v1/mapx-gl.bundle.js";
 
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 
@@ -24,10 +29,9 @@ map.on("load", () => {
   map.on("moveend", load);
   load();
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/stops`
-- [Öffentlicher Verkehr](/de/api/transit/) `GET api.mapx.at/v1/departures`
-
+- [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/stops`
+- [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/departures`

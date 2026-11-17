@@ -1,7 +1,10 @@
-# Navigation
+# Routing guide: car, truck, bike, foot
 
+Source: https://docs.mapx.at/guides/navigation/
 
-Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
+> Plan routes for car, truck, bike and foot in Austria: tolls, isochrones, travel-time matrices, map matching and tour planning.
+
+Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Endpoint | Zone |
 |---|---|---|
@@ -23,7 +26,7 @@ Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joi
 | `cycling-mtb` | Mountain bike: prefers forest tracks and singletrails, considers the MTB difficulty |
 | `walking` | On foot |
 
-Public transport is a separate API: [Transit](/guides/transit/).
+Public transport is a separate API: [Transit](https://docs.mapx.at/guides/transit.md).
 
 ## A route
 
@@ -109,7 +112,7 @@ const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725
 const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance&access_token=YOUR_TOKEN")).json();
 ```
 
-The isochrone result is a `FeatureCollection` of polygons, largest first. Show it with a `fill` layer; see [Isochrone](/examples/isochrone/) and [Matrix](/examples/matrix/). Map matching takes a GPS trace and returns the matched route.
+The isochrone result is a `FeatureCollection` of polygons, largest first. Show it with a `fill` layer; see [Isochrone](https://docs.mapx.at/examples/isochrone.md) and [Matrix](https://docs.mapx.at/examples/matrix.md). Map matching takes a GPS trace and returns the matched route.
 
 ## Tour planning
 
@@ -125,11 +128,10 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/opt
 
 ## Handle failures
 
-`422` means the request is valid but unanswerable, for example no route between the points. `400` carries the faulty parameter in `param`. Retry `429` after `Retry-After` seconds. See [Errors and limits](/api/errors/).
+`422` means the request is valid but unanswerable, for example no route between the points. `400` carries the faulty parameter in `param`. Retry `429` after `Retry-After` seconds. See [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## Next
 
-- [Directions API](/api/directions/), [Optimization API](/api/optimization/)
-- [Traffic](/guides/traffic/): incidents along a route
-- [Route example](/examples/route/)
-
+- [Directions API](https://docs.mapx.at/api/directions.md), [Optimization API](https://docs.mapx.at/api/optimization.md)
+- [Traffic](https://docs.mapx.at/guides/traffic.md): incidents along a route
+- [Route example](https://docs.mapx.at/examples/route.md)

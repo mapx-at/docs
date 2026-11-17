@@ -1,9 +1,16 @@
-# Public transit route
+# Public transit route example
 
+Source: https://docs.mapx.at/examples/transit-route/
+
+> Click start and destination and get the walking and riding legs of a public transport journey in Austria with the mapx transit API.
 
 The transit API combines walks on the road network with rides from the timetable. Without `depart_at` it plans for now; `arrive_by` plans backwards. Walking legs are drawn dashed, rides solid.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Public transit: click start and destination, get walking and riding legs for the next departure.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -36,9 +43,8 @@ map.on('click', async (e) => {
     info.textContent = `${route.departure.slice(11, 16)} to ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} transfer(s): ` + route.legs.map((l) => l.summary).join(' > ');
   } catch (err) { info.textContent = 'Error: ' + err.message; }
 });
-```
+````
 
 ## APIs used
 
-- [Transit](/api/transit/) `GET api.mapx.at/v1/directions/transit/{coordinates}`
-
+- [Transit](https://docs.mapx.at/api/transit.md) `GET api.mapx.at/v1/directions/transit/{coordinates}`

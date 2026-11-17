@@ -1,9 +1,16 @@
-# Traffic flow and incidents
+# Traffic flow and incidents example
 
+Source: https://docs.mapx.at/examples/traffic/
+
+> Traffic style plus the active incidents of the visible map area: show traffic flow and road incidents in Austria with the mapx traffic API.
 
 The style `traffic-day` colours the road network by current flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Traffic: live traffic flow as a style plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -31,10 +38,9 @@ map.on('load', () => {
   map.on('moveend', load);
   load();
 });
-```
+````
 
 ## APIs used
 
-- [Traffic](/api/traffic/) `GET api.mapx.at/v1/traffic/incidents`
-- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/traffic-day`
-
+- [Traffic](https://docs.mapx.at/api/traffic.md) `GET api.mapx.at/v1/traffic/incidents`
+- [Styles](https://docs.mapx.at/api/styles.md) `GET api.mapx.at/v1/styles/traffic-day`

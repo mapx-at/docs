@@ -1,9 +1,16 @@
-# Reverse geocoding
+# Reverse geocoding example
 
+Source: https://docs.mapx.at/examples/reverse-geocode/
+
+> Click the map and get the nearest address: reverse geocoding with the mapx geocoding API for Austria, runnable code with MapLibre GL JS.
 
 Reverse geocoding turns a coordinate into the nearest address, street or place. `types` limits the kind of result, `radius` the search distance in metres.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Reverse geocoding: click the map, get the nearest address, street or place.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -25,9 +32,8 @@ map.on('click', async (e) => {
     popup.setLngLat(e.lngLat).setText(f ? f.place_name : 'Nothing found nearby').addTo(map);
   } catch (err) { popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map); }
 });
-```
+````
 
 ## APIs used
 
-- [Geocoding](/api/geocoding/) `GET api.mapx.at/v1/reverse`
-
+- [Geocoding](https://docs.mapx.at/api/geocoding.md) `GET api.mapx.at/v1/reverse`

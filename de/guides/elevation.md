@@ -1,4 +1,8 @@
-# Höhen und Gelände
+# Höhen-Guide: Höhenprofil und Gelände
+
+Source: https://docs.mapx.at/de/guides/elevation/
+
+> Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Tilesets für Österreich.
 
 mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen.
 
@@ -27,11 +31,11 @@ console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m ab Start) und p.elevations[i] (m) sind bereit für ein Diagramm
 ```
 
-Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Beispiel mit Diagramm: [Höhenprofil](/de/examples/elevation-profile/). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.
+Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Beispiel mit Diagramm: [Höhenprofil](https://docs.mapx.at/de/examples/elevation-profile.md). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.
 
 ## 3D-Gelände in der Karte
 
-Das Tileset `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](/de/start/access-and-limits/)):
+Das Tileset `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)):
 
 ```js
 map.on("load", () => {
@@ -42,15 +46,14 @@ map.on("load", () => {
 map.setPitch(60);
 ```
 
-Schritt für Schritt mit Luftbild: [3D-Gelände mit Orthophoto](/de/guides/3d-terrain/). Der Style `outdoors` enthält Schummerung und Höhenlinien bereits.
+Schritt für Schritt mit Luftbild: [3D-Gelände mit Orthophoto](https://docs.mapx.at/de/guides/3d-terrain.md). Der Style `outdoors` enthält Schummerung und Höhenlinien bereits.
 
 ## Höhen aus Tiles lesen
 
-Die Tiles verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Für Massenarbeit die Tiles selbst dekodieren, siehe [Terrain-RGB](/de/reference/terrain-rgb/). Für einzelne Punkte ist die API einfacher.
+Die Tiles verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Für Massenarbeit die Tiles selbst dekodieren, siehe [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md). Für einzelne Punkte ist die API einfacher.
 
 ## Nächste Schritte
 
-- [Elevation API](/de/api/elevation/)
-- [Tilesets](/de/tilesets/terrain-rgb/): Datenblatt des Geländemodells
-- [Höhenlinien überlagern](/de/guides/overlay-contours/)
-
+- [Elevation API](https://docs.mapx.at/de/api/elevation.md)
+- [Tilesets](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Datenblatt des Geländemodells
+- [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md)

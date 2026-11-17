@@ -1,43 +1,55 @@
-# Sentinel-2 aktuell
+# Sentinel-2-Satellitenbild-Tileset
 
+Source: https://docs.mapx.at/de/tilesets/sentinel2/
+
+> Immer aktuelles, wolkenfreies Satellitenbild Österreichs aus Copernicus Sentinel-2 als WebP-Kacheln, z5 bis z13, 10 m, täglich um 02:00 aktualisiert.
 
 Ein Satellitenbild Österreichs, das sich täglich fortschreibt: Für jedes Pixel gilt ein **robuster Wert aus den jüngsten wolken- und schattenfreien Sentinel-2-Aufnahmen** (Rolling Best-Pixel-Composite). Auflösung 10 m, Web-Mercator, WebP, 512 px, z5 bis z13 (darüber überzoomt der Client). Das Aufnahmedatum jedes Pixels wird im Bestand mitgeführt.
 
+**Nutzungen**
 
+- **Aktueller Hintergrund**: Satellitenansicht, die nicht Jahre alt ist
+- **Veränderungen sehen**: Schneelage, Ernte, Windwurf, Baustellen im 10-m-Raster
+- **Übersicht und Planung**: Landschaft, Vegetation und Gewässer im Überblick
 
 ## Einbinden
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    new maplibregl.Map({
-      container: "map",
-      center: [15.334, 48.227], zoom: 11,
-      style: {
-        version: 8,
-        sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
-        layers: [{ id: "s2", type: "raster", source: "s2" }]
-      }
-    });
-    ```
-    TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
-    **Leaflet**
+```js
+new maplibregl.Map({
+  container: "map",
+  center: [15.334, 48.227], zoom: 11,
+  style: {
+    version: 8,
+    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+    layers: [{ id: "s2", type: "raster", source: "s2" }]
+  }
+});
+```
+TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
 
-    ```js
-    L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
-      tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-      attribution: "Contains modified Copernicus Sentinel data 2026"
-    }).addTo(map);
-    ```
-    **curl**
-
-    ```bash
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
-    ```
   
-> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:stand` (jüngste eingepflegte Szene); PMTiles direkt: `https://tiles.mapx.at/sentinel2.pmtiles` (Cache 5 Minuten).
 
+**Leaflet**
+
+```js
+L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
+  tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
+  attribution: "Contains modified Copernicus Sentinel data 2026"
+}).addTo(map);
+```
+
+  
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
+```
+
+> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:stand` (jüngste eingepflegte Szene); PMTiles direkt: `https://tiles.mapx.at/sentinel2.pmtiles` (Cache 5 Minuten).
 
 ## TileJSON, Zoom und Aktualisierung
 
@@ -89,5 +101,4 @@ Pflicht nach den Copernicus-Nutzungsbedingungen (frei, vollständig und offen) f
 Contains modified Copernicus Sentinel data 2026
 ```
 
-Die Jahreszahl nennt das Jahr der Aufnahmen; MapLibre übernimmt den Text aus TileJSON oder PMTiles. Mehr: [Lizenz](/de/reference/attribution/).
-
+Die Jahreszahl nennt das Jahr der Aufnahmen; MapLibre übernimmt den Text aus TileJSON oder PMTiles. Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

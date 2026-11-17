@@ -1,6 +1,10 @@
-# Errors and retries in the SDK
+# SDK errors and retries (MapxError)
 
-Every helper throws a `MapxError` when the API answers with an error or the network fails. It mirrors the `application/problem+json` document of the [error catalog](/api/errors/).
+Source: https://docs.mapx.at/guides/sdk/errors/
+
+> MapxError carries code, status, param and allowed values from the problem+json response of the mapx APIs; retry only what is worth retrying.
+
+Every helper throws a `MapxError` when the API answers with an error or the network fails. It mirrors the `application/problem+json` document of the [error catalog](https://docs.mapx.at/api/errors.md).
 
 | Property | Meaning |
 |---|---|
@@ -21,7 +25,7 @@ try {
 }
 ```
 
-Missing or rejected tokens arrive as `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `origin-not-allowed`, …), see [Access and limits](/start/access-and-limits/). Do not retry them.
+Missing or rejected tokens arrive as `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `origin-not-allowed`, …), see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Do not retry them.
 
 Branch on `code`, never on the text. Send `Accept-Language: de` through your own `fetch` if you need German messages; the helpers use the browser default.
 
@@ -58,6 +62,5 @@ input.oninput = async () => {
 
 ## Next
 
-- [Errors and limits](/api/errors/) with the rate-limit zones
-- [SDK helpers](/guides/sdk/helpers/)
-
+- [Errors and limits](https://docs.mapx.at/api/errors.md) with the rate-limit zones
+- [SDK helpers](https://docs.mapx.at/guides/sdk/helpers.md)

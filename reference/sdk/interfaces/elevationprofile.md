@@ -1,5 +1,9 @@
 # ElevationProfile
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/elevationprofile/
+
+> mapx-gl ElevationProfile
+
 ## Properties
 
 ### ascent
@@ -47,4 +51,3 @@
 ### min
 
 > **min**: `number`
-

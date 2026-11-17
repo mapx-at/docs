@@ -1,10 +1,12 @@
-# Optimization API
+# Route optimization API
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/optimization/
+
+> Route optimization API: best order for up to 25 stops and tour planning for several vehicles, with parameters and example requests.
 
 Finds the best order of stops (traveling salesman) or plans tours for several vehicles with capacities and time windows.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [Navigation](/guides/navigation/)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/guides/navigation.md)
 
 ## Optimized order
 
@@ -12,12 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 2 to 25 coordinates. Exact up to 12 points, above that nearest neighbour with 2-opt and Or-opt over the duration matrix. Response like Directions: `trips[]` with one route, `waypoints[]` in input order with `waypoint_index` (position in the trip) and `trips_index`.
 
-<details>
-<summary>More</summary>
-
 Expensive: zone `heavy`.
-
-</details>
 
 **Parameters**
 
@@ -37,13 +34,11 @@ Expensive: zone `heavy`.
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -52,14 +47,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -71,7 +64,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -88,12 +81,7 @@ data = res.json()
 
 Vehicles with start/end/capacity/time window, services (one location) and shipments (pickup before delivery, same vehicle) with duration, time windows and amounts. Heuristic: regret insertion, local search, ruin and recreate until `options.time_limit_ms`. At most 10 vehicles, 50 jobs, 60 distinct locations, 256 KB.
 
-<details>
-<summary>More</summary>
-
 Times in seconds. Expensive: zone `heavy`.
-
-</details>
 
 **Request body (JSON)**
 
@@ -105,7 +93,6 @@ Times in seconds. Expensive: zone `heavy`.
 
 **curl**
 
-
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/optimization" \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -114,7 +101,6 @@ curl -s -X POST "https://api.mapx.at/v1/optimization" \
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/optimization", {
@@ -159,7 +145,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -199,7 +184,6 @@ res = requests.post("https://api.mapx.at/v1/optimization", headers={"Authorizati
 data = res.json()
 ```
 
-
 **Example response**
 
 ```json
@@ -213,7 +197,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -225,6 +209,3 @@ data = res.json()
 | `502` | Upstream service unavailable |
 
 ## Playground
-
-
-

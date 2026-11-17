@@ -1,5 +1,8 @@
-# Fehler und Limits
+# Fehlercodes und Rate Limits der API
 
+Source: https://docs.mapx.at/de/api/errors/
+
+> Fehlercodes (problem+json), HTTP-Statuscodes, Rate Limits je Zone und Caching aller mapx-APIs, dazu Retry-After bei 429.
 
 Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)). Der `type` ist ein URI auf diese Seite: `https://docs.mapx.at/api/errors/#<code>`. Auswertbar sind `code` (oder `type`) und `status`, nie der Text.
 
@@ -56,7 +59,7 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
 | [`service-unavailable`](#service-unavailable) | 503 | Dienst nicht verfügbar |
 | [`service-busy`](#service-busy) | 503 | Dienst ausgelastet |
 
-Token-Fehler (401 `missing-token`, `invalid-token`, `token-expired`; 403 `token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) stehen mit Ursache und Abhilfe unter [Zugang und Limits](/de/start/access-and-limits/).
+Token-Fehler (401 `missing-token`, `invalid-token`, `token-expired`; 403 `token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) stehen mit Ursache und Abhilfe unter [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
 ### bad-request
 
@@ -182,7 +185,7 @@ Was tun: Punkte oder Zeit ändern; `detail` lesen.
 
 **429** · Rate-Limit überschritten
 
-Zu viele Anfragen in dieser Endpunktgruppe (gezählt je Token, ohne gültigen Token je IP-Adresse). Siehe [Limits](/de/api/errors/#limits).
+Zu viele Anfragen in dieser Endpunktgruppe (gezählt je Token, ohne gültigen Token je IP-Adresse). Siehe [Limits](https://docs.mapx.at/de/api/errors.md#limits).
 
 Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort nennt die Zone.
 
@@ -218,11 +221,11 @@ Der Server ist an seiner Parallelitätsgrenze.
 
 Was tun: `Retry-After` Sekunden warten und erneut versuchen.
 
-Siehe auch: [Fehler und Limits](/de/api/errors/) für Limits und Caching.
+Siehe auch: [Fehler und Limits](https://docs.mapx.at/de/api/errors.md) für Limits und Caching.
 
 ## Limits
 
-Die Limits je Zone stehen unter [Zugang und Limits](/de/start/access-and-limits/). Bei `429` und `503` mit wachsendem Abstand wiederholen und `Retry-After` beachten; `400`, `404` und `422` nicht unverändert wiederholen.
+Die Limits je Zone stehen unter [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bei `429` und `503` mit wachsendem Abstand wiederholen und `Retry-After` beachten; `400`, `404` und `422` nicht unverändert wiederholen.
 
 ## Caching
 
@@ -237,5 +240,4 @@ PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen u
 
 ## Attribution
 
-JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](/de/reference/attribution/).
-
+JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).

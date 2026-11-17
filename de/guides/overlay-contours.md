@@ -1,12 +1,14 @@
-# Höhenlinien überlagern
+# Höhenlinien über Orthophoto legen
 
+Source: https://docs.mapx.at/de/guides/overlay-contours/
+
+> Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basiskarte in MapLibre GL JS legen, mit den mapx-Höhenlinien als Vektorkacheln.
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
-**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine eigene Schriftquelle (Glyphen), siehe [Basiskarte gestalten](/de/guides/style-the-basemap/#beschriftung-braucht-eigene-glyphen).
+**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine eigene Schriftquelle (Glyphen), siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-braucht-eigene-glyphen).
 
-Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
-
+Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
 1. **Seite mit Hintergrund.** Das Orthophoto als Basis, die Höhenlinien als Vektorquelle:
 
@@ -93,19 +95,16 @@ Das Tileset [Höhenlinien](/de/tilesets/contours/) hat einen Layer `contour_l` m
    </script>
    ```
 
-
 ## Ergebnis
 
 Über dem Luftbild liegen feine Höhenlinien, deren Abstand sich mit dem Zoom anpasst (100 m bis 10 m). Indexlinien sind kräftig und tragen die Höhe in Metern.
 
-Für eine Karte statt Luftbild die Orthophoto-Ebene durch die Ebenen aus [Basiskarte gestalten](/de/guides/style-the-basemap/) ersetzen; die Höhenlinien kommen danach darüber.
+Für eine Karte statt Luftbild die Orthophoto-Ebene durch die Ebenen aus [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md) ersetzen; die Höhenlinien kommen danach darüber.
 
-> Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](/de/guides/3d-terrain/).
-
+> Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](https://docs.mapx.at/de/guides/3d-terrain.md).
 
 ## Nächste Schritte
 
-- Felder und Stufen im Detail: [Höhenlinien](/de/tilesets/contours/).
-- Gelände dreidimensional: [3D-Gelände](/de/guides/3d-terrain/).
-- Quellenangabe: [Attribution](/de/reference/attribution/).
-
+- Felder und Stufen im Detail: [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md).
+- Gelände dreidimensional: [3D-Gelände](https://docs.mapx.at/de/guides/3d-terrain.md).
+- Quellenangabe: [Attribution](https://docs.mapx.at/de/reference/attribution.md).

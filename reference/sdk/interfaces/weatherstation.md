@@ -1,5 +1,9 @@
 # WeatherStation
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/weatherstation/
+
+> mapx-gl WeatherStation
+
 ## Properties
 
 ### distance\_m
@@ -47,4 +51,3 @@
 ### wind\_speed\_kmh
 
 > **wind\_speed\_kmh**: `null` \| `number`
-

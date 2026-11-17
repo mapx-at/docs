@@ -1,5 +1,8 @@
-# Attribution und Lizenz
+# Quellenangabe und Lizenz (CC BY 4.0)
 
+Source: https://docs.mapx.at/de/reference/attribution/
+
+> Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
 
 Alle mapx-Daten stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
 
@@ -20,12 +23,12 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 
 | Tileset | Text |
 |---|---|
-| `streets` | {{< ts k="basis" f="attribution" >}} |
-| `cadastre` | {{< ts k="kataster" f="attribution" >}} |
-| `contours` | {{< ts k="hoehenlinien" f="attribution" >}} |
-| `terrain-rgb` | {{< ts k="relief" f="attribution" >}} |
-| `dsm` | {{< ts k="dsm" f="attribution" >}} |
-| `orthophoto` | {{< ts k="dop" f="attribution" >}} |
+| `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0 |
+| `cadastre` | Datenquelle: BEV – DKM, CC BY 4.0 |
+| `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `orthophoto` | Orthophoto: BEV (CC BY 4.0) |
 | `orthophoto-flight-blocks` | BEV, CC BY 4.0 |
 
 ## Text je API
@@ -44,4 +47,3 @@ JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es is
 | Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 Die Quellenangabe steht auch in den Metadaten von TileJSON und PMTiles.
-

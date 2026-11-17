@@ -1,31 +1,35 @@
-# Guides
+# Guides for maps, search and routing
 
+Source: https://docs.mapx.at/guides/
+
+> Task-oriented guides for every mapx product: maps, search, navigation, traffic, transit, static images, elevation and parcels, plus techniques.
 
 Each guide shows the common tasks of one product with code that runs as it is.
 
 ## Products
 
-  - [Maps](/guides/maps/) Styles, tilesets, overlays, terrain.
-  - [Search](/guides/search/) Geocoding, type-ahead, address forms.
-  - [Navigation](/guides/navigation/) Car, truck, bike, foot; tolls; isochrones.
-  - [Traffic](/guides/traffic/) Incidents, speed limits, traffic layer.
-  - [Transit departures](/guides/transit/) Journeys, stops, departure boards.
-  - [Static images](/guides/static-images/) Map images for reports and web pages.
-  - [Elevation and terrain](/guides/elevation/) Heights, profiles, 3D terrain.
-  - [Parcels](/guides/parcels/) Cadastral parcels at a point.
+- [Maps](https://docs.mapx.at/guides/maps.md): Styles, tilesets, overlays, terrain.
+- [Search](https://docs.mapx.at/guides/search.md): Geocoding, type-ahead, address forms.
+- [Navigation](https://docs.mapx.at/guides/navigation.md): Car, truck, bike, foot; tolls; isochrones.
+- [Traffic](https://docs.mapx.at/guides/traffic.md): Incidents, speed limits, traffic layer.
+- [Transit departures](https://docs.mapx.at/guides/transit.md): Journeys, stops, departure boards.
+- [Static images](https://docs.mapx.at/guides/static-images.md): Map images for reports and web pages.
+- [Elevation and terrain](https://docs.mapx.at/guides/elevation.md): Heights, profiles, 3D terrain.
+- [Parcels](https://docs.mapx.at/guides/parcels.md): Cadastral parcels at a point.
+
 ## Use cases
 
-  - [Real estate](/use-cases/real-estate/) Parcel dossier, listing image, reachability.
-  - [Logistics](/use-cases/logistics/) Truck routing, matrix, tour planning, traffic.
-  - [Tourism](/use-cases/tourism/) Bike and MTB routes, elevation profile, weather.
-  - [Municipalities](/use-cases/municipalities/) Parcels, address validation, departures, embeds.
+- [Real estate](https://docs.mapx.at/use-cases/real-estate.md): Parcel dossier, listing image, reachability.
+- [Logistics](https://docs.mapx.at/use-cases/logistics.md): Truck routing, matrix, tour planning, traffic.
+- [Tourism](https://docs.mapx.at/use-cases/tourism.md): Bike and MTB routes, elevation profile, weather.
+- [Municipalities](https://docs.mapx.at/use-cases/municipalities.md): Parcels, address validation, departures, embeds.
+
 ## Techniques
 
-- [SDK mapx-gl](/guides/sdk/): [helpers](/guides/sdk/helpers/), [controls and popups](/guides/sdk/controls/), [errors and retries](/guides/sdk/errors/).
-- [Style the basemap](/guides/style-the-basemap/), [Overlay contour lines](/guides/overlay-contours/), [3D terrain with orthophoto](/guides/3d-terrain/), [Elevation profile](/guides/elevation-profile/).
-- [QGIS](/guides/qgis/) and [Self-host PMTiles](/guides/self-host-pmtiles/).
+- [SDK mapx-gl](https://docs.mapx.at/guides/sdk/index.md): [helpers](https://docs.mapx.at/guides/sdk/helpers.md), [controls and popups](https://docs.mapx.at/guides/sdk/controls.md), [errors and retries](https://docs.mapx.at/guides/sdk/errors.md).
+- [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md), [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md), [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md), [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md).
+- [QGIS](https://docs.mapx.at/guides/qgis.md) and [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
 
 ## Examples
 
-27 runnable maps with the complete code, a preview image and a filter by product: [Examples](/examples/).
-
+27 runnable maps with the complete code, a preview image and a filter by product: [Examples](https://docs.mapx.at/examples/index.md).

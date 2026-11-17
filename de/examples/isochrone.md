@@ -1,9 +1,16 @@
-# Erreichbarkeit (Isochronen)
+# Isochronen: Beispiel Erreichbarkeit
 
+Source: https://docs.mapx.at/de/examples/isochrone/
+
+> Welche Fläche ist in 5, 10 und 15 Minuten erreichbar? Isochronen (Erreichbarkeit) mit der mapx-Routing-API zeichnen; lauffähiger Code zum Kopieren.
 
 Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPolygon, die größte Fläche zuerst.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Isochrones: areas reachable in 5, 10 and 15 minutes.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -32,9 +39,8 @@ async function abfragen(ort) {
     map.getSource('iso').setData(await r.json()); // one MultiPolygon per step, largest first
   } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Routing](/de/api/directions/#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
-
+- [Routing](https://docs.mapx.at/de/api/directions.md#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`

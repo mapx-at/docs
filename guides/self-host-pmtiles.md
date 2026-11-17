@@ -1,12 +1,14 @@
-# Self-host PMTiles
+# Self-host PMTiles files
 
+Source: https://docs.mapx.at/guides/self-host-pmtiles/
+
+> Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
 
 **Goal:** Run a mapx PMTiles file on your own infrastructure, for example for resilience, internal networks or your own domain, or a subset of it.
 
 **Prerequisites:** a server, S3-compatible storage or a CDN that supports HTTP range requests. A PMTiles file is a single static file; no tile server is needed.
 
-The files are free to download with a token ([Access and limits](/start/access-and-limits/)) at `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN` (file names per product under "Key figures" on the [product pages](/tilesets/)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](/reference/attribution/) you may redistribute and mirror the files.
-
+The files are free to download with a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)) at `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN` (file names per product under "Key figures" on the [product pages](https://docs.mapx.at/tilesets/index.md)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](https://docs.mapx.at/reference/attribution.md) you may redistribute and mirror the files.
 
 1. **Download the file.** `curl -C -` resumes an interrupted download:
 
@@ -58,21 +60,18 @@ The files are free to download with a token ([Access and limits](/start/access-a
    curl -s -D - -o /dev/null -r 0-16383 https://tiles.example.com/salzburg.pmtiles
    ```
 
-
 ## Caching
 
-Because file names are immutable, set `Cache-Control: public, max-age=31536000, immutable`. A new release is published under a new name; your page switches by entering the new URL. Details on caching of the mapx services: [Errors, limits and operation](/api/errors/).
+Because file names are immutable, set `Cache-Control: public, max-age=31536000, immutable`. A new release is published under a new name; your page switches by entering the new URL. Details on caching of the mapx services: [Errors, limits and operation](https://docs.mapx.at/api/errors.md).
 
 ## Result
 
 A file or subset is served independently of mapx, with the same look and accuracy as the original tiles.
 
-> An alternative without your own files: the [TileJSON address](/api/tiles/) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. It always points to the current release.
-
+> An alternative without your own files: the [TileJSON address](https://docs.mapx.at/api/tiles.md) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. It always points to the current release.
 
 ## Next steps
 
 - File format and protocol: [PMTiles documentation](https://docs.protomaps.com/pmtiles/).
-- Display with MapLibre: [First map](/start/first-map/).
-- Do not forget the credit: [Attribution](/reference/attribution/).
-
+- Display with MapLibre: [First map](https://docs.mapx.at/start/first-map.md).
+- Do not forget the credit: [Attribution](https://docs.mapx.at/reference/attribution.md).

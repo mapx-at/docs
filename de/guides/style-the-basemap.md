@@ -1,12 +1,14 @@
-# Eigene Karte aus der Basiskarte
+# Eigener Kartenstil aus der Basiskarte
 
+Source: https://docs.mapx.at/de/guides/style-the-basemap/
 
-**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](/de/tilesets/streets/) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
+> Einen eigenen MapLibre-Kartenstil für die mapx-Vektor-Basiskarte von Österreich schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen Layer für Layer.
+
+**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
 
 **Voraussetzungen:** ein Browser und ein statischer Webserver. Grundkenntnisse in MapLibre-Styles (Quellen und Ebenen).
 
-Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](/de/tilesets/streets/).
-
+Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](https://docs.mapx.at/de/tilesets/streets.md).
 
 1. **Seite und Quelle.** Die Quelle ist der TileJSON-Link, Zoombereich und Attribution kommen automatisch mit:
 
@@ -113,7 +115,6 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    </script>
    ```
 
-
 ## Ergebnis
 
 Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Tileset.
@@ -141,7 +142,6 @@ Das Beispiel nutzt die freien Demo-Glyphen von MapLibre (Schrift `Open Sans Semi
 
 ## Nächste Schritte
 
-- Alle Layer, Felder und Werte: [Basiskarte](/de/tilesets/streets/).
-- Höhenlinien und Beschriftung darüberlegen: [Höhenlinien überlagern](/de/guides/overlay-contours/).
-- Karte für den Druck oder als Offline-Datei: [PMTiles selbst hosten](/de/guides/self-host-pmtiles/).
-
+- Alle Layer, Felder und Werte: [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md).
+- Höhenlinien und Beschriftung darüberlegen: [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md).
+- Karte für den Druck oder als Offline-Datei: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).

@@ -1,9 +1,16 @@
-# 3D terrain
+# 3D terrain example with orthophoto
 
+Source: https://docs.mapx.at/examples/terrain-3d/
+
+> Aerial imagery draped over the terrain model, tilted and exaggerated: 3D terrain in MapLibre GL JS with mapx Terrain-RGB tiles, runnable code.
 
 The Terrain-RGB tileset via TileJSON as a `raster-dem` source, `map.setTerrain()` and a slider for the exaggeration.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // 3D terrain: mapx Terrain-RGB tiles via TileJSON as elevation source.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -28,10 +35,9 @@ map.on('load', () => {
 document.getElementById('ueberhoehung').addEventListener('input', (e) => {
   map.setTerrain({ source: 'hoehe', exaggeration: Number(e.target.value) });
 });
-```
+````
 
 ## APIs used
 
-- [TileJSON](/api/tiles/) `dtm`
+- [TileJSON](https://docs.mapx.at/api/tiles.md) `dtm`
 - Style `satellite`
-

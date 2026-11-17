@@ -1,5 +1,9 @@
 # Stop
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/stop/
+
+> mapx-gl Stop
+
 ## Properties
 
 ### distance?
@@ -22,7 +26,7 @@
 
 ### location
 
-> **location**: [`LL`](/reference/sdk/type-aliases/ll/)
+> **location**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 ***
 
@@ -35,4 +39,3 @@
 ### name
 
 > **name**: `string`
-

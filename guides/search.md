@@ -1,18 +1,21 @@
-# Search
+# Address search: geocoding and autofill
 
+Source: https://docs.mapx.at/guides/search/
+
+> Add address and place search for Austria to your app: geocoding, type-ahead Search Box, address autofill for forms and address validation.
 
 Pick the endpoint by what the user does.
 
 | Task | Endpoint |
 |---|---|
-| Convert a typed address or place to coordinates | [`/v1/geocode`](/api/geocoding/) |
-| Show suggestions while the user types | [`/v1/searchbox/suggest`](/api/search-box/) |
-| Fill a postal address form | [`/v1/autofill/suggest`](/api/address/) |
-| Check an address | [`/v1/address/validate`](/api/address/) |
-| Find the address at a point | [`/v1/reverse`](/api/geocoding/) |
-| Show places of a kind (pharmacy, station) | [`/v1/searchbox/category/{category}`](/api/search-box/) |
+| Convert a typed address or place to coordinates | [`/v1/geocode`](https://docs.mapx.at/api/geocoding.md) |
+| Show suggestions while the user types | [`/v1/searchbox/suggest`](https://docs.mapx.at/api/search-box.md) |
+| Fill a postal address form | [`/v1/autofill/suggest`](https://docs.mapx.at/api/address.md) |
+| Check an address | [`/v1/address/validate`](https://docs.mapx.at/api/address.md) |
+| Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
+| Show places of a kind (pharmacy, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
-All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
+All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
 ## Geocode an address
 
@@ -42,7 +45,7 @@ const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?se
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
-Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_church`) and the administrative context. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](/examples/search/).
+Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_church`) and the administrative context. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](https://docs.mapx.at/examples/search.md).
 
 ## Places by category
 
@@ -76,7 +79,6 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/va
 
 ## Next
 
-- [Geocoding API](/api/geocoding/), [Search Box API](/api/search-box/), [Address API](/api/address/)
-- [Parcels](/guides/parcels/): search results of type parcel
-- [Errors and limits](/api/errors/)
-
+- [Geocoding API](https://docs.mapx.at/api/geocoding.md), [Search Box API](https://docs.mapx.at/api/search-box.md), [Address API](https://docs.mapx.at/api/address.md)
+- [Parcels](https://docs.mapx.at/guides/parcels.md): search results of type parcel
+- [Errors and limits](https://docs.mapx.at/api/errors.md)

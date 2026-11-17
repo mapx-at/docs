@@ -1,17 +1,20 @@
-# Einstieg
+# Einstieg in mapx
 
+Source: https://docs.mapx.at/de/start/
 
-mapx braucht ein kostenloses Konto und einen API-Token ([in einer Minute holen](/de/start/access-and-limits/)). Eine Seite wählen und den Code kopieren. Die Codebeispiele verwenden `DEIN_TOKEN` als Platzhalter.
+> Einstieg in die mapx Karten- und Location-APIs für Österreich: kostenlosen API-Token holen, dann Code für Karte, Suche und Route kopieren.
 
-  - [Was ist mapx](/de/start/what-is-mapx/) Die Produkte in einer Minute.
-  - [Zugang und Limits](/de/start/access-and-limits/) Kostenloser Token, Rate Limits, Attribution.
-  - [Erste Karte in 5 Minuten](/de/start/first-map/) Eine HTML-Datei.
-  - [Erste Suche](/de/start/first-search/) Eine Adresse mit einer Anfrage finden.
-  - [Erste Route](/de/start/first-route/) Von Wien nach Melk fahren.
-  - [Glossar](/de/start/glossary/) Tile, TileJSON, Profil, Isochrone und mehr.
-  - [FAQ](/de/start/faq/) Kurze Antworten auf häufige Fragen.
+mapx braucht ein kostenloses Konto und einen API-Token ([in einer Minute holen](https://docs.mapx.at/de/start/access-and-limits.md)). Eine Seite wählen und den Code kopieren. Die Codebeispiele verwenden `DEIN_TOKEN` als Platzhalter.
+
+- [Was ist mapx](https://docs.mapx.at/de/start/what-is-mapx.md): Die Produkte in einer Minute.
+- [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md): Kostenloser Token, Rate Limits, Attribution.
+- [Erste Karte in 5 Minuten](https://docs.mapx.at/de/start/first-map.md): Eine HTML-Datei.
+- [Erste Suche](https://docs.mapx.at/de/start/first-search.md): Eine Adresse mit einer Anfrage finden.
+- [Erste Route](https://docs.mapx.at/de/start/first-route.md): Von Wien nach Melk fahren.
+- [Glossar](https://docs.mapx.at/de/start/glossary.md): Tile, TileJSON, Profil, Isochrone und mehr.
+- [FAQ](https://docs.mapx.at/de/start/faq.md): Kurze Antworten auf häufige Fragen.
+
 ## Nächste Schritte
 
-- [Guides](/de/guides/): ein Guide pro Produkt.
-- [Referenz](/de/api/): jeder Endpunkt mit Playground.
-
+- [Guides](https://docs.mapx.at/de/guides/index.md): ein Guide pro Produkt.
+- [Referenz](https://docs.mapx.at/de/api/index.md): jeder Endpunkt mit Playground.

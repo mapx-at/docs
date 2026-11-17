@@ -1,5 +1,9 @@
 # WeatherHour
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/weatherhour/
+
+> mapx-gl WeatherHour
+
 ## Properties
 
 ### cloud\_cover\_pct
@@ -47,4 +51,3 @@
 ### wind\_speed\_ms
 
 > **wind\_speed\_ms**: `number`
-

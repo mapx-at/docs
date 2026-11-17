@@ -1,10 +1,12 @@
-# Traffic API
+# Traffic API: incidents and speed limits
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/traffic/
+
+> Traffic API for Austria: traffic incidents, motorway speed limits, signs and traffic tiles, with parameters and example requests.
 
 Incident reports (accidents, roadworks, closures), speed limits shown on motorway gantries and a vector layer for maps.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `static` (5/s) · Guide: [Traffic](/guides/traffic/)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `static` (5/s) · Guide: [Traffic](https://docs.mapx.at/guides/traffic.md)
 
 ## Speed limits of variable message signs on motorways (GeoJSON)
 
@@ -22,13 +24,11 @@ Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No a
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -37,14 +37,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/flow?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -81,7 +79,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -97,12 +95,7 @@ data = res.json()
 
 Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next_cursor`, `next` as relative URL, `next_offset`).
 
-<details>
-<summary>More</summary>
-
 Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
-
-</details>
 
 **Parameters**
 
@@ -128,13 +121,11 @@ Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`)
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -143,14 +134,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&limit=5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -187,7 +176,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -229,7 +218,6 @@ Body: the same parameters as a JSON object; `route` as polyline string or GeoJSO
 
 **curl**
 
-
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -238,7 +226,6 @@ curl -s -X POST "https://api.mapx.at/v1/traffic/incidents" \
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/incidents", {
@@ -267,7 +254,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -290,7 +276,6 @@ res = requests.post("https://api.mapx.at/v1/traffic/incidents", headers={"Author
   })
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -327,7 +312,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -354,13 +339,11 @@ Current state: speed limit, pictogram, additional text. Only installations with 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -369,14 +352,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/signs?bbox=16.0,48.0,16.8,48.5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -407,7 +388,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -427,13 +408,11 @@ Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incid
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles.json" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/tiles.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -442,14 +421,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -464,7 +441,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -490,13 +467,11 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -505,7 +480,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -513,10 +487,9 @@ res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", header
 open("result.bin", "wb").write(res.content)
 ```
 
-
 **Example response**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -530,19 +503,15 @@ open("result.bin", "wb").write(res.content)
 
 `GET /v1/traffic/status`
 
-
-
 **Example**
 
 **curl**
-
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/status" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/traffic/status", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -551,14 +520,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/status", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -572,7 +539,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -581,6 +548,3 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
 ## Playground
-
-
-

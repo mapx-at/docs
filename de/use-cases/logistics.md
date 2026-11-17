@@ -1,8 +1,12 @@
-# Logistik
+# Logistik: Lkw-Routing und Matrix
+
+Source: https://docs.mapx.at/de/use-cases/logistics/
+
+> Lkw-Routing mit Fahrzeugmaßen, Fahrzeitmatrizen, Tourenplanung und Verkehr für Zustellung und Flotten, aufgebaut auf den mapx-APIs für Österreich.
 
 Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuelle Verkehrslage. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
 
 ## Lkw-Routen
 
@@ -24,7 +28,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 
 ## Fahrzeiten für viele Paare
 
-`matrix` beantwortet alle Paare in einer Anfrage, im Rahmen der Grenzen der [Matrix-API](/de/api/directions/). Mit `sources` und `destinations` (Indizes) lässt sich nur eine Zeile abfragen.
+`matrix` beantwortet alle Paare in einer Anfrage, im Rahmen der Grenzen der [Matrix-API](https://docs.mapx.at/de/api/directions.md). Mit `sources` und `destinations` (Indizes) lässt sich nur eine Zeile abfragen.
 
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];
@@ -51,7 +55,7 @@ const tour = await res.json();
 console.log(tour.routes[0].steps.map((s) => s.id ?? s.type), tour.unassigned); // unassigned: Aufträge, die nicht passten
 ```
 
-Das Ergebnis mit einer `directions`-Anfrage durch die Orte aus `tour.routes[0].steps` zeichnen (bis zu 25 Punkte); siehe das [Beispiel Tourenplanung](/de/examples/optimization/).
+Das Ergebnis mit einer `directions`-Anfrage durch die Orte aus `tour.routes[0].steps` zeichnen (bis zu 25 Punkte); siehe das [Beispiel Tourenplanung](https://docs.mapx.at/de/examples/optimization.md).
 
 ## Verkehr
 
@@ -63,11 +67,10 @@ const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incident
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 
-Der Kartenstil `traffic-day` zeigt die Verkehrslage; siehe das [Beispiel](/de/examples/traffic/). Verkehrsdaten: ASFINAG / EVIS.AT (CC BY 4.0).
+Der Kartenstil `traffic-day` zeigt die Verkehrslage; siehe das [Beispiel](https://docs.mapx.at/de/examples/traffic.md). Verkehrsdaten: ASFINAG / EVIS.AT (CC BY 4.0).
 
 ## Nächste Schritte
 
-- [Navigation](/de/guides/navigation/): alle Profile und Parameter
-- [Verkehr](/de/guides/traffic/)
-- [Fehler und Limits](/de/api/errors/): Rate-Limit-Zonen und was bei `429` zu tun ist
-
+- [Navigation](https://docs.mapx.at/de/guides/navigation.md): alle Profile und Parameter
+- [Verkehr](https://docs.mapx.at/de/guides/traffic.md)
+- [Fehler und Limits](https://docs.mapx.at/de/api/errors.md): Rate-Limit-Zonen und was bei `429` zu tun ist

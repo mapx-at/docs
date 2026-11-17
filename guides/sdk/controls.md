@@ -1,4 +1,8 @@
-# SDK controls and popups
+# SDK controls and popups for MapLibre
+
+Source: https://docs.mapx.at/guides/sdk/controls/
+
+> RouteControl, LayerControl, SearchControl, ParcelPopup and DeparturesPopup: ready-made map tools of the mapx-gl SDK in one line each.
 
 Controls are added with `map.addControl(control, position)`. Popups attach to the map with `new Popup(map, options)`. Texts are German when the page language or browser is German, otherwise English.
 
@@ -16,7 +20,7 @@ map.addControl(route, "top-right");
 await route.setWaypoints([16.3725, 48.2085], [15.3294, 48.2272]); // set both points from code
 ```
 
-For cars the panel offers *avoid tolls* and *avoid motorways* (`exclude`), for trucks weight, height, width and length. `route.last` holds the last response. [Live example](/examples/sdk-controls/).
+For cars the panel offers *avoid tolls* and *avoid motorways* (`exclude`), for trucks weight, height, width and length. `route.last` holds the last response. [Live example](https://docs.mapx.at/examples/sdk-controls.md).
 
 ## LayerControl
 
@@ -58,7 +62,7 @@ const departures = new mapx.DeparturesPopup(map, { limit: 8, radius: 150 });
 departures.open("at:49:1320"); // or by stop id, or [lng, lat]
 ```
 
-[Live example](/examples/departures/).
+[Live example](https://docs.mapx.at/examples/departures.md).
 
 ## Combine popups and tools
 
@@ -71,7 +75,6 @@ document.querySelector("#tools").onchange = (e) => (e.target.checked ? parcels.r
 
 ## Next
 
-- [SDK helpers](/guides/sdk/helpers/)
-- [Errors and retries](/guides/sdk/errors/)
-- [SDK reference](/reference/sdk/)
-
+- [SDK helpers](https://docs.mapx.at/guides/sdk/helpers.md)
+- [Errors and retries](https://docs.mapx.at/guides/sdk/errors.md)
+- [SDK reference](https://docs.mapx.at/reference/sdk/index.md)

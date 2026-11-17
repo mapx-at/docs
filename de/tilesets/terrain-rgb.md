@@ -1,76 +1,104 @@
-# DTM Geländemodell
+# DTM-Geländemodell (Terrain-RGB)
 
+Source: https://docs.mapx.at/de/tilesets/terrain-rgb/
+
+> Digitales Geländemodell Österreich als Terrain-RGB-Kacheln (Mapbox-Kodierung, 0,1 m), z5 bis z16, aus dem BEV ALS-DTM 1 m.
 
 Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebäude und Bewuchs, kodiert als Farbe (Terrain-RGB). Es ist direkt für `raster-dem`, Schummerung und 3D-Gelände in MapLibre, Mapbox GL und kompatiblen Clients verwendbar.
 
+**Nutzungen**
 
+- **Wander- und Outdoorkarten**: Schummerung als Kartenhintergrund bis z16
+- **3D-Gelände**: Gelände und Flugansichten mit Orthophoto (https://docs.mapx.at/de/guides/3d-terrain/)
+- **Höhenprofile**: Aufstieg und Gefälle entlang einer Route (https://docs.mapx.at/de/guides/elevation-profile/)
+- **Hang- und Expositionsanalyse**: Neigung und Ausrichtung aus den Höhenwerten
+- **QGIS und Analyse**: Höhen als Raster im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
+**Tileset `relief-terrainrgb`**
 
+| Kennwert | Wert |
+|---|---|
+| Datei | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
+| Stichtag | `15.09.2025` |
+| Format | `webp, Kodierung mapbox, 512 px` |
+| Zoomstufen | `z5–z16` |
+| Gebiet (WGS84) | `9,5306 / 46,3697 / 17,1661 / 49,0235 (W/S/O/N)` |
+| Vertikale Auflösung | `0,1 m (Terrain-RGB)` |
+| Höhengenauigkeit (Quelle) | `± 0,50 m laut BEV, im Hochgebirge größer` |
+| Höhenbezug | `EVRF2000 Austria, orthometrisch (EPSG:9274)` |
+| Lizenz | `CC BY 4.0` |
 
 ## Live-Karte
-
-
 
 Der Klick liest die Kachel der aktuellen Zoomstufe (maximal z16) per Range-Request, dekodiert das Pixel am Klickpunkt mit der
 Formel unter „Kodierung“ und zeigt Höhe und RGB-Wert. Bei eingeschaltetem 3D steht zusätzlich der Wert von `queryTerrainElevation` dabei.
 
 ## Einbinden
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    import * as maplibregl from "maplibre-gl";
+```js
+import * as maplibregl from "maplibre-gl";
 
-    maplibregl.addProtocol("pmtiles", new Protocol().tile);
-    const map = new maplibregl.Map({
-      container: "map",
-      center: [12.694, 47.074], zoom: 11, pitch: 60,
-      style: {
-        version: 8,
-        sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
-        terrain: { source: "dem", exaggeration: 1.2 },
-        layers: [{ id: "hill", type: "hillshade", source: "dem" }]
-      }
-    });
-    map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
-    ```
-    **QGIS**
+maplibregl.addProtocol("pmtiles", new Protocol().tile);
+const map = new maplibregl.Map({
+  container: "map",
+  center: [12.694, 47.074], zoom: 11, pitch: 60,
+  style: {
+    version: 8,
+    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    terrain: { source: "dem", exaggeration: 1.2 },
+    layers: [{ id: "hill", type: "hillshade", source: "dem" }]
+  }
+});
+map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
+```
 
-    1. Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
-    2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
-    3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
-    **Python**
-
-    ```python
-    # pip install pmtiles pillow numpy requests
-    from PIL import Image
-    from pmtiles.reader import Reader
-
-    URL = "@@url:relief@@"
-
-    def get_bytes(offset, length):
-        r = requests.get(URL, headers={"Authorization": "Bearer DEIN_TOKEN", "Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
-        r.raise_for_status()
-        return r.content
-
-    reader = Reader(get_bytes)
-    tile = reader.get(12, 2192, 1439)          # z, x, y (Großglockner)
-    rgb = np.asarray(Image.open(io.BytesIO(tile)).convert("RGB")).astype(np.uint32)
-    hoehe = -10000 + (rgb[..., 0] * 65536 + rgb[..., 1] * 256 + rgb[..., 2]) * 0.1
-    print(hoehe.shape, hoehe.min(), hoehe.max())
-    ```
-    **curl**
-
-    ```bash
-    # eine Kachel über den XYZ-Endpunkt
-    curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
-
-    # ganze Datei, fortsetzbar
-    curl -C - -H "Authorization: Bearer DEIN_TOKEN" -O @@url:relief@@
-    ```
   
+
+**QGIS**
+
+1. Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
+2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
+3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
+
+  
+
+**Python**
+
+```python
+# pip install pmtiles pillow numpy requests
+from PIL import Image
+from pmtiles.reader import Reader
+
+URL = "@@url:relief@@"
+
+def get_bytes(offset, length):
+    r = requests.get(URL, headers={"Authorization": "Bearer DEIN_TOKEN", "Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
+    r.raise_for_status()
+    return r.content
+
+reader = Reader(get_bytes)
+tile = reader.get(12, 2192, 1439)          # z, x, y (Großglockner)
+rgb = np.asarray(Image.open(io.BytesIO(tile)).convert("RGB")).astype(np.uint32)
+hoehe = -10000 + (rgb[..., 0] * 65536 + rgb[..., 1] * 256 + rgb[..., 2]) * 0.1
+print(hoehe.shape, hoehe.min(), hoehe.max())
+```
+
+  
+
+**curl**
+
+```bash
+# eine Kachel über den XYZ-Endpunkt
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
+
+# ganze Datei, fortsetzbar
+curl -C - -H "Authorization: Bearer DEIN_TOKEN" -O @@url:relief@@
+```
+
 ## Kodierung
 
 ```
@@ -82,7 +110,7 @@ höhe_m = -10000 + (R · 65536 + G · 256 + B) · 0,1
 - WebP **verlustfrei**: verlustbehaftete Kompression würde die kodierten Höhen direkt verfälschen. Keine Alpha-Information nutzen, RGB-Bänder unverändert lesen (kein Farbmanagement, kein Premultiplied Alpha).
 - 512 × 512 Pixel, **ohne Rand** (kein 1-px-Skirt). In MapLibre `tileSize: 512` und `encoding: "mapbox"` angeben.
 
-Ausführlich: [Terrain-RGB](/de/reference/terrain-rgb/).
+Ausführlich: [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
 
 ## Vertikale Auflösung und Genauigkeit
 
@@ -95,14 +123,27 @@ Ausführlich: [Terrain-RGB](/de/reference/terrain-rgb/).
 
 Die Kodierung ist also fünfmal feiner als die Genauigkeit der Messung: Sie begrenzt die Qualität nicht.
 
-In den Übersichtsstufen z15 bis z5 ist jedes Pixel der Mittelwert der feineren Stufe. Die vertikale Auflösung bleibt 0,1 m, kleine Spitzen und Gipfel werden aber geglättet. Für exakte Punkthöhen z16 lesen oder die [Höhen-API](/de/api/elevation/) nutzen.
-
+In den Übersichtsstufen z15 bis z5 ist jedes Pixel der Mittelwert der feineren Stufe. Die vertikale Auflösung bleibt 0,1 m, kleine Spitzen und Gipfel werden aber geglättet. Für exakte Punkthöhen z16 lesen oder die [Höhen-API](https://docs.mapx.at/de/api/elevation.md) nutzen.
 
 ## Horizontale Auflösung je Zoom
 
 Bei 47,5° N, 512-px-Kacheln, Web-Mercator:
 
-
+| Zoom | m pro Pixel | Kantenlänge Kachel (km) | Anmerkung |
+|---|---|---|---|
+| z5 | 1.652 | 846 |  |
+| z6 | 826 | 423 |  |
+| z7 | 413 | 212 |  |
+| z8 | 207 | 106 |  |
+| z9 | 103 | 53 |  |
+| z10 | 52 | 26 |  |
+| z11 | 26 | 13 |  |
+| z12 | 13 | 6,61 |  |
+| z13 | 6,46 | 3,30 |  |
+| z14 | 3,23 | 1,65 |  |
+| z15 | 1,61 | 0,83 |  |
+| z16 | 0,81 | 0,41 | höchste gespeicherte Stufe (≈ 1-m-Ursprung) |
+| z17 | 0,40 | 0,21 | Overzoom (Client) |
 
 Die Daten stammen aus einem 1-m-Raster. z16 (≈ 0,8 m pro Pixel) ist die feinste Stufe und erhält die Auflösung der Quelle.
 Über z16 gibt es keine Kacheln: MapLibre zoomt ab z17 die z16-Kachel auf (`maxzoom: 16` setzen).
@@ -117,7 +158,7 @@ Das DTM entsteht aus dem ALS-DTM 1 m des BEV (Airborne Laserscanning, nur Gelän
 
 - Quantisierung 0,1 m. Die Abweichung zur Quelle liegt im Rundungsbereich (höchstens 0,05 m).
 - Höhengenauigkeit laut BEV ± 0,50 m, Details unter [Vertikale Auflösung und Genauigkeit](#vertikale-auflösung-und-genauigkeit).
-- Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](/de/tilesets/dsm/).
+- Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](https://docs.mapx.at/de/tilesets/dsm.md).
 - **Kein Messwert außerhalb der Daten.** Das Gebiet des Kachelsatzes ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
 
 ## Attribution
@@ -130,7 +171,8 @@ Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0
 
 HTML (wie in den PMTiles-Metadaten, MapLibre übernimmt es automatisch aus dem Tileset):
 
-{{< attribution ts="relief" >}}
+```html
+Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+```
 
-Mehr: [Lizenz](/de/reference/attribution/).
-
+Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

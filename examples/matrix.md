@@ -1,9 +1,16 @@
-# Travel-time matrix
+# Travel-time matrix example
 
+Source: https://docs.mapx.at/examples/matrix/
+
+> Get travel times between several places in one request with the mapx matrix API (Fahrzeitmatrix): a runnable example you can copy.
 
 The matrix API takes sources (and optionally destinations) and returns duration (and optionally distance) for all pairs; `null` means not routable.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Matrix: Fahrzeiten zwischen mehreren Orten in einer Anfrage.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -28,9 +35,8 @@ document.getElementById('los').addEventListener('click', async () => {
       durations.map((zeile, i) => `<tr><th>${namen[i]}</th>` + zeile.map((s) => `<td>${s == null ? '–' : Math.round(s / 60) + ' min'}</td>`).join('') + '</tr>').join('');
   } catch (err) { tabelle.textContent = 'Error: ' + err.message; }
 });
-```
+````
 
 ## APIs used
 
-- [Routing](/api/directions/#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
-
+- [Routing](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`

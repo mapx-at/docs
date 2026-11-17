@@ -1,9 +1,12 @@
-# Maps
+# Maps guide: vector tiles and styles
 
+Source: https://docs.mapx.at/guides/maps/
+
+> Show a mapx vector map in MapLibre GL JS, switch styles, add tilesets and overlays, including weather and traffic layers.
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
-**Before you start:** a page with MapLibre GL JS, see [First map](/start/first-map/). You need a free token ([Access and limits](/start/access-and-limits/)); the snippets show `YOUR_TOKEN` only where it matters. The map options below assume the `transformRequest` from First map, which adds the token to every request to `mapx.at`.
+**Before you start:** a page with MapLibre GL JS, see [First map](https://docs.mapx.at/start/first-map.md). You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the snippets show `YOUR_TOKEN` only where it matters. The map options below assume the `transformRequest` from First map, which adds the token to every request to `mapx.at`.
 
 ## Use a style
 
@@ -24,7 +27,7 @@ const map = new maplibregl.Map({
 });
 ```
 
-Switching style at runtime replaces layers and sources: call `map.setStyle(url)`. See [Switch the basemap](/examples/switch-basemap/).
+Switching style at runtime replaces layers and sources: call `map.setStyle(url)`. See [Switch the basemap](https://docs.mapx.at/examples/switch-basemap.md).
 
 ## Add tilesets to your own style
 
@@ -46,22 +49,22 @@ map.on("load", () => {
 });
 ```
 
-Layer names and fields: [Tilesets](/tilesets/). Add your own data the same way with a `geojson` source.
+Layer names and fields: [Tilesets](https://docs.mapx.at/tilesets/index.md). Add your own data the same way with a `geojson` source.
 
 ## Weather and traffic overlays
 
-Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](/api/air-quality/). Official weather warnings are GeoJSON (`/v1/weather/warnings`, add it as a `geojson` source and colour by `level`).
+Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](https://docs.mapx.at/api/air-quality.md). Official weather warnings are GeoJSON (`/v1/weather/warnings`, add it as a `geojson` source and colour by `level`).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
 map.addLayer({ id: "temp", type: "raster", source: "temp", paint: { "raster-opacity": 0.6 } });
 ```
 
-The traffic layer is a vector source, see [Traffic](/guides/traffic/). Example: [Weather overlay](/examples/weather-overlay/).
+The traffic layer is a vector source, see [Traffic](https://docs.mapx.at/guides/traffic.md). Example: [Weather overlay](https://docs.mapx.at/examples/weather-overlay.md).
 
 ## Other clients
 
-The style and TileJSON formats work in MapLibre, Mapbox GL JS clients that accept custom URLs, Leaflet with a vector plugin, OpenLayers and QGIS. For clients without vector support, [Static Tiles](/api/styles/) deliver the rendered style as raster tiles:
+The style and TileJSON formats work in MapLibre, Mapbox GL JS clients that accept custom URLs, Leaflet with a vector plugin, OpenLayers and QGIS. For clients without vector support, [Static Tiles](https://docs.mapx.at/api/styles.md) deliver the rendered style as raster tiles:
 
 ```
 https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TOKEN
@@ -69,14 +72,12 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 ## Offline and bulk use
 
-Each tileset is also one PMTiles file. Download it once instead of fetching tiles: [Self-host PMTiles](/guides/self-host-pmtiles/).
+Each tileset is also one PMTiles file. Download it once instead of fetching tiles: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
 
-> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](/reference/attribution/).
-
+> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 
-- [Style the basemap](/guides/style-the-basemap/)
-- [Tilesets](/tilesets/)
-- [Styles API](/api/styles/) and [Tiles API](/api/tiles/)
-
+- [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md)
+- [Tilesets](https://docs.mapx.at/tilesets/index.md)
+- [Styles API](https://docs.mapx.at/api/styles.md) and [Tiles API](https://docs.mapx.at/api/tiles.md)

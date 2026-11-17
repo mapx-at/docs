@@ -1,8 +1,12 @@
 # ReverseOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/reverseoptions/
+
+> mapx-gl ReverseOptions
+
 ## Extends
 
-- [`Common`](/reference/sdk/interfaces/common/)
+- [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md)
 
 ## Properties
 
@@ -24,11 +28,10 @@
 
 #### Inherited from
 
-[`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
+[`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md).[`signal`](https://docs.mapx.at/reference/sdk/interfaces/common.md#signal)
 
 ***
 
 ### types?
 
-> `optional` **types**: `string` \| [`GeocodeType`](/reference/sdk/type-aliases/geocodetype/)[]
-
+> `optional` **types**: `string` \| [`GeocodeType`](https://docs.mapx.at/reference/sdk/type-aliases/geocodetype.md)[]

@@ -1,5 +1,9 @@
 # transformRequest
 
+Source: https://docs.mapx.at/reference/sdk/functions/transformrequest/
+
+> mapx-gl transformRequest
+
 > **transformRequest**(`url`): `object`
 
 `transformRequest` für MapLibre: hängt den Token an mapx.at-Anfragen. Verträgt eigene Funktionen über `createMap({ transformRequest })`.
@@ -15,4 +19,3 @@
 ### url
 
 > **url**: `string`
-

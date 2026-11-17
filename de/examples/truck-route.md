@@ -1,9 +1,16 @@
-# Lkw-Route mit Optionen
+# Lkw-Route: Beispiel mit Optionen
 
+Source: https://docs.mapx.at/de/examples/truck-route/
+
+> Lkw-Routing mit Fahrzeugmaßen, Maut und Autobahn meiden sowie Alternativen: lauffähiges Beispiel für die mapx-Routing-API zum Kopieren.
 
 Das Profil `driving-truck` mit Gewicht und Höhe wählen: Straßen mit passenden Verboten und Beschränkungen werden gemieden, die Antwort nennt die GO-mautpflichtigen Kilometer. Für Pkw (`driving`) lassen sich Maut und Autobahn meiden, dazu gibt es bis zu zwei Alternativen. Start und Ziel anklicken.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -43,9 +50,8 @@ async function route() {
     $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km subject to GO toll` : '') + (routes.length > 1 ? `, ${routes.length - 1} alternative(s)` : '');
   } catch (err) { $('info').textContent = 'Error: ' + err.message; }
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Directions](/de/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
-
+- [Directions](https://docs.mapx.at/de/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`

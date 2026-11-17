@@ -1,5 +1,9 @@
 # SearchControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/searchcontrol/
+
+> mapx-gl SearchControl
+
 Suchfeld über /v1/geocode; Auswahl fliegt zum Treffer.
 
 ## Implements
@@ -10,7 +14,7 @@ Suchfeld über /v1/geocode; Auswahl fliegt zum Treffer.
 
 ### new SearchControl()
 
-> **new SearchControl**(`o`): [`SearchControl`](/reference/sdk/classes/searchcontrol/)
+> **new SearchControl**(`o`): [`SearchControl`](https://docs.mapx.at/reference/sdk/classes/searchcontrol.md)
 
 #### Parameters
 
@@ -18,7 +22,7 @@ Suchfeld über /v1/geocode; Auswahl fliegt zum Treffer.
 
 #### Returns
 
-[`SearchControl`](/reference/sdk/classes/searchcontrol/)
+[`SearchControl`](https://docs.mapx.at/reference/sdk/classes/searchcontrol.md)
 
 ## Methods
 
@@ -66,4 +70,3 @@ internally.
 #### Implementation of
 
 `IControl.onRemove`
-

@@ -1,5 +1,9 @@
 # LayerControl
 
+Source: https://docs.mapx.at/reference/sdk/classes/layercontrol/
+
+> mapx-gl LayerControl
+
 Ebenen-Schalter: Gruppen und Overlays kommen aus den Style-Metadaten (`mapx:groups`, `mapx:overlays`), keine Liste im Code nötig.
 
 ## Implements
@@ -10,15 +14,15 @@ Ebenen-Schalter: Gruppen und Overlays kommen aus den Style-Metadaten (`mapx:grou
 
 ### new LayerControl()
 
-> **new LayerControl**(`o`): [`LayerControl`](/reference/sdk/classes/layercontrol/)
+> **new LayerControl**(`o`): [`LayerControl`](https://docs.mapx.at/reference/sdk/classes/layercontrol.md)
 
 #### Parameters
 
-• **o**: [`LayerControlOptions`](/reference/sdk/interfaces/layercontroloptions/) = `{}`
+• **o**: [`LayerControlOptions`](https://docs.mapx.at/reference/sdk/interfaces/layercontroloptions.md) = `{}`
 
 #### Returns
 
-[`LayerControl`](/reference/sdk/classes/layercontrol/)
+[`LayerControl`](https://docs.mapx.at/reference/sdk/classes/layercontrol.md)
 
 ## Methods
 
@@ -84,4 +88,3 @@ Gruppe per Code ein-/ausschalten.
 #### Returns
 
 `void`
-

@@ -1,5 +1,8 @@
-# Errors and limits
+# Errors, status codes and rate limits
 
+Source: https://docs.mapx.at/api/errors/
+
+> Error codes (problem+json), HTTP status codes, rate limits per zone and caching rules of all mapx APIs, with Retry-After on 429.
 
 Every error is an `application/problem+json` document ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)). The `type` is a URI into this page: `https://docs.mapx.at/api/errors/#<code>`. Branch on `code` (or `type`) and `status`, never on the text.
 
@@ -29,7 +32,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 
 ## Authentication errors
 
-Every request needs a token ([Access and limits](/start/access-and-limits/)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Anonymous requests are still served during the transition period; they carry `X-Mapx-Token-Warning: missing-token` and will get `401` later.
+Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Anonymous requests are still served during the transition period; they carry `X-Mapx-Token-Warning: missing-token` and will get `401` later.
 
 ```bash
 # with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
@@ -120,7 +123,7 @@ What to do: Check the JSON against the schema in the OpenAPI description.
 
 The request carries no token. Today anonymous requests are still answered during the transition period and carry the header `X-Mapx-Token-Warning`; afterwards they get this error.
 
-What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`. See [Access and limits](/start/access-and-limits/).
+What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
 ### invalid-token
 
@@ -270,7 +273,7 @@ What to do: Change the points or the time; read `detail`.
 
 **429** · Rate limit exceeded
 
-Too many requests from your token (without a valid token: your IP address) in this endpoint group. See [rate limits](/api/errors/#rate-limits).
+Too many requests from your token (without a valid token: your IP address) in this endpoint group. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
 
@@ -306,11 +309,11 @@ The server is at its concurrency limit.
 
 What to do: Wait `Retry-After` seconds and retry.
 
-See also: [Errors and limits](/api/errors/) for rate limits and caching.
+See also: [Errors and limits](https://docs.mapx.at/api/errors.md) for rate limits and caching.
 
 ## Rate limits
 
-Limits per token and zone are listed under [Access and limits](/start/access-and-limits/). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
+Limits per token and zone are listed under [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
 
 ## Caching
 
@@ -325,5 +328,4 @@ PMTiles files carry the release date in their name and never change; they may be
 
 ## Attribution
 
-JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: BEV – DKM, CC BY 4.0` for parcels or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](/reference/attribution/).
-
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: BEV – DKM, CC BY 4.0` for parcels or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](https://docs.mapx.at/reference/attribution.md).

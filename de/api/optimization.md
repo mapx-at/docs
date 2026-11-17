@@ -1,10 +1,12 @@
-# Optimization API
+# Routenoptimierung API
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/optimization/
+
+> Routenoptimierungs-API: beste Reihenfolge für bis zu 25 Stopps und Tourenplanung für mehrere Fahrzeuge, mit Parametern und Beispielanfragen.
 
 Findet die beste Reihenfolge von Stopps (Handlungsreisender) oder plant Touren für mehrere Fahrzeuge mit Kapazitäten und Zeitfenstern.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Navigation](/de/guides/navigation/)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
 ## Optimized order
 
@@ -12,12 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 
 2 to 25 coordinates. Exact up to 12 points, above that nearest neighbour with 2-opt and Or-opt over the duration matrix. Response like Directions: `trips[]` with one route, `waypoints[]` in input order with `waypoint_index` (position in the trip) and `trips_index`.
 
-<details>
-<summary>Mehr</summary>
-
 Expensive: zone `heavy`.
-
-</details>
 
 **Parameter**
 
@@ -37,13 +34,11 @@ Expensive: zone `heavy`.
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -52,14 +47,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/optimized-trips/driving/16.3725,48.2085;15.6256,48.2049;14.2858,48.3069?roundtrip=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -71,7 +64,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -88,12 +81,7 @@ data = res.json()
 
 Vehicles with start/end/capacity/time window, services (one location) and shipments (pickup before delivery, same vehicle) with duration, time windows and amounts. Heuristic: regret insertion, local search, ruin and recreate until `options.time_limit_ms`. At most 10 vehicles, 50 jobs, 60 distinct locations, 256 KB.
 
-<details>
-<summary>Mehr</summary>
-
 Times in seconds. Expensive: zone `heavy`.
-
-</details>
 
 **Request-Body (JSON)**
 
@@ -105,7 +93,6 @@ Times in seconds. Expensive: zone `heavy`.
 
 **curl**
 
-
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/optimization" \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -114,7 +101,6 @@ curl -s -X POST "https://api.mapx.at/v1/optimization" \
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/optimization", {
@@ -159,7 +145,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -199,7 +184,6 @@ res = requests.post("https://api.mapx.at/v1/optimization", headers={"Authorizati
 data = res.json()
 ```
 
-
 **Beispielantwort**
 
 ```json
@@ -213,7 +197,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -225,6 +209,3 @@ data = res.json()
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
 ## Playground
-
-
-

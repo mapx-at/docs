@@ -1,9 +1,12 @@
-# Immobilien
+# Immobilien: Grundstück, Sonne, Exposé
 
+Source: https://docs.mapx.at/de/use-cases/real-estate/
+
+> Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
 
 Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne), nutzbar mit einem kostenlosen Token. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](/de/start/access-and-limits/)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
 
 ## Grundstück finden
 
@@ -31,7 +34,7 @@ console.log(
 );
 ```
 
-Fehlende Daten sind `null` oder leere Listen, nie abwesend. Mit dem [SDK](/de/guides/sdk/helpers/): `mapx.parcelDossier(id)` oder `mapx.parcel(point, { dossier: true })`. Für einen Kartenklick `new mapx.ParcelPopup(map)`.
+Fehlende Daten sind `null` oder leere Listen, nie abwesend. Mit dem [SDK](https://docs.mapx.at/de/guides/sdk/helpers.md): `mapx.parcelDossier(id)` oder `mapx.parcel(point, { dossier: true })`. Für einen Kartenklick `new mapx.ParcelPopup(map)`.
 
 ## Ein Bild fürs Exposé
 
@@ -44,7 +47,7 @@ const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponen
 document.querySelector("#expose").src = img; // geht auch in E-Mails und PDFs
 ```
 
-Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](/de/guides/static-images/). Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](/de/reference/attribution/)).
+Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md). Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
 
 ## Sonne, Hitze und Schnee am Standort
 
@@ -61,7 +64,7 @@ console.log(
 );
 ```
 
-Eine grobe Photovoltaik-Abschätzung ist die Strahlung auf dem Dach mal Modulwirkungsgrad und Systemwirkungsgrad (etwa 0,8); der Wert dient der Orientierung und ersetzt keine Ertragsprognose. Die erste Anfrage für ein Gebiet, nach dem noch niemand gefragt hat, kann bis zu 20 Sekunden dauern, spätere kommen aus dem Cache. Im Dossier ist der Abschnitt `null` mit `status: "partial"`, bis die Daten geladen sind; nach `retry_after_s` erneut fragen. Referenz: [Climate API](/de/api/climate/). Den Quellenhinweis anzeigen: GeoSphere Austria, CC BY 4.0 ([Quellenangaben](/de/reference/attribution/)).
+Eine grobe Photovoltaik-Abschätzung ist die Strahlung auf dem Dach mal Modulwirkungsgrad und Systemwirkungsgrad (etwa 0,8); der Wert dient der Orientierung und ersetzt keine Ertragsprognose. Die erste Anfrage für ein Gebiet, nach dem noch niemand gefragt hat, kann bis zu 20 Sekunden dauern, spätere kommen aus dem Cache. Im Dossier ist der Abschnitt `null` mit `status: "partial"`, bis die Daten geladen sind; nach `retry_after_s` erneut fragen. Referenz: [Climate API](https://docs.mapx.at/de/api/climate.md). Den Quellenhinweis anzeigen: GeoSphere Austria, CC BY 4.0 ([Quellenangaben](https://docs.mapx.at/de/reference/attribution.md)).
 
 ## Wie gut ist es erreichbar
 
@@ -76,10 +79,9 @@ const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map
 console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 ```
 
-Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](/de/guides/transit/) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`.
+Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](https://docs.mapx.at/de/guides/transit.md) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`.
 
 **curl**
-
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
@@ -87,17 +89,14 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures
 
 **Python**
 
-
 ```python
 import requests
 r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
 
-
 ## Nächste Schritte
 
-- [Grundstücke](/de/guides/parcels/) und das Beispiel [Grundstück per Klick](/de/examples/parcel-on-click/)
-- [Statische Bilder](/de/guides/static-images/) mit Markern und Pfaden
-- [Navigation](/de/guides/navigation/) für Isochronen und Matrizen
-
+- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) und das Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md)
+- [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md) mit Markern und Pfaden
+- [Navigation](https://docs.mapx.at/de/guides/navigation.md) für Isochronen und Matrizen

@@ -1,10 +1,12 @@
-# Elevation API
+# Elevation API: height and profile
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/elevation/
+
+> Elevation API for Austria: terrain height and surface height for points and elevation profiles along a line, with parameters and example requests.
 
 Height above sea level (m) for points or along a line, from the terrain model (`dtm`) or the surface model (`dsm`).
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `elevation` (10/s), `search` (10/s) · Guide: [Elevation and terrain](/guides/elevation/)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `elevation` (10/s), `search` (10/s) · Guide: [Elevation and terrain](https://docs.mapx.at/guides/elevation.md)
 
 ## Elevations (bilinear from z16 Terrain-RGB, 0.1 m)
 
@@ -25,13 +27,11 @@ Either `points` (up to 512 points) or `path` (polyline on the sphere, split even
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -40,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -75,7 +73,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -100,13 +98,11 @@ One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavaila
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/12.694,47.074" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/elevation/12.694,47.074", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -115,14 +111,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/elevation/12.694,47.074", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -145,7 +139,7 @@ data = res.json()
 }
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -172,13 +166,11 @@ One GeoJSON line with z coordinate; properties: `distances`, `elevations`, `asce
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -187,14 +179,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=20", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -231,7 +221,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -241,6 +231,3 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 
 ## Playground
-
-
-

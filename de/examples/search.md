@@ -1,9 +1,16 @@
-# Suche
+# Ortssuche: Beispiel mit Geocoding
 
+Source: https://docs.mapx.at/de/examples/search/
+
+> Orte, Adressen und Gipfel in Österreich suchen und auf der Karte anspringen: Beispiel zur Geocoding-API mit MapLibre GL JS und lauffähigem Code.
 
 Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -37,9 +44,8 @@ eingabe.addEventListener('input', async () => {
     }
   } catch (e) { liste.textContent = 'Error: ' + e.message; }
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Geocoding](/de/api/geocoding/) `GET api.mapx.at/v1/geocode`
-
+- [Geocoding](https://docs.mapx.at/de/api/geocoding.md) `GET api.mapx.at/v1/geocode`

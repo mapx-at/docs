@@ -1,5 +1,9 @@
 # Departure
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/departure/
+
+> mapx-gl Departure
+
 ## Properties
 
 ### destination
@@ -75,4 +79,3 @@
 ### time
 
 > **time**: `string`
-

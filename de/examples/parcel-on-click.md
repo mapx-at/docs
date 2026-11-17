@@ -1,9 +1,16 @@
 # Kataster: Grundstück per Klick
 
+Source: https://docs.mapx.at/de/examples/parcel-on-click/
+
+> Grundstücksgrenzen (Kataster) über dem Luftbild zeigen, ein Klick nennt die Grundstücksnummer: Kataster-Tileset und Parcel-API, lauffähiger Code.
 
 Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer und Katastralgemeinde. `queryRenderedFeatures` liest sie am Klickpunkt.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -24,9 +31,8 @@ map.on('click', (e) => {
   const text = f ? `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}` : 'No parcel boundary hit (visible from zoom 16).';
   new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
 });
-```
+````
 
 ## Verwendete APIs
 
-- [Kataster](/de/tilesets/cadastre/) (Vektorkacheln im Stil `satellite`)
-
+- [Kataster](https://docs.mapx.at/de/tilesets/cadastre.md) (Vektorkacheln im Stil `satellite`)

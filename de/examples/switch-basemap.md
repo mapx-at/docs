@@ -1,9 +1,16 @@
-# Basiskarte wechseln
+# Basiskarte wechseln: Beispiel
 
+Source: https://docs.mapx.at/de/examples/switch-basemap/
+
+> Zwischen Karte, Luftbild (Orthophoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Styles: lauffähiges Beispiel für einen Basiskarten-Umschalter.
 
 Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Switch the basemap: map, aerial imagery and terrain are three ready-made styles.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -25,9 +32,8 @@ for (const knopf of document.querySelectorAll('[data-stil]')) {
     for (const k of document.querySelectorAll('[data-stil]')) k.setAttribute('aria-pressed', String(k === knopf));
   });
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Styles](/de/api/styles/) `GET api.mapx.at/v1/styles/{streets|satellite|outdoors}`
-
+- [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{streets|satellite|outdoors}`

@@ -1,6 +1,10 @@
-# Tourism
+# Tourism: bike routes and elevation profile
 
-The snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once ([Access and limits](/start/access-and-limits/)).
+Source: https://docs.mapx.at/use-cases/tourism/
+
+> Bike and mountain-bike routes, cycle-route layer, elevation profile and weather for tours and visitor information, built on the mapx APIs.
+
+The snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
 
 Visitors ask "Which way by bike, how steep is it, and what is the weather?". The answers come from the same API: routes with the profiles `cycling` and `cycling-mtb`, a profile of the heights, the signposted cycle routes on the map and the forecast for the destination.
 
@@ -28,7 +32,7 @@ map.addControl(new mapx.LayerControl({ groups: ["bike_routes", "relief"] }), "to
 map.addControl(new mapx.RouteControl({ profiles: ["cycling", "cycling-mtb", "walking"] }), "top-right");
 ```
 
-The [SDK example](/examples/sdk-controls/) shows both controls together.
+The [SDK example](https://docs.mapx.at/examples/sdk-controls.md) shows both controls together.
 
 ## Elevation profile
 
@@ -42,7 +46,7 @@ console.log(`up ${Math.round(p.ascent)} m, down ${Math.round(p.descent)} m, ${Ma
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
 
-The height model is the official DTM of the BEV. See [Elevation profile](/guides/elevation-profile/) for a finished chart and the [live example](/examples/elevation-profile/).
+The height model is the official DTM of the BEV. See [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md) for a finished chart and the [live example](https://docs.mapx.at/examples/elevation-profile.md).
 
 ## Reachability for the area
 
@@ -54,7 +58,7 @@ map.addSource("reach", { type: "geojson", data: iso });
 map.addLayer({ id: "reach", type: "fill", source: "reach", paint: { "fill-color": "#2346d8", "fill-opacity": 0.12 } });
 ```
 
-For public transport to the trailhead use [`transitDirections`](/guides/sdk/helpers/) with `bike: true` to ride to the stop.
+For public transport to the trailhead use [`transitDirections`](https://docs.mapx.at/guides/sdk/helpers.md) with `bike: true` to ride to the stop.
 
 ## Weather for the destination
 
@@ -63,11 +67,10 @@ const f = await mapx.weatherForecast([12.694, 47.074], { hours: 12 }); // Grossg
 console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`weatherCurrent` gives the measurements of the nearest stations. As a map layer see the [weather overlay](/examples/weather-overlay/). Weather data: GeoSphere Austria (CC BY 4.0).
+`weatherCurrent` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
 
 ## Next steps
 
-- [Navigation](/guides/navigation/) and [Elevation and terrain](/guides/elevation/)
-- [3D terrain](/guides/3d-terrain/) for a spectacular tour map
-- [Static images](/guides/static-images/) for brochures and newsletters
-
+- [Navigation](https://docs.mapx.at/guides/navigation.md) and [Elevation and terrain](https://docs.mapx.at/guides/elevation.md)
+- [3D terrain](https://docs.mapx.at/guides/3d-terrain.md) for a spectacular tour map
+- [Static images](https://docs.mapx.at/guides/static-images.md) for brochures and newsletters

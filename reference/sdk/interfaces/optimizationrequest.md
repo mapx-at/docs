@@ -1,5 +1,9 @@
 # OptimizationRequest
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/optimizationrequest/
+
+> mapx-gl OptimizationRequest
+
 ## Properties
 
 ### options?
@@ -33,4 +37,3 @@
 ### vehicles
 
 > **vehicles**: `object`[]
-

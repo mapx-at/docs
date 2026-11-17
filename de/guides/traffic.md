@@ -1,12 +1,16 @@
-# Verkehr
+# Verkehrs-Guide: Meldungen und Ebene
+
+Source: https://docs.mapx.at/de/guides/traffic/
+
+> Verkehrsmeldungen, Tempolimits auf Autobahnen und eine Verkehrsebene auf der Karte zeigen und Routen mit Verkehrslage nutzen, mit der mapx-Verkehrs-API.
 
 Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 | Aufgabe | Endpunkt |
 |---|---|
-| Störungen, Baustellen und Sperren auflisten | [`/v1/traffic/incidents`](/de/api/traffic/) |
-| Tempolimits auf Wechselverkehrszeichen | [`/v1/traffic/flow`](/de/api/traffic/) |
-| Positionen der Zeichen | [`/v1/traffic/signs`](/de/api/traffic/) |
+| Störungen, Baustellen und Sperren auflisten | [`/v1/traffic/incidents`](https://docs.mapx.at/de/api/traffic.md) |
+| Tempolimits auf Wechselverkehrszeichen | [`/v1/traffic/flow`](https://docs.mapx.at/de/api/traffic.md) |
+| Positionen der Zeichen | [`/v1/traffic/signs`](https://docs.mapx.at/de/api/traffic.md) |
 | Verkehr auf einer Karte zeichnen | `/v1/traffic/tiles.json` |
 | Prüfen, ob die Daten aktuell sind | `/v1/traffic/status` |
 | Um Sperren herum routen | Profil `driving-traffic` |
@@ -60,7 +64,7 @@ map.on("load", () => {
 });
 ```
 
-Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](/de/start/access-and-limits/). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
+Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
 ## Route mit Verkehrslage
 
@@ -72,7 +76,6 @@ Die Route meidet aktuelle Sperren und listet Störungen in `legs[].incidents`. M
 
 ## Nächste Schritte
 
-- [Traffic API](/de/api/traffic/)
-- [Navigation](/de/guides/navigation/): Maut, Lkw, Alternativen
-- [Attribution](/de/reference/attribution/): ASFINAG und GIP.at nennen
-
+- [Traffic API](https://docs.mapx.at/de/api/traffic.md)
+- [Navigation](https://docs.mapx.at/de/guides/navigation.md): Maut, Lkw, Alternativen
+- [Attribution](https://docs.mapx.at/de/reference/attribution.md): ASFINAG und GIP.at nennen

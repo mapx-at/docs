@@ -1,8 +1,12 @@
 # TilequeryOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/tilequeryoptions/
+
+> mapx-gl TilequeryOptions
+
 ## Extends
 
-- [`Common`](/reference/sdk/interfaces/common/)
+- [`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md)
 
 ## Properties
 
@@ -42,5 +46,4 @@
 
 #### Inherited from
 
-[`Common`](/reference/sdk/interfaces/common/).[`signal`](/reference/sdk/interfaces/common/#signal)
-
+[`Common`](https://docs.mapx.at/reference/sdk/interfaces/common.md).[`signal`](https://docs.mapx.at/reference/sdk/interfaces/common.md#signal)

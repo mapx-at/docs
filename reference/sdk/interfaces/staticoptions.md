@@ -1,5 +1,9 @@
 # StaticOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/staticoptions/
+
+> mapx-gl StaticOptions
+
 ## Properties
 
 ### bearing?
@@ -10,7 +14,7 @@
 
 ### center?
 
-> `optional` **center**: [`LL`](/reference/sdk/type-aliases/ll/)
+> `optional` **center**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 Mittelpunkt und Zoom; ohne beides `auto` (nur mit Overlays).
 
@@ -63,4 +67,3 @@ Bildgröße in Pixel, je 1 bis 1280.
 ### zoom?
 
 > `optional` **zoom**: `number`
-

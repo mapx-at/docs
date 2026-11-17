@@ -1,43 +1,55 @@
-# Sentinel-2 current
+# Sentinel-2 satellite imagery tileset
 
+Source: https://docs.mapx.at/tilesets/sentinel2/
+
+> Always up-to-date, cloud-free satellite image of Austria from Copernicus Sentinel-2 as WebP tiles, z5 to z13, 10 m, updated daily at 02:00.
 
 A satellite image of Austria that updates every day: each pixel shows a **robust value from the most recent cloud- and shadow-free Sentinel-2 acquisitions** (rolling best-pixel composite). Resolution 10 m, Web Mercator, WebP, 512 px, z5 to z13 (the client overzooms beyond that). The acquisition date of every pixel is kept in the underlying store.
 
+**Use cases**
 
+- **Current background**: Satellite view that is not years old
+- **Seeing change**: Snow cover, harvest, windthrow, construction sites on a 10 m grid
+- **Overview and planning**: Landscape, vegetation and water at a glance
 
 ## Add to your map
 
-  **MapLibre**
+**MapLibre**
 
-    ```js
-    new maplibregl.Map({
-      container: "map",
-      center: [15.334, 48.227], zoom: 11,
-      style: {
-        version: 8,
-        sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
-        layers: [{ id: "s2", type: "raster", source: "s2" }]
-      }
-    });
-    ```
-    TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](/start/first-map/) to the map options. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
-    **Leaflet**
+```js
+new maplibregl.Map({
+  container: "map",
+  center: [15.334, 48.227], zoom: 11,
+  style: {
+    version: 8,
+    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+    layers: [{ id: "s2", type: "raster", source: "s2" }]
+  }
+});
+```
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
 
-    ```js
-    L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
-      tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-      attribution: "Contains modified Copernicus Sentinel data 2026"
-    }).addTo(map);
-    ```
-    **curl**
-
-    ```bash
-    curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
-    curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
-    ```
   
-> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
 
+**Leaflet**
+
+```js
+L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
+  tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
+  attribution: "Contains modified Copernicus Sentinel data 2026"
+}).addTo(map);
+```
+
+  
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sentinel2.json
+curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
+```
+
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
 
 ## TileJSON, zoom and update
 
@@ -89,5 +101,4 @@ Required under the Copernicus terms of use (free, full and open) for modified da
 Contains modified Copernicus Sentinel data 2026
 ```
 
-The year is the year of acquisition; MapLibre picks up the text from TileJSON or PMTiles. More: [License](/reference/attribution/).
-
+The year is the year of acquisition; MapLibre picks up the text from TileJSON or PMTiles. More: [License](https://docs.mapx.at/reference/attribution.md).

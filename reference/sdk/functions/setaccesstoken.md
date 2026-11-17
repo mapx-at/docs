@@ -1,5 +1,9 @@
 # setAccessToken
 
+Source: https://docs.mapx.at/reference/sdk/functions/setaccesstoken/
+
+> mapx-gl setAccessToken
+
 > **setAccessToken**(`token`): `void`
 
 Zugriffstoken setzen (`mx_pk_…` im Browser, auf account.mapx.at erzeugt). Alle API-Anfragen senden ihn als `Authorization: Bearer`,
@@ -12,4 +16,3 @@ Karten (Style, Kacheln, Schriften, Sprites) als `access_token`-Query, Static-Ima
 ## Returns
 
 `void`
-

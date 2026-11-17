@@ -1,10 +1,12 @@
-# Erste Karte in 5 Minuten
+# Erste Karte mit MapLibre in 5 Minuten
 
+Source: https://docs.mapx.at/de/start/first-map/
 
-Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](/de/start/access-and-limits/) ersetzen (erlaubter Origin: die eigene Seite, beim Testen `localhost`). Kein Build-Schritt.
+> Die erste mapx-Webkarte: eine vollständige HTML-Datei mit MapLibre GL JS oder dem SDK mapx-gl und einem öffentlichen Token. Kopieren, speichern, im Browser öffnen.
+
+Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch einen öffentlichen Token von [account.mapx.at](https://docs.mapx.at/de/start/access-and-limits.md) ersetzen (erlaubter Origin: die eigene Seite, beim Testen `localhost`). Kein Build-Schritt.
 
 **MapLibre GL JS**
-
 
 ```html
 <!doctype html>
@@ -35,8 +37,7 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
 
 **SDK mapx-gl**
 
-
-Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `mapx-gl.bundle.js`, `maplibre-gl-worker.js` und `mapx-gl.css` von `https://map.mapx.at/sdk/v1/` herunterladen und neben der Seite ausliefern (der Worker muss im selben Verzeichnis wie das Bundle liegen).
+Das [SDK](https://docs.mapx.at/de/guides/sdk/index.md) ergänzt eine Suchbox und einen Style-Umschalter. `mapx-gl.bundle.js`, `maplibre-gl-worker.js` und `mapx-gl.css` von `https://map.mapx.at/sdk/v1/` herunterladen und neben der Seite ausliefern (der Worker muss im selben Verzeichnis wie das Bundle liegen).
 
 ```html
 <!doctype html>
@@ -60,14 +61,12 @@ Das [SDK](/de/guides/sdk/) ergänzt eine Suchbox und einen Style-Umschalter. `ma
 </html>
 ```
 
-
-Der Style `streets` ist ein gewöhnlicher [MapLibre-Style](https://maplibre.org/maplibre-style-spec/). Durch `satellite` oder `outdoors` ersetzen, um das Aussehen zu ändern. Alle Styles: [Styles API](/de/api/styles/).
+Der Style `streets` ist ein gewöhnlicher [MapLibre-Style](https://maplibre.org/maplibre-style-spec/). Durch `satellite` oder `outdoors` ersetzen, um das Aussehen zu ändern. Alle Styles: [Styles API](https://docs.mapx.at/de/api/styles.md).
 
 MapLibre GL JS {V.maplibre} ist die Version, mit der diese Beispiele getestet sind.
 
 ## Nächste Schritte
 
-- [Erste Suche](/de/start/first-search/)
-- [Karten-Guide](/de/guides/maps/): Styles, Gelände, Overlays
-- [Beispiele](/de/examples/)
-
+- [Erste Suche](https://docs.mapx.at/de/start/first-search.md)
+- [Karten-Guide](https://docs.mapx.at/de/guides/maps.md): Styles, Gelände, Overlays
+- [Beispiele](https://docs.mapx.at/de/examples/index.md)

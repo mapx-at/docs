@@ -1,9 +1,16 @@
-# Niederschlagsradar-Animation
+# Niederschlagsradar-Animation: Beispiel
 
+Source: https://docs.mapx.at/de/examples/radar-animation/
+
+> Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation auf der Karte: Nowcast von GeoSphere Austria, lauffähiger Code.
 
 Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -48,13 +55,11 @@ map.on('load', async () => {
 });
 document.getElementById('play').addEventListener('click', abspielen);
 document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
-```
+````
 
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
 
-
 ## Verwendete APIs
 
-- [Wetter](/de/api/weather/#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
-- [Niederschlags-Nowcast](/de/api/weather/) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
-
+- [Wetter](https://docs.mapx.at/de/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
+- [Niederschlags-Nowcast](https://docs.mapx.at/de/api/weather.md) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`

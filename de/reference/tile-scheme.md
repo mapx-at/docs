@@ -1,5 +1,8 @@
-# Kachelschema
+# Kachelschema: Web-Mercator, z/x/y
 
+Source: https://docs.mapx.at/de/reference/tile-scheme/
+
+> Kachelschema der mapx-Kacheln: Web-Mercator, z/x/y-Adressierung, 512-Pixel-Kacheln, Auflösung je Zoomstufe und Overzoom.
 
 Alle mapx-Kacheln folgen dem gängigen Schema von Web-Karten. Wer MapLibre, Leaflet, OpenLayers oder QGIS nutzt, muss dazu nichts einstellen; für eigene Abfragen und Berechnungen steht hier das Wichtigste.
 
@@ -20,7 +23,7 @@ function kachel(lon, lat, z) {
 kachel(12.694, 47.074, 12);   // { z: 12, x: 2192, y: 1439 }
 ```
 
-Eine Kachel liefert der Endpunkt `https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`, siehe [Kacheln](/de/api/tiles/).
+Eine Kachel liefert der Endpunkt `https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`, siehe [Kacheln](https://docs.mapx.at/de/api/tiles.md).
 
 ## 512-Pixel-Kacheln
 
@@ -37,19 +40,31 @@ Vergisst man das, wirkt die Karte um eine Zoomstufe versetzt und unscharf oder z
 
 Die Auflösung hängt von der Breite ab. Die Tabelle gilt für 47,5° N, die Mitte Österreichs:
 
-
+| Zoom | m pro Pixel | Kantenlänge Kachel (km) | Anmerkung |
+|---|---|---|---|
+| z5 | 1.652 | 846 |  |
+| z6 | 826 | 423 |  |
+| z7 | 413 | 212 |  |
+| z8 | 207 | 106 |  |
+| z9 | 103 | 53 |  |
+| z10 | 52 | 26 |  |
+| z11 | 26 | 13 |  |
+| z12 | 13 | 6,61 |  |
+| z13 | 6,46 | 3,30 |  |
+| z14 | 3,23 | 1,65 |  |
+| z15 | 1,61 | 0,83 |  |
+| z16 | 0,81 | 0,41 | höchste gespeicherte Stufe (≈ 1-m-Ursprung) |
+| z17 | 0,40 | 0,21 | Overzoom (Client) |
 
 Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vor, das Orthophoto bis z18.
 
 ## Overzoom
 
-Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](/de/api/errors/).
+Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 > Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) im Style `minzoom: 16` setzen.
 
-
 ## Weiter
 
-- Höhenwerte in Kacheln: [Terrain-RGB](/de/reference/terrain-rgb/).
-- Koordinaten und Projektionen: [Koordinaten](/de/reference/coordinates/).
-
+- Höhenwerte in Kacheln: [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
+- Koordinaten und Projektionen: [Koordinaten](https://docs.mapx.at/de/reference/coordinates.md).

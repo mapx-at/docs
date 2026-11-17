@@ -1,16 +1,20 @@
 # GeocodeFeature
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/geocodefeature/
+
+> mapx-gl GeocodeFeature
+
 ## Properties
 
 ### bbox?
 
-> `optional` **bbox**: [`BBox`](/reference/sdk/type-aliases/bbox/)
+> `optional` **bbox**: [`BBox`](https://docs.mapx.at/reference/sdk/type-aliases/bbox.md)
 
 ***
 
 ### center
 
-> **center**: [`LL`](/reference/sdk/type-aliases/ll/)
+> **center**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 ***
 
@@ -55,4 +59,3 @@
 ### text
 
 > **text**: `string`
-

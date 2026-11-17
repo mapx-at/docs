@@ -1,12 +1,14 @@
-# 3D-Gelände mit Orthophoto
+# 3D-Gelände-Karte mit Orthophoto
 
+Source: https://docs.mapx.at/de/guides/3d-terrain/
+
+> Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und kostenlosem Token.
 
 **Ziel:** Eine Karte, auf der das Orthophoto über dem echten Gelände liegt, plastisch schattiert und im Browser kippbar.
 
-**Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](/de/start/access-and-limits/)).
+**Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
-Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) und das [Orthophoto](/de/tilesets/orthophoto/) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](/de/api/tiles/) einbinden, ohne einen Dateinamen zu kennen.
-
+Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Höhe, Typ `raster-dem`) und das [Orthophoto](https://docs.mapx.at/de/tilesets/orthophoto.md) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](https://docs.mapx.at/de/api/tiles.md) einbinden, ohne einen Dateinamen zu kennen.
 
 1. **Seite anlegen.** Datei `index.html` mit MapLibre GL JS und einem Kartencontainer:
 
@@ -66,18 +68,15 @@ Verwendet werden das [DTM](/de/tilesets/terrain-rgb/) (Höhe, Typ `raster-dem`) 
 
 5. **Starten.** `npx serve` im Ordner, die ausgegebene Adresse öffnen. Mit gedrückter rechter Maustaste ziehen kippt und dreht die Karte.
 
-
 ## Ergebnis
 
 Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusätzlich schattiert. Das Orthophoto reicht bis z18 (20 cm), das DTM bis z16 (Rasterweite 1 m); MapLibre vergrößert darüber hinaus automatisch.
 
 > Mit `exaggeration` lässt sich das Relief überhöhen. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
 
-
 ## Nächste Schritte
 
-- Höhe pro Klick auslesen: `map.queryTerrainElevation(e.lngLat)`, Details in [DTM Geländemodell](/de/tilesets/terrain-rgb/).
-- Höhenlinien und Beschriftung darüber: [Höhenlinien überlagern](/de/guides/overlay-contours/).
-- Höhenprofil entlang einer Linie: [Höhenprofil](/de/guides/elevation-profile/).
-- Quellenangabe richtig anzeigen: [Attribution](/de/reference/attribution/).
-
+- Höhe pro Klick auslesen: `map.queryTerrainElevation(e.lngLat)`, Details in [DTM Geländemodell](https://docs.mapx.at/de/tilesets/terrain-rgb.md).
+- Höhenlinien und Beschriftung darüber: [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md).
+- Höhenprofil entlang einer Linie: [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md).
+- Quellenangabe richtig anzeigen: [Attribution](https://docs.mapx.at/de/reference/attribution.md).

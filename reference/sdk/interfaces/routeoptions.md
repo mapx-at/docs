@@ -1,5 +1,9 @@
 # RouteOptions
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/routeoptions/
+
+> mapx-gl RouteOptions
+
 ## Properties
 
 ### onError()?
@@ -8,7 +12,7 @@
 
 #### Parameters
 
-• **e**: [`MapxError`](/reference/sdk/classes/mapxerror/)
+• **e**: [`MapxError`](https://docs.mapx.at/reference/sdk/classes/mapxerror.md)
 
 #### Returns
 
@@ -22,15 +26,15 @@
 
 #### Parameters
 
-• **r**: [`DirectionsResponse`](/reference/sdk/interfaces/directionsresponse/)
+• **r**: [`DirectionsResponse`](https://docs.mapx.at/reference/sdk/interfaces/directionsresponse.md)
 
 • **request**
 
-• **request.options**: [`DirectionsOptions`](/reference/sdk/interfaces/directionsoptions/)
+• **request.options**: [`DirectionsOptions`](https://docs.mapx.at/reference/sdk/interfaces/directionsoptions.md)
 
-• **request.profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+• **request.profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
-• **request.waypoints**: [`LL`](/reference/sdk/type-aliases/ll/)[]
+• **request.waypoints**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)[]
 
 #### Returns
 
@@ -48,13 +52,12 @@ Maut-/Autobahn-Schalter und Lkw-Maße anzeigen (Standard `true`).
 
 ### profile?
 
-> `optional` **profile**: [`Profile`](/reference/sdk/type-aliases/profile/)
+> `optional` **profile**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)
 
 ***
 
 ### profiles?
 
-> `optional` **profiles**: [`Profile`](/reference/sdk/type-aliases/profile/)[]
+> `optional` **profiles**: [`Profile`](https://docs.mapx.at/reference/sdk/type-aliases/profile.md)[]
 
 Angebotene Profile; Standard alle sechs.
-

@@ -1,12 +1,15 @@
-# Changelog
+# Changelog: API and tileset changes
 
+Source: https://docs.mapx.at/reference/changelog/
 
-Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](/api/migration/).
+> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates and sunset notices.
+
+Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](https://docs.mapx.at/api/migration.md).
 
 ## 2026-11-08
 
 ### Added
-- API tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` and `search.mapx.at` need a free token from [account.mapx.at](https://account.mapx.at/): public (`mx_pk_`, bound to origins or an Android app, `GET`/`HEAD` only) or secret (`mx_sk_`). Send it as `Authorization: Bearer` or `?access_token=`. New errors `401` (`missing-token`, `invalid-token`, `token-expired`) and `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), reason in the header `X-Mapx-Reason`. Anonymous requests are still served during the transition period with the header `X-Mapx-Token-Warning`. See [Access and limits](/start/access-and-limits/) and [Errors and limits](/api/errors/).
+- API tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` and `search.mapx.at` need a free token from [account.mapx.at](https://account.mapx.at/): public (`mx_pk_`, bound to origins or an Android app, `GET`/`HEAD` only) or secret (`mx_sk_`). Send it as `Authorization: Bearer` or `?access_token=`. New errors `401` (`missing-token`, `invalid-token`, `token-expired`) and `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), reason in the header `X-Mapx-Reason`. Anonymous requests are still served during the transition period with the header `X-Mapx-Token-Warning`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [Errors and limits](https://docs.mapx.at/api/errors.md).
 - Corridor graph: `GET /v1/corridor-graph` (`polyline` as polyline6, `buffer` 100 to 5000 m, `profile` driving, cycling or walking): compact gzip subgraph of the road network around a route (nodes, directed arcs with travel time and weight, geometry, names, road class, statutory speed limits, turn restrictions) for recomputing a route offline.
 - Speed limits: `GET /v1/speedlimits` (`bbox` or `corridor` as polyline6 plus `buffer`): statutory GIP limits as compact GeoJSON.
 - Directions: `exclude=ferry` (all profiles except `driving-traffic`) and `exclude=toll`; `voice_instructions` and `banner_instructions` also for `cycling`, `cycling-mtb` and `walking`; `maxspeed` carries `legal` (`false` marks a modeled speed that is not a limit).
@@ -14,7 +17,7 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 - Directions: `driving` and `driving-traffic` avoid binding closures (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `exclude` also for `driving-truck` and `driving-traffic`; `voice_instructions` and `banner_instructions` (Mapbox form).
 - Headers `Server-Timing`, `ETag`, `Last-Modified` (styles, TileJSON, OpenAPI; conditional requests answer `304`) and `RateLimit-Policy` per endpoint group.
 - Truck profile `driving-truck` with `weight`, `height`, `width`, `length` and `truck_type`.
-- Error catalog with a stable `code` per error: [Errors and limits](/api/errors/).
+- Error catalog with a stable `code` per error: [Errors and limits](https://docs.mapx.at/api/errors.md).
 - Docs: API reference generated from OpenAPI, playground per API, guides per product.
 
 ### Changed
@@ -59,5 +62,7 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 
 ## Tileset releases
 
-
-
+| Tileset | Source date | File |
+|---|---|---|
+| terrain-rgb | 20250915 | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
+| dsm | 20250915 | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |

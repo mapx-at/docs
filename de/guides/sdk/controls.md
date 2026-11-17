@@ -1,4 +1,8 @@
-# SDK-Controls und Popups
+# SDK-Controls und Popups für MapLibre
+
+Source: https://docs.mapx.at/de/guides/sdk/controls/
+
+> RouteControl, LayerControl, SearchControl, ParcelPopup und DeparturesPopup: fertige Kartenwerkzeuge des SDK mapx-gl in je einer Zeile.
 
 Controls kommen mit `map.addControl(control, position)` auf die Karte. Popups hängen sich mit `new Popup(map, options)` an die Karte. Die Texte sind deutsch, wenn Seite oder Browser deutsch sind, sonst englisch.
 
@@ -16,7 +20,7 @@ map.addControl(route, "top-right");
 await route.setWaypoints([16.3725, 48.2085], [15.3294, 48.2272]); // beide Punkte aus dem Code setzen
 ```
 
-Für Pkw bietet das Panel *Maut meiden* und *Autobahn meiden* (`exclude`), für Lkw Gewicht, Höhe, Breite und Länge. `route.last` enthält die letzte Antwort. [Live-Beispiel](/de/examples/sdk-controls/).
+Für Pkw bietet das Panel *Maut meiden* und *Autobahn meiden* (`exclude`), für Lkw Gewicht, Höhe, Breite und Länge. `route.last` enthält die letzte Antwort. [Live-Beispiel](https://docs.mapx.at/de/examples/sdk-controls.md).
 
 ## LayerControl
 
@@ -58,7 +62,7 @@ const departures = new mapx.DeparturesPopup(map, { limit: 8, radius: 150 });
 departures.open("at:49:1320"); // oder per Haltestellen-ID, oder [lng, lat]
 ```
 
-[Live-Beispiel](/de/examples/departures/).
+[Live-Beispiel](https://docs.mapx.at/de/examples/departures.md).
 
 ## Popups und Werkzeuge kombinieren
 
@@ -71,7 +75,6 @@ document.querySelector("#tools").onchange = (e) => (e.target.checked ? parcels.r
 
 ## Weiter
 
-- [SDK-Helfer](/de/guides/sdk/helpers/)
-- [Fehler und Wiederholungen](/de/guides/sdk/errors/)
-- [SDK-Referenz](/reference/sdk/)
-
+- [SDK-Helfer](https://docs.mapx.at/de/guides/sdk/helpers.md)
+- [Fehler und Wiederholungen](https://docs.mapx.at/de/guides/sdk/errors.md)
+- [SDK-Referenz](https://docs.mapx.at/de/reference/sdk/index.md)

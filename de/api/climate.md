@@ -1,10 +1,12 @@
-# Climate API
+# Klima-API: Sonne, Schnee, Hitzetage
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/climate/
 
-Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Temperatur- und Niederschlagsnormale mit Trend, Hitze- und Frosttage, Schneetage je Winter und der Dürreindex. Quelle: GeoSphere Austria, CC BY 4.0. Dasselbe Objekt steht als `properties.climate` im [Grundstücks-Dossier](/de/api/tilequery/).
+> Klima-API für einen Punkt in Österreich: Sonnenpotenzial, Klimanormale, Hitzetage, Schnee und Dürre von GeoSphere Austria, mit Parametern und Beispielen.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](/de/guides/parcels/)
+Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Temperatur- und Niederschlagsnormale mit Trend, Hitze- und Frosttage, Schneetage je Winter und der Dürreindex. Quelle: GeoSphere Austria, CC BY 4.0. Dasselbe Objekt steht als `properties.climate` im [Grundstücks-Dossier](https://docs.mapx.at/de/api/tilequery.md).
+
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
 
 ## Climate at a point (solar potential, normals, heat days, snow, drought)
 
@@ -12,12 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
 
-<details>
-<summary>Mehr</summary>
-
 Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. The same object is part of the parcel dossier (`properties.climate`). Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
-
-</details>
 
 **Parameter**
 
@@ -30,13 +27,11 @@ Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -45,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/climate/15.3294,48.2272?sections=solar,snow", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -100,7 +93,7 @@ data = res.json()
 | `snow` | object,null | Snow cover (SNOWGRID-CL model, 1 km) |
 | `drought` | object,null | Drought index SPEI (WINFORE, 1 km), latest value |
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -112,6 +105,3 @@ data = res.json()
 | `503` | Daten vorübergehend nicht verfügbar |
 
 ## Playground
-
-
-

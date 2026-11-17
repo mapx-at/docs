@@ -1,6 +1,10 @@
-# Fehler und Wiederholungen im SDK
+# SDK-Fehler und Wiederholungen (MapxError)
 
-Jeder Helfer wirft einen `MapxError`, wenn die API einen Fehler meldet oder das Netz ausfällt. Er bildet das `application/problem+json`-Dokument des [Fehlerkatalogs](/de/api/errors/) ab.
+Source: https://docs.mapx.at/de/guides/sdk/errors/
+
+> MapxError trägt code, status, param und erlaubte Werte aus der problem+json-Antwort der mapx-APIs; nur wiederholen, was sich lohnt.
+
+Jeder Helfer wirft einen `MapxError`, wenn die API einen Fehler meldet oder das Netz ausfällt. Er bildet das `application/problem+json`-Dokument des [Fehlerkatalogs](https://docs.mapx.at/de/api/errors.md) ab.
 
 | Eigenschaft | Bedeutung |
 |---|---|
@@ -56,6 +60,5 @@ input.oninput = async () => {
 
 ## Weiter
 
-- [Fehler und Limits](/de/api/errors/) mit den Rate-Limit-Zonen
-- [SDK-Helfer](/de/guides/sdk/helpers/)
-
+- [Fehler und Limits](https://docs.mapx.at/de/api/errors.md) mit den Rate-Limit-Zonen
+- [SDK-Helfer](https://docs.mapx.at/de/guides/sdk/helpers.md)

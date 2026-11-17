@@ -1,9 +1,12 @@
-# Karten
+# Karten-Guide: Vektorkarte und Styles
 
+Source: https://docs.mapx.at/de/guides/maps/
+
+> Eine mapx-Vektorkarte in MapLibre GL JS anzeigen, Styles wechseln, Tilesets und Overlays hinzufügen, auch Wetter- und Verkehrsebenen.
 
 mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Style entsteht.
 
-**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](/de/start/first-map/). Ein kostenloser Token ist nötig ([Zugang und Limits](/de/start/access-and-limits/)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt, die Übergabe steht dort.
+**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt, die Übergabe steht dort.
 
 ## Einen Style verwenden
 
@@ -23,7 +26,7 @@ const map = new maplibregl.Map({
 });
 ```
 
-Ein Style-Wechsel zur Laufzeit ersetzt Layer und Sources: `map.setStyle(url)` aufrufen. Siehe [Basiskarte wechseln](/de/examples/switch-basemap/).
+Ein Style-Wechsel zur Laufzeit ersetzt Layer und Sources: `map.setStyle(url)` aufrufen. Siehe [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md).
 
 ## Tilesets zum eigenen Style hinzufügen
 
@@ -45,22 +48,22 @@ map.on("load", () => {
 });
 ```
 
-Layernamen und Felder: [Tilesets](/de/tilesets/). Eigene Daten lassen sich genauso mit einer `geojson`-Source hinzufügen.
+Layernamen und Felder: [Tilesets](https://docs.mapx.at/de/tilesets/index.md). Eigene Daten lassen sich genauso mit einer `geojson`-Source hinzufügen.
 
 ## Wetter- und Verkehrs-Overlays
 
-Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](/de/api/air-quality/). Die amtlichen Wetterwarnungen sind GeoJSON (`/v1/weather/warnings`, als `geojson`-Source einbinden und nach `level` einfärben).
+Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](https://docs.mapx.at/de/api/air-quality.md). Die amtlichen Wetterwarnungen sind GeoJSON (`/v1/weather/warnings`, als `geojson`-Source einbinden und nach `level` einfärben).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
 map.addLayer({ id: "temp", type: "raster", source: "temp", paint: { "raster-opacity": 0.6 } });
 ```
 
-Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](/de/guides/traffic/). Beispiel: [Wetter-Overlay](/de/examples/weather-overlay/).
+Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](https://docs.mapx.at/de/guides/traffic.md). Beispiel: [Wetter-Overlay](https://docs.mapx.at/de/examples/weather-overlay.md).
 
 ## Andere Clients
 
-Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](/de/api/styles/) den gerenderten Style als Raster-Tiles:
+Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles:
 
 ```
 https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}
@@ -68,14 +71,12 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}
 
 ## Offline und Massennutzung
 
-Jedes Tileset ist auch eine einzelne PMTiles-Datei. Einmal herunterladen statt Tiles abzurufen: [PMTiles selbst hosten](/de/guides/self-host-pmtiles/).
+Jedes Tileset ist auch eine einzelne PMTiles-Datei. Einmal herunterladen statt Tiles abzurufen: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
 
-> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, siehe [Attribution](/de/reference/attribution/).
-
+> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Nächste Schritte
 
-- [Basiskarte gestalten](/de/guides/style-the-basemap/)
-- [Tilesets](/de/tilesets/)
-- [Styles API](/de/api/styles/) und [Tiles API](/de/api/tiles/)
-
+- [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md)
+- [Tilesets](https://docs.mapx.at/de/tilesets/index.md)
+- [Styles API](https://docs.mapx.at/de/api/styles.md) und [Tiles API](https://docs.mapx.at/de/api/tiles.md)

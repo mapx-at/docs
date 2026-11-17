@@ -1,13 +1,17 @@
-# Grundstücke
+# Grundstücke und Kataster abfragen
+
+Source: https://docs.mapx.at/de/guides/parcels/
+
+> Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen auf der Karte zeichnen und die Attribute lesen: Kataster-Abfrage mit mapx für Österreich.
 
 Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich.
 
 | Aufgabe | Verwendung |
 |---|---|
 | Grundstücksgrenzen zeichnen | Tileset `cadastre` (z16) |
-| Grundstücksnummer, Fläche und Katastralgemeinde an einem Punkt | [`/v1/parcel/{lon},{lat}`](/de/api/tilequery/) |
-| Ein beliebiges Vektor-Tileset an einem Punkt abfragen | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](/de/api/tilequery/) |
-| Ein Grundstück suchen | [Geocoding](/de/guides/search/): Grundstücke gehören zu den durchsuchten Objekten |
+| Grundstücksnummer, Fläche und Katastralgemeinde an einem Punkt | [`/v1/parcel/{lon},{lat}`](https://docs.mapx.at/de/api/tilequery.md) |
+| Ein beliebiges Vektor-Tileset an einem Punkt abfragen | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](https://docs.mapx.at/de/api/tilequery.md) |
+| Ein Grundstück suchen | [Geocoding](https://docs.mapx.at/de/guides/search.md): Grundstücke gehören zu den durchsuchten Objekten |
 
 ## Grundstück an einem Punkt
 
@@ -35,7 +39,7 @@ map.on("click", async (e) => {
 });
 ```
 
-Vollständiges Beispiel: [Grundstück per Klick](/de/examples/parcel-on-click/). Die Katastralgemeinde (`cadastral_municipality_id`) gehört zur Identität eines Grundstücks: Die Nummer allein ist nicht eindeutig.
+Vollständiges Beispiel: [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md). Die Katastralgemeinde (`cadastral_municipality_id`) gehört zur Identität eines Grundstücks: Die Nummer allein ist nicht eindeutig.
 
 ## Tilequery
 
@@ -49,7 +53,7 @@ Tilesets lassen sich mit Komma kombinieren, zum Beispiel `streets,cadastre`. Jed
 
 ## Grundstücksbild für ein Inserat
 
-Das Grundstück mit einem [Static Image](/de/guides/static-images/) kombinieren und das Polygon als GeoJSON-Overlay verwenden:
+Das Grundstück mit einem [Static Image](https://docs.mapx.at/de/guides/static-images.md) kombinieren und das Polygon als GeoJSON-Overlay verwenden:
 
 ```js
 const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).features[0];
@@ -74,10 +78,10 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcels/14
 | `elevation` | Min, Mittel, Max und mittlere/maximale Neigung aus dem Geländemodell an einem Punktraster im Grundstück |
 | `addresses`, `nearest_transit_stop` | Adressen des Registers auf dem Grundstück, nächste Haltestelle im Umkreis von 2 km |
 | `orthophoto` | Flugjahr und -datum |
-| `climate` | Sonnenpotenzial, Temperatur- und Niederschlagsnormale, Hitze- und Schneetage, Dürreindex; dasselbe Objekt wie [`/v1/climate/{lon},{lat}`](/de/api/climate/) am inneren Punkt des Grundstücks. Solange ein neues Gebiet geladen wird, sind Abschnitte `null` mit `status: "partial"`; nach `retry_after_s` Sekunden erneut fragen |
-| `links.static_image` | fertige [Static-Images](/de/guides/static-images/)-URL mit umrandetem Grundstück |
+| `climate` | Sonnenpotenzial, Temperatur- und Niederschlagsnormale, Hitze- und Schneetage, Dürreindex; dasselbe Objekt wie [`/v1/climate/{lon},{lat}`](https://docs.mapx.at/de/api/climate.md) am inneren Punkt des Grundstücks. Solange ein neues Gebiet geladen wird, sind Abschnitte `null` mit `status: "partial"`; nach `retry_after_s` Sekunden erneut fragen |
+| `links.static_image` | fertige [Static-Images](https://docs.mapx.at/de/guides/static-images.md)-URL mit umrandetem Grundstück |
 
-Die Punktabfrage ergänzt `parcel_id` und `links.dossier`; `?include=dossier` liefert je Feature das volle Dossier. Referenz: [Tilequery und Parcel API](/de/api/tilequery/).
+Die Punktabfrage ergänzt `parcel_id` und `links.dossier`; `?include=dossier` liefert je Feature das volle Dossier. Referenz: [Tilequery und Parcel API](https://docs.mapx.at/de/api/tilequery.md).
 
 ## Grundstückssuche
 
@@ -93,7 +97,6 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=
 
 ## Nächste Schritte
 
-- [Tilequery und Parcel API](/de/api/tilequery/)
-- [Tilesets](/de/tilesets/cadastre/): Layer und Felder des Katasters
-- [Höhen](/de/guides/elevation/): Höhe des Grundstücks
-
+- [Tilequery und Parcel API](https://docs.mapx.at/de/api/tilequery.md)
+- [Tilesets](https://docs.mapx.at/de/tilesets/cadastre.md): Layer und Felder des Katasters
+- [Höhen](https://docs.mapx.at/de/guides/elevation.md): Höhe des Grundstücks

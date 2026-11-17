@@ -1,9 +1,16 @@
-# Tourenplanung
+# Tourenplanung: Beispiel Stopp-Reihenfolge
 
+Source: https://docs.mapx.at/de/examples/optimization/
+
+> Haltestellen auf der Karte anklicken und die beste Reihenfolge ab Depot und zurück mit der mapx-Routenoptimierung erhalten: lauffähiges Beispiel.
 
 Die Optimization-API ordnet Stopps für ein oder mehrere Fahrzeuge, mit Servicezeiten, Kapazitäten und Zeitfenstern. Hier startet und endet ein Fahrzeug in Melk. Bis zu neun Stopps anklicken, jeder Klick plant neu. Die Reihenfolge wird mit einer Directions-Anfrage durch alle Stopps gezeichnet.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Tour planning: click stops (up to 9), the optimization API finds the shortest order from the depot and back.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -51,10 +58,9 @@ async function plan() {
     document.getElementById('info').textContent = `Order: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min driving`;
   } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
 }
-```
+````
 
 ## Verwendete APIs
 
-- [Optimization](/de/api/optimization/) `POST api.mapx.at/v1/optimization`
-- [Directions](/de/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
-
+- [Optimization](https://docs.mapx.at/de/api/optimization.md) `POST api.mapx.at/v1/optimization`
+- [Directions](https://docs.mapx.at/de/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`

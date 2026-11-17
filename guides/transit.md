@@ -1,12 +1,16 @@
-# Transit departures
+# Transit guide: public transport departures
 
-The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
+Source: https://docs.mapx.at/guides/transit/
+
+> Query public transport journeys, stops and departure boards in Austria from the scheduled timetable with the mapx transit API.
+
+The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Endpoint |
 |---|---|
-| Find stops near a point | [`/v1/stops`](/api/transit/) |
-| Next departures at a stop | [`/v1/departures`](/api/transit/) |
-| Journey from A to B | [`/v1/directions/transit/{coordinates}`](/api/transit/) |
+| Find stops near a point | [`/v1/stops`](https://docs.mapx.at/api/transit.md) |
+| Next departures at a stop | [`/v1/departures`](https://docs.mapx.at/api/transit.md) |
+| Journey from A to B | [`/v1/directions/transit/{coordinates}`](https://docs.mapx.at/api/transit.md) |
 
 ## Find stops
 
@@ -64,13 +68,12 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/
 
 ## Show departures in an app
 
-1. Search a stop with [`/v1/stops`](/api/transit/) or let the user click the map.
+1. Search a stop with [`/v1/stops`](https://docs.mapx.at/api/transit.md) or let the user click the map.
 2. Call `/v1/departures` and refresh every minute.
 3. Show line, destination and `time`; mark missing real-time data with "scheduled".
 
 ## Next
 
-- [Transit API](/api/transit/)
-- [Navigation](/guides/navigation/)
-- [Attribution](/reference/attribution/): timetable data credit
-
+- [Transit API](https://docs.mapx.at/api/transit.md)
+- [Navigation](https://docs.mapx.at/guides/navigation.md)
+- [Attribution](https://docs.mapx.at/reference/attribution.md): timetable data credit

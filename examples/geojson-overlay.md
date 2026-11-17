@@ -1,9 +1,16 @@
-# Your own GeoJSON on the map
+# GeoJSON overlay on the map example
 
+Source: https://docs.mapx.at/examples/geojson-overlay/
+
+> Show your own GeoJSON points, line and polygon over the mapx style, with a popup on click, in MapLibre GL JS. Runnable code to copy.
 
 Your own data goes on top of the mapx style as a GeoJSON source. Filter by geometry type to style points, lines and areas separately. Larger datasets work the same way as PMTiles.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Own data: add a GeoJSON layer (points, line, area) on top of the mapx style and show a popup on click.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -33,9 +40,8 @@ map.on('load', () => {
   map.on('mouseleave', 'own-points', () => (map.getCanvas().style.cursor = ''));
   // PMTiles of your own work the same way: map.addSource('x', { type: 'vector', url: 'pmtiles://https://example.com/x.pmtiles' })
 });
-```
+````
 
 ## APIs used
 
-- [Styles](/api/styles/) `GET api.mapx.at/v1/styles/{id}`
-
+- [Styles](https://docs.mapx.at/api/styles.md) `GET api.mapx.at/v1/styles/{id}`

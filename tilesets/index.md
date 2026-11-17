@@ -1,11 +1,24 @@
-# Tilesets
+# Tilesets: vector and raster tiles
 
+Source: https://docs.mapx.at/tilesets/
 
-Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](/api/tiles/) and as one immutable [PMTiles](https://docs.protomaps.com/pmtiles/) file (the source date is part of the file name). All data is licensed CC BY 4.0, see [Attribution](/reference/attribution/).
+> All mapx tilesets for Austria with type, zoom range and source date: basemap, cadastre, contours, orthophoto, terrain and surface models.
 
+Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and as one immutable [PMTiles](https://docs.protomaps.com/pmtiles/) file (the source date is part of the file name). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
+| Tileset | Type | Zoom | As of |
+|---|---|---|---|
+| [`streets`](https://docs.mapx.at/tilesets/streets.md) | vector | z0–16 | 2026-04-01 |
+| [`cadastre`](https://docs.mapx.at/tilesets/cadastre.md) | vector | z16–16 | 2026-04-01 |
+| [`contours`](https://docs.mapx.at/tilesets/contours.md) | vector | z10–16 | 20250915 |
+| [`terrain-rgb`](https://docs.mapx.at/tilesets/terrain-rgb.md) | DEM | z5–16 | 20250915 |
+| [`dsm`](https://docs.mapx.at/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
+| [`orthophoto`](https://docs.mapx.at/tilesets/orthophoto.md) | raster | z5–18 | 2025-10-03 |
+| [`orthophoto-flight-blocks`](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md) | vector | z6–17 | 2025-10-03 |
+| [`rest-areas`](https://docs.mapx.at/tilesets/rest-areas.md) | vector | z7–14 | 20261107 |
+| [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261107 |
 
-Not in the table because it is replaced daily instead of versioned: [Sentinel-2 current](/tilesets/sentinel2/) (`sentinel2`, raster, z5 to z13).
+Not in the table because it is replaced daily instead of versioned: [Sentinel-2 current](https://docs.mapx.at/tilesets/sentinel2.md) (`sentinel2`, raster, z5 to z13).
 
 Use a tileset by name:
 
@@ -13,10 +26,9 @@ Use a tileset by name:
 map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
 ```
 
-The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Former German names still work until 2027-05-31, see [Migration](/api/migration/).
+The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Former German names still work until 2027-05-31, see [Migration](https://docs.mapx.at/api/migration.md).
 
 ## Next
 
-- [Maps guide](/guides/maps/)
-- [Self-host PMTiles](/guides/self-host-pmtiles/)
-
+- [Maps guide](https://docs.mapx.at/guides/maps.md)
+- [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md)

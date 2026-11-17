@@ -1,9 +1,16 @@
-# Truck route with options
+# Truck route example with options
 
+Source: https://docs.mapx.at/examples/truck-route/
+
+> Truck routing with vehicle size, avoiding tolls and motorways, and alternatives: a runnable example for the mapx routing API.
 
 Choose the profile `driving-truck` and give weight and height: roads with matching bans and limits are avoided, and the response reports the kilometres subject to the GO toll. For cars (`driving`) you can avoid tolls and motorways and get up to two alternatives. Click start and destination.
 
-```js
+## Code
+
+````js
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+
 // Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
@@ -43,9 +50,8 @@ async function route() {
     $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km subject to GO toll` : '') + (routes.length > 1 ? `, ${routes.length - 1} alternative(s)` : '');
   } catch (err) { $('info').textContent = 'Error: ' + err.message; }
 }
-```
+````
 
 ## APIs used
 
-- [Directions](/api/directions/) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
-
+- [Directions](https://docs.mapx.at/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`

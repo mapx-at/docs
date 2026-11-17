@@ -1,12 +1,14 @@
-# Your own map from the basemap
+# Custom map style from the basemap
 
+Source: https://docs.mapx.at/guides/style-the-basemap/
 
-**Goal:** Build your own, consistently coloured map from the vector tiles of the [basemap](/tilesets/streets/). mapx provides the data, you decide how it looks.
+> Write your own MapLibre style for the mapx vector basemap of Austria: style land use, water, roads, buildings and boundaries layer by layer.
 
-**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](/start/access-and-limits/)). Basic knowledge of MapLibre styles (sources and layers).
+**Goal:** Build your own, consistently coloured map from the vector tiles of the [basemap](https://docs.mapx.at/tilesets/streets.md). mapx provides the data, you decide how it looks.
 
-The basemap has 18 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](/tilesets/streets/).
+**Prerequisites:** a browser, a static web server and a free public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Basic knowledge of MapLibre styles (sources and layers).
 
+The basemap has 18 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](https://docs.mapx.at/tilesets/streets.md).
 
 1. **Page and source.** The source is the TileJSON link; zoom range and attribution come with it:
 
@@ -112,7 +114,6 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    </script>
    ```
 
-
 ## Result
 
 A map in your own look: areas by land use, lakes, road network with trails, buildings and administrative boundaries. All data comes from a single tileset.
@@ -140,7 +141,6 @@ style: {
 
 ## Next steps
 
-- All layers, fields and values: [Basemap](/tilesets/streets/).
-- Overlay contour lines and labels: [Overlay contour lines](/guides/overlay-contours/).
-- A map for print or as an offline file: [Self-host PMTiles](/guides/self-host-pmtiles/).
-
+- All layers, fields and values: [Basemap](https://docs.mapx.at/tilesets/streets.md).
+- Overlay contour lines and labels: [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md).
+- A map for print or as an offline file: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).

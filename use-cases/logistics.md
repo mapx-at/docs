@@ -1,6 +1,10 @@
-# Logistics
+# Logistics: truck routing and matrix
 
-All requests need a token ([Access and limits](/start/access-and-limits/)); in server code use a secret token (`mx_sk_…`) and never ship it in a web page.
+Source: https://docs.mapx.at/use-cases/logistics/
+
+> Truck routing with vehicle size, travel-time matrices, tour planning and traffic for deliveries and fleets, built on the mapx APIs for Austria.
+
+All requests need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); in server code use a secret token (`mx_sk_…`) and never ship it in a web page.
 
 Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic situation. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
 
@@ -24,7 +28,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 
 ## Travel times for many pairs
 
-`matrix` answers all pairs in one request, up to the limits of the [Matrix API](/api/directions/). Use `sources` and `destinations` (indices) to ask for one row only.
+`matrix` answers all pairs in one request, up to the limits of the [Matrix API](https://docs.mapx.at/api/directions.md). Use `sources` and `destinations` (indices) to ask for one row only.
 
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];
@@ -51,7 +55,7 @@ const tour = await res.json();
 console.log(tour.routes[0].steps.map((s) => s.id ?? s.type), tour.unassigned); // unassigned: jobs that did not fit
 ```
 
-Draw the result with one `directions` request through `tour.routes[0].steps` locations (up to 25 points); see the [tour planning example](/examples/optimization/).
+Draw the result with one `directions` request through `tour.routes[0].steps` locations (up to 25 points); see the [tour planning example](https://docs.mapx.at/examples/optimization.md).
 
 ## Traffic
 
@@ -63,11 +67,10 @@ const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incident
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 
-The map style `traffic-day` shows the flow; see the [example](/examples/traffic/). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
+The map style `traffic-day` shows the flow; see the [example](https://docs.mapx.at/examples/traffic.md). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
 
 ## Next steps
 
-- [Navigation](/guides/navigation/): all profiles and parameters
-- [Traffic](/guides/traffic/)
-- [Errors and limits](/api/errors/): rate-limit zones and what to do on `429`
-
+- [Navigation](https://docs.mapx.at/guides/navigation.md): all profiles and parameters
+- [Traffic](https://docs.mapx.at/guides/traffic.md)
+- [Errors and limits](https://docs.mapx.at/api/errors.md): rate-limit zones and what to do on `429`

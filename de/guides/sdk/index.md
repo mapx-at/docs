@@ -1,7 +1,10 @@
-# SDK mapx-gl
+# SDK mapx-gl für MapLibre
 
+Source: https://docs.mapx.at/de/guides/sdk/
 
-`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](/de/api/) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@{V.maplibre}` und `pmtiles@{V.pmtiles}`.
+> Ein kleines Add-on für MapLibre GL JS: Karten-Factory, typisierte Helfer für jede API, Routenplaner, Ebenen-Schalter, Grundstücks- und Abfahrts-Popups.
+
+`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@{V.maplibre}` und `pmtiles@{V.pmtiles}`.
 
 ## Installation
 
@@ -32,7 +35,7 @@ Ein vollständiges Beispiel liegt unter [map.mapx.at/sdk/v1/example.html](https:
 
 ## Token
 
-Alle Aufrufe brauchen einen Token ([Zugang und Limits](/de/start/access-and-limits/)). Er wird einmal gesetzt, mit `mapx.map({ accessToken: "DEIN_TOKEN", … })` oder `mapx.setAccessToken("DEIN_TOKEN")`; Helfer, Styles, Tiles und `staticImageUrl()` tragen ihn dann mit. Auf Webseiten einen öffentlichen Token (`mx_pk_…`) verwenden, geheime Tokens (`mx_sk_…`) gehören nur auf Server.
+Alle Aufrufe brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Er wird einmal gesetzt, mit `mapx.map({ accessToken: "DEIN_TOKEN", … })` oder `mapx.setAccessToken("DEIN_TOKEN")`; Helfer, Styles, Tiles und `staticImageUrl()` tragen ihn dann mit. Auf Webseiten einen öffentlichen Token (`mx_pk_…`) verwenden, geheime Tokens (`mx_sk_…`) gehören nur auf Server.
 
 ## Karte
 
@@ -42,11 +45,11 @@ Alle Aufrufe brauchen einen Token ([Zugang und Limits](/de/start/access-and-limi
 
 | Teil | Inhalt | Seite |
 |---|---|---|
-| Helfer | `geocode`, `reverse`, `searchSuggest`, `searchRetrieve`, `directions`, `transitDirections`, `isochrone`, `matrix`, `optimization`, `parcel`, `parcelDossier`, `tilequery`, `elevation`, `elevationProfile`, `trafficIncidents`, `stops`, `departures`, `weatherCurrent`, `weatherForecast`, `staticImageUrl` | [SDK-Helfer](/de/guides/sdk/helpers/) |
-| Controls | `SearchControl`, `StyleSwitcherControl`, `MeasureControl`, `ElevationProfileControl`, `Terrain3DControl`, `RouteControl`, `LayerControl` | [Controls und Popups](/de/guides/sdk/controls/) |
-| Popups | `ParcelPopup`, `DeparturesPopup` | [Controls und Popups](/de/guides/sdk/controls/) |
-| Fehler | `MapxError` mit `code`, `param`, `allowed`, `retryAfter` | [Fehler und Wiederholungen](/de/guides/sdk/errors/) |
-| Typen | Alle Options- und Antworttypen | [SDK-Referenz](/reference/sdk/) |
+| Helfer | `geocode`, `reverse`, `searchSuggest`, `searchRetrieve`, `directions`, `transitDirections`, `isochrone`, `matrix`, `optimization`, `parcel`, `parcelDossier`, `tilequery`, `elevation`, `elevationProfile`, `trafficIncidents`, `stops`, `departures`, `weatherCurrent`, `weatherForecast`, `staticImageUrl` | [SDK-Helfer](https://docs.mapx.at/de/guides/sdk/helpers.md) |
+| Controls | `SearchControl`, `StyleSwitcherControl`, `MeasureControl`, `ElevationProfileControl`, `Terrain3DControl`, `RouteControl`, `LayerControl` | [Controls und Popups](https://docs.mapx.at/de/guides/sdk/controls.md) |
+| Popups | `ParcelPopup`, `DeparturesPopup` | [Controls und Popups](https://docs.mapx.at/de/guides/sdk/controls.md) |
+| Fehler | `MapxError` mit `code`, `param`, `allowed`, `retryAfter` | [Fehler und Wiederholungen](https://docs.mapx.at/de/guides/sdk/errors.md) |
+| Typen | Alle Options- und Antworttypen | [SDK-Referenz](https://docs.mapx.at/de/reference/sdk/index.md) |
 
 ```js
 const r = await mapx.directions("driving-truck", [[16.3725, 48.2085], [15.3294, 48.2272]], { truck: { weight: 40, height: 4 } });
@@ -55,7 +58,6 @@ const h = await mapx.elevation([12.694, 47.074]); // 3726.3
 
 ## Weiter
 
-- [Beispiele](/de/examples/) mit SDK: [Routenplaner und Ebenen](/de/examples/sdk-controls/), [Abfahrten](/de/examples/departures/)
-- [Karten](/de/guides/maps/) und [Navigation](/de/guides/navigation/)
-- [API-Referenz](/de/api/)
-
+- [Beispiele](https://docs.mapx.at/de/examples/index.md) mit SDK: [Routenplaner und Ebenen](https://docs.mapx.at/de/examples/sdk-controls.md), [Abfahrten](https://docs.mapx.at/de/examples/departures.md)
+- [Karten](https://docs.mapx.at/de/guides/maps.md) und [Navigation](https://docs.mapx.at/de/guides/navigation.md)
+- [API-Referenz](https://docs.mapx.at/de/api/index.md)

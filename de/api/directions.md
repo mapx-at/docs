@@ -1,10 +1,12 @@
-# Directions API
+# Routing-API: Routen, Isochronen, Matrix
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/directions/
+
+> Routing-API für Österreich: Routen für Auto, Lkw, Rad und Fuß, Isochronen, Fahrzeitmatrizen und Map Matching, mit Parametern und Beispielen.
 
 Routing auf dem österreichischen Straßengraphen (GIP.at). Profile: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `heavy` (30/min) · Guide: [Navigation](/de/guides/navigation/)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
 ## Speed limits (GIP.at, statutory limits only)
 
@@ -12,12 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `heavy` (30/
 
 Statutory speed limits of the road network as compact GeoJSON, either inside a box (`bbox`, at most 0.08 square degrees, about 28 x 28 km) or in a corridor around a route (`corridor` as polyline6, e.g. `routes[].geometry` with `geometries=polyline6`, plus `buffer` in meters).
 
-<details>
-<summary>Mehr</summary>
-
 One LineString feature per road link in digitizing direction with `limit_kmh`, `direction` (`both`, `forward` or `backward` relative to the geometry) and `id` (GIP link id); if the directions differ there is one feature per direction. Only statutory limits (5, 10, 20 ... 130 km/h, including the default limits inside built-up areas and on rural roads) are returned. Links without a value (many motorways) and modeled speeds such as 53 or 84 km/h are left out. At most 60,000 features. Source: GIP.at (CC BY 4.0).
-
-</details>
 
 **Parameter**
 
@@ -31,13 +28,11 @@ One LineString feature per road link in digitizing direction with `limit_kmh`, `
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -46,14 +41,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -92,7 +85,7 @@ data = res.json()
 |---|---|---|
 | `legal_only` | boolean | always true: only statutory limits are listed |
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -108,12 +101,7 @@ data = res.json()
 
 Compact binary subgraph of the road network around a route, for recomputing a route without network (for example in a dead zone after a wrong turn). `polyline` is the route as polyline6 (e.g. `routes[].geometry` with `geometries=polyline6`), `buffer` the radius around it in meters (default 3000, at most 5000).
 
-<details>
-<summary>Mehr</summary>
-
 The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, no `Content-Encoding`) of a `MXCG` v1 file: a version header and the graph id of the server graph, nodes (microdegrees), directed arcs with travel time and weight in ms (the same values the router uses, so offline costs equal server costs), simplified link geometry, road name and reference, road class (FRC/FOW), maximum speed with a statutory flag, link flags (roundabout, ramp, toll, urban, motorway) and the turn restrictions between the arcs including derived U-turn bans. Arcs that cannot be driven are left out. Typically 1 to 3 MB per 100 km of route (compressed). Source: GIP.at (CC BY 4.0).
-
-</details>
 
 **Parameter**
 
@@ -127,13 +115,11 @@ The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C_nDouS_pR_af@&buffer=1000" -o result.bin
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C_nDouS_pR_af@&buffer=1000", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -142,7 +128,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -150,10 +135,9 @@ res = requests.get("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C
 open("result.bin", "wb").write(res.content)
 ```
 
-
 **Beispielantwort**: `application/vnd.mapx.corridor-graph+gzip` · Corridor graph (gzip of MXCG v1)
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -170,12 +154,7 @@ open("result.bin", "wb").write(res.content)
 
 Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
 
-<details>
-<summary>Mehr</summary>
-
 District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
-
-</details>
 
 **Parameter**
 
@@ -207,13 +186,11 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -222,14 +199,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=false&overview=simplified", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -266,7 +241,7 @@ data = res.json()
   …
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -299,13 +274,11 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -314,14 +287,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/directions?profile=driving&coordinates=16.3725,48.2085;15.3294,48.2272", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -358,7 +329,7 @@ data = res.json()
   …
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -376,12 +347,7 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
 
-<details>
-<summary>Mehr</summary>
-
 `access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400).
-
-</details>
 
 **Parameter**
 
@@ -400,13 +366,11 @@ Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -415,14 +379,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -459,7 +421,7 @@ data = res.json()
   …
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -491,13 +453,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -506,14 +466,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -555,7 +513,7 @@ data = res.json()
 | `durations` | array | seconds |
 | `distances` | array | meters |
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -585,13 +543,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -600,14 +556,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -619,7 +573,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -630,6 +584,3 @@ data = res.json()
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
 ## Playground
-
-
-

@@ -1,10 +1,12 @@
-# Address API
+# Adress-Autofill und Adressprüfung API
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/address/
+
+> Adress-Autofill für Formulare und Adressvalidierung gegen das amtliche österreichische Adressregister: Endpunkte, Parameter und Beispiele.
 
 Autofill vervollständigt eine Postadresse beim Tippen. Die Validierung prüft eine Adresse gegen das amtliche Register.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](/de/guides/search/)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
 ## Address Autofill: suggestions
 
@@ -25,13 +27,11 @@ Official address register only (BEV). Completes street, house number, postcode a
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -40,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -72,7 +70,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -99,13 +97,11 @@ data = res.json()
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/address-7065749" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/address-7065749", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -114,14 +110,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/autofill/retrieve/address-7065749", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -146,7 +140,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -162,12 +156,7 @@ data = res.json()
 
 Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the normalized address, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), coordinate, `id` and `adrcd`. Understands Str./Straße, abbreviations, umlauts and ß.
 
-<details>
-<summary>Mehr</summary>
-
 `ambiguous` returns `candidates[]` (up to 5) instead of `address`.
-
-</details>
 
 **Parameter**
 
@@ -183,13 +172,11 @@ Checks an address against the official register. `status`: match | corrected | a
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -198,14 +185,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -233,7 +218,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -263,7 +248,6 @@ Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `p
 
 **curl**
 
-
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/address/validate" \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -272,7 +256,6 @@ curl -s -X POST "https://api.mapx.at/v1/address/validate" \
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/address/validate", {
@@ -289,7 +272,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -300,7 +282,6 @@ res = requests.post("https://api.mapx.at/v1/address/validate", headers={"Authori
   })
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -328,7 +309,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -339,6 +320,3 @@ data = res.json()
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
 ## Playground
-
-
-

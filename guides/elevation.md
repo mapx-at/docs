@@ -1,6 +1,10 @@
-# Elevation and terrain
+# Elevation guide: height profile and terrain
 
-mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
+Source: https://docs.mapx.at/guides/elevation/
+
+> Get heights at points and elevation profiles, use terrain models and show 3D terrain in the map: elevation API and terrain tilesets for Austria.
+
+mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
 ## Height at a point
 
@@ -27,7 +31,7 @@ console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
 
-Up to 1024 samples along a line of 2 to 512 vertices. Example with a chart: [Elevation profile](/examples/elevation-profile/). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
+Up to 1024 samples along a line of 2 to 512 vertices. Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
 
 ## 3D terrain in the map
 
@@ -42,15 +46,14 @@ map.on("load", () => {
 map.setPitch(60);
 ```
 
-Step-by-step with aerial imagery: [3D terrain with orthophoto](/guides/3d-terrain/). The style `outdoors` already includes hillshade and contours.
+Step-by-step with aerial imagery: [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md). The style `outdoors` already includes hillshade and contours.
 
 ## Read heights from tiles
 
-The tiles use the Terrain-RGB encoding: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Decode tiles yourself for bulk work, see [Terrain-RGB](/reference/terrain-rgb/). For single points the API is simpler.
+The tiles use the Terrain-RGB encoding: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Decode tiles yourself for bulk work, see [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md). For single points the API is simpler.
 
 ## Next
 
-- [Elevation API](/api/elevation/)
-- [Tilesets](/tilesets/terrain-rgb/): terrain model data sheet
-- [Overlay contour lines](/guides/overlay-contours/)
-
+- [Elevation API](https://docs.mapx.at/api/elevation.md)
+- [Tilesets](https://docs.mapx.at/tilesets/terrain-rgb.md): terrain model data sheet
+- [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md)

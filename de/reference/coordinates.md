@@ -1,4 +1,8 @@
-# Koordinaten
+# Koordinaten: lon,lat, WGS84, Web-Mercator
+
+Source: https://docs.mapx.at/de/reference/coordinates/
+
+> Koordinatenreihenfolge lon,lat in allen mapx-APIs, WGS84 und Web-Mercator (EPSG:3857) sowie amtliche österreichische Quellen in MGI und ETRS89.
 
 ## Reihenfolge: Länge vor Breite
 
@@ -8,7 +12,7 @@ Alle mapx-Schnittstellen, TileJSON, MapLibre und GeoJSON verwenden **`lon, lat`*
 12.694,47.074      // lon,lat: Großglockner-Gebiet
 ```
 
-Viele Karten-Apps und GPS-Geräte zeigen dagegen `lat, lon`. Vertauschte Werte landen im Indischen Ozean, nicht in Österreich. Die [Höhen-API](/de/api/elevation/) erwartet `points=lon,lat;lon,lat`. Leaflet nimmt `[lat, lon]` bei `L.latLng`, MapLibre und OpenLayers `[lon, lat]`.
+Viele Karten-Apps und GPS-Geräte zeigen dagegen `lat, lon`. Vertauschte Werte landen im Indischen Ozean, nicht in Österreich. Die [Höhen-API](https://docs.mapx.at/de/api/elevation.md) erwartet `points=lon,lat;lon,lat`. Leaflet nimmt `[lat, lon]` bei `L.latLng`, MapLibre und OpenLayers `[lon, lat]`.
 
 ## EPSG:4326 und EPSG:3857
 
@@ -18,7 +22,7 @@ Viele Karten-Apps und GPS-Geräte zeigen dagegen `lat, lon`. Vertauschte Werte l
 | Verwendung | Eingabe und Ausgabe der APIs, GeoJSON, GPS | Kachelschema der Karten |
 | Beispiel | `12.694, 47.074` | `1413090, 5954161` |
 
-Eingaben an die APIs sind immer **WGS84 (EPSG:4326)**. Kacheln liegen in **Web-Mercator (EPSG:3857)**, siehe [Kachelschema](/de/reference/tile-scheme/). Clients rechnen dazwischen selbst um; die Kachelkoordinaten müssen nicht berechnet werden.
+Eingaben an die APIs sind immer **WGS84 (EPSG:4326)**. Kacheln liegen in **Web-Mercator (EPSG:3857)**, siehe [Kachelschema](https://docs.mapx.at/de/reference/tile-scheme.md). Clients rechnen dazwischen selbst um; die Kachelkoordinaten müssen nicht berechnet werden.
 
 Maße in Web-Mercator sind in Österreich um rund 50 % größer als wahre Meter (Faktor `1 / cos(Breite)`). Längen und Flächen daher nicht in EPSG:3857 messen, sondern geodätisch oder in einem lokalen System wie EPSG:31287 (MGI / Austria Lambert) bzw. EPSG:3035 (ETRS89-LAEA).
 
@@ -30,6 +34,5 @@ Die Ausgangsdaten der Behörden liegen in unterschiedlichen Systemen: Österreic
 
 ## Weiter
 
-- [Kachelschema](/de/reference/tile-scheme/)
-- [Höhe und Profil](/de/api/elevation/)
-
+- [Kachelschema](https://docs.mapx.at/de/reference/tile-scheme.md)
+- [Höhe und Profil](https://docs.mapx.at/de/api/elevation.md)

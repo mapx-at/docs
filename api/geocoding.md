@@ -1,10 +1,12 @@
-# Geocoding API
+# Geocoding API for Austria
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/geocoding/
+
+> Geocoding API for Austria: forward, reverse and batch geocoding of addresses, streets, places, postcodes and parcels, with parameters and examples.
 
 Turns an address or place name into coordinates and coordinates into the nearest address.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30/min) · Guide: [Search](/guides/search/)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30/min) · Guide: [Search](https://docs.mapx.at/guides/search.md)
 
 ## Forward geocoding
 
@@ -12,12 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 Search over the official address register, streets, places, municipalities, districts, postcodes and parcels. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
-<details>
-<summary>More</summary>
-
 Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`. Always pass `types` for cheap queries.
-
-</details>
 
 **Parameters**
 
@@ -33,13 +30,11 @@ Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -48,14 +43,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&limit=3&types=address", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -92,7 +85,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -122,13 +115,11 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -137,14 +128,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -181,7 +170,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -211,13 +200,11 @@ Nearest features around a point, nearest first. Use `types` to restrict (e.g. `a
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -226,14 +213,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&limit=1&types=address", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -270,7 +255,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -286,12 +271,7 @@ data = res.json()
 
 JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array of FeatureCollections in input order. Requests run in batches via Meilisearch multi-search (at most 4 in parallel).
 
-<details>
-<summary>More</summary>
-
 At most 512 KB.
-
-</details>
 
 **Request body (JSON)**
 
@@ -314,7 +294,6 @@ At most 512 KB.
 
 **curl**
 
-
 ```bash
 curl -s -X POST "https://api.mapx.at/v1/geocode/batch" \
   -H "Authorization: Bearer YOUR_TOKEN" \
@@ -323,7 +302,6 @@ curl -s -X POST "https://api.mapx.at/v1/geocode/batch" \
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode/batch", {
@@ -347,7 +325,6 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -365,7 +342,6 @@ res = requests.post("https://api.mapx.at/v1/geocode/batch", headers={"Authorizat
   ])
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -402,7 +378,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -414,6 +390,3 @@ data = res.json()
 | `502` | Upstream service unavailable |
 
 ## Playground
-
-
-

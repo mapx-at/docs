@@ -1,10 +1,12 @@
-# Air Quality API
+# Air quality API for Austria
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/api/air-quality/
 
-Daily air quality index and hourly nitrogen dioxide, ozone, PM10 and PM2.5 near the surface plus the Saharan dust load for a point, from the GeoSphere chemical weather model (3 km). The index follows the EEA European Air Quality Index (1 good to 6 extremely poor; SO2 is not provided by the model). Map layers: the weather tiles `aqi`, `no2`, `o3`, `pm10`, `pm25` and `dust` (see [Weather API](/api/weather/)). Source: GeoSphere Austria, CC BY 4.0.
+> Air quality index, pollutants and Saharan dust for a point in Austria from GeoSphere Austria: endpoints, parameters and example requests.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](/guides/maps/)
+Daily air quality index and hourly nitrogen dioxide, ozone, PM10 and PM2.5 near the surface plus the Saharan dust load for a point, from the GeoSphere chemical weather model (3 km). The index follows the EEA European Air Quality Index (1 good to 6 extremely poor; SO2 is not provided by the model). Map layers: the weather tiles `aqi`, `no2`, `o3`, `pm10`, `pm25` and `dust` (see [Weather API](https://docs.mapx.at/api/weather.md)). Source: GeoSphere Austria, CC BY 4.0.
+
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## Air quality index and pollutants for a point
 
@@ -12,12 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [M
 
 GeoSphere chemical weather model (3 km) bilinear to the point: daily index `aqi` (3 days) and hourly NO2, O3, PM10, PM2.5 near the surface in ug/m3 with an hourly index (worst level by the EEA European Air Quality Index limits; SO2 is not provided by the model) plus the Saharan dust load (mg/m2, 0.2 degree grid).
 
-<details>
-<summary>More</summary>
-
 Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
-
-</details>
 
 **Parameters**
 
@@ -30,13 +27,11 @@ Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -45,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/air-quality/16.3725,48.2085?hours=6", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Example response**
 
@@ -89,7 +82,7 @@ data = res.json()
   …
 ```
 
-**Errors** (details: [error catalog](/api/errors/))
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
 | Status | Meaning |
 |---|---|
@@ -101,6 +94,3 @@ data = res.json()
 | `503` | Data temporarily unavailable |
 
 ## Playground
-
-
-

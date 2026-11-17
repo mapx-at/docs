@@ -1,13 +1,17 @@
-# Parcels
+# Parcels guide: cadastre lookup
 
-The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](/start/access-and-limits/)); `curl` samples send it as a header, browser samples as `access_token`.
+Source: https://docs.mapx.at/guides/parcels/
+
+> Find the cadastral parcel at a point, draw parcel boundaries on the map and read the parcel attributes with the mapx cadastre for Austria.
+
+The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
 | Task | Use |
 |---|---|
 | Draw parcel boundaries | tileset `cadastre` (z16) |
-| Parcel number, area and cadastral municipality at a point | [`/v1/parcel/{lon},{lat}`](/api/tilequery/) |
-| Query any vector tileset at a point | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](/api/tilequery/) |
-| Search for a parcel | [Geocoding](/guides/search/): parcels are among the searched objects |
+| Parcel number, area and cadastral municipality at a point | [`/v1/parcel/{lon},{lat}`](https://docs.mapx.at/api/tilequery.md) |
+| Query any vector tileset at a point | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](https://docs.mapx.at/api/tilequery.md) |
+| Search for a parcel | [Geocoding](https://docs.mapx.at/guides/search.md): parcels are among the searched objects |
 
 ## Parcel at a point
 
@@ -35,7 +39,7 @@ map.on("click", async (e) => {
 });
 ```
 
-Full example: [Parcel on click](/examples/parcel-on-click/). The cadastral municipality (`cadastral_municipality_id`) is part of the identity of a parcel: the number alone is not unique.
+Full example: [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md). The cadastral municipality (`cadastral_municipality_id`) is part of the identity of a parcel: the number alone is not unique.
 
 ## Tilequery
 
@@ -49,7 +53,7 @@ Combine tilesets with a comma, for example `streets,cadastre`. Each feature has 
 
 ## Parcel image for a listing
 
-Combine the parcel with a [static image](/guides/static-images/) using the polygon as GeoJSON overlay:
+Combine the parcel with a [static image](https://docs.mapx.at/guides/static-images.md) using the polygon as GeoJSON overlay:
 
 ```js
 const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
@@ -74,10 +78,10 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14
 | `elevation` | min, mean, max and mean/max slope from the terrain model on a point grid inside the parcel |
 | `addresses`, `nearest_transit_stop` | register addresses on the parcel, nearest stop within 2 km |
 | `orthophoto` | flight year and date |
-| `climate` | solar potential, temperature and precipitation normals, hot and snow days, drought index; same object as [`/v1/climate/{lon},{lat}`](/api/climate/) at the parcel's inner point. While a new area is being loaded, sections are `null` with `status: "partial"`; ask again after `retry_after_s` seconds |
-| `links.static_image` | ready-made [static image](/guides/static-images/) URL with the parcel outlined |
+| `climate` | solar potential, temperature and precipitation normals, hot and snow days, drought index; same object as [`/v1/climate/{lon},{lat}`](https://docs.mapx.at/api/climate.md) at the parcel's inner point. While a new area is being loaded, sections are `null` with `status: "partial"`; ask again after `retry_after_s` seconds |
+| `links.static_image` | ready-made [static image](https://docs.mapx.at/guides/static-images.md) URL with the parcel outlined |
 
-The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns the full dossier per feature. Reference: [Tilequery and Parcel API](/api/tilequery/).
+The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns the full dossier per feature. Reference: [Tilequery and Parcel API](https://docs.mapx.at/api/tilequery.md).
 
 ## Parcel search
 
@@ -93,7 +97,6 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=
 
 ## Next
 
-- [Tilequery and Parcel API](/api/tilequery/)
-- [Tilesets](/tilesets/cadastre/): layers and fields of the cadastre
-- [Elevation](/guides/elevation/): height of the parcel
-
+- [Tilequery and Parcel API](https://docs.mapx.at/api/tilequery.md)
+- [Tilesets](https://docs.mapx.at/tilesets/cadastre.md): layers and fields of the cadastre
+- [Elevation](https://docs.mapx.at/guides/elevation.md): height of the parcel

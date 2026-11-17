@@ -1,12 +1,14 @@
-# 3D terrain with orthophoto
+# 3D terrain map with orthophoto
 
+Source: https://docs.mapx.at/guides/3d-terrain/
+
+> A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.
 
 **Goal:** A map where the orthophoto is draped over real terrain, shaded for depth and tiltable in the browser.
 
-**Prerequisites:** a browser and any static web server (for example `npx serve`). A free API token ([Access and limits](/start/access-and-limits/)).
+**Prerequisites:** a browser and any static web server (for example `npx serve`). A free API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
 
-This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`) and the [orthophoto](/tilesets/orthophoto/) (imagery, type `raster`). Both tilesets are added via [TileJSON](/api/tiles/), so you never need a file name.
-
+This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevation, type `raster-dem`) and the [orthophoto](https://docs.mapx.at/tilesets/orthophoto.md) (imagery, type `raster`). Both tilesets are added via [TileJSON](https://docs.mapx.at/api/tiles.md), so you never need a file name.
 
 1. **Create the page.** A file `index.html` with MapLibre GL JS and a map container:
 
@@ -66,18 +68,15 @@ This guide uses the [DTM](/tilesets/terrain-rgb/) (elevation, type `raster-dem`)
 
 5. **Run it.** Run `npx serve` in the folder and open the printed address. Dragging with the right mouse button tilts and rotates the map.
 
-
 ## Result
 
 The aerial imagery lies on the terrain around the Großglockner, slopes are additionally shaded. The orthophoto reaches z18 (20 cm), the DTM z16 (1 m raster); MapLibre scales up automatically beyond that.
 
 > `exaggeration` exaggerates the relief. `1.0` is natural; for flat terrain `1.5` to `2` looks more plastic.
 
-
 ## Next steps
 
-- Read the elevation at a click: `map.queryTerrainElevation(e.lngLat)`, details in [DTM terrain model](/tilesets/terrain-rgb/).
-- Contour lines and labels on top: [Overlay contour lines](/guides/overlay-contours/).
-- Elevation profile along a line: [Elevation profile](/guides/elevation-profile/).
-- Show the credit correctly: [Attribution](/reference/attribution/).
-
+- Read the elevation at a click: `map.queryTerrainElevation(e.lngLat)`, details in [DTM terrain model](https://docs.mapx.at/tilesets/terrain-rgb.md).
+- Contour lines and labels on top: [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md).
+- Elevation profile along a line: [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md).
+- Show the credit correctly: [Attribution](https://docs.mapx.at/reference/attribution.md).

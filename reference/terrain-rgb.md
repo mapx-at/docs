@@ -1,5 +1,8 @@
-# Terrain-RGB
+# Terrain-RGB elevation encoding
 
+Source: https://docs.mapx.at/reference/terrain-rgb/
+
+> How mapx encodes elevation as color in Terrain-RGB tiles (Mapbox encoding, 0.1 m): value range, rounding and decoding functions.
 
 Terrain-RGB stores one elevation per pixel in the three color channels of an image. This lets elevation tiles be served in ordinary
 image formats, and clients such as MapLibre compute shading and 3D terrain from them.
@@ -29,5 +32,4 @@ hoehe = -10000 + (r.astype("uint32") * 65536 + g * 256 + b) * 0.1  # r, g, b als
 - **Mapbox-compatible.** `encoding: "mapbox"` in MapLibre. Terrarium (`R·256 + G + B/256 − 32768`) is a different encoding and is not served by mapx.
 - **512 pixels, no border.** `tileSize: 512`.
 
-Application: [DTM terrain model](/tilesets/terrain-rgb/).
-
+Application: [DTM terrain model](https://docs.mapx.at/tilesets/terrain-rgb.md).

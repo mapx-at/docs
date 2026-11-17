@@ -1,17 +1,18 @@
-# Erste Suche
+# Erste Suche: Geocoding-Anfrage
 
+Source: https://docs.mapx.at/de/start/first-search/
+
+> Eine Adresse oder einen Ort in Österreich mit einer Geocoding-Anfrage finden (curl, JavaScript, Python) und das Ergebnis als Marker auf einer Karte zeigen.
 
 ## Anfrage
 
 **curl**
-
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1" | jq '.features[0] | {place_name, center}'
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1", { headers: { Authorization: "Bearer DEIN_TOKEN" } });
@@ -21,7 +22,6 @@ console.log(features[0].place_name, features[0].center); // center ist [lon, lat
 
 **Python**
 
-
 ```python
 import requests
 
@@ -30,12 +30,11 @@ feature = res.json()["features"][0]
 print(feature["place_name"], feature["center"])
 ```
 
-
 Die Antwort ist eine GeoJSON-`FeatureCollection`. Jedes Feature hat `place_name`, `center` (`lon,lat`) und `geometry`. Mit `types=address` lassen sich die Ergebnisse auf Adressen beschränken.
 
 ## Ergebnis auf der Karte zeigen
 
-Diesen Code auf der Seite aus [Erste Karte](/de/start/first-map/) nach `new maplibregl.Map(...)` einfügen (die Karte in `const map` speichern):
+Diesen Code auf der Seite aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) nach `new maplibregl.Map(...)` einfügen (die Karte in `const map` speichern):
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1", { headers: { Authorization: "Bearer DEIN_TOKEN" } });
@@ -48,6 +47,5 @@ Den Code in ein `<script type="module">` setzen, damit Top-Level-`await` funktio
 
 ## Nächste Schritte
 
-- [Such-Guide](/de/guides/search/): Type-ahead, Kategorien, Adressformen
-- [Geocoding API](/de/api/geocoding/)
-
+- [Such-Guide](https://docs.mapx.at/de/guides/search.md): Type-ahead, Kategorien, Adressformen
+- [Geocoding API](https://docs.mapx.at/de/api/geocoding.md)

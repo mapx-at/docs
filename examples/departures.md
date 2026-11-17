@@ -1,11 +1,16 @@
-# Departures at a stop
+# Departures at a stop example
 
+Source: https://docs.mapx.at/examples/departures/
 
-`DeparturesPopup` from the [SDK](/guides/sdk/) finds the nearest stop to a click and lists the next departures from the scheduled timetable (no real-time data). The dots are the stops of the visible area from `/v1/stops`.
+> Click near a public transport stop in Austria and see the next departures: transit departures API with a live map and runnable code.
 
-```js
+`DeparturesPopup` from the [SDK](https://docs.mapx.at/guides/sdk/index.md) finds the nearest stop to a click and lists the next departures from the scheduled timetable (no real-time data). The dots are the stops of the visible area from `/v1/stops`.
+
+## Code
+
+````js
 // Departures: click near a stop to see the next departures. Uses the DeparturesPopup of the mapx-gl SDK.
-import mapx from "mapx-gl-sdk";
+import mapx from "https://map.mapx.at/sdk/v1/mapx-gl.bundle.js";
 
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 
@@ -24,10 +29,9 @@ map.on("load", () => {
   map.on("moveend", load);
   load();
 });
-```
+````
 
 ## APIs used
 
-- [Transit](/api/transit/) `GET api.mapx.at/v1/stops`
-- [Transit](/api/transit/) `GET api.mapx.at/v1/departures`
-
+- [Transit](https://docs.mapx.at/api/transit.md) `GET api.mapx.at/v1/stops`
+- [Transit](https://docs.mapx.at/api/transit.md) `GET api.mapx.at/v1/departures`

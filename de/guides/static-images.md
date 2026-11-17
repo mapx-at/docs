@@ -1,5 +1,8 @@
-# Static Images
+# Static-Images-Guide: Karte als Bild
 
+Source: https://docs.mapx.at/de/guides/static-images/
+
+> Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-Static-Images-API.
 
 Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
 
@@ -22,7 +25,7 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Der Token gehört an jede Bild-URL (`?access_token=…`, [Zugang und Limits](/de/start/access-and-limits/)). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
+Der Token gehört an jede Bild-URL (`?access_token=…`, [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 
 ## Overlays
 
@@ -49,7 +52,7 @@ const path = encodeURIComponent(routes[0].geometry); // kodierte Polyline, Präz
 const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=DEIN_TOKEN`;
 ```
 
-Die Route kommt aus [Directions](/de/guides/navigation/) mit `geometries=polyline`.
+Die Route kommt aus [Directions](https://docs.mapx.at/de/guides/navigation.md) mit `geometries=polyline`.
 
 ## Luftbild für ein Inserat
 
@@ -59,7 +62,7 @@ Die Route kommt aus [Directions](/de/guides/navigation/) mit `geometries=polylin
 https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp?access_token=DEIN_TOKEN
 ```
 
-Die Quellenangabe neben dem Bild anzeigen, siehe [Attribution](/de/reference/attribution/).
+Die Quellenangabe neben dem Bild anzeigen, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Raster-Tiles eines Styles
 
@@ -67,7 +70,6 @@ Für Clients, die nur Raster-Tiles lesen (Leaflet, QGIS), rendern Static Tiles e
 
 ## Nächste Schritte
 
-- [Static Images API](/de/api/static-images/)
-- [Karten](/de/guides/maps/): dieselben Styles interaktiv
-- [Grundstücke](/de/guides/parcels/): Grundstücksgrenze als GeoJSON-Overlay
-
+- [Static Images API](https://docs.mapx.at/de/api/static-images.md)
+- [Karten](https://docs.mapx.at/de/guides/maps.md): dieselben Styles interaktiv
+- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Grundstücksgrenze als GeoJSON-Overlay

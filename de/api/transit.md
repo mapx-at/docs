@@ -1,10 +1,12 @@
-# Transit API
+# ÖV-API: Verbindungen und Abfahrten
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/transit/
+
+> ÖV-API für den öffentlichen Verkehr in Österreich: Verbindungen, Haltestellen und Abfahrtstafeln aus den Fahrplandaten, mit Parametern und Beispielen.
 
 Verbindungen mit öffentlichem Verkehr (zu Fuß oder mit dem Rad zur Haltestelle), Abfahrtstafeln und Haltestellen auf Basis des Fahrplans.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10/s) · Guide: [ÖV-Abfahrten](/de/guides/transit/)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10/s) · Guide: [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
 
 ## Public transit: walking plus transit (GTFS timetable, RAPTOR)
 
@@ -25,13 +27,11 @@ Exactly origin and destination. Connections with walks on the GIP.at network and
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -40,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -75,7 +73,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -92,12 +90,7 @@ data = res.json()
 
 Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included. Per departure: time, line (name, mode, route_type), headsign, destination, platform (null if unknown), operator, stop.
 
-<details>
-<summary>Mehr</summary>
-
 No real-time data: `realtime` is always false. Outside the feed period 422, unknown station 404. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
-
-</details>
 
 **Parameter**
 
@@ -113,13 +106,11 @@ No real-time data: `realtime` is always false. Outside the feed period 422, unkn
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -128,14 +119,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit=5&radius=300", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -165,7 +154,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -196,13 +185,11 @@ Stations in a box (`bbox`, by number of trip patterns descending) or around a po
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -211,14 +198,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300&limit=5", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -245,7 +230,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -256,6 +241,3 @@ data = res.json()
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
 ## Playground
-
-
-

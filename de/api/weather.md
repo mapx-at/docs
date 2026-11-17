@@ -1,10 +1,12 @@
-# Weather API
+# Wetter-API: Vorhersage und Nowcast
 
-<!-- Generiert von scripts/gen-reference.mjs aus openapi.json, nicht von Hand ändern. -->
+Source: https://docs.mapx.at/de/api/weather/
+
+> Wetter-API für Österreich: aktuelle Messwerte, Stundenvorhersage, Niederschlags-Nowcast, Warnungen und Wetterkacheln von GeoSphere Austria.
 
 Messwerte der nächsten Stationen, Stundenvorhersage für einen Punkt und Rasterkacheln für ein Karten-Overlay. Quelle: GeoSphere Austria, CC BY 4.0.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](/de/guides/maps/)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
 ## Current observations of the nearest TAWES stations
 
@@ -25,13 +27,11 @@ GeoSphere Austria station network, 10-minute values (temperature, humidity, wind
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -40,14 +40,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -82,7 +80,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -111,13 +109,11 @@ GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current h
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -126,14 +122,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -170,7 +164,7 @@ data = res.json()
   …
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -197,13 +191,11 @@ GeoSphere INCA nowcast nowcast-v1-15min-1km, bilinear to the point. `precipitati
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -212,14 +204,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/nowcast/16.3725,48.2085", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -252,7 +242,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -269,12 +259,7 @@ data = res.json()
 
 param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (hourly, AROME) or rr_nowcast, pt_nowcast (precipitation radar nowcast, 15 min steps). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
 
-<details>
-<summary>Mehr</summary>
-
 Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
-
-</details>
 
 **Parameter**
 
@@ -286,13 +271,11 @@ Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/tiles/temperature.json" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature.json", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -301,14 +284,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature.json", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -323,7 +304,7 @@ data = res.json()
 }
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -353,13 +334,11 @@ Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png" -o result.png
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22.png", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -368,7 +347,6 @@ const blob = await res.blob();
 
 **Python**
 
-
 ```python
 import requests
 
@@ -376,10 +354,9 @@ res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22
 open("result.png", "wb").write(res.content)
 ```
 
-
 **Beispielantwort**: `image/png` · PNG; header X-Weather-Reference-Time
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -396,12 +373,7 @@ open("result.png", "wb").write(res.content)
 
 Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` carry `de` and `en`.
 
-<details>
-<summary>Mehr</summary>
-
 Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
-
-</details>
 
 **Parameter**
 
@@ -418,13 +390,11 @@ Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`
 
 **curl**
 
-
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1" | jq
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
@@ -433,14 +403,12 @@ const data = await res.json();
 
 **Python**
 
-
 ```python
 import requests
 
 res = requests.get("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,49.1&min_level=1", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
-
 
 **Beispielantwort**
 
@@ -477,7 +445,7 @@ data = res.json()
   …
 ```
 
-**Fehler** (Details: [Fehlerkatalog](/de/api/errors/))
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
@@ -488,6 +456,3 @@ data = res.json()
 | `503` | Daten vorübergehend nicht verfügbar |
 
 ## Playground
-
-
-

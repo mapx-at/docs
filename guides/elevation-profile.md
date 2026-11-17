@@ -1,12 +1,14 @@
-# Elevation profile along a line
+# Elevation profile chart in JavaScript
 
+Source: https://docs.mapx.at/guides/elevation-profile/
+
+> Query an elevation profile for a route through the elevation API and draw it as an SVG chart, in plain JavaScript.
 
 **Goal:** Query an elevation profile (distance against elevation) for a route and draw it as a chart.
 
 **Prerequisites:** a browser. A free token, no framework, no library.
 
-With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint returns elevation values spaced evenly by length along the line.
-
+With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevation.md) endpoint returns elevation values spaced evenly by length along the line.
 
 1. **Test the request.** The line is made of `lon,lat` pairs separated by semicolons (longitude first). 50 sample points along a route at the Großglockner:
 
@@ -70,17 +72,14 @@ With `path` and `samples`, the [`/v1/elevation`](/api/elevation/) endpoint retur
 
 4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly.
 
-
 ## Result
 
 An SVG chart with area and line of elevation over distance, with length, ascent and descent below.
 
-> More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](/start/faq/#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
-
+> More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](https://docs.mapx.at/start/faq.md#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
 
 ## Next steps
 
-- All parameters and response fields: [Elevation and profile](/api/elevation/).
-- Line from a GPX track: join the coordinates as `lon,lat;lon,lat`, order see [Coordinates](/reference/coordinates/).
-- Limits for many requests: [Errors and limits](/api/errors/).
-
+- All parameters and response fields: [Elevation and profile](https://docs.mapx.at/api/elevation.md).
+- Line from a GPX track: join the coordinates as `lon,lat;lon,lat`, order see [Coordinates](https://docs.mapx.at/reference/coordinates.md).
+- Limits for many requests: [Errors and limits](https://docs.mapx.at/api/errors.md).

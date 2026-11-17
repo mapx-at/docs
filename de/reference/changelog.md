@@ -1,7 +1,10 @@
-# Changelog
+# Changelog: Änderungen an API und Tilesets
 
+Source: https://docs.mapx.at/de/reference/changelog/
 
-Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. Details zur Umbenennung: [Migration](/de/api/migration/).
+> Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt, mit Stichtagen und Abschaltterminen.
+
+Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. Details zur Umbenennung: [Migration](https://docs.mapx.at/de/api/migration.md).
 
 ## 2026-11-08
 
@@ -13,7 +16,7 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 - Directions: `driving` und `driving-traffic` umfahren verbindliche Sperren (EVIS/ASFINAG) und listen sie in `routes[].closures_avoided`; `exclude` auch für `driving-truck` und `driving-traffic`; `voice_instructions` und `banner_instructions` (Mapbox-Form).
 - Header `Server-Timing`, `ETag`, `Last-Modified` (Styles, TileJSON, OpenAPI; bedingte Anfragen antworten mit `304`) und `RateLimit-Policy` je Endpunktgruppe.
 - Lkw-Profil `driving-truck` mit `weight`, `height`, `width`, `length` und `truck_type`.
-- Fehlerkatalog mit stabilem `code` je Fehler: [Fehler und Limits](/de/api/errors/).
+- Fehlerkatalog mit stabilem `code` je Fehler: [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 - Doku: API-Referenz aus OpenAPI generiert, Playground je API, Guides je Produkt.
 
 ### Geändert
@@ -58,5 +61,7 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 
 ## Tileset-Stände
 
-
-
+| Tileset | Stichtag | Datei |
+|---|---|---|
+| terrain-rgb | 20250915 | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
+| dsm | 20250915 | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |

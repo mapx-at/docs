@@ -1,6 +1,10 @@
 # parcelDossier
 
-> **parcelDossier**(`id`, `signal`?): `Promise`\<[`Dossier`](/reference/sdk/interfaces/dossier/)\>
+Source: https://docs.mapx.at/reference/sdk/functions/parceldossier/
+
+> mapx-gl parcelDossier
+
+> **parcelDossier**(`id`, `signal`?): `Promise`\<[`Dossier`](https://docs.mapx.at/reference/sdk/interfaces/dossier.md)\>
 
 Parzellen-Dossier: Fläche, Nutzung, Gebäude, Gelände, Adressen, nächste Haltestelle, Flugjahr, Static-Image-Link. ID aus `parcel_id`, z. B. `14143-473_1`.
 
@@ -12,5 +16,4 @@ Parzellen-Dossier: Fläche, Nutzung, Gebäude, Gelände, Adressen, nächste Halt
 
 ## Returns
 
-`Promise`\<[`Dossier`](/reference/sdk/interfaces/dossier/)\>
-
+`Promise`\<[`Dossier`](https://docs.mapx.at/reference/sdk/interfaces/dossier.md)\>

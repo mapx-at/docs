@@ -1,17 +1,18 @@
-# First search
+# First search: geocoding request
 
+Source: https://docs.mapx.at/start/first-search/
+
+> Find an address or place in Austria with one geocoding request (curl, JavaScript, Python), then show the result as a marker on a map.
 
 ## Request
 
 **curl**
-
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1" | jq '.features[0] | {place_name, center}'
 ```
 
 **JavaScript**
-
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
@@ -21,7 +22,6 @@ console.log(features[0].place_name, features[0].center); // center is [lon, lat]
 
 **Python**
 
-
 ```python
 import requests
 
@@ -30,12 +30,11 @@ feature = res.json()["features"][0]
 print(feature["place_name"], feature["center"])
 ```
 
-
 The response is a GeoJSON `FeatureCollection`. Each feature has `place_name`, `center` (`lon,lat`) and `geometry`. Pass `types=address` to limit results to addresses.
 
 ## Show the result on the map
 
-Add this to the page from [First map](/start/first-map/) after `new maplibregl.Map(...)` (store the map in `const map`):
+Add this to the page from [First map](https://docs.mapx.at/start/first-map.md) after `new maplibregl.Map(...)` (store the map in `const map`):
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
@@ -48,6 +47,5 @@ Put the code in a `<script type="module">` so that top-level `await` works.
 
 ## Next
 
-- [Search guide](/guides/search/): type-ahead, categories, address forms
-- [Geocoding API](/api/geocoding/)
-
+- [Search guide](https://docs.mapx.at/guides/search.md): type-ahead, categories, address forms
+- [Geocoding API](https://docs.mapx.at/api/geocoding.md)

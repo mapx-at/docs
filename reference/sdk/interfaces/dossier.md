@@ -1,5 +1,9 @@
 # Dossier
 
+Source: https://docs.mapx.at/reference/sdk/interfaces/dossier/
+
+> mapx-gl Dossier
+
 ## Extends
 
 - `Feature`\<`GeoJSON.Polygon` \| `GeoJSON.MultiPolygon`\>
@@ -80,7 +84,7 @@ Properties associated with this feature.
 
 #### centroid
 
-> **centroid**: [`LL`](/reference/sdk/type-aliases/ll/)
+> **centroid**: [`LL`](https://docs.mapx.at/reference/sdk/type-aliases/ll.md)
 
 #### district
 
@@ -153,4 +157,3 @@ Properties associated with this feature.
 #### Overrides
 
 `GeoJSON.Feature.properties`
-

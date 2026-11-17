@@ -1,5 +1,8 @@
-# Static images
+# Static images guide: map as image
 
+Source: https://docs.mapx.at/guides/static-images/
+
+> Render map images as PNG or WebP with pins, paths and GeoJSON for reports, e-mails and web pages, using the mapx static images API.
 
 A static image is one HTTP request that returns a picture. Use it where an interactive map is not possible: PDFs, emails, listings, social previews. The token goes into the URL as `access_token`, because an image tag cannot send a header. For web pages use a public token (`mx_pk_…`) with your site as allowed origin; build images for e-mails and PDFs on your server with a secret token (`mx_sk_…`) so the secret does not end up in the message.
 
@@ -49,7 +52,7 @@ const path = encodeURIComponent(routes[0].geometry); // encoded polyline, precis
 const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=YOUR_TOKEN`;
 ```
 
-The route comes from [Directions](/guides/navigation/) with `geometries=polyline`.
+The route comes from [Directions](https://docs.mapx.at/guides/navigation.md) with `geometries=polyline`.
 
 ## Aerial image for a listing
 
@@ -59,7 +62,7 @@ The route comes from [Directions](/guides/navigation/) with `geometries=polyline
 https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp?access_token=YOUR_TOKEN
 ```
 
-Show the data credit next to the image, see [Attribution](/reference/attribution/).
+Show the data credit next to the image, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Raster tiles of a style
 
@@ -67,7 +70,6 @@ For clients that only read raster tiles (Leaflet, QGIS), Static Tiles render a s
 
 ## Next
 
-- [Static Images API](/api/static-images/)
-- [Maps](/guides/maps/): the same styles interactively
-- [Parcels](/guides/parcels/): parcel boundary as GeoJSON overlay
-
+- [Static Images API](https://docs.mapx.at/api/static-images.md)
+- [Maps](https://docs.mapx.at/guides/maps.md): the same styles interactively
+- [Parcels](https://docs.mapx.at/guides/parcels.md): parcel boundary as GeoJSON overlay
