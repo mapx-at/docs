@@ -5,8 +5,17 @@
 All endpoints under `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` and all tiles under `https://tiles.mapx.at/` need a token. It is free and there is no usage-based charge.
 
 1. Open [account.mapx.at](https://account.mapx.at/) and register with your e-mail address (an 8-digit code is sent to you) or sign in with Google or Microsoft. You must agree to be contacted about the service and your account (security, changes, shutdown). Marketing mail is a separate, optional checkbox.
-2. Under **Tokens** create as many named tokens as you like. The token is shown once; copy it then. You can block, rotate or delete a token at any time, deleting takes effect immediately.
-3. Send the token with every request (see below). The **Usage** page shows requests per token, product and day, including rejected requests with the reason.
+2. Under **Tokens** use **New token** to create a named token (up to 100 per account). The token is shown once; copy it then.
+3. Send the token with every request (see below).
+
+### Managing tokens and your account
+
+- **Edit:** You can change the name, allowed origins or Android app, IP ranges and expiry date later; changes take effect immediately. Wildcards need your own domain after them (`*.example.com`, not `*.at`), and an IP range `/0` is not allowed (leave the field empty instead).
+- **Expiry date:** given in UTC. Once set, an expiry date can only be brought forward, not extended.
+- **Rotate:** creates a new token with the same settings; the old one keeps working for 7 days so you can replace it calmly.
+- **Block:** the token is rejected immediately (`token-blocked`) and can be unblocked again. **Delete** takes effect immediately and permanently.
+- **Usage:** the **Overview** and **Usage** pages show requests per token, product and day, rejected ones with the reason (e.g. `origin-not-allowed`). “Last used” is updated about once a minute.
+- **Account:** under **Account** you can change your address (shortly after signing in; a code is sent to the new address), turn the newsletter on or off, export all your data as JSON and delete the account. Deleting the account deletes all tokens; applications using them stop working immediately.
 
 The OpenAPI description `https://api.mapx.at/v1/openapi.json` and CORS preflight requests (`OPTIONS`) work without a token.
 

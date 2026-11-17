@@ -5,8 +5,17 @@
 Alle Endpunkte unter `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` und alle Tiles unter `https://tiles.mapx.at/` brauchen einen Token. Er ist kostenlos, es gibt keine nutzungsabhängige Verrechnung.
 
 1. [account.mapx.at](https://account.mapx.at/) öffnen und mit der E-Mail-Adresse registrieren (ein 8-stelliger Code kommt per Mail) oder mit Google bzw. Microsoft anmelden. Der Kontaktaufnahme zu Dienst und Konto (Sicherheit, Änderungen, Abschaltung) ist zuzustimmen. Werbung und Newsletter sind eine eigene, freiwillige Checkbox.
-2. Unter **Tokens** beliebig viele benannte Tokens anlegen. Der Token wird nur einmal angezeigt, dann kopieren. Tokens lassen sich jederzeit sperren, rotieren oder löschen, Löschen wirkt sofort.
-3. Den Token bei jeder Anfrage mitschicken (siehe unten). Die Seite **Nutzung** zeigt Anfragen je Token, Produkt und Tag, auch abgelehnte mit Grund.
+2. Unter **Tokens** mit **Neuer Token** einen benannten Token anlegen (bis zu 100 je Konto). Der Token wird nur einmal angezeigt, dann kopieren.
+3. Den Token bei jeder Anfrage mitschicken (siehe unten).
+
+### Tokens und Konto verwalten
+
+- **Bearbeiten:** Name, erlaubte Origins bzw. Android-App, IP-Bereiche und Ablaufdatum lassen sich nachträglich ändern; Änderungen wirken sofort. Platzhalter brauchen eine eigene Domain dahinter (`*.example.com`, nicht `*.at`), ein IP-Bereich `/0` ist nicht erlaubt (Feld dann leer lassen).
+- **Ablaufdatum:** wird in UTC angegeben. Ein gesetztes Ablaufdatum lässt sich nur verkürzen, nicht verlängern.
+- **Rotieren:** erzeugt einen neuen Token mit denselben Einstellungen; der alte funktioniert noch 7 Tage, damit du ihn in Ruhe austauschen kannst.
+- **Sperren:** Der Token wird sofort abgelehnt (`token-blocked`) und lässt sich wieder entsperren. **Löschen** wirkt sofort und endgültig.
+- **Nutzung:** Die Seiten **Übersicht** und **Nutzung** zeigen Anfragen je Token, Produkt und Tag, abgelehnte mit Grund (z. B. `origin-not-allowed`). „Zuletzt genutzt“ wird etwa einmal pro Minute aktualisiert.
+- **Konto:** Unter **Konto** kannst du deine Adresse ändern (kurz nach einer Anmeldung, ein Code geht an die neue Adresse), den Newsletter an- oder abschalten, alle Daten als JSON exportieren und das Konto löschen. Mit dem Konto werden alle Tokens gelöscht; Anwendungen, die sie nutzen, funktionieren dann sofort nicht mehr.
 
 Die OpenAPI-Beschreibung `https://api.mapx.at/v1/openapi.json` und CORS-Preflights (`OPTIONS`) funktionieren ohne Token.
 
