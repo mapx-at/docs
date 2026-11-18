@@ -35,7 +35,7 @@ A public token is checked against the `Origin` header (for tiles and images with
 
 ## Send the token
 
-Use the header in server code and scripts. In the browser use the query parameter: images and MapLibre tile URLs cannot set headers, and the CORS preflight does not allow the `Authorization` header.
+Use the header in server code and scripts. In the browser `fetch` calls can send the header as well; use the query parameter where no header can be set, for example in image URLs and MapLibre tile URLs.
 
 ```bash
 # header
@@ -70,7 +70,7 @@ When you request a style with `?access_token=…`, the API writes the token into
 
 **Android.** Send `Authorization: Bearer <public token>` plus `X-Mapx-Android-Package` (package name) and `X-Mapx-Android-Cert` (SHA-256 of the signing certificate, read at run time with `PackageManager`).
 
-Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md). During the transition period the token may still be optional: requests without one succeed and carry the header `X-Mapx-Token-Warning`.
+Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## Rate limits
 
@@ -91,7 +91,7 @@ For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) fi
 
 ## CORS and caching
 
-CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer of the API does not list the `Authorization` header yet, so in browser code send the token as `access_token` in the URL. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
+CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
 
 ## Attribution
 

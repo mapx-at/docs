@@ -4,13 +4,13 @@ Source: https://docs.mapx.at/api/
 
 > Reference of all mapx APIs for Austria with endpoints, parameters, examples and a live playground, generated from the OpenAPI description.
 
-All APIs live under `https://api.mapx.at/v1/` and need a free API token from [account.mapx.at](https://account.mapx.at/). Send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`; see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). `mx_pk_` tokens (public) work from allowed websites and Android apps with `GET`/`HEAD`, `mx_sk_` tokens (secret) from servers. The pages below are generated from the [OpenAPI description](https://api.mapx.at/v1/openapi.json) and always match the running service. Each page has a playground that calls the live API.
+All APIs live under `https://api.mapx.at/v1/` and need a free API token from [account.mapx.at](https://account.mapx.at/). Send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`; see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). `mx_pk_` tokens (public) work from allowed websites and Android apps with `GET`/`HEAD`, `mx_sk_` tokens (secret) from servers. The pages below are generated from the [OpenAPI description](https://api.mapx.at/v1/openapi.json) and reflect the service as of the last docs build. Each page has a playground that calls the live API.
 
 ## Conventions
 
 - **Coordinates** are `lon,lat` (WGS84), several separated by `;`. See [Coordinates](https://docs.mapx.at/reference/coordinates.md).
 - **Errors** are `application/problem+json` (RFC 9457) with a stable `code`, including `401`/`403` for token problems. See [Errors and limits](https://docs.mapx.at/api/errors.md).
-- **Limits** are per token and zone (without a valid token per IP address); `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+- **Limits** apply per IP address and zone, plus a per-minute limit per token; `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 - **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
 - **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Deprecations are announced in the [Changelog](https://docs.mapx.at/reference/changelog.md) with a sunset date.
 

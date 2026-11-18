@@ -142,7 +142,7 @@ Was tun: Pfad mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json
 
 Die angefragte Ressource (Kachel, Sprite, ...) existiert nicht.
 
-Was tun: Bei Kacheln als leere Kachel behandeln.
+Was tun: Pfad prüfen. Kacheln im Zoombereich ohne Daten antworten mit `204`, nicht mit diesem Fehler.
 
 ### unknown-style
 

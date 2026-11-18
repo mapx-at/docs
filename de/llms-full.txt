@@ -143,7 +143,7 @@ Wird ein Style mit `?access_token=…` angefordert, schreibt die API den Token i
 
 **Android.** `Authorization: Bearer <öffentlicher Token>` plus `X-Mapx-Android-Package` (Paketname) und `X-Mapx-Android-Cert` (SHA-256 des Signaturzertifikats, zur Laufzeit per `PackageManager` gelesen).
 
-Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-token`, `token-expired`) oder `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) als `application/problem+json`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md). In der Übergangsphase kann der Token noch optional sein: Anfragen ohne Token gelingen und tragen den Header `X-Mapx-Token-Warning`.
+Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-token`, `token-expired`) oder `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) als `application/problem+json`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 ## Rate Limits
 
@@ -246,7 +246,7 @@ Das [SDK](https://docs.mapx.at/de/guides/sdk/index.md) ergänzt eine Suchbox und
 
 Der Style `streets` ist ein gewöhnlicher [MapLibre-Style](https://maplibre.org/maplibre-style-spec/). Durch `satellite` oder `outdoors` ersetzen, um das Aussehen zu ändern. Alle Styles: [Styles API](https://docs.mapx.at/de/api/styles.md).
 
-MapLibre GL JS {V.maplibre} ist die Version, mit der diese Beispiele getestet sind.
+MapLibre GL JS 6.18.0 ist die Version, mit der diese Beispiele getestet sind.
 
 ## Nächste Schritte
 
@@ -394,11 +394,11 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **PMTiles.** Einzeldatei-Archiv von Tiles, gelesen mit HTTP-Range-Requests. Jedes Tileset ist als PMTiles verfügbar.
 
-**Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-truck`, `cycling`, `walking`.
+**Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
 **Sprite.** Bildatlas mit den Icons eines Styles.
 
-**Style.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet `streets`, `satellite` und `outdoors`.
+**Style.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet unter anderem `streets`, `satellite` und `outdoors`; alle Styles stehen in der [Style-Referenz](https://docs.mapx.at/de/reference/style-spec.md).
 
 **Tile.** Ein quadratisches Kartenstück, adressiert als `{z}/{x}/{y}`. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
 
@@ -2068,7 +2068,7 @@ Source: https://docs.mapx.at/de/guides/sdk/
 
 > Ein kleines Add-on für MapLibre GL JS: Karten-Factory, typisierte Helfer für jede API, Routenplaner, Ebenen-Schalter, Grundstücks- und Abfahrts-Popups.
 
-`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@{V.maplibre}` und `pmtiles@{V.pmtiles}`.
+`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@6.18.0` und `pmtiles@{V.pmtiles}`.
 
 ## Installation
 
@@ -2395,13 +2395,13 @@ Source: https://docs.mapx.at/de/api/
 
 > Referenz aller mapx-APIs für Österreich mit Endpunkten, Parametern, Beispielen und Live-Playground, erzeugt aus der OpenAPI-Beschreibung.
 
-Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert und passen immer zum laufenden Dienst. Jede Seite hat einen Playground, der die Live-API aufruft.
+Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert (Stand des letzten Doku-Baus). Jede Seite hat einen Playground, der die Live-API aufruft.
 
 ## Konventionen
 
 - **Koordinaten** sind `lon,lat` (WGS84), mehrere getrennt durch `;`. Siehe [Koordinaten](https://docs.mapx.at/de/reference/coordinates.md).
 - **Fehler** sind `application/problem+json` (RFC 9457) mit stabilem `code`. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
-- **Limits** gelten pro Token und Zone; `429` trägt `Retry-After`. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
+- **Limits** gelten pro IP-Adresse und Zone, dazu ein Minutenlimit je Token; `429` trägt `Retry-After`. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 - **Caching:** Tiles, Styles und TileJSON tragen `ETag`; mit `If-None-Match` kommt `304`.
 - **Versionierung:** Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu. Deprecations werden im [Changelog](https://docs.mapx.at/de/reference/changelog.md) mit Stichtag angekündigt.
 
@@ -2596,7 +2596,7 @@ Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -2612,7 +2612,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.png", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
@@ -2921,7 +2921,7 @@ data = res.json()
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -2937,7 +2937,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Beispielantwort**: `application/x-protobuf` · Glyph PBF
@@ -6865,7 +6865,7 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -6881,7 +6881,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Beispielantwort**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
@@ -7092,7 +7092,7 @@ Was tun: Pfad mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json
 
 Die angefragte Ressource (Kachel, Sprite, ...) existiert nicht.
 
-Was tun: Bei Kacheln als leere Kachel behandeln.
+Was tun: Pfad prüfen. Kacheln im Zoombereich ohne Daten antworten mit `204`, nicht mit diesem Fehler.
 
 ### unknown-style
 
@@ -8776,14 +8776,14 @@ Source: https://docs.mapx.at/de/reference/attribution/
 
 > Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
 
-Alle mapx-Daten stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
+Die amtlichen Daten in mapx stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Ausnahme sind die Sentinel-2-Kacheln: Sie enthalten veränderte Copernicus-Sentinel-Daten und folgen den Copernicus-Bedingungen, die Quellenangabe steht im TileJSON. Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
 
 ## In einer MapLibre-Karte
 
 MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON geladen wird (unten rechts, Symbol "i"). Es ist nichts zu ergänzen, solange sie nicht ausgeblendet wird. Bei `attributionControl: false` oder bei `tiles: [...]` ohne TileJSON den Text selbst ergänzen:
 
 ```js
-{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp"], tileSize: 512,
+{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN"], tileSize: 512,
   maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
 ```
 
@@ -8835,7 +8835,7 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 ### Neu
 - Korridor-Graph: `GET /v1/corridor-graph` (`polyline` als polyline6, `buffer` 100 bis 5000 m, `profile` driving, cycling oder walking): kompakter gzip-Teilgraph des Straßennetzes um eine Route (Knoten, gerichtete Arcs mit Fahrzeit und Gewicht, Geometrie, Namen, Straßenklasse, gesetzliche Tempolimits, Abbiegeverbote) für die Neuberechnung ohne Netz.
 - Tempolimits: `GET /v1/speedlimits` (`bbox` oder `corridor` als polyline6 plus `buffer`): gesetzliche GIP-Limits als kompaktes GeoJSON.
-- Directions: `exclude=ferry` für alle Profile; `voice_instructions` und `banner_instructions` auch für `cycling`, `cycling-mtb` und `walking`; `maxspeed` trägt `legal` (`false` kennzeichnet eine modellierte Geschwindigkeit, die kein Limit ist).
+- Directions: `exclude=ferry` (alle Profile außer `driving-traffic`) und `exclude=toll`; `voice_instructions` und `banner_instructions` auch für `cycling`, `cycling-mtb` und `walking`; `maxspeed` trägt `legal` (`false` kennzeichnet eine modellierte Geschwindigkeit, die kein Limit ist).
 - Klima: `GET /v1/climate/{lon},{lat}` und der Abschnitt `climate` im Grundstücks-Dossier: Sonnenpotenzial (kWh/m² und Sonnenstunden je Jahr), Temperatur- und Niederschlagsnormale mit Trend, Hitze-, Frost- und Schneetage, Dürreindex SPEI (GeoSphere Austria, CC BY 4.0).
 - Directions: `driving` und `driving-traffic` umfahren verbindliche Sperren (EVIS/ASFINAG) und listen sie in `routes[].closures_avoided`; `exclude` auch für `driving-truck` und `driving-traffic`; `voice_instructions` und `banner_instructions` (Mapbox-Form).
 - Header `Server-Timing`, `ETag`, `Last-Modified` (Styles, TileJSON, OpenAPI; bedingte Anfragen antworten mit `304`) und `RateLimit-Policy` je Endpunktgruppe.
@@ -8906,9 +8906,9 @@ Die vollständige Typreferenz von [`mapx-gl`](https://docs.mapx.at/de/guides/sdk
 
 Source: https://docs.mapx.at/de/examples/
 
-> Sechsundzwanzig lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+> 27 lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
 
-Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (4.7.1) mit pmtiles (3.2.1), mit kostenlosem Token und ohne Build. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt filtern:
+Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.18.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt filtern:
 
 - [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md): Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
 - [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md): Zwischen Karte, Luftbild und Gelände umschalten.
@@ -10279,12 +10279,12 @@ Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zug
 
 ## Grundstück finden
 
-Nach der Grundstücksnummer suchen (`KG 14105 Gst 102/3`, `14105/102/3`) oder das Grundstück an einem Punkt nehmen, etwa aus einem Klick oder einer Adresse:
+Nach der Grundstücksnummer suchen (`KG 14143 Gst 473/1`, `14143/473/1`) oder das Grundstück an einem Punkt nehmen, etwa aus einem Klick oder einer Adresse:
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&types=address&limit=1" | jq '.features[0].center'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=1" | jq '.features[0].center'
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_id, parcel_number, area_m2, is_building_land}'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014105%20Gst%20102/3&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
 ```
 
 ## Dossier lesen
@@ -10391,7 +10391,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions
   | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
 ```
 
-`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. Für Pkw meiden `exclude=toll` und `exclude=motorway` Mautabschnitte und Autobahnen (nur Profil `driving`).
+`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
 
 Mit dem SDK:
 

@@ -162,7 +162,7 @@ Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -178,7 +178,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.png", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile

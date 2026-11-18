@@ -97,7 +97,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 
 ## Optional
 
-- [Beispiele: lauffähiger Karten-Code](https://docs.mapx.at/de/examples/index.md): Sechsundzwanzig lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+- [Beispiele: lauffähiger Karten-Code](https://docs.mapx.at/de/examples/index.md): 27 lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
 - [Karte in eine HTML-Seite einbetten](https://docs.mapx.at/de/examples/embed-map.md): Eine mapx-Karte mit dem fertigen Stil per MapLibre GL JS in eine beliebige HTML-Seite einbetten: minimales, lauffähiges Beispiel mit öffentlichem Token.
 - [Basiskarte wechseln: Beispiel](https://docs.mapx.at/de/examples/switch-basemap.md): Zwischen Karte, Luftbild (Orthophoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Styles: lauffähiges Beispiel für einen Basiskarten-Umschalter.
 - [Tageszeit und Nachtmodus: Beispiel](https://docs.mapx.at/de/examples/time-of-day.md): Den mapx-Standardstil in vier Lichtstimmungen samt Nachtmodus mit MapLibre GL JS zeigen: lauffähiger Beispielcode zum Kopieren.

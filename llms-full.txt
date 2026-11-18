@@ -108,7 +108,7 @@ A public token is checked against the `Origin` header (for tiles and images with
 
 ## Send the token
 
-Use the header in server code and scripts. In the browser use the query parameter: images and MapLibre tile URLs cannot set headers, and the CORS preflight does not allow the `Authorization` header.
+Use the header in server code and scripts. In the browser `fetch` calls can send the header as well; use the query parameter where no header can be set, for example in image URLs and MapLibre tile URLs.
 
 ```bash
 # header
@@ -143,7 +143,7 @@ When you request a style with `?access_token=…`, the API writes the token into
 
 **Android.** Send `Authorization: Bearer <public token>` plus `X-Mapx-Android-Package` (package name) and `X-Mapx-Android-Cert` (SHA-256 of the signing certificate, read at run time with `PackageManager`).
 
-Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md). During the transition period the token may still be optional: requests without one succeed and carry the header `X-Mapx-Token-Warning`.
+Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## Rate limits
 
@@ -164,7 +164,7 @@ For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) fi
 
 ## CORS and caching
 
-CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer of the API does not list the `Authorization` header yet, so in browser code send the token as `access_token` in the URL. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
+CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
 
 ## Attribution
 
@@ -246,7 +246,7 @@ The [SDK](https://docs.mapx.at/guides/sdk/index.md) adds a search box and a styl
 
 The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](https://docs.mapx.at/api/styles.md).
 
-MapLibre GL JS {V.maplibre} is the version these examples are tested with.
+MapLibre GL JS 6.18.0 is the version these examples are tested with.
 
 ## Next
 
@@ -394,11 +394,11 @@ Source: https://docs.mapx.at/start/glossary/
 
 **PMTiles.** Single-file archive of tiles, read with HTTP range requests. Every tileset is available as one.
 
-**Profile.** The kind of traveler for routing: `driving`, `driving-truck`, `cycling`, `walking`.
+**Profile.** The kind of traveler for routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
 **Sprite.** Image atlas with the icons of a style.
 
-**Style.** A JSON document that tells the map which data to draw and how. mapx offers `streets`, `satellite` and `outdoors`.
+**Style.** A JSON document that tells the map which data to draw and how. mapx offers `streets`, `satellite`, `outdoors` and more; all styles are listed in the [style reference](https://docs.mapx.at/reference/style-spec.md).
 
 **Tile.** A square piece of map addressed as `{z}/{x}/{y}`. See [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
 
@@ -2079,7 +2079,7 @@ Source: https://docs.mapx.at/guides/sdk/
 
 > A small add-on for MapLibre GL JS: map factory, typed helpers for every API, route planner, layer switcher, parcel and departures popups.
 
-`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@{V.maplibre}` and `pmtiles@{V.pmtiles}`.
+`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@6.18.0` and `pmtiles@{V.pmtiles}`.
 
 ## Install
 
@@ -2404,13 +2404,13 @@ Source: https://docs.mapx.at/api/
 
 > Reference of all mapx APIs for Austria with endpoints, parameters, examples and a live playground, generated from the OpenAPI description.
 
-All APIs live under `https://api.mapx.at/v1/` and need a free API token from [account.mapx.at](https://account.mapx.at/). Send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`; see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). `mx_pk_` tokens (public) work from allowed websites and Android apps with `GET`/`HEAD`, `mx_sk_` tokens (secret) from servers. The pages below are generated from the [OpenAPI description](https://api.mapx.at/v1/openapi.json) and always match the running service. Each page has a playground that calls the live API.
+All APIs live under `https://api.mapx.at/v1/` and need a free API token from [account.mapx.at](https://account.mapx.at/). Send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`; see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). `mx_pk_` tokens (public) work from allowed websites and Android apps with `GET`/`HEAD`, `mx_sk_` tokens (secret) from servers. The pages below are generated from the [OpenAPI description](https://api.mapx.at/v1/openapi.json) and reflect the service as of the last docs build. Each page has a playground that calls the live API.
 
 ## Conventions
 
 - **Coordinates** are `lon,lat` (WGS84), several separated by `;`. See [Coordinates](https://docs.mapx.at/reference/coordinates.md).
 - **Errors** are `application/problem+json` (RFC 9457) with a stable `code`, including `401`/`403` for token problems. See [Errors and limits](https://docs.mapx.at/api/errors.md).
-- **Limits** are per token and zone (without a valid token per IP address); `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+- **Limits** apply per IP address and zone, plus a per-minute limit per token; `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 - **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
 - **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Deprecations are announced in the [Changelog](https://docs.mapx.at/reference/changelog.md) with a sunset date.
 
@@ -2605,7 +2605,7 @@ Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.png
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -2621,7 +2621,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.png", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Example response**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
@@ -2930,7 +2930,7 @@ data = res.json()
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -2946,7 +2946,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Example response**: `application/x-protobuf` · Glyph PBF
@@ -6874,7 +6874,7 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -6890,7 +6890,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Example response**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
@@ -6991,7 +6991,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 
 ## Authentication errors
 
-Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Anonymous requests are still served during the transition period; they carry `X-Mapx-Token-Warning: missing-token` and will get `401` later.
+Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Requests without a token get `401` `missing-token`.
 
 ```bash
 # with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
@@ -7083,7 +7083,7 @@ What to do: Check the JSON against the schema in the OpenAPI description.
 
 **401** · Token missing
 
-The request carries no token. Today anonymous requests are still answered during the transition period and carry the header `X-Mapx-Token-Warning`; afterwards they get this error.
+The request carries no token.
 
 What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
@@ -7181,7 +7181,7 @@ What to do: Send a normal path as listed in the [OpenAPI description](https://ap
 
 The path does not exist.
 
-What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` and `driving-ev` were removed.
+What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` were removed. An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
 
 ### not-found
 
@@ -7189,7 +7189,7 @@ What to do: Check the path against the [OpenAPI description](https://api.mapx.at
 
 The addressed resource (a tile, a sprite, ...) does not exist.
 
-What to do: For tiles treat as an empty tile.
+What to do: Check the path. Tiles inside the zoom range without data answer `204`, not this error.
 
 ### unknown-style
 
@@ -7295,11 +7295,11 @@ The server is at its concurrency limit.
 
 What to do: Wait `Retry-After` seconds and retry.
 
-See also: [Errors and limits](https://docs.mapx.at/api/errors.md) for rate limits and caching.
+See also: [Access and limits](https://docs.mapx.at/start/access-and-limits.md) for rate limits and caching.
 
 ## Rate limits
 
-Limits per token and zone are listed under [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
+Limits per IP address and zone and the per-minute limit per token are listed under [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
 
 ## Caching
 
@@ -8872,7 +8872,7 @@ Source: https://docs.mapx.at/reference/attribution/
 
 > Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 
-All mapx data is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). You may use it commercially. You must name the source and the license and must not present modifications as official. The credit has to be visible to the users of the map, for example in the corner, not only in an imprint.
+The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. The credit has to be visible to the users of the map, for example in the corner, not only in an imprint.
 
 ## In a MapLibre map
 
@@ -8929,7 +8929,7 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 ## 2026-11-08
 
 ### Added
-- API tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` and `search.mapx.at` need a free token from [account.mapx.at](https://account.mapx.at/): public (`mx_pk_`, bound to origins or an Android app, `GET`/`HEAD` only) or secret (`mx_sk_`). Send it as `Authorization: Bearer` or `?access_token=`. New errors `401` (`missing-token`, `invalid-token`, `token-expired`) and `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), reason in the header `X-Mapx-Reason`. Anonymous requests are still served during the transition period with the header `X-Mapx-Token-Warning`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [Errors and limits](https://docs.mapx.at/api/errors.md).
+- API tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` and `search.mapx.at` need a free token from [account.mapx.at](https://account.mapx.at/): public (`mx_pk_`, bound to origins or an Android app, `GET`/`HEAD` only) or secret (`mx_sk_`). Send it as `Authorization: Bearer` or `?access_token=`. New errors `401` (`missing-token`, `invalid-token`, `token-expired`) and `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), reason in the header `X-Mapx-Reason`. Requests without a token get `401`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [Errors and limits](https://docs.mapx.at/api/errors.md).
 - Corridor graph: `GET /v1/corridor-graph` (`polyline` as polyline6, `buffer` 100 to 5000 m, `profile` driving, cycling or walking): compact gzip subgraph of the road network around a route (nodes, directed arcs with travel time and weight, geometry, names, road class, statutory speed limits, turn restrictions) for recomputing a route offline.
 - Speed limits: `GET /v1/speedlimits` (`bbox` or `corridor` as polyline6 plus `buffer`): statutory GIP limits as compact GeoJSON.
 - Directions: `exclude=ferry` (all profiles except `driving-traffic`) and `exclude=toll`; `voice_instructions` and `banner_instructions` also for `cycling`, `cycling-mtb` and `walking`; `maxspeed` carries `legal` (`false` marks a modeled speed that is not a limit).
@@ -9120,7 +9120,7 @@ Re-exports styleUrl
 
 Source: https://docs.mapx.at/examples/
 
-> Twenty-six runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+> 27 runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 
 Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.18.0) with pmtiles (4.5.0), a free token and no build. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product:
 

@@ -97,7 +97,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 
 ## Optional
 
-- [Examples: runnable map code](https://docs.mapx.at/examples/index.md): Twenty-six runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+- [Examples: runnable map code](https://docs.mapx.at/examples/index.md): 27 runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 - [Embed a map in an HTML page](https://docs.mapx.at/examples/embed-map.md): Embed a mapx map with the ready-made style in any HTML page with MapLibre GL JS: a minimal runnable example with a public token.
 - [Switch basemap example](https://docs.mapx.at/examples/switch-basemap.md): Switch between the map, aerial imagery (orthophoto) and terrain with MapLibre GL JS and mapx styles: a runnable basemap switcher example.
 - [Time of day and night mode example](https://docs.mapx.at/examples/time-of-day.md): Show the default mapx style in four lighting moods, including a night mode, with MapLibre GL JS: runnable example code to copy.

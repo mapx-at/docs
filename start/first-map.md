@@ -63,7 +63,7 @@ The [SDK](https://docs.mapx.at/guides/sdk/index.md) adds a search box and a styl
 
 The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](https://docs.mapx.at/api/styles.md).
 
-MapLibre GL JS {V.maplibre} is the version these examples are tested with.
+MapLibre GL JS 6.18.0 is the version these examples are tested with.
 
 ## Next
 

@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/sdk/
 
 > A small add-on for MapLibre GL JS: map factory, typed helpers for every API, route planner, layer switcher, parcel and departures popups.
 
-`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@{V.maplibre}` and `pmtiles@{V.pmtiles}`.
+`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@6.18.0` and `pmtiles@{V.pmtiles}`.
 
 ## Install
 

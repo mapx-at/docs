@@ -468,7 +468,7 @@ Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -484,7 +484,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Example response**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted

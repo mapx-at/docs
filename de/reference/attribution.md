@@ -4,14 +4,14 @@ Source: https://docs.mapx.at/de/reference/attribution/
 
 > Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
 
-Alle mapx-Daten stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
+Die amtlichen Daten in mapx stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Ausnahme sind die Sentinel-2-Kacheln: Sie enthalten veränderte Copernicus-Sentinel-Daten und folgen den Copernicus-Bedingungen, die Quellenangabe steht im TileJSON. Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
 
 ## In einer MapLibre-Karte
 
 MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON geladen wird (unten rechts, Symbol "i"). Es ist nichts zu ergänzen, solange sie nicht ausgeblendet wird. Bei `attributionControl: false` oder bei `tiles: [...]` ohne TileJSON den Text selbst ergänzen:
 
 ```js
-{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp"], tileSize: 512,
+{ type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN"], tileSize: 512,
   maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
 ```
 

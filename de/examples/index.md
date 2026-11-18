@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/examples/
 
-> Sechsundzwanzig lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+> 27 lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
 
-Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (4.7.1) mit pmtiles (3.2.1), mit kostenlosem Token und ohne Build. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt filtern:
+Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.18.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt filtern:
 
 - [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md): Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
 - [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md): Zwischen Karte, Luftbild und Gelände umschalten.

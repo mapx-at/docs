@@ -286,7 +286,7 @@ data = res.json()
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.bin
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf" -o result.pbf
 ```
 
 **JavaScript**
@@ -302,7 +302,7 @@ const blob = await res.blob();
 import requests
 
 res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf", headers={"Authorization": "Bearer YOUR_TOKEN"})
-open("result.bin", "wb").write(res.content)
+open("result.pbf", "wb").write(res.content)
 ```
 
 **Example response**: `application/x-protobuf` · Glyph PBF

@@ -24,11 +24,11 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **PMTiles.** Einzeldatei-Archiv von Tiles, gelesen mit HTTP-Range-Requests. Jedes Tileset ist als PMTiles verfügbar.
 
-**Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-truck`, `cycling`, `walking`.
+**Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
 **Sprite.** Bildatlas mit den Icons eines Styles.
 
-**Style.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet `streets`, `satellite` und `outdoors`.
+**Style.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet unter anderem `streets`, `satellite` und `outdoors`; alle Styles stehen in der [Style-Referenz](https://docs.mapx.at/de/reference/style-spec.md).
 
 **Tile.** Ein quadratisches Kartenstück, adressiert als `{z}/{x}/{y}`. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
 

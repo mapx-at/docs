@@ -70,7 +70,7 @@ Wird ein Style mit `?access_token=…` angefordert, schreibt die API den Token i
 
 **Android.** `Authorization: Bearer <öffentlicher Token>` plus `X-Mapx-Android-Package` (Paketname) und `X-Mapx-Android-Cert` (SHA-256 des Signaturzertifikats, zur Laufzeit per `PackageManager` gelesen).
 
-Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-token`, `token-expired`) oder `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) als `application/problem+json`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md). In der Übergangsphase kann der Token noch optional sein: Anfragen ohne Token gelingen und tragen den Header `X-Mapx-Token-Warning`.
+Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-token`, `token-expired`) oder `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) als `application/problem+json`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 ## Rate Limits
 

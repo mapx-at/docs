@@ -17,7 +17,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions
   | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
 ```
 
-`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. Für Pkw meiden `exclude=toll` und `exclude=motorway` Mautabschnitte und Autobahnen (nur Profil `driving`).
+`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
 
 Mit dem SDK:
 

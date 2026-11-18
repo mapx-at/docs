@@ -32,7 +32,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 
 ## Authentication errors
 
-Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Anonymous requests are still served during the transition period; they carry `X-Mapx-Token-Warning: missing-token` and will get `401` later.
+Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Requests without a token get `401` `missing-token`.
 
 ```bash
 # with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
@@ -124,7 +124,7 @@ What to do: Check the JSON against the schema in the OpenAPI description.
 
 **401** · Token missing
 
-The request carries no token. Today anonymous requests are still answered during the transition period and carry the header `X-Mapx-Token-Warning`; afterwards they get this error.
+The request carries no token.
 
 What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and send it as `Authorization: Bearer YOUR_TOKEN` or `?access_token=YOUR_TOKEN`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
@@ -222,7 +222,7 @@ What to do: Send a normal path as listed in the [OpenAPI description](https://ap
 
 The path does not exist.
 
-What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` and `driving-ev` were removed.
+What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` were removed. An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
 
 ### not-found
 
@@ -230,7 +230,7 @@ What to do: Check the path against the [OpenAPI description](https://api.mapx.at
 
 The addressed resource (a tile, a sprite, ...) does not exist.
 
-What to do: For tiles treat as an empty tile.
+What to do: Check the path. Tiles inside the zoom range without data answer `204`, not this error.
 
 ### unknown-style
 
@@ -336,11 +336,11 @@ The server is at its concurrency limit.
 
 What to do: Wait `Retry-After` seconds and retry.
 
-See also: [Errors and limits](https://docs.mapx.at/api/errors.md) for rate limits and caching.
+See also: [Access and limits](https://docs.mapx.at/start/access-and-limits.md) for rate limits and caching.
 
 ## Rate limits
 
-Limits per token and zone are listed under [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
+Limits per IP address and zone and the per-minute limit per token are listed under [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Retry on `429` and `503` with growing delay and honor `Retry-After`; do not retry `400`, `401`, `403`, `404` and `422` unchanged.
 
 ## Caching
 

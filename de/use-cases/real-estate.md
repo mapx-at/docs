@@ -10,12 +10,12 @@ Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zug
 
 ## Grundstück finden
 
-Nach der Grundstücksnummer suchen (`KG 14105 Gst 102/3`, `14105/102/3`) oder das Grundstück an einem Punkt nehmen, etwa aus einem Klick oder einer Adresse:
+Nach der Grundstücksnummer suchen (`KG 14143 Gst 473/1`, `14143/473/1`) oder das Grundstück an einem Punkt nehmen, etwa aus einem Klick oder einer Adresse:
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&types=address&limit=1" | jq '.features[0].center'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=1" | jq '.features[0].center'
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_id, parcel_number, area_m2, is_building_land}'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014105%20Gst%20102/3&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
 ```
 
 ## Dossier lesen
