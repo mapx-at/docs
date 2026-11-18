@@ -17,6 +17,8 @@ Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](http
 | [`orthophoto-flight-blocks`](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md) | vector | z6–17 | 2025-10-03 |
 | [`rest-areas`](https://docs.mapx.at/tilesets/rest-areas.md) | vector | z7–14 | 20261107 |
 | [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261107 |
+| [`bike-routes`](https://docs.mapx.at/tilesets/bike-routes.md) | vector | z5–14 | 20260708 |
+| [`gip-poi`](https://docs.mapx.at/tilesets/gip-poi.md) | vector | z12–15 | 20260708 |
 
 Not in the table because it is replaced daily instead of versioned: [Sentinel-2 current](https://docs.mapx.at/tilesets/sentinel2.md) (`sentinel2`, raster, z5 to z13).
 

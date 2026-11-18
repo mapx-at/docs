@@ -38,16 +38,16 @@ Fehlende Daten sind `null` oder leere Listen, nie abwesend. Mit dem [SDK](https:
 
 ## Ein Bild fürs Exposé
 
-Das Dossier enthält `links.static_image`: ein Luftbild mit dem Grundstücksumriss. Für ein eigenes Bild das Polygon als GeoJSON-Overlay zeichnen und mit `auto` den Ausschnitt anpassen lassen:
+Das Dossier enthält `links.static_image`: ein Luftbild mit dem Grundstücksumriss. Der Link kommt ohne Token; vor dem Einbinden `?access_token=DEIN_TOKEN` anhängen. Für ein eigenes Bild das Polygon als GeoJSON-Overlay zeichnen und mit `auto` den Ausschnitt anpassen lassen:
 
 ```js
 const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).features[0];
 const outline = { type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry };
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponent(JSON.stringify(outline))})/auto/800x500.webp?access_token=DEIN_TOKEN`;
-document.querySelector("#expose").src = img; // geht auch in E-Mails und PDFs
+document.querySelector("#expose").src = img; // für E-Mails und PDFs auf dem Server mit geheimem Token erzeugen
 ```
 
-Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md). Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
+Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md). Die Bild-URL enthält den Token: für Bilder auf Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Website als erlaubter Origin verwenden, Bilder für E-Mails und PDFs auf dem Server mit einem geheimen Token (`mx_sk_…`) erzeugen. Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
 
 ## Sonne, Hitze und Schnee am Standort
 
@@ -79,19 +79,19 @@ const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map
 console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 ```
 
-Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](https://docs.mapx.at/de/guides/transit.md) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`.
+Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](https://docs.mapx.at/de/guides/transit.md) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`. Das Beispiel nimmt Melk Bahnhof (`at:43:7226`).
 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:43:7226&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
 **Python**
 
 ```python
 import requests
-r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()
+r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:43:7226", "limit": 3}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
 

@@ -6,9 +6,19 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. Details zur Umbenennung: [Migration](https://docs.mapx.at/de/api/migration.md).
 
+## 2026-11-18
+
+### Neu
+- MCP-Server `https://mcp.mapx.at/mcp` mit 23 Werkzeugen für KI-Assistenten (Claude, ChatGPT, Cursor); eigener Token-Typ KI-Assistent (`mx_mcp_`), der nur am MCP-Server gilt, alternativ Anmeldung über das mapx-Konto (OAuth). Neue Fehler `403` `mcp-token-only` und `mcp-token-required`. Siehe [MCP-Server](https://docs.mapx.at/de/guides/mcp.md).
+- [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/), verlinkt aus Konto, Registrierung und Doku.
+
+### Geändert
+- Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
+
 ## 2026-11-08
 
 ### Neu
+- API-Tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` und `search.mapx.at` brauchen einen kostenlosen Token von [account.mapx.at](https://account.mapx.at/): öffentlich (`mx_pk_`, an Websites oder eine Android-App gebunden, nur `GET`/`HEAD`) oder geheim (`mx_sk_`). Senden als `Authorization: Bearer` oder `?access_token=`. Neue Fehler `401` (`missing-token`, `invalid-token`, `token-expired`) und `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), Grund im Header `X-Mapx-Reason`. Anfragen ohne Token bekommen `401`. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md) und [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 - Korridor-Graph: `GET /v1/corridor-graph` (`polyline` als polyline6, `buffer` 100 bis 5000 m, `profile` driving, cycling oder walking): kompakter gzip-Teilgraph des Straßennetzes um eine Route (Knoten, gerichtete Arcs mit Fahrzeit und Gewicht, Geometrie, Namen, Straßenklasse, gesetzliche Tempolimits, Abbiegeverbote) für die Neuberechnung ohne Netz.
 - Tempolimits: `GET /v1/speedlimits` (`bbox` oder `corridor` als polyline6 plus `buffer`): gesetzliche GIP-Limits als kompaktes GeoJSON.
 - Directions: `exclude=ferry` (alle Profile außer `driving-traffic`) und `exclude=toll`; `voice_instructions` und `banner_instructions` auch für `cycling`, `cycling-mtb` und `walking`; `maxspeed` trägt `legal` (`false` kennzeichnet eine modellierte Geschwindigkeit, die kein Limit ist).

@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/use-cases/logistics/
 
 All requests need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); in server code use a secret token (`mx_sk_…`) and never ship it in a web page.
 
-Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic situation. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
+Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic reports. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
 
 ## Truck routes
 
@@ -39,7 +39,7 @@ console.log(m.durations[0][1] / 60, "min", m.distances[0][1] / 1000, "km"); // V
 
 ## Plan the tour
 
-`POST /v1/optimization` assigns jobs to vehicles and orders them: capacity, time windows, service times (seconds), start and end per vehicle. At most 10 vehicles, 50 jobs and 60 distinct locations per request.
+`POST /v1/optimization` assigns jobs to vehicles and orders them: capacity, time windows, service times (seconds), start and end per vehicle. At most 10 vehicles, 50 jobs and 60 distinct locations per request. Secret token (`mx_sk_…`) from a server only; a public token gets `403 pk-not-allowed`.
 
 ```js
 const body = {
@@ -59,7 +59,7 @@ Draw the result with one `directions` request through `tour.routes[0].steps` loc
 
 ## Traffic
 
-Use `driving-traffic` for a route with the current traffic and closures. Incidents on the route come with `incidents=true` in `legs[].incidents`. For a region, list the active incidents or show the traffic style:
+`driving-traffic` uses the reports of ASFINAG and EVIS.AT: binding closures are avoided, non-binding closures are avoided where possible, and on motorways the speed limits currently shown on variable message signs slow down the travel time. There is no area-wide measured traffic flow (speeds on every road, congestion as "flow"); reported jams without a closure do not change the route, they only show up as incidents. Incidents on the route come with `incidents=true` in `legs[].incidents`. For a region, list the active incidents or show the traffic style:
 
 ```js
 const bbox = [14.5, 47.8, 16.9, 48.6]; // Lower Austria
@@ -67,7 +67,7 @@ const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incident
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 
-The map style `traffic-day` shows the flow; see the [example](https://docs.mapx.at/examples/traffic.md). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
+The map style `traffic-day` shows the current reports and closures and, on motorways, the sections with a speed limit from variable message signs (no area-wide traffic flow); see the [example](https://docs.mapx.at/examples/traffic.md). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
 
 ## Next steps
 

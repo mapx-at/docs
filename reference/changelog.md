@@ -6,6 +6,15 @@ Source: https://docs.mapx.at/reference/changelog/
 
 Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](https://docs.mapx.at/api/migration.md).
 
+## 2026-11-18
+
+### Added
+- MCP server `https://mcp.mapx.at/mcp` with 23 tools for AI assistants (Claude, ChatGPT, Cursor); its own token type AI assistant (`mx_mcp_`) that only works at the MCP server, or sign-in with the mapx account (OAuth). New errors `403` `mcp-token-only` and `mcp-token-required`. See [MCP server](https://docs.mapx.at/guides/mcp.md).
+- [Terms of use](https://mapx.at/en/terms/), linked from the account, sign-up and docs.
+
+### Changed
+- Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
+
 ## 2026-11-08
 
 ### Added

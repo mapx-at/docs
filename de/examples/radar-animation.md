@@ -27,7 +27,8 @@ let times = [], timer = null;
 function zeigen(i) {
   const t = times[i];
   document.getElementById('zeit').value = i;
-  document.getElementById('info').textContent = `Radar-Nowcast ${t} (UTC), Quelle: GeoSphere Austria, CC BY 4.0`;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `Radar nowcast ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
   // one layer per time step, only the selected one is visible: tiles are already loaded when playing
   times.forEach((_, k) => map.setLayoutProperty('radar-' + k, 'visibility', k === i ? 'visible' : 'none'));
 }

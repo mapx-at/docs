@@ -35,7 +35,7 @@ const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}`, { h
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
-Während der Eingabe das [Adress-Autofill](https://docs.mapx.at/de/examples/autofill.md) anbieten; für Listen mit vielen Adressen `POST /v1/geocode/batch` ([Suche](https://docs.mapx.at/de/guides/search.md)).
+Während der Eingabe das [Adress-Autofill](https://docs.mapx.at/de/examples/autofill.md) anbieten; für Listen mit vielen Adressen `POST /v1/geocode/batch` ([Suche](https://docs.mapx.at/de/guides/search.md)), nur mit geheimem Token (`mx_sk_…`) vom Server, sonst `403 pk-not-allowed`.
 
 ## Abfahrten am Gemeindeamt
 
@@ -64,7 +64,7 @@ Für ein einfaches Bild ohne JavaScript (Druck, Newsletter, Seite ohne Skripte) 
      src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=DEIN_TOKEN">
 ```
 
-Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md) zeigen. Die Attribution der Daten sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
+Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md) zeigen. Die `<img>`-URL enthält den Token: einen öffentlichen Token (`mx_pk_…`) mit der eigenen Website als erlaubter Origin verwenden; Bilder für E-Mail oder PDF auf dem Server mit einem geheimen Token (`mx_sk_…`) erzeugen. Die Attribution der Daten sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
 
 ## Nächste Schritte
 

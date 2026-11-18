@@ -29,7 +29,12 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `orthophoto` | Orthophoto: BEV (CC BY 4.0) |
-| `orthophoto-flight-blocks` | BEV, CC BY 4.0 |
+| `orthophoto-flight-blocks` | The TileJSON currently carries no attribution text. The flight blocks are metadata of the BEV orthophoto, so credit `BEV, CC BY 4.0`. |
+| `bike-routes` | Datenquelle: GIP.at, CC BY 4.0 |
+| `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
+| `rastanlagen` | ASFINAG, CC BY 4.0 |
+| `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
+| `sentinel2`, `sentinel2-datum`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
 
 ## Text per API
 
@@ -42,6 +47,7 @@ JSON responses with data carry a top-level `attribution` field. Show it when you
 | Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
 | Weather | GeoSphere Austria, CC BY 4.0 |
+| Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
 | Climate, `properties.climate` of the parcel dossier | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Parcel, Tilequery (cadastre) | BEV – DKM, CC BY 4.0 |
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |

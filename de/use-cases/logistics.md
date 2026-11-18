@@ -4,9 +4,9 @@ Source: https://docs.mapx.at/de/use-cases/logistics/
 
 > Lkw-Routing mit Fahrzeugmaßen, Fahrzeitmatrizen, Tourenplanung und Verkehr für Zustellung und Flotten, aufgebaut auf den mapx-APIs für Österreich.
 
-Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuelle Verkehrslage. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
+Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuellen Verkehrsmeldungen. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Im Servercode einen geheimen Token (`mx_sk_…`) verwenden und ihn nie in eine Webseite einbauen. Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
 
 ## Lkw-Routen
 
@@ -39,7 +39,7 @@ console.log(m.durations[0][1] / 60, "min", m.distances[0][1] / 1000, "km"); // W
 
 ## Tour planen
 
-`POST /v1/optimization` teilt Aufträge Fahrzeugen zu und ordnet sie: Kapazität, Zeitfenster, Servicezeiten (Sekunden), Start und Ende je Fahrzeug. Höchstens 10 Fahrzeuge, 50 Aufträge und 60 verschiedene Orte je Anfrage.
+`POST /v1/optimization` teilt Aufträge Fahrzeugen zu und ordnet sie: Kapazität, Zeitfenster, Servicezeiten (Sekunden), Start und Ende je Fahrzeug. Höchstens 10 Fahrzeuge, 50 Aufträge und 60 verschiedene Orte je Anfrage. Nur mit geheimem Token (`mx_sk_…`) vom Server; ein öffentlicher Token bekommt `403 pk-not-allowed`.
 
 ```js
 const body = {
@@ -59,7 +59,7 @@ Das Ergebnis mit einer `directions`-Anfrage durch die Orte aus `tour.routes[0].s
 
 ## Verkehr
 
-`driving-traffic` liefert eine Route mit aktuellem Verkehr und Sperren. Meldungen auf der Route kommen mit `incidents=true` in `legs[].incidents`. Für eine Region die aktiven Meldungen auflisten oder den Verkehrsstil zeigen:
+`driving-traffic` berücksichtigt die Meldungen von ASFINAG und EVIS.AT: verbindliche Sperren werden umfahren, nicht verbindliche Sperren nach Möglichkeit gemieden, und auf Autobahnen bremsen die aktuell geschalteten Tempolimits der Wechselverkehrszeichen die Fahrzeit. Eine flächendeckende gemessene Verkehrslage (Geschwindigkeiten auf allen Straßen, Stau als „flow“) gibt es nicht; gemeldete Staus ohne Sperre ändern die Route nicht, sie erscheinen nur als Meldung. Meldungen auf der Route kommen mit `incidents=true` in `legs[].incidents`. Für eine Region die aktiven Meldungen auflisten oder den Verkehrsstil zeigen:
 
 ```js
 const bbox = [14.5, 47.8, 16.9, 48.6]; // Niederösterreich
@@ -67,7 +67,7 @@ const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incident
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 
-Der Kartenstil `traffic-day` zeigt die Verkehrslage; siehe das [Beispiel](https://docs.mapx.at/de/examples/traffic.md). Verkehrsdaten: ASFINAG / EVIS.AT (CC BY 4.0).
+Der Kartenstil `traffic-day` zeigt die aktuellen Meldungen und Sperren und auf Autobahnen die Abschnitte mit Tempolimit durch Wechselverkehrszeichen (keine flächendeckende Verkehrslage); siehe das [Beispiel](https://docs.mapx.at/de/examples/traffic.md). Verkehrsdaten: ASFINAG / EVIS.AT (CC BY 4.0).
 
 ## Nächste Schritte
 

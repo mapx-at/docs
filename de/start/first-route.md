@@ -33,7 +33,7 @@ route = requests.get(url, params={"overview": "simplified"}, headers={"Authoriza
 print(route["distance"] / 1000, "km", route["duration"] / 60, "min")
 ```
 
-`distance` ist in Metern, `duration` in Sekunden. Weitere Profile: `driving-truck`, `cycling`, `walking`. Siehe den [Navigation-Guide](https://docs.mapx.at/de/guides/navigation.md).
+`distance` ist in Metern, `duration` in Sekunden. Weitere Profile: `driving-traffic` (umfährt gemeldete Sperren), `driving-truck`, `cycling`, `cycling-mtb` und `walking`; Parameter je Profil in der [Directions-Referenz](https://docs.mapx.at/de/api/directions.md). Siehe den [Navigation-Guide](https://docs.mapx.at/de/guides/navigation.md).
 
 ## Auf der Karte zeichnen
 

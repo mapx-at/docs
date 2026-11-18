@@ -27,7 +27,7 @@ The OpenAPI description `https://api.mapx.at/v1/openapi.json` and CORS preflight
 
 | Kind | Prefix | Use | Restrictions |
 |---|---|---|---|
-| Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
+| Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Not for `POST /v1/optimization`, `POST /v1/geocode/batch` and `/v1/corridor-graph` (otherwise `403 pk-not-allowed`). Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
 | Secret | `mx_sk_…` | Servers, scripts and CI. Never put it into a web page or an app. | No origin binding; optionally bound to IP ranges (CIDR). |
 | AI assistant (MCP) | `mx_mcp_…` | AI assistants and agents that use the [mapx MCP server](https://docs.mapx.at/guides/mcp.md). | Created by hand or by signing in with your account (then shown as "connected via <host>"). Works only at `https://mcp.mapx.at/mcp`, no origin or IP binding, optional expiry date. Direct API calls with it answer `403` `mcp-token-only`. |
 
@@ -46,7 +46,7 @@ curl -s "https://api.mapx.at/v1/geocode?q=Melk&limit=1&access_token=YOUR_TOKEN" 
 ```
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR_TOKEN"); // in the browser use access_token; Node can use the header
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR_TOKEN"); // the query parameter works everywhere; the header works in the browser too
 ```
 
 **Maps with MapLibre GL JS.** The simplest way is a `transformRequest` that adds the token to every request to `mapx.at`, never to other hosts:

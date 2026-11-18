@@ -10,7 +10,7 @@ Yes, a free account and API token. Register at [account.mapx.at](https://account
 
 ## Why do I get 401 or 403?
 
-`401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`). The `code` in the error body names the reason. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+`401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`), or a public token calls an endpoint that needs a secret token (`pk-not-allowed`). The `code` in the error body (and the `X-Mapx-Reason` header) names the reason. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [error codes](https://docs.mapx.at/api/errors.md#authentication-errors).
 
 ## Can I use mapx with Claude, ChatGPT or Cursor?
 

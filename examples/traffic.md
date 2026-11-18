@@ -1,17 +1,17 @@
-# Traffic flow and incidents example
+# Traffic incidents and closures example
 
 Source: https://docs.mapx.at/examples/traffic/
 
-> Traffic style plus the active incidents of the visible map area: show traffic flow and road incidents in Austria with the mapx traffic API.
+> Traffic style plus the active incidents of the visible map area: show road incidents and closures in Austria with the mapx traffic API.
 
-The style `traffic-day` colours the road network by current flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
+The style `traffic-day` shows the current reports and colours the motorway sections where variable message signs limit the speed; there is no area-wide traffic flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
 
 ## Code
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
-// Traffic: live traffic flow as a style plus the current incident list for the visible area.
+// Traffic: the traffic-day style (reports, sign speed limits on motorways) plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -33,7 +33,11 @@ map.on('load', () => {
     const res = await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}&active=true&limit=50`, AUTH);
     const fc = await res.json();
     map.getSource('incidents').setData(fc);
-    list.textContent = `${fc.features.length} active incident(s) in view` + (fc.features[0] ? `, e.g. ${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '');
+    const de = document.documentElement.lang.startsWith('de'); // page language: German or English text
+    const first = fc.features[0] ? `${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '';
+    list.textContent = de
+      ? `${fc.features.length} aktive Meldung(en) im Ausschnitt` + (first ? `, z. B. ${first}` : '')
+      : `${fc.features.length} active incident(s) in view` + (first ? `, e.g. ${first}` : '');
   };
   map.on('moveend', load);
   load();

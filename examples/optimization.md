@@ -6,6 +6,8 @@ Source: https://docs.mapx.at/examples/optimization/
 
 The optimization API orders stops for one or more vehicles, with service times, capacities and time windows. Here one vehicle starts and ends in Melk. Click up to nine stops; every click plans again. The order is drawn with one directions request through all stops.
 
+`POST /v1/optimization` needs a secret token (`mx_sk_…`); a public token gets `403 pk-not-allowed`. In your own application send this request through your server, not straight from the web page.
+
 ## Code
 
 ````js

@@ -27,7 +27,7 @@ Die OpenAPI-Beschreibung `https://api.mapx.at/v1/openapi.json` und CORS-Prefligh
 
 | Art | Präfix | Einsatz | Einschränkung |
 |---|---|---|---|
-| Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo es erlaubt ist. | Nur lesende Produkte, nur `GET`/`HEAD`. Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
+| Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo es erlaubt ist. | Nur lesende Produkte, nur `GET`/`HEAD`. Nicht für `POST /v1/optimization`, `POST /v1/geocode/batch` und `/v1/corridor-graph` (sonst `403 pk-not-allowed`). Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
 | Geheim | `mx_sk_…` | Server, Skripte und CI. Nie in eine Webseite oder App einbauen. | Keine Origin-Bindung; optional an IP-Bereiche (CIDR) gebunden. |
 | KI-Assistent (MCP) | `mx_mcp_…` | KI-Assistenten und Agenten, die den [mapx-MCP-Server](https://docs.mapx.at/de/guides/mcp.md) nutzen. | Entsteht von Hand oder durch die Anmeldung über das Konto (erscheint dann als „verbunden über <Host>“). Gilt nur am `https://mcp.mapx.at/mcp`, keine Origin- oder IP-Bindung, optional ein Ablaufdatum. Direkte API-Aufrufe damit ergeben `403` `mcp-token-only`. |
 

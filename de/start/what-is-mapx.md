@@ -4,11 +4,11 @@ Source: https://docs.mapx.at/de/start/what-is-mapx/
 
 > mapx ist eine Sammlung von Karten- und Location-APIs für Österreich, ausschließlich auf amtlichen offenen Daten: Kacheln, Geocoding, Routing, Höhe, ÖV und mehr.
 
-mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten stammen aus offiziellen offenen Quellen (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB und weitere). Deshalb gibt es keine nutzungsabhängigen Preise. Ein kostenloses Konto und ein API-Token sind nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
+mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten stammen aus offiziellen offenen Quellen (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB, Copernicus Sentinel-2 und weitere; vollständig unter [Quellen und Lizenzen](https://docs.mapx.at/de/reference/attribution.md)). Deshalb gibt es keine nutzungsabhängigen Preise. Ein kostenloses Konto und ein API-Token sind nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
 | Produkt | Inhalt | Einstieg |
 |---|---|---|
-| Karten | Vektor- und Raster-Tiles, fertige Styles (`streets`, `satellite`, `outdoors`), TileJSON | [Karten](https://docs.mapx.at/de/guides/maps.md) |
+| Karten | Vektor- und Raster-Tiles, fertige Styles (`streets` mit den Tageszeit-Varianten `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `traffic-day`; Liste unter [Styles](https://docs.mapx.at/de/api/styles.md)), TileJSON | [Karten](https://docs.mapx.at/de/guides/maps.md) |
 | Suche | Geocoding, Type-ahead-Search-Box, Adress-Autofill und Validierung | [Suche](https://docs.mapx.at/de/guides/search.md) |
 | Navigation | Routen für Auto, Lkw, Rad und zu Fuß, Isochronen, Matrizen, Map Matching, Maut | [Navigation](https://docs.mapx.at/de/guides/navigation.md) |
 | Verkehr | Störungsmeldungen, Tempolimits auf Autobahnen, eine Verkehrsebene | [Verkehr](https://docs.mapx.at/de/guides/traffic.md) |

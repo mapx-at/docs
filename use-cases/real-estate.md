@@ -36,13 +36,13 @@ Missing data are `null` or empty lists, never absent. With the [SDK](https://doc
 
 ## A picture for the listing
 
-The dossier carries `links.static_image`: a satellite image with the parcel outline. To build your own, draw the polygon as a GeoJSON overlay and let the image fit it with `auto`:
+The dossier carries `links.static_image`: a satellite image with the parcel outline. The link comes without a token; append `?access_token=YOUR_TOKEN` before using it. To build your own, draw the polygon as a GeoJSON overlay and let the image fit it with `auto`:
 
 ```js
 const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
 const outline = { type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry };
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponent(JSON.stringify(outline))})/auto/800x500.webp?access_token=YOUR_TOKEN`;
-document.querySelector("#expose").src = img; // also fine in e-mails and PDFs
+document.querySelector("#expose").src = img; // for e-mails and PDFs render it on your server with a secret token
 ```
 
 Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](https://docs.mapx.at/guides/static-images.md). The image URL contains the token, so use a public token (`mx_pk_…`) with your site as allowed origin for images on web pages, and render images for e-mails and PDFs on your server with a secret token (`mx_sk_…`). The image carries the attribution of its data; keep it visible in the layout ([Attribution](https://docs.mapx.at/reference/attribution.md)).
@@ -77,19 +77,19 @@ const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map
 console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 ```
 
-For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`.
+For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`. The example uses Melk station (`at:43:7226`).
 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:43:7226&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
 **Python**
 
 ```python
 import requests
-r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3},
+r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:43:7226", "limit": 3},
                  headers={"Authorization": "Bearer YOUR_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```

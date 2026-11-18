@@ -83,6 +83,8 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Orthophoto flight blocks tileset](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md): Which flight supplies which orthophoto pixel: winning areas of the BEV surveys with flight period, as vector tiles z6 to z17.
 - [Rest areas tileset (ASFINAG)](https://docs.mapx.at/tilesets/rest-areas.md): Rest areas and truck parking of ASFINAG as vector tiles (tileset rastanlagen) and as the search category rastplatz in the mapx search.
 - [Sharing stations tileset (ÖBB)](https://docs.mapx.at/tilesets/sharing.md): Sharing stations (cargo bikes, bikes) of ÖBB as vector tiles (tileset sharing) and as the search category sharing in the mapx search API.
+- [Cycle routes tileset (GIP.at)](https://docs.mapx.at/tilesets/bike-routes.md): Signed cycle routes and mountain bike trails in Austria from GIP.at, EuroVelo included, as vector tiles (tileset bike-routes) for MapLibre.
+- [GIP points tileset (park and ride, level crossings)](https://docs.mapx.at/tilesets/gip-poi.md): Park and ride, bike and ride, level crossings, bollards, barriers, gates and pedestrian crossings in Austria from GIP.at as vector tiles (tileset gip-poi).
 
 ## Reference
 
@@ -121,7 +123,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Tour planning example: best stop order](https://docs.mapx.at/examples/optimization.md): Click stops on the map and get the best order from the depot and back with the mapx route optimization API: runnable tour planning example.
 - [Public transit route example](https://docs.mapx.at/examples/transit-route.md): Click start and destination and get the walking and riding legs of a public transport journey in Austria with the mapx transit API.
 - [Departures at a stop example](https://docs.mapx.at/examples/departures.md): Click near a public transport stop in Austria and see the next departures: transit departures API with a live map and runnable code.
-- [Traffic flow and incidents example](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible map area: show traffic flow and road incidents in Austria with the mapx traffic API.
+- [Traffic incidents and closures example](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible map area: show road incidents and closures in Austria with the mapx traffic API.
 - [Static image example for a listing](https://docs.mapx.at/examples/static-image.md): Click a place and get a ready-made static map image URL with a pin, for example for a real estate listing: static images API, runnable code.
 - [GeoJSON overlay on the map example](https://docs.mapx.at/examples/geojson-overlay.md): Show your own GeoJSON points, line and polygon over the mapx style, with a popup on click, in MapLibre GL JS. Runnable code to copy.
 - [SDK example: route planner and layers](https://docs.mapx.at/examples/sdk-controls.md): RouteControl with truck profile, LayerControl, search and style switcher: ready-made map controls of the mapx-gl SDK in one runnable example.

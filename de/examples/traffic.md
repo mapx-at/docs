@@ -1,17 +1,17 @@
-# Verkehrslage und Meldungen: Beispiel
+# Verkehrsmeldungen und Sperren: Beispiel
 
 Source: https://docs.mapx.at/de/examples/traffic/
 
-> Verkehrsstil plus die aktiven Meldungen im sichtbaren Kartenausschnitt: Verkehrslage und Störungen in Österreich mit der mapx-Verkehrs-API.
+> Verkehrsstil plus die aktiven Meldungen im sichtbaren Kartenausschnitt: Störungen und Sperren in Österreich mit der mapx-Verkehrs-API.
 
-Der Stil `traffic-day` färbt das Straßennetz nach der aktuellen Verkehrslage. Meldungen (Unfälle, Baustellen, Sperren) kommen von `/v1/traffic/incidents`; das Beispiel lädt die aktiven für den sichtbaren Ausschnitt und zeichnet sie darüber. Eine Linie anklicken zeigt den Text.
+Der Stil `traffic-day` zeigt die aktuellen Meldungen und färbt auf Autobahnen die Abschnitte, auf denen Wechselverkehrszeichen das Tempo beschränken; eine flächendeckende Verkehrslage gibt es nicht. Meldungen (Unfälle, Baustellen, Sperren) kommen von `/v1/traffic/incidents`; das Beispiel lädt die aktiven für den sichtbaren Ausschnitt und zeichnet sie darüber. Eine Linie anklicken zeigt den Text.
 
 ## Code
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
-// Traffic: live traffic flow as a style plus the current incident list for the visible area.
+// Traffic: the traffic-day style (reports, sign speed limits on motorways) plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -33,7 +33,11 @@ map.on('load', () => {
     const res = await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}&active=true&limit=50`, AUTH);
     const fc = await res.json();
     map.getSource('incidents').setData(fc);
-    list.textContent = `${fc.features.length} active incident(s) in view` + (fc.features[0] ? `, e.g. ${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '');
+    const de = document.documentElement.lang.startsWith('de'); // page language: German or English text
+    const first = fc.features[0] ? `${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '';
+    list.textContent = de
+      ? `${fc.features.length} aktive Meldung(en) im Ausschnitt` + (first ? `, z. B. ${first}` : '')
+      : `${fc.features.length} active incident(s) in view` + (first ? `, e.g. ${first}` : '');
   };
   map.on('moveend', load);
   load();

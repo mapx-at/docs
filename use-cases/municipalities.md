@@ -33,7 +33,7 @@ const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}&acces
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
-While the person types, offer [address autofill](https://docs.mapx.at/examples/autofill.md); for lists with many addresses use `POST /v1/geocode/batch` ([Search](https://docs.mapx.at/guides/search.md)).
+While the person types, offer [address autofill](https://docs.mapx.at/examples/autofill.md); for lists with many addresses use `POST /v1/geocode/batch` ([Search](https://docs.mapx.at/guides/search.md)), secret token (`mx_sk_…`) from a server only, otherwise `403 pk-not-allowed`.
 
 ## Departures at the town hall
 
@@ -62,7 +62,7 @@ For a plain picture without JavaScript (print, newsletter, page without scripts)
      src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=YOUR_TOKEN">
 ```
 
-Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md). The `<img>` URL carries the token: use a public token (`mx_pk_…`) with your website as allowed origin. Keep the attribution of the data visible ([Attribution](https://docs.mapx.at/reference/attribution.md)).
+Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md). The `<img>` URL carries the token: use a public token (`mx_pk_…`) with your website as allowed origin; render images for e-mails or PDFs on your server with a secret token (`mx_sk_…`). Keep the attribution of the data visible ([Attribution](https://docs.mapx.at/reference/attribution.md)).
 
 ## Next steps
 

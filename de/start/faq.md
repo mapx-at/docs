@@ -8,6 +8,10 @@ Source: https://docs.mapx.at/de/start/faq/
 
 Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) registrieren, Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
+## Warum bekomme ich 401 oder 403?
+
+`401` heißt: Token fehlt, ist ungültig oder abgelaufen. `403` heißt: Er ist gesperrt, ein öffentlicher Token wird von einer nicht erlaubten Website oder App verwendet (`origin-not-allowed`), oder ein öffentlicher Token ruft einen Endpunkt auf, der einen geheimen Token braucht (`pk-not-allowed`). Der `code` im Fehlerkörper (und der Header `X-Mapx-Reason`) nennt den Grund. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md) und [Fehlercodes](https://docs.mapx.at/de/api/errors.md#anmeldefehler).
+
 ## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
 
 Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
@@ -66,4 +70,4 @@ Die früheren deutschen Style-, Tileset- und Kategorienamen funktionieren bis 20
 
 ## Wo melde ich ein Problem?
 
-Ein Issue in der [GitHub-Organisation mapx-at](https://github.com/mapx-at) eröffnen.
+An [support@mapx.at](mailto:support@mapx.at) schreiben (technische Fragen und Fehler) oder an [info@mapx.at](mailto:info@mapx.at) (alles andere).

@@ -83,6 +83,8 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Orthophoto-Flugblöcke (Tileset)](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md): Welcher Bildflug liefert welches Orthophoto-Pixel: Gewinnerflächen der BEV-Operate mit Flugzeitraum, als Vektorkacheln z6 bis z17.
 - [Rastanlagen-Tileset (ASFINAG)](https://docs.mapx.at/de/tilesets/rest-areas.md): Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Tileset rastanlagen) und als Suchkategorie rastplatz in der mapx-Suche.
 - [Sharing-Stationen-Tileset (ÖBB)](https://docs.mapx.at/de/tilesets/sharing.md): Sharing-Stationen (Lastenräder, Fahrräder) der ÖBB als Vektorkacheln (Tileset sharing) und als Suchkategorie sharing in der mapx-Such-API.
+- [Radrouten-Tileset (GIP.at)](https://docs.mapx.at/de/tilesets/bike-routes.md): Beschilderte Radrouten und MTB-Strecken in Österreich aus GIP.at, inklusive EuroVelo, als Vektorkacheln (Tileset bike-routes) für MapLibre.
+- [GIP-Punkte-Tileset (Park & Ride, Bahnübergänge)](https://docs.mapx.at/de/tilesets/gip-poi.md): Park & Ride, Bike & Ride, Bahnübergänge, Poller, Schranken, Tore und Schutzwege in Österreich aus GIP.at als Vektorkacheln (Tileset gip-poi).
 
 ## Referenz
 
@@ -121,7 +123,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Tourenplanung: Beispiel Stopp-Reihenfolge](https://docs.mapx.at/de/examples/optimization.md): Haltestellen auf der Karte anklicken und die beste Reihenfolge ab Depot und zurück mit der mapx-Routenoptimierung erhalten: lauffähiges Beispiel.
 - [ÖV-Verbindung: Beispiel](https://docs.mapx.at/de/examples/transit-route.md): Start und Ziel anklicken und die Fuß- und Fahrabschnitte einer ÖV-Verbindung in Österreich mit der mapx-ÖV-API erhalten; lauffähiger Code.
 - [Abfahrten an einer Haltestelle: Beispiel](https://docs.mapx.at/de/examples/departures.md): Nahe an eine ÖV-Haltestelle in Österreich klicken und die nächsten Abfahrten sehen: ÖV-Abfahrts-API mit Live-Karte und lauffähigem Code.
-- [Verkehrslage und Meldungen: Beispiel](https://docs.mapx.at/de/examples/traffic.md): Verkehrsstil plus die aktiven Meldungen im sichtbaren Kartenausschnitt: Verkehrslage und Störungen in Österreich mit der mapx-Verkehrs-API.
+- [Verkehrsmeldungen und Sperren: Beispiel](https://docs.mapx.at/de/examples/traffic.md): Verkehrsstil plus die aktiven Meldungen im sichtbaren Kartenausschnitt: Störungen und Sperren in Österreich mit der mapx-Verkehrs-API.
 - [Static Image fürs Exposé: Beispiel](https://docs.mapx.at/de/examples/static-image.md): Ort anklicken und eine fertige Bild-URL einer statischen Karte mit Marker erhalten, etwa fürs Exposé: Static-Images-API, lauffähiger Code.
 - [Eigenes GeoJSON auf der Karte: Beispiel](https://docs.mapx.at/de/examples/geojson-overlay.md): Eigene GeoJSON-Punkte, -Linie und -Fläche über dem mapx-Stil zeigen, mit Popup per Klick, in MapLibre GL JS. Lauffähiger Code zum Kopieren.
 - [SDK-Beispiel: Routenplaner und Ebenen](https://docs.mapx.at/de/examples/sdk-controls.md): RouteControl mit Lkw-Profil, LayerControl, Suche und Stilumschalter: fertige Kartenwerkzeuge des SDK mapx-gl in einem lauffähigen Beispiel.

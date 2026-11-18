@@ -35,7 +35,8 @@ async function laden() {
 
 function zeigen(param, i) {
   const t = times[Math.min(i, times.length - 1)];
-  document.getElementById('info').textContent = `${param}, ${t} (UTC), Quelle: GeoSphere Austria, CC BY 4.0`;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `${param}, ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
   if (map.getLayer('wetter')) map.removeLayer('wetter');
   if (map.getSource('wetter')) map.removeSource('wetter');
   map.addSource('wetter', {

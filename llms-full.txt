@@ -48,11 +48,11 @@ Source: https://docs.mapx.at/start/what-is-mapx/
 
 > mapx is a set of maps and location APIs for Austria built only on official open data: tiles, geocoding, routing, elevation, transit and more.
 
-mapx is a set of maps and location APIs for Austria. All data comes from official open sources (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others), so there is no usage-based pricing. A free account and API token are required ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
+mapx is a set of maps and location APIs for Austria. All data comes from official open sources (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB, Copernicus Sentinel-2 and others; full list under [Sources and licenses](https://docs.mapx.at/reference/attribution.md)), so there is no usage-based pricing. A free account and API token are required ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
 
 | Product | What you get | Start |
 |---|---|---|
-| Maps | Vector and raster tiles, ready-made styles (`streets`, `satellite`, `outdoors`), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
+| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `traffic-day`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
 | Search | Geocoding, type-ahead Search Box, address autofill and validation | [Search](https://docs.mapx.at/guides/search.md) |
 | Navigation | Routes for car, truck, bike and foot, isochrones, matrices, map matching, tolls | [Navigation](https://docs.mapx.at/guides/navigation.md) |
 | Traffic | Incident reports, motorway speed limits, a traffic layer | [Traffic](https://docs.mapx.at/guides/traffic.md) |
@@ -100,7 +100,7 @@ The OpenAPI description `https://api.mapx.at/v1/openapi.json` and CORS preflight
 
 | Kind | Prefix | Use | Restrictions |
 |---|---|---|---|
-| Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
+| Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Not for `POST /v1/optimization`, `POST /v1/geocode/batch` and `/v1/corridor-graph` (otherwise `403 pk-not-allowed`). Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
 | Secret | `mx_sk_…` | Servers, scripts and CI. Never put it into a web page or an app. | No origin binding; optionally bound to IP ranges (CIDR). |
 | AI assistant (MCP) | `mx_mcp_…` | AI assistants and agents that use the [mapx MCP server](https://docs.mapx.at/guides/mcp.md). | Created by hand or by signing in with your account (then shown as "connected via <host>"). Works only at `https://mcp.mapx.at/mcp`, no origin or IP binding, optional expiry date. Direct API calls with it answer `403` `mcp-token-only`. |
 
@@ -119,7 +119,7 @@ curl -s "https://api.mapx.at/v1/geocode?q=Melk&limit=1&access_token=YOUR_TOKEN" 
 ```
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR_TOKEN"); // in the browser use access_token; Node can use the header
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR_TOKEN"); // the query parameter works everywhere; the header works in the browser too
 ```
 
 **Maps with MapLibre GL JS.** The simplest way is a `transformRequest` that adds the token to every request to `mapx.at`, never to other hosts:
@@ -267,13 +267,13 @@ Source: https://docs.mapx.at/start/first-search/
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1" | jq '.features[0] | {place_name, center}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1" | jq '.features[0] | {place_name, center}'
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1&access_token=YOUR_TOKEN");
 const { features } = await res.json();
 console.log(features[0].place_name, features[0].center); // center is [lon, lat]
 ```
@@ -283,19 +283,19 @@ console.log(features[0].place_name, features[0].center); // center is [lon, lat]
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/geocode", params={"q": "Stephansplatz Wien", "limit": 1}, headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/geocode", params={"q": "Stephansplatz 1, Wien", "types": "address", "limit": 1}, headers={"Authorization": "Bearer YOUR_TOKEN"})
 feature = res.json()["features"][0]
 print(feature["place_name"], feature["center"])
 ```
 
-The response is a GeoJSON `FeatureCollection`. Each feature has `place_name`, `center` (`lon,lat`) and `geometry`. Pass `types=address` to limit results to addresses.
+The response is a GeoJSON `FeatureCollection`. Each feature has `place_name`, `center` (`lon,lat`) and `geometry`. `types=address` limits the results to addresses; without it a street or place can come first even for a house number.
 
 ## Show the result on the map
 
 Add this to the page from [First map](https://docs.mapx.at/start/first-map.md) after `new maplibregl.Map(...)` (store the map in `const map`):
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%20Wien&limit=1&access_token=YOUR_TOKEN");
+const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1&access_token=YOUR_TOKEN");
 const [hit] = (await res.json()).features;
 new maplibregl.Marker().setLngLat(hit.center).addTo(map);
 map.flyTo({ center: hit.center, zoom: 16 });
@@ -345,7 +345,7 @@ route = requests.get(url, params={"overview": "simplified"}, headers={"Authoriza
 print(route["distance"] / 1000, "km", route["duration"] / 60, "min")
 ```
 
-`distance` is in meters, `duration` in seconds. Other profiles: `driving-truck`, `cycling`, `walking`. See the [Navigation guide](https://docs.mapx.at/guides/navigation.md).
+`distance` is in meters, `duration` in seconds. Other profiles: `driving-traffic` (avoids reported closures), `driving-truck`, `cycling`, `cycling-mtb` and `walking`; parameters per profile in the [Directions reference](https://docs.mapx.at/api/directions.md). See the [Navigation guide](https://docs.mapx.at/guides/navigation.md).
 
 ## Draw it on the map
 
@@ -420,7 +420,7 @@ Yes, a free account and API token. Register at [account.mapx.at](https://account
 
 ## Why do I get 401 or 403?
 
-`401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`). The `code` in the error body names the reason. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+`401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`), or a public token calls an endpoint that needs a secret token (`pk-not-allowed`). The `code` in the error body (and the `X-Mapx-Reason` header) names the reason. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [error codes](https://docs.mapx.at/api/errors.md#authentication-errors).
 
 ## Can I use mapx with Claude, ChatGPT or Cursor?
 
@@ -6974,10 +6974,10 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
   "title": "Invalid parameter",
   "status": 400,
-  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi)",
+  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, parcel, road_ref)",
   "code": "invalid-parameter",
   "param": "types",
-  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi"]
+  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "parcel", "road_ref"]
 }
 ```
 
@@ -6988,7 +6988,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 | `type` | URI of the error type (anchor on this page) |
 | `title` | Short summary of the type |
 | `status` | HTTP status |
-| `detail` | Explanation for this request; English by default |
+| `detail` | Explanation for this request; English by default. Missing on authentication and token errors (see below) |
 | `code` | Stable machine-readable code, equals the anchor |
 | `param` | Offending parameter (where applicable) |
 | `allowed` | Accepted values for enumerations (where applicable) |
@@ -6997,6 +6997,12 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 
 Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Requests without a token get `401` `missing-token`.
 
+These answers come from the token check in front of the API and are terser than the others: `title` is generic (`Unauthorized` for 401, `Forbidden` for 403, `Too many requests` for a 429 from the per-token minute limit), always English, and there is no `detail`. Branch on `code` or `X-Mapx-Reason`.
+
+```json
+{"type": "https://docs.mapx.at/api/errors/#missing-token", "title": "Unauthorized", "status": 401, "code": "missing-token"}
+```
+
 ```bash
 # with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
 curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Melk" | head -12
@@ -7004,7 +7010,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 
 ## Language
 
-`title` and `detail` are English by default. Send `Accept-Language: de` to get German texts; `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
+`title` and `detail` are English by default. Except for authentication errors, send `Accept-Language: de` to get German texts; `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
 
 ## Catalog
 
@@ -7015,18 +7021,18 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`invalid-parameter`](#invalid-parameter) | 400 | Invalid parameter |
 | [`invalid-coordinates`](#invalid-coordinates) | 400 | Invalid coordinates |
 | [`invalid-body`](#invalid-body) | 400 | Invalid request body |
-| [`missing-token`](#missing-token) | 401 | Token missing |
-| [`invalid-token`](#invalid-token) | 401 | Invalid token |
-| [`token-expired`](#token-expired) | 401 | Token expired |
-| [`token-blocked`](#token-blocked) | 403 | Token blocked |
-| [`origin-not-allowed`](#origin-not-allowed) | 403 | Origin not allowed |
-| [`origin-missing`](#origin-missing) | 403 | Origin missing |
-| [`pk-not-allowed`](#pk-not-allowed) | 403 | Public token not allowed here |
-| [`app-not-allowed`](#app-not-allowed) | 403 | App not allowed |
-| [`ip-not-allowed`](#ip-not-allowed) | 403 | IP address not allowed |
-| [`mcp-token-only`](#mcp-token-only) | 403 | MCP token only valid at the MCP server |
+| [`missing-token`](#missing-token) | 401 | Unauthorized (token missing) |
+| [`invalid-token`](#invalid-token) | 401 | Unauthorized (invalid token) |
+| [`token-expired`](#token-expired) | 401 | Unauthorized (token expired) |
+| [`token-blocked`](#token-blocked) | 403 | Forbidden (token blocked) |
+| [`origin-not-allowed`](#origin-not-allowed) | 403 | Forbidden (origin not allowed) |
+| [`origin-missing`](#origin-missing) | 403 | Forbidden (origin missing) |
+| [`pk-not-allowed`](#pk-not-allowed) | 403 | Forbidden (public token not allowed here) |
+| [`app-not-allowed`](#app-not-allowed) | 403 | Forbidden (app not allowed) |
+| [`ip-not-allowed`](#ip-not-allowed) | 403 | Forbidden (IP address not allowed) |
+| [`mcp-token-only`](#mcp-token-only) | 403 | Forbidden (MCP token only valid at the MCP server) |
 | [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
-| [`invalid-path`](#invalid-path) | 403 | Invalid request path |
+| [`invalid-path`](#invalid-path) | 403 | Forbidden (invalid request path) |
 | [`unknown-path`](#unknown-path) | 404 | Unknown path |
 | [`not-found`](#not-found) | 404 | Not found |
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
@@ -7037,11 +7043,14 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Method not allowed |
 | [`unprocessable`](#unprocessable) | 422 | Unprocessable request |
-| [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded |
+| [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded or Too many requests |
 | [`internal-error`](#internal-error) | 500 | Internal error |
 | [`upstream-error`](#upstream-error) | 502 | Upstream error |
 | [`service-unavailable`](#service-unavailable) | 503 | Service unavailable |
 | [`service-busy`](#service-busy) | 503 | Service busy |
+| [`cache-unavailable`](#cache-unavailable) | 503 | Authorization backend unavailable |
+
+For authentication errors the parentheses give the meaning; the API only sends the generic title in front.
 
 ### bad-request
 
@@ -7097,7 +7106,7 @@ What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and se
 
 The token is malformed or unknown (also after it was deleted or rotated).
 
-What to do: Copy the token again from your account, check for a stray space or line break, and use the current token. Tokens start with `mx_pk_` or `mx_sk_`.
+What to do: Copy the token again from your account, check for a stray space or line break, and use the current token. Tokens start with `mx_pk_`, `mx_sk_` or (MCP server only) `mx_mcp_`.
 
 ### token-expired
 
@@ -7127,7 +7136,7 @@ What to do: Add the origin to the token (for development also `localhost`), or c
 
 **403** · Origin missing
 
-A public token was used without `Origin` and without `Referer`, so the site cannot be checked.
+A public token restricted to websites was used without `Origin` and without `Referer`, so the site cannot be checked.
 
 What to do: Call from a browser page, or use a secret token on a server.
 
@@ -7135,7 +7144,7 @@ What to do: Call from a browser page, or use a secret token on a server.
 
 **403** · Public token not allowed here
 
-A public token only allows read access (`GET`, `HEAD`) to the public products.
+A public token only allows read access (`GET`, `HEAD`) to the public products. Batch geocoding (`POST /v1/geocode/batch`), optimization (`POST /v1/optimization`) and `corridor-graph` need a secret token.
 
 What to do: Use a secret token (`mx_sk_`) from a server for this request.
 
@@ -7263,7 +7272,7 @@ What to do: Change the points or the time; read `detail`.
 
 **429** · Rate limit exceeded
 
-Too many requests from your token (without a valid token: your IP address) in this endpoint group. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
+Too many requests. `429` has two causes: the limit per IP address and zone (endpoint group; answer with `title` `Rate limit exceeded` and a `detail`) or the per-minute limit of the token (answer from the token check with `title` `Too many requests`, no `detail`). Both carry `Retry-After`. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
 
@@ -7298,6 +7307,14 @@ What to do: Retry later.
 The server is at its concurrency limit.
 
 What to do: Wait `Retry-After` seconds and retry.
+
+### cache-unavailable
+
+**503** · Authorization backend unavailable
+
+The store behind the token check is briefly unreachable and the token is not in the local cache. The request is refused to stay on the safe side.
+
+What to do: Retry after a few seconds.
 
 See also: [Access and limits](https://docs.mapx.at/start/access-and-limits.md) for rate limits and caching.
 
@@ -7465,6 +7482,8 @@ Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](http
 | [`orthophoto-flight-blocks`](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md) | vector | z6–17 | 2025-10-03 |
 | [`rest-areas`](https://docs.mapx.at/tilesets/rest-areas.md) | vector | z7–14 | 20261107 |
 | [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261107 |
+| [`bike-routes`](https://docs.mapx.at/tilesets/bike-routes.md) | vector | z5–14 | 20260708 |
+| [`gip-poi`](https://docs.mapx.at/tilesets/gip-poi.md) | vector | z12–15 | 20260708 |
 
 Not in the table because it is replaced daily instead of versioned: [Sentinel-2 current](https://docs.mapx.at/tilesets/sentinel2.md) (`sentinel2`, raster, z5 to z13).
 
@@ -8465,6 +8484,49 @@ The source file has one location of the Leoben station "Waasenbrücke" with a la
 
 ---
 
+# Cycle routes tileset (GIP.at)
+
+Source: https://docs.mapx.at/tilesets/bike-routes/
+
+> Signed cycle routes and mountain bike trails in Austria from GIP.at, EuroVelo included, as vector tiles (tileset bike-routes) for MapLibre.
+
+Cycle routes and mountain bike trails from the open data set of the Austrian road graph platform (GIP.at, GIPOGD), EuroVelo routes included. In the style `streets` they form the layer group `bike_routes` (off by default); see [Tourism](https://docs.mapx.at/use-cases/tourism.md).
+
+> **Warning:** **Attribution**
+> 
+> Datenquelle: GIP.at, CC BY 4.0
+
+| | |
+|---|---|
+| Tileset | `bike-routes`, vector, z5 to z14, as of 20260708 |
+| TileJSON | `https://api.mapx.at/v1/tiles/bike-routes.json` |
+| Layer | `bike_routes` (lines) with `name`, `ref`, `network`, `type`, `difficulty`, `signed`, `min_zoom` |
+| Style | group `bike_routes` in `streets`, off by default |
+| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `bike-routes` as tileset |
+
+---
+
+# GIP points tileset (park and ride, level crossings)
+
+Source: https://docs.mapx.at/tilesets/gip-poi/
+
+> Park and ride, bike and ride, level crossings, bollards, barriers, gates and pedestrian crossings in Austria from GIP.at as vector tiles (tileset gip-poi).
+
+Points from the Austrian road graph platform (GIP.at, GIPOGD): park and ride, bike and ride, level crossings, bollards, barriers and gates, and pedestrian crossings. The kind is in `kind` (for example `bollard`, `crosswalk`).
+
+> **Warning:** **Attribution**
+> 
+> Datenquelle: GIP.at, CC BY 4.0
+
+| | |
+|---|---|
+| Tileset | `gip-poi`, vector, z12 to z15, as of 20260708 |
+| TileJSON | `https://api.mapx.at/v1/tiles/gip-poi.json` |
+| Layer | `gip_poi` (points) with `kind`, `name`, `min_zoom` |
+| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `gip-poi` as tileset |
+
+---
+
 # Reference: tiles, styles, attribution
 
 Source: https://docs.mapx.at/reference/
@@ -8901,7 +8963,12 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `orthophoto` | Orthophoto: BEV (CC BY 4.0) |
-| `orthophoto-flight-blocks` | BEV, CC BY 4.0 |
+| `orthophoto-flight-blocks` | The TileJSON currently carries no attribution text. The flight blocks are metadata of the BEV orthophoto, so credit `BEV, CC BY 4.0`. |
+| `bike-routes` | Datenquelle: GIP.at, CC BY 4.0 |
+| `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
+| `rastanlagen` | ASFINAG, CC BY 4.0 |
+| `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
+| `sentinel2`, `sentinel2-datum`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
 
 ## Text per API
 
@@ -8914,6 +8981,7 @@ JSON responses with data carry a top-level `attribution` field. Show it when you
 | Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
 | Weather | GeoSphere Austria, CC BY 4.0 |
+| Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
 | Climate, `properties.climate` of the parcel dossier | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Parcel, Tilequery (cadastre) | BEV – DKM, CC BY 4.0 |
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
@@ -8929,6 +8997,15 @@ Source: https://docs.mapx.at/reference/changelog/
 > Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates and sunset notices.
 
 Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](https://docs.mapx.at/api/migration.md).
+
+## 2026-11-18
+
+### Added
+- MCP server `https://mcp.mapx.at/mcp` with 23 tools for AI assistants (Claude, ChatGPT, Cursor); its own token type AI assistant (`mx_mcp_`) that only works at the MCP server, or sign-in with the mapx account (OAuth). New errors `403` `mcp-token-only` and `mcp-token-required`. See [MCP server](https://docs.mapx.at/guides/mcp.md).
+- [Terms of use](https://mapx.at/en/terms/), linked from the account, sign-up and docs.
+
+### Changed
+- Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
 
 ## 2026-11-08
 
@@ -9575,7 +9652,8 @@ async function laden() {
 
 function zeigen(param, i) {
   const t = times[Math.min(i, times.length - 1)];
-  document.getElementById('info').textContent = `${param}, ${t} (UTC), Quelle: GeoSphere Austria, CC BY 4.0`;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `${param}, ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
   if (map.getLayer('wetter')) map.removeLayer('wetter');
   if (map.getSource('wetter')) map.removeSource('wetter');
   map.addSource('wetter', {
@@ -9628,7 +9706,8 @@ let times = [], timer = null;
 function zeigen(i) {
   const t = times[i];
   document.getElementById('zeit').value = i;
-  document.getElementById('info').textContent = `Radar-Nowcast ${t} (UTC), Quelle: GeoSphere Austria, CC BY 4.0`;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `Radar nowcast ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
   // one layer per time step, only the selected one is visible: tiles are already loaded when playing
   times.forEach((_, k) => map.setLayoutProperty('radar-' + k, 'visibility', k === i ? 'visible' : 'none'));
 }
@@ -10153,6 +10232,8 @@ Source: https://docs.mapx.at/examples/optimization/
 
 The optimization API orders stops for one or more vehicles, with service times, capacities and time windows. Here one vehicle starts and ends in Melk. Click up to nine stops; every click plans again. The order is drawn with one directions request through all stops.
 
+`POST /v1/optimization` needs a secret token (`mx_sk_…`); a public token gets `403 pk-not-allowed`. In your own application send this request through your server, not straight from the web page.
+
 ## Code
 
 ````js
@@ -10307,20 +10388,20 @@ map.on("load", () => {
 
 ---
 
-# Traffic flow and incidents example
+# Traffic incidents and closures example
 
 Source: https://docs.mapx.at/examples/traffic/
 
-> Traffic style plus the active incidents of the visible map area: show traffic flow and road incidents in Austria with the mapx traffic API.
+> Traffic style plus the active incidents of the visible map area: show road incidents and closures in Austria with the mapx traffic API.
 
-The style `traffic-day` colours the road network by current flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
+The style `traffic-day` shows the current reports and colours the motorway sections where variable message signs limit the speed; there is no area-wide traffic flow. Incidents (accidents, roadworks, closures) come from `/v1/traffic/incidents`; the example loads the active ones for the visible area and draws them on top. Click a line for the text.
 
 ## Code
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
-// Traffic: live traffic flow as a style plus the current incident list for the visible area.
+// Traffic: the traffic-day style (reports, sign speed limits on motorways) plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -10342,7 +10423,11 @@ map.on('load', () => {
     const res = await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}&active=true&limit=50`, AUTH);
     const fc = await res.json();
     map.getSource('incidents').setData(fc);
-    list.textContent = `${fc.features.length} active incident(s) in view` + (fc.features[0] ? `, e.g. ${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '');
+    const de = document.documentElement.lang.startsWith('de'); // page language: German or English text
+    const first = fc.features[0] ? `${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '';
+    list.textContent = de
+      ? `${fc.features.length} aktive Meldung(en) im Ausschnitt` + (first ? `, z. B. ${first}` : '')
+      : `${fc.features.length} active incident(s) in view` + (first ? `, e.g. ${first}` : '');
   };
   map.on('moveend', load);
   load();
@@ -10523,13 +10608,13 @@ Missing data are `null` or empty lists, never absent. With the [SDK](https://doc
 
 ## A picture for the listing
 
-The dossier carries `links.static_image`: a satellite image with the parcel outline. To build your own, draw the polygon as a GeoJSON overlay and let the image fit it with `auto`:
+The dossier carries `links.static_image`: a satellite image with the parcel outline. The link comes without a token; append `?access_token=YOUR_TOKEN` before using it. To build your own, draw the polygon as a GeoJSON overlay and let the image fit it with `auto`:
 
 ```js
 const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
 const outline = { type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry };
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponent(JSON.stringify(outline))})/auto/800x500.webp?access_token=YOUR_TOKEN`;
-document.querySelector("#expose").src = img; // also fine in e-mails and PDFs
+document.querySelector("#expose").src = img; // for e-mails and PDFs render it on your server with a secret token
 ```
 
 Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](https://docs.mapx.at/guides/static-images.md). The image URL contains the token, so use a public token (`mx_pk_…`) with your site as allowed origin for images on web pages, and render images for e-mails and PDFs on your server with a secret token (`mx_sk_…`). The image carries the attribution of its data; keep it visible in the layout ([Attribution](https://docs.mapx.at/reference/attribution.md)).
@@ -10564,19 +10649,19 @@ const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map
 console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
 ```
 
-For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`.
+For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`. The example uses Melk station (`at:43:7226`).
 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:43:7226&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
 ```
 
 **Python**
 
 ```python
 import requests
-r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:49:1320", "limit": 3},
+r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:43:7226", "limit": 3},
                  headers={"Authorization": "Bearer YOUR_TOKEN"}).json()
 print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
 ```
@@ -10597,7 +10682,7 @@ Source: https://docs.mapx.at/use-cases/logistics/
 
 All requests need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); in server code use a secret token (`mx_sk_…`) and never ship it in a web page.
 
-Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic situation. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
+Fleet and delivery software needs a route that a truck can really drive, travel times for many pairs, a good order of stops and the current traffic reports. All four are one request each. Coordinates are `lon,lat`, times are seconds, distances metres.
 
 ## Truck routes
 
@@ -10630,7 +10715,7 @@ console.log(m.durations[0][1] / 60, "min", m.distances[0][1] / 1000, "km"); // V
 
 ## Plan the tour
 
-`POST /v1/optimization` assigns jobs to vehicles and orders them: capacity, time windows, service times (seconds), start and end per vehicle. At most 10 vehicles, 50 jobs and 60 distinct locations per request.
+`POST /v1/optimization` assigns jobs to vehicles and orders them: capacity, time windows, service times (seconds), start and end per vehicle. At most 10 vehicles, 50 jobs and 60 distinct locations per request. Secret token (`mx_sk_…`) from a server only; a public token gets `403 pk-not-allowed`.
 
 ```js
 const body = {
@@ -10650,7 +10735,7 @@ Draw the result with one `directions` request through `tour.routes[0].steps` loc
 
 ## Traffic
 
-Use `driving-traffic` for a route with the current traffic and closures. Incidents on the route come with `incidents=true` in `legs[].incidents`. For a region, list the active incidents or show the traffic style:
+`driving-traffic` uses the reports of ASFINAG and EVIS.AT: binding closures are avoided, non-binding closures are avoided where possible, and on motorways the speed limits currently shown on variable message signs slow down the travel time. There is no area-wide measured traffic flow (speeds on every road, congestion as "flow"); reported jams without a closure do not change the route, they only show up as incidents. Incidents on the route come with `incidents=true` in `legs[].incidents`. For a region, list the active incidents or show the traffic style:
 
 ```js
 const bbox = [14.5, 47.8, 16.9, 48.6]; // Lower Austria
@@ -10658,7 +10743,7 @@ const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incident
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 
-The map style `traffic-day` shows the flow; see the [example](https://docs.mapx.at/examples/traffic.md). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
+The map style `traffic-day` shows the current reports and closures and, on motorways, the sections with a speed limit from variable message signs (no area-wide traffic flow); see the [example](https://docs.mapx.at/examples/traffic.md). Traffic data: ASFINAG / EVIS.AT (CC BY 4.0).
 
 ## Next steps
 
@@ -10782,7 +10867,7 @@ const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}&acces
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
-While the person types, offer [address autofill](https://docs.mapx.at/examples/autofill.md); for lists with many addresses use `POST /v1/geocode/batch` ([Search](https://docs.mapx.at/guides/search.md)).
+While the person types, offer [address autofill](https://docs.mapx.at/examples/autofill.md); for lists with many addresses use `POST /v1/geocode/batch` ([Search](https://docs.mapx.at/guides/search.md)), secret token (`mx_sk_…`) from a server only, otherwise `403 pk-not-allowed`.
 
 ## Departures at the town hall
 
@@ -10811,7 +10896,7 @@ For a plain picture without JavaScript (print, newsletter, page without scripts)
      src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=YOUR_TOKEN">
 ```
 
-Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md). The `<img>` URL carries the token: use a public token (`mx_pk_…`) with your website as allowed origin. Keep the attribution of the data visible ([Attribution](https://docs.mapx.at/reference/attribution.md)).
+Show your own data (playgrounds, collection points, closures) as [GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md). The `<img>` URL carries the token: use a public token (`mx_pk_…`) with your website as allowed origin; render images for e-mails or PDFs on your server with a secret token (`mx_sk_…`). Keep the attribution of the data visible ([Attribution](https://docs.mapx.at/reference/attribution.md)).
 
 ## Next steps
 
