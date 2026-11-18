@@ -144,4 +144,4 @@ style: {
 
 - Alle Layer, Felder und Werte: [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md).
 - Höhenlinien und Beschriftung darüberlegen: [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md).
-- Karte für den Druck oder als Offline-Datei: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
+- Karte als Bild für den Druck: [Static Images](https://docs.mapx.at/de/api/static-images.md).

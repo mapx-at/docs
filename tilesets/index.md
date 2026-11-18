@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/tilesets/
 
 > All mapx tilesets for Austria with type, zoom range and source date: basemap, cadastre, contours, orthophoto, terrain and surface models.
 
-Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and as one immutable [PMTiles](https://docs.protomaps.com/pmtiles/) file (the source date is part of the file name). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and is part of the [styles](https://docs.mapx.at/api/styles.md). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 | Tileset | Type | Zoom | As of |
 |---|---|---|---|
@@ -34,4 +34,4 @@ The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
 ## Next
 
 - [Maps guide](https://docs.mapx.at/guides/maps.md)
-- [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md)
+- [Styles API](https://docs.mapx.at/api/styles.md)

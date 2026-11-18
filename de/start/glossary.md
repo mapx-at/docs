@@ -22,7 +22,7 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **Orthophoto.** Entzerrte Luftaufnahme.
 
-**PMTiles.** Einzeldatei-Archiv von Tiles, gelesen mit HTTP-Range-Requests. Jedes Tileset ist als PMTiles verfügbar.
+**PMTiles.** Einzeldatei-Archiv von Tiles, gelesen mit HTTP-Range-Requests. Die mapx-Styles lesen ihre Kacheln technisch aus PMTiles; Zugriff für eigene Anwendungen über Style, TileJSON oder `{z}/{x}/{y}`.
 
 **Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 

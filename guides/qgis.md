@@ -2,11 +2,11 @@
 
 Source: https://docs.mapx.at/guides/qgis/
 
-> Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
+> Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection and vector tile connection.
 
 **Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download. You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); append `?access_token=YOUR_TOKEN` to every layer URL. Use a secret token (`mx_sk_…`) on your own computer: a public token only works for its allowed origins, and QGIS is not a website.
 
-**Prerequisites:** QGIS 3.x (3.32 or newer for direct PMTiles).
+**Prerequisites:** QGIS 3.x.
 
 ## Orthophoto as an XYZ layer
 
@@ -52,20 +52,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 
 The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) and `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
 
-## PMTiles directly (QGIS 3.32 and newer)
-
-Vector tilesets can also be opened directly as a PMTiles file from QGIS 3.32, locally or over HTTP. The file name with its cut-off date is on each [product page](https://docs.mapx.at/tilesets/index.md) under key figures.
-
-1. Browser panel, right-click **Vector Tiles**, **New Generic Connection**.
-2. Set the **Service type** to PMTiles (or pick a local file) and enter the file as URL: `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
-3. Save with OK and load it into the map. QGIS reads only the required tiles via HTTP range.
-
-Imagery and elevation tiles (orthophoto, DTM, DSM) are added through the XYZ connection above.
-
-> If your QGIS version does not offer the PMTiles service type, use the vector tile connection above; it delivers the same tiles.
-
 ## Next steps
 
 - Understand the elevation model: [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md).
-- Keep data locally: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
 - Credits in maps and reports: [Attribution](https://docs.mapx.at/reference/attribution.md).

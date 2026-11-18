@@ -20,7 +20,6 @@ Contour lines for all of Austria as vector tiles, derived from the [DTM](https:/
 
 | Property | Value |
 |---|---|
-| File | `hoehenlinien-20250915-2037a3df.pmtiles` |
 | Reference date | `2025-09-15` |
 | Format | `mvt` |
 | Zoom levels | `z10–z16` |
@@ -43,13 +42,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 

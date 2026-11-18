@@ -20,7 +20,6 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 
 | Property | Value |
 |---|---|
-| File | `mapx-kataster-20260401-e4504d72.pmtiles` |
 | Reference date | `2026-04-01` |
 | Format | `mvt` |
 | Zoom levels | `z16–z16` |
@@ -43,13 +42,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 

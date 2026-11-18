@@ -76,7 +76,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TO
 
 ## Offline und Massennutzung
 
-Jedes Tileset ist auch eine einzelne PMTiles-Datei. Einmal herunterladen statt Tiles abzurufen: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
+Kacheln und Tilesets gibt es nur über die API: Style, TileJSON oder `{z}/{x}/{y}`. Ganze Dateien zum Herunterladen bietet mapx nicht an. Für viele Anfragen die Kacheln im Client cachen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
 > Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 

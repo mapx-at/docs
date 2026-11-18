@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/api/tiles/
 
 > Tiles API for Austria: tileset list, TileJSON and XYZ tiles as vector, raster and elevation (Terrain-RGB), with parameters and examples.
 
-Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. The whole product is also available as one [PMTiles](https://docs.protomaps.com/pmtiles/) file; see [Tilesets](https://docs.mapx.at/tilesets/index.md).
+Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. All products: [Tilesets](https://docs.mapx.at/tilesets/index.md).
 
 Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 

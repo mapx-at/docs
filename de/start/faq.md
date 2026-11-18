@@ -30,11 +30,11 @@ Jedes Tileset hat ein Quelldatum. Es steht auf seiner Seite unter [Tilesets](htt
 
 ## Ändert sich eine URL bei neuen Daten?
 
-API-URLs (`/v1/tiles/streets/...`, TileJSON) bleiben gleich. PMTiles-Dateinamen enthalten das Datum, alte Dateien bleiben also gültig. Über das TileJSON ist immer die aktuelle Datei erreichbar.
+API-URLs (`/v1/tiles/streets/...`, TileJSON) bleiben gleich. Über Style und TileJSON kommen immer die aktuellen Daten.
 
-## Lassen sich die Karten offline nutzen?
+## Kann ich die Kacheln herunterladen?
 
-Ja. Eine PMTiles-Datei herunterladen und selbst ausliefern: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md), [QGIS](https://docs.mapx.at/de/guides/qgis.md).
+Nein. mapx liefert Karten und Kacheln über die API: Style, TileJSON oder `{z}/{x}/{y}`, siehe [Karten](https://docs.mapx.at/de/guides/maps.md) und [QGIS](https://docs.mapx.at/de/guides/qgis.md). Ganze Tileset-Dateien zum Selbsthosten gibt es nicht.
 
 ## Gibt es Daten außerhalb Österreichs?
 
@@ -50,7 +50,7 @@ Das Tile liegt außerhalb des Datengebiets oder Zoombereichs, die Endung passt n
 
 ## Warum kommt 429?
 
-Das Rate Limit der Zone wurde überschritten. `Retry-After` Sekunden warten und mit wachsender Pause wiederholen. Bei hoher Last [PMTiles](https://docs.mapx.at/de/guides/self-host-pmtiles.md) verwenden.
+Das Rate Limit der Zone wurde überschritten. `Retry-After` Sekunden warten und mit wachsender Pause wiederholen. Bei hoher Last Kacheln im Client cachen.
 
 ## Meine Punkte landen im falschen Land
 

@@ -143,4 +143,4 @@ style: {
 
 - All layers, fields and values: [Basemap](https://docs.mapx.at/tilesets/streets.md).
 - Overlay contour lines and labels: [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md).
-- A map for print or as an offline file: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+- A map as an image for print: [Static Images](https://docs.mapx.at/api/static-images.md).

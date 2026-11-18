@@ -42,9 +42,8 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Contour lines over orthophoto](https://docs.mapx.at/guides/overlay-contours.md): Place contour lines (Höhenlinien) with index lines and elevation labels over the orthophoto or the basemap in MapLibre GL JS.
 - [3D terrain map with orthophoto](https://docs.mapx.at/guides/3d-terrain.md): A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.
 - [Elevation profile chart in JavaScript](https://docs.mapx.at/guides/elevation-profile.md): Query an elevation profile for a route through the elevation API and draw it as an SVG chart, in plain JavaScript.
-- [mapx data in QGIS: XYZ and vector tiles](https://docs.mapx.at/guides/qgis.md): Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
+- [mapx data in QGIS: XYZ and vector tiles](https://docs.mapx.at/guides/qgis.md): Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection and vector tile connection.
 - [mapx maps with OpenLayers](https://docs.mapx.at/guides/openlayers.md): Add the mapx basemap to OpenLayers: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
-- [Self-host PMTiles files](https://docs.mapx.at/guides/self-host-pmtiles.md): Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
 - [mapx maps with Leaflet](https://docs.mapx.at/guides/leaflet.md): Add the mapx basemap to Leaflet: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
 
 ## API reference

@@ -2,11 +2,11 @@
 
 Source: https://docs.mapx.at/de/guides/qgis/
 
-> DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung, Vektorkachel-Verbindung und PMTiles direkt.
+> DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung und Vektorkachel-Verbindung.
 
 **Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Auf dem eigenen Rechner einen geheimen Token (`mx_sk_…`) verwenden: ein öffentlicher Token gilt nur für seine erlaubten Origins, und QGIS ist keine Webseite.
 
-**Voraussetzungen:** QGIS 3.x (für PMTiles direkt ab 3.32).
+**Voraussetzungen:** QGIS 3.x.
 
 ## Orthophoto als XYZ-Layer
 
@@ -52,20 +52,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TO
 
 Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `cadastre` (Zoom 16) und `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Tilesets: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
 
-## PMTiles direkt (QGIS ab 3.32)
-
-Vektor-Tilesets lassen sich ab QGIS 3.32 auch direkt als PMTiles-Datei öffnen, lokal oder per HTTP. Der Dateiname steht mit Stichtag auf der jeweiligen [Produktseite](https://docs.mapx.at/de/tilesets/index.md) unter Kennwerte.
-
-1. Browser-Panel, Rechtsklick auf **Vector Tiles**, **Neue generische Verbindung**.
-2. **Diensttyp** auf PMTiles stellen (alternativ eine lokale Datei wählen) und als URL die Datei eintragen: `https://tiles.mapx.at/<datei>.pmtiles?access_token=DEIN_TOKEN`.
-3. Mit OK speichern und in die Karte laden. QGIS liest per HTTP-Range nur die benötigten Kacheln.
-
-Bild- und Höhenkacheln (Orthophoto, DTM, DSM) lassen sich über die XYZ-Verbindung oben einbinden.
-
-> Bietet die QGIS-Version den PMTiles-Diensttyp nicht an, die Vektorkachel-Verbindung oben verwenden; sie liefert dieselben Kacheln.
-
 ## Nächste Schritte
 
 - Höhenmodell verstehen: [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
-- Daten lokal ablegen: [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
 - Quellenangabe in Karten und Berichten: [Attribution](https://docs.mapx.at/de/reference/attribution.md).

@@ -85,7 +85,7 @@ Limits apply per token and zone (requests without a valid token count per IP add
 
 **Over MCP.** Every tool call of the [MCP server](https://docs.mapx.at/guides/mcp.md) counts like an API call (some tools make several) and shows up as MCP in the usage view. The per-minute limit of the token and the zone limits above apply, per token instead of per IP address. The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB.
 
-For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) file once instead of requesting millions of tiles. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
+For many tiles: cache responses in the client (tiles change only with a new release) and on `429` retry after `Retry-After`. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## CORS and caching
 

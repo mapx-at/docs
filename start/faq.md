@@ -30,11 +30,11 @@ Each tileset has a source date, shown on its page under [Tilesets](https://docs.
 
 ## Does a URL change when there is new data?
 
-API URLs (`/v1/tiles/streets/...`, TileJSON) stay the same. PMTiles file names contain the date, so old files stay valid. Use the TileJSON to always get the current file.
+API URLs (`/v1/tiles/streets/...`, TileJSON) stay the same. Styles and TileJSON always point to the current data.
 
-## Can I use the maps offline?
+## Can I download the tiles?
 
-Yes. Download a PMTiles file and serve it yourself: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md), [QGIS](https://docs.mapx.at/guides/qgis.md).
+No. mapx delivers maps and tiles through the API: style, TileJSON or `{z}/{x}/{y}`, see [Maps](https://docs.mapx.at/guides/maps.md) and [QGIS](https://docs.mapx.at/guides/qgis.md). Whole tileset files for self-hosting are not offered.
 
 ## Is there data outside Austria?
 
@@ -50,7 +50,7 @@ The tile lies outside the data area or zoom range, the extension does not match 
 
 ## Why do I get 429?
 
-You exceeded the rate limit of the zone. Wait `Retry-After` seconds and retry with growing delay. For heavy loads use [PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+You exceeded the rate limit of the zone. Wait `Retry-After` seconds and retry with growing delay. For heavy loads, cache tiles in the client.
 
 ## My points land in the wrong country
 

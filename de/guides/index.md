@@ -28,7 +28,7 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 ## Techniken
 
 - [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md), [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md), [3D-Gelände mit Orthophoto](https://docs.mapx.at/de/guides/3d-terrain.md), [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md).
-- [QGIS](https://docs.mapx.at/de/guides/qgis.md) und [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
+- [QGIS](https://docs.mapx.at/de/guides/qgis.md).
 
 ## Beispiele
 

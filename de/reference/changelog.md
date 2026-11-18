@@ -18,6 +18,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 - POST-Anfragen mit mehr als 16 KB Körper lieferten `500` statt `413` `payload-too-large`.
 
 ### Entfernt
+- Das Angebot, PMTiles-Dateien herunterzuladen und selbst zu hosten, entfällt: Anleitung „PMTiles selbst hosten“ (Adresse leitet auf [Karten](https://docs.mapx.at/de/guides/maps.md) um), Dateinamen in den Kennwerten, Hinweise in FAQ, Glossar, Zugang und Limits sowie der Abschnitt „PMTiles direkt“ im [QGIS-Guide](https://docs.mapx.at/de/guides/qgis.md). Karten und Kacheln gibt es über Style, TileJSON und `{z}/{x}/{y}`; die Styles lesen ihre Quellen weiterhin technisch aus PMTiles.
 - SDK `mapx-gl` entfällt ersatzlos, ebenso die ausgelieferten Dateien unter `https://map.mapx.at/sdk/v1/` und die SDK-Seiten der Doku (alte Adressen leiten auf die Beispiele um). Stattdessen zeigen die [Beispiele](https://docs.mapx.at/de/examples/index.md) jeden Anwendungsfall mit MapLibre GL JS, OpenLayers oder Leaflet und direkten API-Aufrufen (`fetch`).
 - Alte deutsche Namen und doppelte Felder (Übergang seit 2026-11-08) sind entfernt, es gelten nur die englischen Namen. Alte Namen liefern den gleichen Fehler wie jeder unbekannte Name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); die Header `Deprecation`, `Sunset` und `Link: …; rel="successor-version"` entfallen. Zuordnung:
 

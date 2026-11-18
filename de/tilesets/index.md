@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/tilesets/
 
 > Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Kataster, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
 
-Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und als eine unveränderliche [PMTiles](https://docs.protomaps.com/pmtiles/)-Datei (das Quelldatum steht im Dateinamen). Alle Daten stehen unter CC BY 4.0, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Styles](https://docs.mapx.at/de/api/styles.md) enthalten. Alle Daten stehen unter CC BY 4.0, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 | Tileset | Typ | Zoom | Stand |
 |---|---|---|---|
@@ -29,11 +29,11 @@ Ein Tileset per Namen verwenden:
 map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
 ```
 
-Alle Anfragen an `tiles.mapx.at` brauchen einen Token, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bei MapLibre-Quellen hängt `transformRequest` den Token an, bei Dateien `?access_token=DEIN_TOKEN`.
+Alle Anfragen an `tiles.mapx.at` brauchen einen Token, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bei MapLibre-Quellen hängt `transformRequest` den Token an, bei Kachel-URLs `?access_token=DEIN_TOKEN`.
 
 Die TileJSON-Adresse ist `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
 
 ## Nächste Schritte
 
 - [Karten-Guide](https://docs.mapx.at/de/guides/maps.md)
-- [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md)
+- [Styles-API](https://docs.mapx.at/de/api/styles.md)

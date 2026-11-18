@@ -20,7 +20,6 @@ The DSM is the counterpart to the [DTM](https://docs.mapx.at/tilesets/terrain-rg
 
 | Property | Value |
 |---|---|
-| File | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
 | Reference date | `2025-09-15` |
 | Format | `webp, encoding mapbox, 512 px` |
 | Zoom levels | `z5–z16` |
@@ -47,7 +46,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
@@ -64,7 +63,7 @@ L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YO
 
 **QGIS**
 
-XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`.
 
   
 

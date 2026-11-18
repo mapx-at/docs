@@ -20,7 +20,6 @@ Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebä
 
 | Kennwert | Wert |
 |---|---|
-| Datei | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
 | Stichtag | `15.09.2025` |
 | Format | `webp, Kodierung mapbox, 512 px` |
 | Zoomstufen | `z5–z16` |
@@ -69,19 +68,17 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 **Python**
 
 ```python
-# pip install pmtiles pillow numpy requests
+# pip install pillow numpy requests
+import io
+import numpy as np
+import requests
 from PIL import Image
-from pmtiles.reader import Reader
 
-URL = "@@url:relief@@"
-
-def get_bytes(offset, length):
-    r = requests.get(URL, headers={"Authorization": "Bearer DEIN_TOKEN", "Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
-    r.raise_for_status()
-    return r.content
-
-reader = Reader(get_bytes)
-tile = reader.get(12, 2192, 1439)          # z, x, y (Großglockner)
+z, x, y = 12, 2192, 1439                   # Großglockner
+r = requests.get(f"https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp",
+                 headers={"Authorization": "Bearer DEIN_TOKEN"}, timeout=30)
+r.raise_for_status()
+tile = r.content
 rgb = np.asarray(Image.open(io.BytesIO(tile)).convert("RGB")).astype(np.uint32)
 hoehe = -10000 + (rgb[..., 0] * 65536 + rgb[..., 1] * 256 + rgb[..., 2]) * 0.1
 print(hoehe.shape, hoehe.min(), hoehe.max())
@@ -94,9 +91,6 @@ print(hoehe.shape, hoehe.min(), hoehe.max())
 ```bash
 # eine Kachel über den XYZ-Endpunkt
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
-
-# ganze Datei, fortsetzbar
-curl -C - -H "Authorization: Bearer DEIN_TOKEN" -O @@url:relief@@
 ```
 
 ## Kodierung

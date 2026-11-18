@@ -158,7 +158,7 @@ Limits apply per token and zone (requests without a valid token count per IP add
 
 **Over MCP.** Every tool call of the [MCP server](https://docs.mapx.at/guides/mcp.md) counts like an API call (some tools make several) and shows up as MCP in the usage view. The per-minute limit of the token and the zone limits above apply, per token instead of per IP address. The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB.
 
-For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) file once instead of requesting millions of tiles. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
+For many tiles: cache responses in the client (tiles change only with a new release) and on `429` retry after `Retry-After`. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## CORS and caching
 
@@ -365,7 +365,7 @@ Source: https://docs.mapx.at/start/glossary/
 
 **Orthophoto.** Rectified aerial photograph.
 
-**PMTiles.** Single-file archive of tiles, read with HTTP range requests. Every tileset is available as one.
+**PMTiles.** Single-file archive of tiles, read with HTTP range requests. The mapx styles read their tiles from PMTiles under the hood; your own applications use the style, TileJSON or `{z}/{x}/{y}`.
 
 **Profile.** The kind of traveler for routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
@@ -413,11 +413,11 @@ Each tileset has a source date, shown on its page under [Tilesets](https://docs.
 
 ## Does a URL change when there is new data?
 
-API URLs (`/v1/tiles/streets/...`, TileJSON) stay the same. PMTiles file names contain the date, so old files stay valid. Use the TileJSON to always get the current file.
+API URLs (`/v1/tiles/streets/...`, TileJSON) stay the same. Styles and TileJSON always point to the current data.
 
-## Can I use the maps offline?
+## Can I download the tiles?
 
-Yes. Download a PMTiles file and serve it yourself: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md), [QGIS](https://docs.mapx.at/guides/qgis.md).
+No. mapx delivers maps and tiles through the API: style, TileJSON or `{z}/{x}/{y}`, see [Maps](https://docs.mapx.at/guides/maps.md) and [QGIS](https://docs.mapx.at/guides/qgis.md). Whole tileset files for self-hosting are not offered.
 
 ## Is there data outside Austria?
 
@@ -433,7 +433,7 @@ The tile lies outside the data area or zoom range, the extension does not match 
 
 ## Why do I get 429?
 
-You exceeded the rate limit of the zone. Wait `Retry-After` seconds and retry with growing delay. For heavy loads use [PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+You exceeded the rate limit of the zone. Wait `Retry-After` seconds and retry with growing delay. For heavy loads, cache tiles in the client.
 
 ## My points land in the wrong country
 
@@ -483,7 +483,7 @@ Each guide shows the common tasks of one product with code that runs as it is.
 ## Techniques
 
 - [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md), [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md), [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md), [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md).
-- [QGIS](https://docs.mapx.at/guides/qgis.md) and [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+- [QGIS](https://docs.mapx.at/guides/qgis.md).
 
 ## Examples
 
@@ -569,7 +569,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 ## Offline and bulk use
 
-Each tileset is also one PMTiles file. Download it once instead of fetching tiles: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+Tiles and tilesets are available only through the API: style, TileJSON or `{z}/{x}/{y}`. mapx does not offer whole files for download. For many requests, cache tiles in the client, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
 > Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
@@ -1602,7 +1602,7 @@ style: {
 
 - All layers, fields and values: [Basemap](https://docs.mapx.at/tilesets/streets.md).
 - Overlay contour lines and labels: [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md).
-- A map for print or as an offline file: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
+- A map as an image for print: [Static Images](https://docs.mapx.at/api/static-images.md).
 
 ---
 
@@ -1895,11 +1895,11 @@ An SVG chart with area and line of elevation over distance, with length, ascent 
 
 Source: https://docs.mapx.at/guides/qgis/
 
-> Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
+> Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection and vector tile connection.
 
 **Goal:** Use mapx orthophoto, elevation models and vector data as layers in QGIS, without a download. You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); append `?access_token=YOUR_TOKEN` to every layer URL. Use a secret token (`mx_sk_…`) on your own computer: a public token only works for its allowed origins, and QGIS is not a website.
 
-**Prerequisites:** QGIS 3.x (3.32 or newer for direct PMTiles).
+**Prerequisites:** QGIS 3.x.
 
 ## Orthophoto as an XYZ layer
 
@@ -1945,22 +1945,9 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 
 The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) and `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
 
-## PMTiles directly (QGIS 3.32 and newer)
-
-Vector tilesets can also be opened directly as a PMTiles file from QGIS 3.32, locally or over HTTP. The file name with its cut-off date is on each [product page](https://docs.mapx.at/tilesets/index.md) under key figures.
-
-1. Browser panel, right-click **Vector Tiles**, **New Generic Connection**.
-2. Set the **Service type** to PMTiles (or pick a local file) and enter the file as URL: `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
-3. Save with OK and load it into the map. QGIS reads only the required tiles via HTTP range.
-
-Imagery and elevation tiles (orthophoto, DTM, DSM) are added through the XYZ connection above.
-
-> If your QGIS version does not offer the PMTiles service type, use the vector tile connection above; it delivers the same tiles.
-
 ## Next steps
 
 - Understand the elevation model: [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md).
-- Keep data locally: [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
 - Credits in maps and reports: [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ---
@@ -2020,86 +2007,6 @@ source.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjec
 ## Examples
 
 Examples with an OpenLayers version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "OpenLayers"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#ol), [Route](https://docs.mapx.at/examples/route.md#ol) and [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md#ol).
-
----
-
-# Self-host PMTiles files
-
-Source: https://docs.mapx.at/guides/self-host-pmtiles/
-
-> Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
-
-**Goal:** Run a mapx PMTiles file on your own infrastructure, for example for resilience, internal networks or your own domain, or a subset of it.
-
-**Prerequisites:** a server, S3-compatible storage or a CDN that supports HTTP range requests. A PMTiles file is a single static file; no tile server is needed.
-
-The files are free to download with a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)) at `https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN` (file names per product under "Key figures" on the [product pages](https://docs.mapx.at/tilesets/index.md)). The file name contains the cut-off date and never changes; a new release gets a new name. With attribution under [CC BY 4.0](https://docs.mapx.at/reference/attribution.md) you may redistribute and mirror the files.
-
-1. **Download the file.** `curl -C -` resumes an interrupted download:
-
-   ```bash
-   curl -C - -O "@@url:relief@@?access_token=YOUR_TOKEN"
-   ```
-
-   The orthophoto and the elevation models are very large files; check storage and bandwidth before downloading. For sub-areas step 2 is easier.
-
-2. **Optional: fetch only a subset.** With the [`pmtiles`](https://github.com/protomaps/go-pmtiles) command line tool, `extract` reads only the tiles of an area from the online file using range requests:
-
-   ```bash
-   # subset by bounding box (west,south,east,north)
-   pmtiles extract "@@url:relief@@?access_token=YOUR_TOKEN" salzburg.pmtiles --bbox=12.9,47.7,13.2,47.9
-
-   # or only up to a zoom level
-   pmtiles extract "@@url:relief@@?access_token=YOUR_TOKEN" overview.pmtiles --maxzoom=12 --bbox=9.5,46.3,17.2,49.1
-   ```
-
-   The output is a complete PMTiles file that you serve like any other.
-
-3. **Serve it.** The server must answer `Range` requests with `206 Partial Content`. Example nginx:
-
-   ```nginx
-   location /tiles/ {
-       root /srv;
-       add_header Access-Control-Allow-Origin "*" always;
-       add_header Access-Control-Allow-Headers "Range, If-Match, If-None-Match" always;
-       add_header Access-Control-Expose-Headers "ETag, Content-Length, Content-Range" always;
-       add_header Cache-Control "public, max-age=31536000, immutable";
-       if ($request_method = OPTIONS) { return 204; }
-   }
-   ```
-
-   For S3 and compatible stores, a CORS rule is enough that allows `GET` and `HEAD` for your page origin (or `*`), allows the headers `Range`, `If-Match` and `If-None-Match`, and exposes `ETag`, `Content-Length`, `Content-Range`. Behind a CDN, the CDN must forward range requests to the origin or handle them itself.
-
-4. **Use it in the map.** Your own URL instead of `tiles.mapx.at`:
-
-   ```js
-   import { Protocol } from "pmtiles";
-   maplibregl.addProtocol("pmtiles", new Protocol().tile);
-   // source:
-   { type: "raster-dem", url: "pmtiles://https://tiles.example.com/salzburg.pmtiles", tileSize: 512, encoding: "mapbox" }
-   ```
-
-5. **Verify.** A range request must return `206` and `Content-Range`:
-
-   ```bash
-   curl -s -D - -o /dev/null -r 0-16383 https://tiles.example.com/salzburg.pmtiles
-   ```
-
-## Caching
-
-Because file names are immutable, set `Cache-Control: public, max-age=31536000, immutable`. A new release is published under a new name; your page switches by entering the new URL. Details on caching of the mapx services: [Errors, limits and operation](https://docs.mapx.at/api/errors.md).
-
-## Result
-
-A file or subset is served independently of mapx, with the same look and accuracy as the original tiles.
-
-> An alternative without your own files: the [TileJSON address](https://docs.mapx.at/api/tiles.md) `https://tiles.mapx.at/v1/tiles/{tileset}.json`. It always points to the current release.
-
-## Next steps
-
-- File format and protocol: [PMTiles documentation](https://docs.protomaps.com/pmtiles/).
-- Display with MapLibre: [First map](https://docs.mapx.at/start/first-map.md).
-- Do not forget the credit: [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ---
 
@@ -2205,7 +2112,7 @@ Source: https://docs.mapx.at/api/tiles/
 
 > Tiles API for Austria: tileset list, TileJSON and XYZ tiles as vector, raster and elevation (Terrain-RGB), with parameters and examples.
 
-Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. The whole product is also available as one [PMTiles](https://docs.protomaps.com/pmtiles/) file; see [Tilesets](https://docs.mapx.at/tilesets/index.md).
+Lists the tilesets, describes each as TileJSON and delivers tiles as `{z}/{x}/{y}`. All products: [Tilesets](https://docs.mapx.at/tilesets/index.md).
 
 Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (100/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
@@ -7203,7 +7110,7 @@ Source: https://docs.mapx.at/tilesets/
 
 > All mapx tilesets for Austria with type, zoom range and source date: basemap, cadastre, contours, orthophoto, terrain and surface models.
 
-Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and as one immutable [PMTiles](https://docs.protomaps.com/pmtiles/) file (the source date is part of the file name). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and is part of the [styles](https://docs.mapx.at/api/styles.md). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 | Tileset | Type | Zoom | As of |
 |---|---|---|---|
@@ -7233,7 +7140,7 @@ The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
 ## Next
 
 - [Maps guide](https://docs.mapx.at/guides/maps.md)
-- [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md)
+- [Styles API](https://docs.mapx.at/api/styles.md)
 
 ---
 
@@ -7259,7 +7166,6 @@ The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 la
 
 | Property | Value |
 |---|---|
-| File | `mapx-basis-20260401-611355ce.pmtiles` |
 | Reference date | `2026-04-01` |
 | Format | `mvt` |
 | Zoom levels | `z0–z16` |
@@ -7284,13 +7190,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-basis-20260401-6ae3c128.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-basis-20260401-6ae3c128.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/streets/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 
@@ -7382,7 +7288,6 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 
 | Property | Value |
 |---|---|
-| File | `mapx-kataster-20260401-e4504d72.pmtiles` |
 | Reference date | `2026-04-01` |
 | Format | `mvt` |
 | Zoom levels | `z16–z16` |
@@ -7405,13 +7310,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 
@@ -7482,7 +7387,6 @@ Contour lines for all of Austria as vector tiles, derived from the [DTM](https:/
 
 | Property | Value |
 |---|---|
-| File | `hoehenlinien-20250915-2037a3df.pmtiles` |
 | Reference date | `2025-09-15` |
 | Format | `mvt` |
 | Zoom levels | `z10–z16` |
@@ -7505,13 +7409,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/contours/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 
@@ -7597,7 +7501,6 @@ The DTM is an elevation tile set for all of Austria: ground height without build
 
 | Property | Value |
 |---|---|
-| File | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
 | Reference date | `2025-09-15` |
 | Format | `webp, encoding mapbox, 512 px` |
 | Zoom levels | `z5–z16` |
@@ -7646,19 +7549,17 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 **Python**
 
 ```python
-# pip install pmtiles pillow numpy requests
+# pip install pillow numpy requests
+import io
+import numpy as np
+import requests
 from PIL import Image
-from pmtiles.reader import Reader
 
-URL = "@@url:relief@@?access_token=YOUR_TOKEN"
-
-def get_bytes(offset, length):
-    r = requests.get(URL, headers={"Range": f"bytes={offset}-{offset + length - 1}"}, timeout=30)
-    r.raise_for_status()
-    return r.content
-
-reader = Reader(get_bytes)
-tile = reader.get(12, 2192, 1439)          # z, x, y (Grossglockner)
+z, x, y = 12, 2192, 1439                   # Grossglockner
+r = requests.get(f"https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp",
+                 headers={"Authorization": "Bearer YOUR_TOKEN"}, timeout=30)
+r.raise_for_status()
+tile = r.content
 rgb = np.asarray(Image.open(io.BytesIO(tile)).convert("RGB")).astype(np.uint32)
 hoehe = -10000 + (rgb[..., 0] * 65536 + rgb[..., 1] * 256 + rgb[..., 2]) * 0.1
 print(hoehe.shape, hoehe.min(), hoehe.max())
@@ -7671,9 +7572,6 @@ print(hoehe.shape, hoehe.min(), hoehe.max())
 ```bash
 # one tile via the XYZ endpoint
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/terrain-rgb/12/2192/1439.webp
-
-# whole file, resumable
-curl -C - -O "@@url:relief@@?access_token=YOUR_TOKEN"
 ```
 
 ## Encoding
@@ -7778,7 +7676,6 @@ The DSM is the counterpart to the [DTM](https://docs.mapx.at/tilesets/terrain-rg
 
 | Property | Value |
 |---|---|
-| File | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
 | Reference date | `2025-09-15` |
 | Format | `webp, encoding mapbox, 512 px` |
 | Zoom levels | `z5–z16` |
@@ -7805,7 +7702,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
@@ -7822,7 +7719,7 @@ L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YO
 
 **QGIS**
 
-XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`.
 
   
 
@@ -7884,7 +7781,6 @@ The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolu
 
 | Property | Value |
 |---|---|
-| File | `dop-ortho-20251003-272a54b3.pmtiles` |
 | Reference date | `2025-10-03` |
 | Format | `webp` |
 | Zoom levels | `z5–z18` |
@@ -7909,7 +7805,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
@@ -7926,7 +7822,7 @@ L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_t
 
 **QGIS**
 
-XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+XYZ Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN`.
 
   
 
@@ -8012,7 +7908,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:reference_date` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:reference_date` (most recent ingested scene). Cached for 5 minutes.
 
 ## TileJSON, zoom and update
 
@@ -8089,7 +7985,6 @@ For each pixel of the [orthophoto](https://docs.mapx.at/tilesets/orthophoto.md),
 
 | Property | Value |
 |---|---|
-| File | `dop-flugblock-20251003-0d0d122e.pmtiles` |
 | Reference date | `2025-10-03` |
 | Format | `mvt` |
 | Zoom levels | `z6–z17` |
@@ -8112,13 +8007,13 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/dop-flugblock-20251003-0d0d122e.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles.md)).
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. With PMTiles directly use `url: "pmtiles://https://tiles.mapx.at/dop-flugblock-20251003-0d0d122e.pmtiles?access_token=YOUR_TOKEN"` (protocol as in the [PMTiles guide](https://docs.mapx.at/guides/self-host-pmtiles/)).
 
   
 
 **QGIS**
 
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty. Alternatively open the PMTiles file directly as a layer (QGIS 3.32 and later reads PMTiles over HTTP).
+Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
 
   
 
@@ -8745,6 +8640,7 @@ Source: https://docs.mapx.at/reference/changelog/
 - POST requests with a body over 16 KB returned `500` instead of `413` `payload-too-large`.
 
 ### Removed
+- Downloading and self-hosting PMTiles files is no longer offered: the guide “Self-host PMTiles” (its address redirects to [Maps](https://docs.mapx.at/guides/maps.md)), file names in the key figures, notes in FAQ, glossary and access and limits, and the section “PMTiles directly” in the [QGIS guide](https://docs.mapx.at/guides/qgis.md). Maps and tiles are available through style, TileJSON and `{z}/{x}/{y}`; the styles still read their sources from PMTiles under the hood.
 - The `mapx-gl` SDK is removed without replacement, as are the files served under `https://map.mapx.at/sdk/v1/` and the SDK pages of these docs (old addresses redirect to the examples). Instead the [examples](https://docs.mapx.at/examples/index.md) show each use case with MapLibre GL JS, OpenLayers or Leaflet and direct API calls (`fetch`).
 - The former German names and duplicate fields (transition since 2026-11-08) are removed; only the English names apply. Old names return the same error as any unknown name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"` are gone. Mapping:
 
