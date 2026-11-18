@@ -97,6 +97,10 @@ CORS allows every origin, so you can call the APIs straight from the browser. Th
 
 Show the source of the data wherever the map or result is visible. MapLibre adds the text for you when you load a style or TileJSON. See [Attribution](https://docs.mapx.at/reference/attribution.md).
 
+## No warranty
+
+All mapx data and results are provided without guarantee and used at your own risk. Check results yourself, especially for addresses, routes, departures, weather and cadastre. The [terms of use](https://mapx.at/en/terms/) apply.
+
 ## Next
 
 - [First map in 5 minutes](https://docs.mapx.at/start/first-map.md)

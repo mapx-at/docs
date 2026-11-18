@@ -170,6 +170,10 @@ CORS erlaubt jeden Origin und den Header `Authorization`. Der Header `Authorizat
 
 Die Datenquelle überall anzeigen, wo die Karte oder das Ergebnis sichtbar ist. MapLibre fügt den Text automatisch hinzu, wenn ein Style oder TileJSON geladen wird. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
+## Ohne Gewähr
+
+Alle Daten und Ergebnisse von mapx sind ohne Gewähr, die Nutzung erfolgt auf eigenes Risiko. Prüfe Ergebnisse selbst, besonders bei Adressen, Routen, Abfahrten, Wetter und Kataster. Es gelten die [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
+
 ## Nächste Schritte
 
 - [Erste Karte in 5 Minuten](https://docs.mapx.at/de/start/first-map.md)
