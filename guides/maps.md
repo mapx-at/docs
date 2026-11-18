@@ -68,7 +68,7 @@ The traffic layer is a vector source, see [Traffic](https://docs.mapx.at/guides/
 
 ## Other clients
 
-The style and TileJSON formats work in MapLibre, Mapbox GL JS clients that accept custom URLs, Leaflet with a vector plugin, OpenLayers and QGIS. For clients without vector support, [Static Tiles](https://docs.mapx.at/api/styles.md) deliver the rendered style as raster tiles:
+The style and TileJSON formats work in MapLibre, Mapbox GL JS clients that accept custom URLs and [QGIS](https://docs.mapx.at/guides/qgis.md). For clients without vector support, [Static Tiles](https://docs.mapx.at/api/styles.md) deliver the rendered style as raster tiles; this is how [OpenLayers](https://docs.mapx.at/guides/openlayers.md) and [Leaflet](https://docs.mapx.at/guides/leaflet.md) add the basemap:
 
 ```
 https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TOKEN

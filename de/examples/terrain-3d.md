@@ -8,6 +8,8 @@ Das Terrain-RGB-Tileset per TileJSON als `raster-dem`-Quelle, `map.setTerrain()`
 
 ## Code
 
+3D-Gelände gibt es nur in MapLibre; OpenLayers und Leaflet zeichnen flache Karten.
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 

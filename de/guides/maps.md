@@ -68,7 +68,7 @@ Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](https://docs.mapx.at/d
 
 ## Andere Clients
 
-Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles:
+Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs und in [QGIS](https://docs.mapx.at/de/guides/qgis.md). Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles; so binden [OpenLayers](https://docs.mapx.at/de/guides/openlayers.md) und [Leaflet](https://docs.mapx.at/de/guides/leaflet.md) die Basiskarte ein:
 
 ```
 https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TOKEN

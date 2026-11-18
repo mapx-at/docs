@@ -8,6 +8,8 @@ Der Stil `streets` enthält eine extrudierte Gebäudeebene, die standardmäßig 
 
 ## Code
 
+3D-Gebäude gibt es nur in MapLibre; OpenLayers und Leaflet zeichnen flache Karten.
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 

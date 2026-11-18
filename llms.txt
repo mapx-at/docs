@@ -43,7 +43,9 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [3D terrain map with orthophoto](https://docs.mapx.at/guides/3d-terrain.md): A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.
 - [Elevation profile chart in JavaScript](https://docs.mapx.at/guides/elevation-profile.md): Query an elevation profile for a route through the elevation API and draw it as an SVG chart, in plain JavaScript.
 - [mapx data in QGIS: XYZ and vector tiles](https://docs.mapx.at/guides/qgis.md): Add DTM, DSM, orthophoto and vector tiles to QGIS: XYZ connection, vector tile connection and PMTiles directly.
+- [mapx maps with OpenLayers](https://docs.mapx.at/guides/openlayers.md): Add the mapx basemap to OpenLayers: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
 - [Self-host PMTiles files](https://docs.mapx.at/guides/self-host-pmtiles.md): Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
+- [mapx maps with Leaflet](https://docs.mapx.at/guides/leaflet.md): Add the mapx basemap to Leaflet: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
 - [SDK mapx-gl for MapLibre](https://docs.mapx.at/guides/sdk/index.md): A small add-on for MapLibre GL JS: map factory, typed helpers for every API, route planner, layer switcher, parcel and departures popups.
 - [SDK helpers: one function per API](https://docs.mapx.at/guides/sdk/helpers.md): One typed function per API: search, geocoding, routing, matrix, optimization, parcels, elevation, traffic, transit, weather and static images.
 - [SDK controls and popups for MapLibre](https://docs.mapx.at/guides/sdk/controls.md): RouteControl, LayerControl, SearchControl, ParcelPopup and DeparturesPopup: ready-made map tools of the mapx-gl SDK in one line each.

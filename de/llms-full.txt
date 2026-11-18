@@ -589,7 +589,7 @@ Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](https://docs.mapx.at/d
 
 ## Andere Clients
 
-Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles:
+Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs und in [QGIS](https://docs.mapx.at/de/guides/qgis.md). Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles; so binden [OpenLayers](https://docs.mapx.at/de/guides/openlayers.md) und [Leaflet](https://docs.mapx.at/de/guides/leaflet.md) die Basiskarte ein:
 
 ```
 https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TOKEN
@@ -1995,6 +1995,64 @@ Bild- und Höhenkacheln (Orthophoto, DTM, DSM) lassen sich über die XYZ-Verbind
 
 ---
 
+# mapx-Karten mit OpenLayers
+
+Source: https://docs.mapx.at/de/guides/openlayers/
+
+> mapx-Basiskarte in OpenLayers einbinden: gerenderte Rasterkacheln des Stils, Token, Quellenangabe, eigenes GeoJSON und die Grenzen gegenüber MapLibre.
+
+**Ziel:** Eine mapx-Karte in einer bestehenden OpenLayers-Anwendung (10.11.0), ohne Build, mit kostenlosem öffentlichem Token (siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
+
+## Basiskarte einbinden
+
+Die Stile von mapx sind MapLibre-Stile mit Vektorkacheln. OpenLayers bekommt denselben Stil fertig gerendert als Rasterkacheln ([Static Tiles](https://docs.mapx.at/de/api/styles.md)): `ol/source/XYZ` mit Kachelgröße 512. Stile: `streets` (und Varianten), `satellite`, `satellite-streets`, `outdoors`.
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+<div id="map" style="height:70vh"></div>
+<script>
+const TOKEN = 'DEIN_TOKEN';
+const map = new ol.Map({
+  target: 'map',
+  layers: [new ol.layer.Tile({ source: new ol.source.XYZ({
+    url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN,
+    tileSize: 512, maxZoom: 20, attributionsCollapsible: false,
+    attributions: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  }) })],
+  view: new ol.View({ center: ol.proj.fromLonLat([16.37, 48.21]), zoom: 13 }),
+});
+</script>
+```
+
+Der Token steht als `access_token` in der Kachel-URL, API-Aufrufe per `fetch` schicken ihn als Header `Authorization: Bearer …`.
+
+## Quellenangabe
+
+Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte sichtbar sein. Bei Rasterkacheln gibt es kein TileJSON, aus dem OpenLayers den Text liest: `attributions` selbst setzen und `attributionsCollapsible: false`, damit der Text nicht hinter einem Knopf verschwindet. Den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+
+## Eigenes GeoJSON
+
+Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON in WGS84. `ol.format.GeoJSON` liest sie in die Kartenprojektion:
+
+```js
+const quelle = new ol.source.Vector();
+map.addLayer(new ol.layer.Vector({ source: quelle }));
+quelle.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjection: 'EPSG:3857' }));
+```
+
+## Grenzen
+
+- Kein Vektorstil: die Basiskarte kommt als Bild, Beschriftungen und Ebenen lassen sich nicht einzeln ändern. Dafür [MapLibre](https://docs.mapx.at/de/guides/maps.md).
+- Kein 3D-Gelände und keine 3D-Gebäude, die gibt es nur in MapLibre.
+- Rasterkacheln zählen in der Limit-Zone `static` (5 Anfragen pro Sekunde je IP, kurzzeitig bis 60 auf einmal, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Gewöhnliches Verschieben und Zoomen bleibt deutlich darunter; erst wer dauerhaft schneller neue Kacheln anfordert, bekommt `429`.
+
+## Beispiele
+
+Die Beispiele mit OpenLayers-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „OpenLayers“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#ol), [Route](https://docs.mapx.at/de/examples/route.md#ol) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#ol).
+
+---
+
 # PMTiles selbst hosten
 
 Source: https://docs.mapx.at/de/guides/self-host-pmtiles/
@@ -2072,6 +2130,59 @@ Eine Datei oder ein Ausschnitt wird unabhängig von mapx ausgeliefert, mit demse
 - Dateiformat und Protokoll: [PMTiles-Dokumentation](https://docs.protomaps.com/pmtiles/).
 - Anzeigen mit MapLibre: [Schnellstart](https://docs.mapx.at/de/start/index.md).
 - Quellenangabe nicht vergessen: [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+
+---
+
+# mapx-Karten mit Leaflet
+
+Source: https://docs.mapx.at/de/guides/leaflet/
+
+> mapx-Basiskarte in Leaflet einbinden: gerenderte Rasterkacheln des Stils, Token, Quellenangabe, eigenes GeoJSON und die Grenzen gegenüber MapLibre.
+
+**Ziel:** Eine mapx-Karte in einer bestehenden Leaflet-Anwendung (1.9.4), ohne Build und ohne Plugin, mit kostenlosem öffentlichem Token (siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
+
+## Basiskarte einbinden
+
+Leaflet zeichnet keine Vektorkacheln. Die mapx-Stile gibt es deshalb fertig gerendert als Rasterkacheln ([Static Tiles](https://docs.mapx.at/de/api/styles.md)), eingebunden mit `L.tileLayer`. Die Kacheln sind 512 Pixel groß: `tileSize: 512` und `zoomOffset: -1` halten den Maßstab wie bei gewöhnlichen 256er-Kacheln. Stile: `streets` (und Varianten), `satellite`, `satellite-streets`, `outdoors`.
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div id="map" style="height:70vh"></div>
+<script>
+const TOKEN = 'DEIN_TOKEN';
+const map = L.map('map').setView([48.21, 16.37], 13);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, {
+  tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21,
+  attribution: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+}).addTo(map);
+</script>
+```
+
+Der Token steht als `access_token` in der Kachel-URL, API-Aufrufe per `fetch` schicken ihn als Header `Authorization: Bearer …`.
+
+## Quellenangabe
+
+Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte sichtbar sein. Leaflet zeigt den Text aus `attribution` unten rechts an; den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+
+## Eigenes GeoJSON
+
+Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON und gehen direkt in `L.geoJSON`:
+
+```js
+const ebene = L.geoJSON(null, { style: { color: '#2346d8', weight: 4 } }).addTo(map);
+ebene.addData(geojson);
+```
+
+## Grenzen
+
+- Kein Vektorstil: die Basiskarte kommt als Bild, Beschriftungen und Ebenen lassen sich nicht einzeln ändern. Dafür [MapLibre](https://docs.mapx.at/de/guides/maps.md).
+- Kein 3D-Gelände und keine 3D-Gebäude, die gibt es nur in MapLibre.
+- Rasterkacheln zählen in der Limit-Zone `static` (5 Anfragen pro Sekunde je IP, kurzzeitig bis 60 auf einmal, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Gewöhnliches Verschieben und Zoomen bleibt deutlich darunter; erst wer dauerhaft schneller neue Kacheln anfordert, bekommt `429`.
+
+## Beispiele
+
+Die Beispiele mit Leaflet-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „Leaflet“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#leaflet), [Route](https://docs.mapx.at/de/examples/route.md#leaflet) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#leaflet).
 
 ---
 
@@ -9045,7 +9156,7 @@ Source: https://docs.mapx.at/de/examples/
 
 > 27 lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
 
-Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.18.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt filtern:
+Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.18.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Viele Beispiele gibt es zusätzlich für OpenLayers (10.11.0) und Leaflet (1.9.4); der Umschalter über der Karte wählt die Bibliothek für alle Beispiele. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt oder Kartenbibliothek filtern:
 
 - [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md): Eine Karte mit dem fertigen mapx-Stil in einer HTML-Seite.
 - [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md): Zwischen Karte, Luftbild und Gelände umschalten.
@@ -9093,6 +9204,8 @@ Der kürzeste Weg zu einer Karte: MapLibre GL JS, das pmtiles-Protokoll und die 
 
 ## Code
 
+### MapLibre GL JS
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
@@ -9114,9 +9227,55 @@ map.addControl(new maplibregl.NavigationControl());
 map.addControl(new maplibregl.ScaleControl());
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Embed a map: the mapx style as rendered raster tiles (Static Tiles) in OpenLayers.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = new ol.Map({
+  target: 'map',
+  layers: [new ol.layer.Tile({ source: new ol.source.XYZ({
+    url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN,
+    tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false,
+  }) })],
+  view: new ol.View({ center: ol.proj.fromLonLat([13.04, 47.80]), zoom: 13, maxZoom: 21 }), // Salzburg
+});
+map.addControl(new ol.control.ScaleLine());
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Embed a map: the mapx style as rendered raster tiles (Static Tiles) in Leaflet.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.80, 13.04], 13); // Salzburg
+// 512 px tiles: zoomOffset -1 keeps the map scale of standard 256 px tiles
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, {
+  tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION,
+}).addTo(map);
+L.control.scale({ imperial: false }).addTo(map);
+````
+
 ## Verwendete APIs
 
 - [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/streets`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9210,6 +9369,8 @@ Source: https://docs.mapx.at/de/examples/terrain-3d/
 Das Terrain-RGB-Tileset per TileJSON als `raster-dem`-Quelle, `map.setTerrain()` und ein Regler für die Überhöhung.
 
 ## Code
+
+3D-Gelände gibt es nur in MapLibre; OpenLayers und Leaflet zeichnen flache Karten.
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9417,6 +9578,8 @@ Die Routing-API arbeitet auf dem GIP.at-Netz für Fuß, Rad, Mountainbike und Au
 
 ## Code
 
+### MapLibre GL JS
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
@@ -9455,9 +9618,92 @@ map.on('click', async (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Route: click start and destination on the map, the Directions API returns a GeoJSON line.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const route = new ol.source.Vector(); // start, destination and the route line
+const line = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#2346d8', width: 5, lineCap: 'round', lineJoin: 'round' }) });
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: route, style: line })], view: new ol.View({ center: ol.proj.fromLonLat([15.33, 48.23]), zoom: 14 }) }); // Melk
+let a = null, b = null;
+
+map.on('click', async (e) => {
+  if (a && b) { a = b = null; route.clear(); }
+  const p = ol.proj.toLonLat(e.coordinate);
+  const marker = new ol.Feature(new ol.geom.Point(e.coordinate));
+  route.addFeature(marker);
+  if (!a) { a = p; marker.setStyle(pin('#1d7f4e')); return; }
+  b = p; marker.setStyle(pin('#c8372d'));
+  const profil = document.getElementById('profil').value; // walking, cycling, cycling-mtb or driving
+  const url = `https://api.mapx.at/v1/directions/${profil}/${a.join(',')};${b.join(',')}?geometries=geojson&overview=full`;
+  const info = document.getElementById('info');
+  try {
+    const r = await fetch(url, AUTH);
+    if (!r.ok) throw new Error('no route (HTTP ' + r.status + ')');
+    const res = (await r.json()).routes[0]; // Mapbox shape: routes[0].geometry is a GeoJSON line
+    route.addFeature(new ol.format.GeoJSON().readFeature(res.geometry, { featureProjection: 'EPSG:3857' }));
+    info.textContent = `${(res.distance / 1000).toFixed(2)} km, ${Math.round(res.duration / 60)} min`;
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Route: click start and destination on the map, the Directions API returns a GeoJSON line.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.23, 15.33], 14); // Melk
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const line = L.geoJSON(null, { style: { color: '#2346d8', weight: 5, opacity: 1 } }).addTo(map);
+const markers = L.layerGroup().addTo(map);
+const pin = (latlng, color) => L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1 }).addTo(markers);
+let a = null, b = null;
+
+map.on('click', async (e) => {
+  if (a && b) { a = b = null; markers.clearLayers(); line.clearLayers(); }
+  const p = [e.latlng.lng, e.latlng.lat];
+  if (!a) { a = p; pin(e.latlng, '#1d7f4e'); return; }
+  b = p; pin(e.latlng, '#c8372d');
+  const profil = document.getElementById('profil').value; // walking, cycling, cycling-mtb or driving
+  const url = `https://api.mapx.at/v1/directions/${profil}/${a.join(',')};${b.join(',')}?geometries=geojson&overview=full`;
+  const info = document.getElementById('info');
+  try {
+    const r = await fetch(url, AUTH);
+    if (!r.ok) throw new Error('no route (HTTP ' + r.status + ')');
+    const route = (await r.json()).routes[0]; // Mapbox shape: routes[0].geometry is a GeoJSON line
+    line.addData(route.geometry);
+    info.textContent = `${(route.distance / 1000).toFixed(2)} km, ${Math.round(route.duration / 60)} min`;
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Routing](https://docs.mapx.at/de/api/directions.md#routing) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9695,9 +9941,11 @@ Source: https://docs.mapx.at/de/examples/parcel-on-click/
 
 > Grundstücksgrenzen (Kataster) über dem Luftbild zeigen, ein Klick nennt die Grundstücksnummer: Kataster-Tileset und Parcel-API, lauffähiger Code.
 
-Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer und Katastralgemeinde. `queryRenderedFeatures` liest sie am Klickpunkt.
+Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer und Katastralgemeinde. `queryRenderedFeatures` liest sie am Klickpunkt. OpenLayers und Leaflet zeigen das Luftbild als Rasterkacheln ohne Grenzlinien; dort fragt ein Klick die Parcel-API und zeichnet den Umriss des Grundstücks.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9725,9 +9973,84 @@ map.on('click', (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const parcel = new ol.source.Vector();
+const outline = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#ffd400', width: 3 }), fill: new ol.style.Fill({ color: 'rgba(255, 212, 0, 0.15)' }) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: parcel, style: outline })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([15.3306, 48.2275]), zoom: 19, maxZoom: 21 }) }); // Melk
+
+map.on('click', async (e) => {
+  const [lon, lat] = ol.proj.toLonLat(e.coordinate);
+  parcel.clear();
+  try {
+    const r = await fetch(`https://api.mapx.at/v1/parcel/${lon.toFixed(6)},${lat.toFixed(6)}`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
+    if (f) parcel.addFeature(new ol.format.GeoJSON().readFeature(f, { featureProjection: 'EPSG:3857' }));
+    const p = f?.properties;
+    label.textContent = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
+  } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+  popup.setPosition(e.coordinate);
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.2275, 15.3306], 19); // Melk
+L.tileLayer('https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const parcel = L.geoJSON(null, { style: { color: '#ffd400', weight: 3, fillOpacity: 0.15 } }).addTo(map);
+
+map.on('click', async (e) => {
+  const { lng, lat } = e.latlng;
+  parcel.clearLayers();
+  let text;
+  try {
+    const r = await fetch(`https://api.mapx.at/v1/parcel/${lng.toFixed(6)},${lat.toFixed(6)}`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
+    if (f) parcel.addData(f);
+    const p = f?.properties;
+    text = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
+  } catch (err) { text = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+  L.popup().setLatLng(e.latlng).setContent(Object.assign(document.createElement('span'), { textContent: text })).openOn(map); // as text, not HTML
+});
+````
+
 ## Verwendete APIs
 
 - [Kataster](https://docs.mapx.at/de/tilesets/cadastre.md) (Vektorkacheln im Stil `satellite`)
+- [Parcel](https://docs.mapx.at/de/api/tilequery.md) `GET api.mapx.at/v1/parcel/{lon},{lat}` (OpenLayers, Leaflet)
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9783,6 +10106,8 @@ Source: https://docs.mapx.at/de/examples/buildings-3d/
 Der Stil `streets` enthält eine extrudierte Gebäudeebene, die standardmäßig aus ist. Die Ebenen-IDs stehen in den Style-Metadaten (`mapx:groups`), damit lässt sich eine ganze Gruppe einschalten, ohne die Namen zu kennen. Auf Zoom 15 oder höher gehen und die Karte kippen (rechte Maustaste oder zwei Finger).
 
 ## Code
+
+3D-Gebäude gibt es nur in MapLibre; OpenLayers und Leaflet zeichnen flache Karten.
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";

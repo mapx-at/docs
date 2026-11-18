@@ -8,6 +8,8 @@ The `streets` style contains an extruded building layer that is switched off by 
 
 ## Code
 
+3D buildings are only available in MapLibre; OpenLayers and Leaflet draw flat maps.
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 

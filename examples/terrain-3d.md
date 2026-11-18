@@ -8,6 +8,8 @@ The Terrain-RGB tileset via TileJSON as a `raster-dem` source, `map.setTerrain()
 
 ## Code
 
+3D terrain is only available in MapLibre; OpenLayers and Leaflet draw flat maps.
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
