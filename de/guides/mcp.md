@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> Claude Code, Cursor, VS Code oder Gemini CLI mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
 
 Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Katastergrundstücke, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
@@ -11,17 +11,38 @@ Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geod
 | Endpunkt | `https://mcp.mapx.at/mcp` |
 | Transport | Streamable HTTP, nur `POST`, zustandslos |
 | Protokollfassungen | `2026-07-28` und ältere ab `2024-11-05` |
-| Anmeldung | Token vom Typ „KI-Assistent (MCP)“, Präfix `mx_mcp_`, im Header `Authorization: Bearer …` |
+| Anmeldung | Entweder über dein mapx-Konto (OAuth 2.1 mit PKCE, nur die Adresse eintragen) oder mit einem Token vom Typ „KI-Assistent (MCP)“, Präfix `mx_mcp_`, im Header `Authorization: Bearer …` |
 
-## In drei Schritten einrichten
+## Einrichten
+
+Es gibt zwei Wege. Die Anmeldung über dein Konto ist der einfachere: Du trägst nur die Adresse ein, ein Token wird nicht kopiert. Der Weg mit Token funktioniert mit jedem MCP-Client.
+
+### Mit Anmeldung über dein Konto
+
+1. Trage `https://mcp.mapx.at/mcp` als MCP-Server in deiner Anwendung ein (siehe unten).
+2. Der Assistent leitet dich zu account.mapx.at. Melde dich an oder registriere dich.
+3. Auf der Zustimmungsseite siehst du die Anwendung, das Weiterleitungsziel, dein Konto und was der Zugriff erlaubt: nur lesende Werkzeuge, Aufrufe zählen zu deiner Nutzung, kein Zugriff auf dein Konto oder deine anderen Tokens. Bestätige die Verbindung.
+4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Welche Apotheken liegen im Umkreis von 500 m um den Bahnhof Melk?“.
+
+Die Verbindung erscheint danach unter [account.mapx.at](https://account.mapx.at/) → **Tokens** als „verbunden über <Host>“. Je Anwendung sind bis zu fünf Verbindungen gleichzeitig möglich, zum Beispiel Browser, Desktop und Handy. Die Verbindung läuft nicht von selbst ab.
+
+Diese Anwendungen sind für die Anmeldung über das Konto freigegeben:
+
+- **claude.ai** (Web, Desktop, Mobil): in den Einstellungen unter **Connectors** einen eigenen Connector hinzufügen und die Adresse eintragen. Die genaue Menüführung hängt vom Tarif ab und ändert sich; sie steht in der [Hilfe von Anthropic](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp). In Team- und Enterprise-Tarifen legt zuerst ein Owner den Connector an.
+- **Claude Code:** `claude mcp add --transport http mapx https://mcp.mapx.at/mcp`, dann in Claude Code `/mcp` eingeben und die Anmeldung für mapx starten.
+- **ChatGPT:** Connectoren bzw. Apps mit eigener MCP-Adresse, je nach Tarif und Einstellung verfügbar (teils nur im Entwicklermodus). Schritte und Verfügbarkeit stehen in der [Hilfe von OpenAI](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+
+Die Anmeldung über das Konto ist auf bekannte Anwendungen beschränkt. Für alle anderen Clients nimm den Weg mit Token; weitere Anwendungen schaltet der Support auf Anfrage frei (support@mapx.at).
+
+### Mit Token
 
 1. Lege unter [account.mapx.at/tokens/new?kind=mcp](https://account.mapx.at/tokens/new?kind=mcp) einen Token an. Wähle den Typ **KI-Assistent (MCP)**, vergib einen Namen und optional ein Ablaufdatum. Der Token wird einmal angezeigt; kopiere ihn dann.
 2. Trage den Server in deinen Client ein (siehe unten) und setze den Token dort ein, wo die Beispiele `YOUR_MCP_TOKEN` zeigen.
-3. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Welche Apotheken liegen im Umkreis von 500 m um den Bahnhof Melk?“.
+3. Stelle eine Frage, die österreichische Daten braucht.
 
 Der Token gilt nur am MCP-Server. Er hat keine Domain- oder IP-Bindung, kann ein Ablaufdatum haben und lässt sich in deinem Konto jederzeit sperren oder rotieren.
 
-## Client einrichten
+#### Clients für den Weg mit Token
 
 Diese Clients nehmen einen festen Header, der Token steht also direkt in der Konfiguration.
 
@@ -115,7 +136,20 @@ curl https://api.openai.com/v1/responses \
   }'
 ```
 
-> claude.ai und ChatGPT (Connectoren im Browser und in der App) brauchen die Anmeldung über dein Konto (OAuth). Das folgt in einem zweiten Schritt und ist in Vorbereitung; bis dahin nutze einen der Clients oben.
+## Verbindung trennen
+
+Unter [account.mapx.at](https://account.mapx.at/) → **Tokens** findest du jede Verbindung über das Konto als „verbunden über <Host>“. Mit **Verbindung trennen** beendest du sie, mit **Sperren** wird sie sofort abgelehnt und lässt sich wieder entsperren. Der Assistent bekommt danach `401` und fragt bei Bedarf neu nach der Anmeldung.
+
+## Für Entwickler
+
+Der MCP-Server folgt der MCP-Autorisierung (OAuth 2.1):
+
+- Protected Resource Metadata: `https://mcp.mapx.at/.well-known/oauth-protected-resource/mcp`
+- Autorisierungsserver: `https://account.mapx.at` (Metadaten unter `/.well-known/oauth-authorization-server`)
+- Authorization Code mit PKCE (`S256`); öffentliche Clients identifizieren sich über Client ID Metadata Documents, eine dynamische Registrierung gibt es nicht.
+- Scope `mcp`. Das Zugriffstoken läuft nicht ab, es gibt keinen Refresh-Token; der Widerruf geschieht im Konto.
+
+Limits, Zählung und Werkzeuge sind für beide Wege gleich.
 
 ## Werkzeuge
 
@@ -188,7 +222,8 @@ Deine Fragen und die Ergebnisse laufen über den Anbieter deines Assistenten. ma
 
 | Symptom | Ursache und Abhilfe |
 |---|---|
-| `401` | Kein oder ungültiger Token. Prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist. |
+| `401` | Kein oder ungültiger Token. Bei Anmeldung über das Konto startet der Assistent damit die Anmeldung; nach dem Trennen oder Sperren meldet er `401` und fragt neu. Beim Weg mit Token prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist. |
+| Fehlerseite „Anwendung nicht zugelassen“ | Die Anwendung steht nicht auf der Liste der freigegebenen Anwendungen. Nimm den Weg mit Token oder schreibe an support@mapx.at. |
 | `403` `mcp-token-required` | Am MCP-Server wurde ein öffentlicher (`mx_pk_`) oder geheimer (`mx_sk_`) Token verwendet. Lege einen Token vom Typ „KI-Assistent (MCP)“ an. |
 | `403` `mcp-token-only` | Ein `mx_mcp_`-Token wurde für einen direkten API-Aufruf verwendet. Nimm dort einen geheimen Token (`mx_sk_`). |
 | `429` | Ein Limit wurde überschritten. Warte die in der Meldung genannte Zeit und rufe weniger parallel auf. |

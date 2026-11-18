@@ -9,7 +9,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - **Basis-URLs:** API `https://api.mapx.at/v1/`, Routing `https://routing.mapx.at/`, Suche `https://search.mapx.at/`, Kacheln `https://tiles.mapx.at/`. Die Daten gelten nur für Österreich.
 - **Authentifizierung:** kostenloses Konto auf https://account.mapx.at, dort unter „Tokens“ einen Token anlegen (kein nutzungsabhängiger Preis). Server und Skripte senden `Authorization: Bearer YOUR_TOKEN`, Browser, Bilder und MapLibre-Kachel-URLs den Query-Parameter `access_token=YOUR_TOKEN`.
 - **Token-Arten:** öffentlich `mx_pk_…` für Websites und Apps (nur `GET`/`HEAD`, nur schreibgeschützte Produkte, an erlaubte Origins oder eine Android-App gebunden); geheim `mx_sk_…` für Server, Skripte und CI (nie in Webseiten oder Apps, optional an IP-Bereiche gebunden); `mx_mcp_…` (KI-Assistent) nur für den MCP-Server.
-- **MCP-Server:** `https://mcp.mapx.at/mcp` (Streamable HTTP, nur lesende Werkzeuge für Österreich), Token vom Typ „KI-Assistent (MCP)“ (`mx_mcp_…`) im Header `Authorization: Bearer …`; Einrichtung in der Anleitung „MCP-Server für Österreich-Geodaten“.
+- **MCP-Server:** `https://mcp.mapx.at/mcp` (Streamable HTTP, nur lesende Werkzeuge für Österreich), Token vom Typ „KI-Assistent (MCP)“ (`mx_mcp_…`) im Header `Authorization: Bearer …`; alternativ Anmeldung über das mapx-Konto (OAuth 2.1 mit PKCE) in claude.ai, ChatGPT und Claude Code: nur die Adresse eintragen und anmelden; Einrichtung in der Anleitung „MCP-Server für Österreich-Geodaten“.
 - **Koordinaten:** immer `lon,lat` (WGS84), mehrere Punkte mit `;` getrennt, also Länge vor Breite.
 - **OpenAPI:** https://api.mapx.at/v1/openapi.json (ohne Token abrufbar). CORS ist offen.
 - **Limits:** je Token und Zone (`tiles`, `search`, `route`, `elevation`, `static`, `heavy`), Überschreitung ergibt `429` mit `Retry-After`; Zahlen in [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Fehler sind `application/problem+json` mit stabilem `code`.
@@ -102,7 +102,7 @@ Die OpenAPI-Beschreibung `https://api.mapx.at/v1/openapi.json` und CORS-Prefligh
 |---|---|---|---|
 | Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo es erlaubt ist. | Nur lesende Produkte, nur `GET`/`HEAD`. Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
 | Geheim | `mx_sk_…` | Server, Skripte und CI. Nie in eine Webseite oder App einbauen. | Keine Origin-Bindung; optional an IP-Bereiche (CIDR) gebunden. |
-| KI-Assistent (MCP) | `mx_mcp_…` | KI-Assistenten und Agenten, die den [mapx-MCP-Server](https://docs.mapx.at/de/guides/mcp.md) nutzen. | Gilt nur am `https://mcp.mapx.at/mcp`, keine Origin- oder IP-Bindung, optional ein Ablaufdatum. Direkte API-Aufrufe damit ergeben `403` `mcp-token-only`. |
+| KI-Assistent (MCP) | `mx_mcp_…` | KI-Assistenten und Agenten, die den [mapx-MCP-Server](https://docs.mapx.at/de/guides/mcp.md) nutzen. | Entsteht von Hand oder durch die Anmeldung über das Konto (erscheint dann als „verbunden über <Host>“). Gilt nur am `https://mcp.mapx.at/mcp`, keine Origin- oder IP-Bindung, optional ein Ablaufdatum. Direkte API-Aufrufe damit ergeben `403` `mcp-token-only`. |
 
 Ein öffentlicher Token wird gegen den Header `Origin` geprüft (bei Kachel- und Bildanfragen ohne Origin gegen den Host des `Referer`). Anfragen von anderen Seiten bekommen `403` mit dem Grund `origin-not-allowed`. `localhost` nur während der Entwicklung als Origin eintragen.
 
@@ -416,7 +416,7 @@ Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://a
 
 ## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
 
-Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. Lege einen Token vom Typ „KI-Assistent (MCP)“ an und trage `https://mcp.mapx.at/mcp` in Claude Code, Cursor, VS Code oder Gemini CLI ein. Connectoren in claude.ai und ChatGPT folgen später.
+Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
 
 ## Was kostet es?
 
@@ -1234,7 +1234,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> Claude Code, Cursor, VS Code oder Gemini CLI mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
 
 Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Katastergrundstücke, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
@@ -1243,17 +1243,38 @@ Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geod
 | Endpunkt | `https://mcp.mapx.at/mcp` |
 | Transport | Streamable HTTP, nur `POST`, zustandslos |
 | Protokollfassungen | `2026-07-28` und ältere ab `2024-11-05` |
-| Anmeldung | Token vom Typ „KI-Assistent (MCP)“, Präfix `mx_mcp_`, im Header `Authorization: Bearer …` |
+| Anmeldung | Entweder über dein mapx-Konto (OAuth 2.1 mit PKCE, nur die Adresse eintragen) oder mit einem Token vom Typ „KI-Assistent (MCP)“, Präfix `mx_mcp_`, im Header `Authorization: Bearer …` |
 
-## In drei Schritten einrichten
+## Einrichten
+
+Es gibt zwei Wege. Die Anmeldung über dein Konto ist der einfachere: Du trägst nur die Adresse ein, ein Token wird nicht kopiert. Der Weg mit Token funktioniert mit jedem MCP-Client.
+
+### Mit Anmeldung über dein Konto
+
+1. Trage `https://mcp.mapx.at/mcp` als MCP-Server in deiner Anwendung ein (siehe unten).
+2. Der Assistent leitet dich zu account.mapx.at. Melde dich an oder registriere dich.
+3. Auf der Zustimmungsseite siehst du die Anwendung, das Weiterleitungsziel, dein Konto und was der Zugriff erlaubt: nur lesende Werkzeuge, Aufrufe zählen zu deiner Nutzung, kein Zugriff auf dein Konto oder deine anderen Tokens. Bestätige die Verbindung.
+4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Welche Apotheken liegen im Umkreis von 500 m um den Bahnhof Melk?“.
+
+Die Verbindung erscheint danach unter [account.mapx.at](https://account.mapx.at/) → **Tokens** als „verbunden über <Host>“. Je Anwendung sind bis zu fünf Verbindungen gleichzeitig möglich, zum Beispiel Browser, Desktop und Handy. Die Verbindung läuft nicht von selbst ab.
+
+Diese Anwendungen sind für die Anmeldung über das Konto freigegeben:
+
+- **claude.ai** (Web, Desktop, Mobil): in den Einstellungen unter **Connectors** einen eigenen Connector hinzufügen und die Adresse eintragen. Die genaue Menüführung hängt vom Tarif ab und ändert sich; sie steht in der [Hilfe von Anthropic](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp). In Team- und Enterprise-Tarifen legt zuerst ein Owner den Connector an.
+- **Claude Code:** `claude mcp add --transport http mapx https://mcp.mapx.at/mcp`, dann in Claude Code `/mcp` eingeben und die Anmeldung für mapx starten.
+- **ChatGPT:** Connectoren bzw. Apps mit eigener MCP-Adresse, je nach Tarif und Einstellung verfügbar (teils nur im Entwicklermodus). Schritte und Verfügbarkeit stehen in der [Hilfe von OpenAI](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+
+Die Anmeldung über das Konto ist auf bekannte Anwendungen beschränkt. Für alle anderen Clients nimm den Weg mit Token; weitere Anwendungen schaltet der Support auf Anfrage frei (support@mapx.at).
+
+### Mit Token
 
 1. Lege unter [account.mapx.at/tokens/new?kind=mcp](https://account.mapx.at/tokens/new?kind=mcp) einen Token an. Wähle den Typ **KI-Assistent (MCP)**, vergib einen Namen und optional ein Ablaufdatum. Der Token wird einmal angezeigt; kopiere ihn dann.
 2. Trage den Server in deinen Client ein (siehe unten) und setze den Token dort ein, wo die Beispiele `YOUR_MCP_TOKEN` zeigen.
-3. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Welche Apotheken liegen im Umkreis von 500 m um den Bahnhof Melk?“.
+3. Stelle eine Frage, die österreichische Daten braucht.
 
 Der Token gilt nur am MCP-Server. Er hat keine Domain- oder IP-Bindung, kann ein Ablaufdatum haben und lässt sich in deinem Konto jederzeit sperren oder rotieren.
 
-## Client einrichten
+#### Clients für den Weg mit Token
 
 Diese Clients nehmen einen festen Header, der Token steht also direkt in der Konfiguration.
 
@@ -1347,7 +1368,20 @@ curl https://api.openai.com/v1/responses \
   }'
 ```
 
-> claude.ai und ChatGPT (Connectoren im Browser und in der App) brauchen die Anmeldung über dein Konto (OAuth). Das folgt in einem zweiten Schritt und ist in Vorbereitung; bis dahin nutze einen der Clients oben.
+## Verbindung trennen
+
+Unter [account.mapx.at](https://account.mapx.at/) → **Tokens** findest du jede Verbindung über das Konto als „verbunden über <Host>“. Mit **Verbindung trennen** beendest du sie, mit **Sperren** wird sie sofort abgelehnt und lässt sich wieder entsperren. Der Assistent bekommt danach `401` und fragt bei Bedarf neu nach der Anmeldung.
+
+## Für Entwickler
+
+Der MCP-Server folgt der MCP-Autorisierung (OAuth 2.1):
+
+- Protected Resource Metadata: `https://mcp.mapx.at/.well-known/oauth-protected-resource/mcp`
+- Autorisierungsserver: `https://account.mapx.at` (Metadaten unter `/.well-known/oauth-authorization-server`)
+- Authorization Code mit PKCE (`S256`); öffentliche Clients identifizieren sich über Client ID Metadata Documents, eine dynamische Registrierung gibt es nicht.
+- Scope `mcp`. Das Zugriffstoken läuft nicht ab, es gibt keinen Refresh-Token; der Widerruf geschieht im Konto.
+
+Limits, Zählung und Werkzeuge sind für beide Wege gleich.
 
 ## Werkzeuge
 
@@ -1420,7 +1454,8 @@ Deine Fragen und die Ergebnisse laufen über den Anbieter deines Assistenten. ma
 
 | Symptom | Ursache und Abhilfe |
 |---|---|
-| `401` | Kein oder ungültiger Token. Prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist. |
+| `401` | Kein oder ungültiger Token. Bei Anmeldung über das Konto startet der Assistent damit die Anmeldung; nach dem Trennen oder Sperren meldet er `401` und fragt neu. Beim Weg mit Token prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist. |
+| Fehlerseite „Anwendung nicht zugelassen“ | Die Anwendung steht nicht auf der Liste der freigegebenen Anwendungen. Nimm den Weg mit Token oder schreibe an support@mapx.at. |
 | `403` `mcp-token-required` | Am MCP-Server wurde ein öffentlicher (`mx_pk_`) oder geheimer (`mx_sk_`) Token verwendet. Lege einen Token vom Typ „KI-Assistent (MCP)“ an. |
 | `403` `mcp-token-only` | Ein `mx_mcp_`-Token wurde für einen direkten API-Aufruf verwendet. Nimm dort einen geheimen Token (`mx_sk_`). |
 | `429` | Ein Limit wurde überschritten. Warte die in der Meldung genannte Zeit und rufe weniger parallel auf. |
@@ -3028,7 +3063,7 @@ Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry
 | `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
 | `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14105 Gst 102/3`, `14105/102/3`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `proximity` | query | string |  | – | lon,lat; ranks equal matches by distance |
+| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better; exact place names stay on top; ignored when bbox is set |
 
 **Beispiel**
 
@@ -3419,7 +3454,7 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat |
+| `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (English, e.g. `pharmacy`; old German ids deprecated until 2027-05-31), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |

@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect Claude Code, Cursor, VS Code or Gemini CLI to mapx: 23 read-only tools for search, routing, transit, elevation, parcels, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 23 read-only tools for search, routing, transit, elevation, parcels, traffic and weather in Austria.
 
 The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address search, routes, public transport, heights, cadastral parcels, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
 
@@ -11,17 +11,38 @@ The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address
 | Endpoint | `https://mcp.mapx.at/mcp` |
 | Transport | Streamable HTTP, `POST` only, stateless |
 | Protocol versions | `2026-07-28` and older ones from `2024-11-05` |
-| Authentication | Token of type "AI assistant (MCP)", prefix `mx_mcp_`, in the header `Authorization: Bearer …` |
+| Authentication | Either sign in with your mapx account (OAuth 2.1 with PKCE, just enter the address) or a token of type "AI assistant (MCP)", prefix `mx_mcp_`, in the header `Authorization: Bearer …` |
 
-## Set up in three steps
+## Set up
+
+There are two ways. Signing in with your account is the simpler one: you only enter the address and do not copy a token. The token way works with any MCP client.
+
+### Sign in with your account
+
+1. Add `https://mcp.mapx.at/mcp` as an MCP server in your application (see below).
+2. The assistant sends you to account.mapx.at. Sign in or register.
+3. The consent page shows the application, the redirect target, your account and what the access allows: read-only tools only, calls count towards your usage, no access to your account or your other tokens. Confirm the connection.
+4. Ask a question that needs Austrian data, for example "Which pharmacies are within 500 m of Melk station?".
+
+The connection then appears at [account.mapx.at](https://account.mapx.at/) → **Tokens** as "connected via <host>". Each application can hold up to five connections at the same time, for example browser, desktop and phone. The connection does not expire on its own.
+
+These applications are approved for signing in with your account:
+
+- **claude.ai** (web, desktop, mobile): under **Connectors** in the settings, add a custom connector and enter the address. The exact menu path depends on your plan and changes over time; it is described in [Anthropic's help](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp). On Team and Enterprise plans an owner adds the connector first.
+- **Claude Code:** `claude mcp add --transport http mapx https://mcp.mapx.at/mcp`, then enter `/mcp` in Claude Code and start the sign-in for mapx.
+- **ChatGPT:** connectors or apps with your own MCP address, available depending on plan and settings (sometimes only in developer mode). Steps and availability are in [OpenAI's help](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+
+Signing in with your account is limited to known applications. For all other clients use the token way; further applications can be enabled on request (support@mapx.at).
+
+### With a token
 
 1. Create a token at [account.mapx.at/tokens/new?kind=mcp](https://account.mapx.at/tokens/new?kind=mcp). Choose the type **AI assistant (MCP)**, give it a name and optionally an expiry date. The token is shown once; copy it then.
 2. Add the server to your client (see below) and paste the token where the examples say `YOUR_MCP_TOKEN`.
-3. Ask a question that needs Austrian data, for example "Which pharmacies are within 500 m of Melk station?".
+3. Ask a question that needs Austrian data.
 
 The token works only at the MCP server. It has no domain or IP binding, can have an expiry date, and you can block or rotate it at any time in your account.
 
-## Set up your client
+#### Clients for the token way
 
 These clients take a fixed header, so the token goes straight into the configuration.
 
@@ -115,7 +136,20 @@ curl https://api.openai.com/v1/responses \
   }'
 ```
 
-> claude.ai and ChatGPT (connectors in the browser and app) need sign-in through your account (OAuth). This follows in a second step and is coming soon; until then use one of the clients above.
+## Disconnect
+
+At [account.mapx.at](https://account.mapx.at/) → **Tokens** every connection made through your account is listed as "connected via <host>". **Disconnect** ends it; **Block** rejects it immediately and can be undone. The assistant then gets `401` and asks you to sign in again when needed.
+
+## For developers
+
+The MCP server follows MCP authorization (OAuth 2.1):
+
+- Protected resource metadata: `https://mcp.mapx.at/.well-known/oauth-protected-resource/mcp`
+- Authorization server: `https://account.mapx.at` (metadata at `/.well-known/oauth-authorization-server`)
+- Authorization code with PKCE (`S256`); public clients identify themselves through Client ID Metadata Documents, there is no dynamic registration.
+- Scope `mcp`. The access token does not expire and there is no refresh token; revocation happens in the account.
+
+Limits, counting and tools are the same for both ways.
 
 ## Tools
 
@@ -188,7 +222,8 @@ Your questions and the results pass through the provider of your assistant. mapx
 
 | Symptom | Cause and fix |
 |---|---|
-| `401` | No or invalid token. Check the `Authorization: Bearer` header and that the token was not deleted or expired. |
+| `401` | No or invalid token. With sign-in through your account, this makes the assistant start the sign-in; after you disconnect or block the connection it reports `401` and asks again. With the token way, check the `Authorization: Bearer` header and that the token was not deleted or expired. |
+| Error page "Application not allowed" | The application is not on the list of approved applications. Use the token way or write to support@mapx.at. |
 | `403` `mcp-token-required` | A public (`mx_pk_`) or secret (`mx_sk_`) token was used at the MCP server. Create a token of type "AI assistant (MCP)". |
 | `403` `mcp-token-only` | An `mx_mcp_` token was used for a direct API call. Use a secret token (`mx_sk_`) there. |
 | `429` | A limit was exceeded. Wait the time stated in the message and make fewer calls in parallel. |

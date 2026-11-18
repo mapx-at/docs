@@ -20,7 +20,7 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat |
+| `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (English, e.g. `pharmacy`; old German ids deprecated until 2027-05-31), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
