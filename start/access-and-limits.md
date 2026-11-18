@@ -64,8 +64,6 @@ const map = new maplibregl.Map({
 
 When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites). Clients that cannot set `transformRequest` then work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"`. Such a response is `private` and must not be shared.
 
-**PMTiles files.** Append the token to the file URL: `pmtiles://https://tiles.mapx.at/<file>.pmtiles?access_token=YOUR_TOKEN`.
-
 **Android.** Send `Authorization: Bearer <public token>` plus `X-Mapx-Android-Package` (package name) and `X-Mapx-Android-Cert` (SHA-256 of the signing certificate, read at run time with `PackageManager`).
 
 Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `token-expired`) or `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) as `application/problem+json`; see [Errors and limits](https://docs.mapx.at/api/errors.md).

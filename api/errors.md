@@ -73,6 +73,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
 | [`invalid-path`](#invalid-path) | 403 | Invalid request path |
 | [`forbidden`](#forbidden) | 403 | Forbidden |
+| [`range-required`](#range-required) | 403 | Range required |
 | [`unknown-path`](#unknown-path) | 404 | Unknown path |
 | [`not-found`](#not-found) | 404 | Not found |
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
@@ -238,6 +239,14 @@ What to do: Send a normal path as listed in the [OpenAPI description](https://ap
 Access is refused without a more specific reason, for example a path that is blocked at the gateway.
 
 What to do: Compare path and host with the [OpenAPI description](https://api.mapx.at/v1/openapi.json).
+
+### range-required
+
+**403** · Range required
+
+`tiles.mapx.at` serves PMTiles files only in pieces: a `GET` on a `.pmtiles` file needs exactly one closed `Range` header (`bytes=<start>-<end>`). Requests without `Range`, with an open (`bytes=100-`), suffix (`bytes=-500`) or multiple range are refused. MapLibre with pmtiles.js and the mapx styles send valid ranges on their own. The gateway checks this before the token, like the method.
+
+What to do: Load maps through the [style](https://docs.mapx.at/api/styles.md), [TileJSON or `{z}/{x}/{y}` tiles](https://docs.mapx.at/api/tiles.md). Whole files are not offered for download.
 
 ### unknown-path
 

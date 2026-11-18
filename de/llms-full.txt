@@ -137,8 +137,6 @@ const map = new maplibregl.Map({
 
 Wird ein Style mit `?access_token=…` angefordert, schreibt die API den Token in alle `mapx.at`-URLs des Styles (Tiles, Glyphs, Sprites). Clients ohne `transformRequest` kommen dann mit `style: "https://api.mapx.at/v1/styles/streets?access_token=DEIN_TOKEN"` aus. Diese Antwort ist `private` und darf nicht geteilt werden.
 
-**PMTiles-Dateien.** Token an die Datei-URL hängen: `pmtiles://https://tiles.mapx.at/<datei>.pmtiles?access_token=DEIN_TOKEN`.
-
 **Android.** `Authorization: Bearer <öffentlicher Token>` plus `X-Mapx-Android-Package` (Paketname) und `X-Mapx-Android-Cert` (SHA-256 des Signaturzertifikats, zur Laufzeit per `PackageManager` gelesen).
 
 Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-token`, `token-expired`) oder `403` (`token-blocked`, `pk-not-allowed`, `origin-missing`, `origin-not-allowed`, `app-not-allowed`, `ip-not-allowed`) als `application/problem+json`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
@@ -6765,6 +6763,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
 | [`invalid-path`](#invalid-path) | 403 | Invalid request path |
 | [`forbidden`](#forbidden) | 403 | Forbidden |
+| [`range-required`](#range-required) | 403 | Range erforderlich |
 | [`unknown-path`](#unknown-path) | 404 | Unbekannter Pfad |
 | [`not-found`](#not-found) | 404 | Nicht gefunden |
 | [`unknown-style`](#unknown-style) | 404 | Unbekannter Stil |
@@ -6930,6 +6929,14 @@ Was tun: Einen normalen Pfad aus der [OpenAPI-Beschreibung](https://api.mapx.at/
 Der Zugriff ist ohne spezifischeren Grund abgelehnt, etwa ein Pfad, der am Gateway gesperrt ist.
 
 Was tun: Pfad und Host mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) vergleichen.
+
+### range-required
+
+**403** · Range erforderlich
+
+`tiles.mapx.at` liefert PMTiles-Dateien nur stückweise aus: Ein `GET` auf eine `.pmtiles`-Datei braucht genau einen geschlossenen `Range`-Header (`bytes=<start>-<ende>`). Anfragen ohne `Range`, mit offener (`bytes=100-`), Suffix- (`bytes=-500`) oder Mehrfach-Range werden abgelehnt. MapLibre mit pmtiles.js und die mapx-Styles senden von sich aus passende Ranges. Das Gateway prüft das wie die Methode vor dem Token.
+
+Was tun: Karten über den [Style](https://docs.mapx.at/de/api/styles.md), [TileJSON oder `{z}/{x}/{y}`-Kacheln](https://docs.mapx.at/de/api/tiles.md) laden. Ganze Dateien gibt es nicht zum Herunterladen.
 
 ### unknown-path
 
@@ -7194,7 +7201,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/mapx-basis-20260401-6ae3c128.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -7314,7 +7321,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/mapx-kataster-20260401-e4504d72.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -7413,7 +7420,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/hoehenlinien-20250915-2037a3df.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -7706,7 +7713,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/relief-dsm-terrainrgb-20250915-d19cb434.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -7809,7 +7816,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -8011,7 +8018,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/dop-flugblock-20251003-0d0d122e.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles/)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -8636,6 +8643,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 - [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/), verlinkt aus Konto, Registrierung und Doku.
 
 ### Geändert
+- `tiles.mapx.at`: `GET` auf `.pmtiles`-Dateien nur noch mit genau einer geschlossenen `Range` (`bytes=<start>-<ende>`), sonst `403` [`range-required`](https://docs.mapx.at/de/api/errors.md#range-required). MapLibre mit pmtiles.js ist nicht betroffen. Die Hinweise auf direkte PMTiles-URLs in den Tileset-Seiten und unter Zugang und Limits sind entfernt; Karten laden über Style, TileJSON oder `{z}/{x}/{y}`.
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
 - Einheitliche Fehlerantworten: Auch Anmeldefehler und alle Fehler des Gateways kommen als `application/problem+json` mit eigenem `title` und `detail` je Code (statt `Unauthorized`/`Forbidden` ohne `detail`); `429` hat immer den Titel `Rate limit exceeded`; `405` kommt mit Header `Allow` auch vom Gateway, und zwar vor der Token-Prüfung. Neue Codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) und `upstream-timeout` (504). Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 

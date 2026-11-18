@@ -73,6 +73,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
 | [`invalid-path`](#invalid-path) | 403 | Invalid request path |
 | [`forbidden`](#forbidden) | 403 | Forbidden |
+| [`range-required`](#range-required) | 403 | Range erforderlich |
 | [`unknown-path`](#unknown-path) | 404 | Unbekannter Pfad |
 | [`not-found`](#not-found) | 404 | Nicht gefunden |
 | [`unknown-style`](#unknown-style) | 404 | Unbekannter Stil |
@@ -238,6 +239,14 @@ Was tun: Einen normalen Pfad aus der [OpenAPI-Beschreibung](https://api.mapx.at/
 Der Zugriff ist ohne spezifischeren Grund abgelehnt, etwa ein Pfad, der am Gateway gesperrt ist.
 
 Was tun: Pfad und Host mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) vergleichen.
+
+### range-required
+
+**403** · Range erforderlich
+
+`tiles.mapx.at` liefert PMTiles-Dateien nur stückweise aus: Ein `GET` auf eine `.pmtiles`-Datei braucht genau einen geschlossenen `Range`-Header (`bytes=<start>-<ende>`). Anfragen ohne `Range`, mit offener (`bytes=100-`), Suffix- (`bytes=-500`) oder Mehrfach-Range werden abgelehnt. MapLibre mit pmtiles.js und die mapx-Styles senden von sich aus passende Ranges. Das Gateway prüft das wie die Methode vor dem Token.
+
+Was tun: Karten über den [Style](https://docs.mapx.at/de/api/styles.md), [TileJSON oder `{z}/{x}/{y}`-Kacheln](https://docs.mapx.at/de/api/tiles.md) laden. Ganze Dateien gibt es nicht zum Herunterladen.
 
 ### unknown-path
 
