@@ -474,10 +474,6 @@ Raster tiles are 512 px. Set `tileSize: 512` in your client. See [Tile scheme](h
 
 No. It shows parcel boundaries for orientation and does not replace a land register extract or a survey.
 
-## Which old names still work?
-
-The former German style, tileset and category names work until 2027-05-31. See [Migration](https://docs.mapx.at/api/migration.md).
-
 ## Where do I report a problem?
 
 Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).
@@ -2416,7 +2412,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - **Errors** are `application/problem+json` (RFC 9457) with a stable `code`, including `401`/`403` for token problems. See [Errors and limits](https://docs.mapx.at/api/errors.md).
 - **Limits** apply per IP address and zone, plus a per-minute limit per token; `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 - **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
-- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Deprecations are announced in the [Changelog](https://docs.mapx.at/reference/changelog.md) with a sunset date.
+- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Changes are listed in the [Changelog](https://docs.mapx.at/reference/changelog.md).
 
 ## APIs
 
@@ -2440,7 +2436,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 
 - [Tilesets](https://docs.mapx.at/tilesets/index.md): data sheets of every tileset.
 - [Style specification](https://docs.mapx.at/reference/style-spec.md), [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md), [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
-- [Errors and limits](https://docs.mapx.at/api/errors.md), [Migration](https://docs.mapx.at/api/migration.md), [Changelog](https://docs.mapx.at/reference/changelog.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
+- [Errors and limits](https://docs.mapx.at/api/errors.md), [Changelog](https://docs.mapx.at/reference/changelog.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
 - [Status](https://api.mapx.at/health): health check of the API.
 
 ---
@@ -7264,7 +7260,7 @@ What to do: Send a normal path as listed in the [OpenAPI description](https://ap
 
 The path does not exist.
 
-What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` were removed. An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
+What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
 
 ### not-found
 
@@ -7409,132 +7405,6 @@ JSON responses carrying data have a top-level `attribution` field (plain text, n
 
 ---
 
-# Migration to English API names
-
-Source: https://docs.mapx.at/api/migration/
-
-> Former German API IDs and field names, their English successors, the deprecation headers and the sunset date 2027-05-31.
-
-Since 2026-11-08 the API uses English identifiers for styles, tilesets, search categories and response fields. The former German names keep working unchanged **until 2027-05-31** (sunset). After that they return `404`, or the old fields are no longer included.
-
-> **Warning:** If nothing changes by 2027-05-31, requests with the old names will fail from then on. The new names already work today; switching is a pure rename, the data is identical.
-
-## Headers on old names
-
-A request using an old name returns the same response as with the new name, plus three headers:
-
-| Header | Meaning |
-|---|---|
-| `Deprecation: @1794096000` | The name has been deprecated since 2026-11-08 ([RFC 9745](https://www.rfc-editor.org/rfc/rfc9745), Unix timestamp in seconds). |
-| `Sunset: Mon, 31 May 2027 00:00:00 GMT` | From this moment the old name is removed ([RFC 8594](https://www.rfc-editor.org/rfc/rfc8594)). |
-| `Link: <https://api.mapx.at/v1/styles/streets>; rel="successor-version"` | The same resource under the new name. |
-
-```bash
-curl -sI -H "Authorization: Bearer YOUR_TOKEN" https://api.mapx.at/v1/styles/karte | grep -iE '^(deprecation|sunset|link)'
-```
-
-The headers appear on styles (`/v1/styles/{id}` including sprites and static tiles), static images (`/v1/static/{style}/…`), tiles, TileJSON, tilequery, and on the Search Box when old category IDs are used. Responses with old field names (parcel, elevation) contain both names side by side; the old ones are marked deprecated in the [OpenAPI](https://api.mapx.at/v1/openapi.json).
-
-## Style IDs
-
-Applies to `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/styles/{id}/sprite` and `/v1/static/{style}/…`.
-
-| old | new |
-|---|---|
-| `karte` | `streets` |
-| `karte-morgen` | `streets-dawn` |
-| `karte-abend` | `streets-dusk` |
-| `karte-nacht` | `streets-night` |
-| `karte-verkehr` | `traffic-day` |
-| `luftbild` | `satellite` |
-| `hybrid` | `satellite-streets` |
-| `gelaende` | `outdoors` |
-| `satellit-aktuell` | `satellite-current` (since 2026-11-18) |
-
-Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). Added on 2026-11-18: `satellit-aktuell` became `satellite-current` (same headers and sunset); the static images keep supporting only the styles listed there.
-
-## Tilesets
-
-Applies to `/v1/tiles`, TileJSON, XYZ tile paths and `/v1/tilequery`. `dtm` and `dsm` stay. The PMTiles file names do not change.
-
-| old | new |
-|---|---|
-| `basis` | `streets` |
-| `kataster` | `cadastre` |
-| `hoehenlinien` | `contours` |
-| `relief` | `terrain-rgb` |
-| `dop` | `orthophoto` |
-| `dop_flugblock` | `orthophoto-flight-blocks` |
-| `rastanlagen` | `rest-areas` (since 2026-11-18) |
-
-The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) and the layer names inside the tiles (for example `rastanlagen`) stay unchanged for now.
-
-## Search categories
-
-Applies to `/v1/searchbox/category/{id}`, `poi_category` and `poi_category_ids`. The `name` stays localised via `language=`. Unchanged: `kindergarten`, `defibrillator`, `park`, `museum`.
-
-| old | new |
-|---|---|
-| `bahnhof` | `train_station` |
-| `haltestelle` | `bus_stop` |
-| `kirche` | `place_of_worship_church` |
-| `religion` | `place_of_worship` |
-| `schule` | `school` |
-| `universitaet` | `university` |
-| `krankenhaus` | `hospital` |
-| `ambulatorium` | `clinic` |
-| `apotheke` | `pharmacy` |
-| `arzt` | `doctor` |
-| `rettung` | `ambulance_station` |
-| `polizei` | `police` |
-| `feuerwehr` | `fire_station` |
-| `gemeindeamt` | `town_hall` |
-| `zoll` | `customs` |
-| `tankstelle` | `gas_station` |
-| `ladestation` | `charging_station` |
-| `parkplatz` | `parking` |
-| `sharing` | `vehicle_sharing` |
-| `rastplatz` | `rest_area` |
-| `faehre` | `ferry_terminal` |
-| `hubschrauberlandeplatz` | `heliport` |
-| `mautstelle` | `toll_booth` |
-| `huette` | `alpine_hut` |
-| `gasthaus` | `restaurant` |
-| `unterkunft` | `lodging` |
-| `campingplatz` | `campground` |
-| `gipfel` | `peak` |
-| `pass` | `mountain_pass` |
-| `hoehle` | `cave` |
-| `schwimmbad` | `swimming_pool` |
-| `sportanlage` | `sports_centre` |
-| `golfplatz` | `golf_course` |
-| `spielplatz` | `playground` |
-| `tiergarten` | `zoo` |
-| `friedhof` | `cemetery` |
-| `bibliothek` | `library` |
-| `theater` | `theatre` |
-| `burg` | `castle` |
-| `denkmal` | `monument` |
-| `sehenswuerdigkeit` | `tourist_attraction` |
-| `markt` | `marketplace` |
-| `forst` | `forest` |
-| `toilette` | `toilets` |
-| `trinkwasser` | `drinking_water` |
-
-## Fields
-
-| Endpoint | old | new |
-|---|---|---|
-| `/v1/parcel` | `gstnr` | `parcel_number` |
-| `/v1/parcel` | `kgnr` | `cadastral_municipality_id` |
-| `/v1/parcel` | `bauflaeche` | `is_building_land` |
-| `/v1/parcel` | `quelle` | `source` |
-| `/v1/elevation`, `/v1/elevation/profile`, `/v1/elevation/{coordinate}`, `/v1/tilequery` | `stichtag` | `reference_date` |
-
-Until the sunset, responses contain both fields. `/v1/weather/*` already returns wind direction as `wind_direction_deg`.
-
----
-
 # Tilesets: vector and raster tiles
 
 Source: https://docs.mapx.at/tilesets/
@@ -7566,7 +7436,7 @@ Use a tileset by name:
 map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
 ```
 
-The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Former German names still work until 2027-05-31, see [Migration](https://docs.mapx.at/api/migration.md).
+The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
 
 ## Next
 
@@ -8350,7 +8220,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:reference_date` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
 
 ## TileJSON, zoom and update
 
@@ -8377,7 +8247,7 @@ Four further fixed tilesets are derived from the same composite. They are transp
 
 | Tileset | Shows | Value and colour |
 |---|---|---|
-| `sentinel2-datum` | Acquisition date per pixel | age in days before `mapx:stand`: 0 green, 20 yellow, 45 orange, 90 red, 180 dark red |
+| `sentinel2-date` | Acquisition date per pixel | age in days before `mapx:reference_date`: 0 green, 20 yellow, 45 orange, 90 red, 180 dark red |
 | `sentinel2-ndvi` | Vegetation, (NIR - red) / (NIR + red) | -0.1 grey, 0.05 bare, 0.2 sand, 0.4 light green, 0.85 dark green |
 | `sentinel2-ndwi` | Water, (green - NIR) / (green + NIR) | only values above 0: light blue (0) to dark blue (0.7) |
 | `sentinel2-ndsi` | Snow, (green - SWIR) / (green + SWIR) | only values from 0.4: light blue to white (0.8); water is excluded by a NIR threshold |
@@ -8523,7 +8393,7 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 
 | | |
 |---|---|
-| Tileset | `rest-areas` (old name `rastanlagen` deprecated until 2027-05-31), vector, z7 to z14 |
+| Tileset | `rest-areas`, vector, z7 to z14 |
 | Layer | `rastanlagen` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
 | Style | group `rest_areas`, off by default: point, name from z12; sites with truck spaces darker |
 | Search | category `rastplatz` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
@@ -9041,7 +8911,7 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 | `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
 | `rest-areas` | ASFINAG, CC BY 4.0 |
 | `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
-| `sentinel2`, `sentinel2-datum`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
+| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
 
 ## Text per API
 
@@ -9067,9 +8937,7 @@ The credit is also stored in the TileJSON and PMTiles metadata.
 
 Source: https://docs.mapx.at/reference/changelog/
 
-> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates and sunset notices.
-
-Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](https://docs.mapx.at/api/migration.md).
+> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
 
 ## 2026-11-18
 
@@ -9079,6 +8947,19 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 
 ### Changed
 - Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
+
+### Removed
+- The former German names and duplicate fields (transition since 2026-11-08) are removed; only the English names apply. Old names return the same error as any unknown name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"` are gone. Mapping:
+
+| Area | old → new |
+|---|---|
+| Style IDs | `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`, `satellit-aktuell` → `satellite-current` |
+| Tilesets | `basis`, `mapx-basis` → `streets`; `kataster`, `mapx-kataster` → `cadastre`; `hoehenlinien` → `contours`; `relief`, `relief-terrainrgb` → `terrain-rgb` (short name `dtm` stays); `relief-dsm-terrainrgb` → `dsm`; `dop`, `dop-ortho` → `orthophoto`; `dop_flugblock`, `dop-flugblock` → `orthophoto-flight-blocks`; `rastanlagen` → `rest-areas`; `bike_routes` → `bike-routes`; `gip_poi` → `gip-poi`; `sentinel2-datum` → `sentinel2-date` |
+| Search categories | `bahnhof` → `train_station`, `haltestelle` → `bus_stop`, `kirche` → `place_of_worship_church`, `religion` → `place_of_worship`, `schule` → `school`, `universitaet` → `university`, `krankenhaus` → `hospital`, `ambulatorium` → `clinic`, `apotheke` → `pharmacy`, `arzt` → `doctor`, `rettung` → `ambulance_station`, `polizei` → `police`, `feuerwehr` → `fire_station`, `gemeindeamt` → `town_hall`, `zoll` → `customs`, `tankstelle` → `gas_station`, `ladestation` → `charging_station`, `parkplatz` → `parking`, `sharing` → `vehicle_sharing`, `rastplatz` → `rest_area`, `faehre` → `ferry_terminal`, `hubschrauberlandeplatz` → `heliport`, `mautstelle` → `toll_booth`, `huette` → `alpine_hut`, `gasthaus` → `restaurant`, `unterkunft` → `lodging`, `campingplatz` → `campground`, `gipfel` → `peak`, `pass` → `mountain_pass`, `hoehle` → `cave`, `schwimmbad` → `swimming_pool`, `sportanlage` → `sports_centre`, `golfplatz` → `golf_course`, `spielplatz` → `playground`, `tiergarten` → `zoo`, `friedhof` → `cemetery`, `bibliothek` → `library`, `theater` → `theatre`, `burg` → `castle`, `denkmal` → `monument`, `sehenswuerdigkeit` → `tourist_attraction`, `markt` → `marketplace`, `forst` → `forest`, `toilette` → `toilets`, `trinkwasser` → `drinking_water` |
+| Fields `/v1/parcel` | `gstnr` → `parcel_number`, `kgnr` → `cadastral_municipality_id`, `bauflaeche` → `is_building_land`, `quelle` → `source` |
+| Fields elevation and tilequery | `stichtag` → `reference_date` |
+| Fields `/v1/tiles` and TileJSON | `stand` → `reference_date`, `aliases` removed; TileJSON `mapx:stand` → `mapx:reference_date` |
+| Field address validation | `adrcd` → `address_code` |
 
 ## 2026-11-08
 
@@ -9100,11 +8981,11 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 - The OpenAPI description is OpenAPI 3.1 with response schemas and examples.
 - Directions `overview` defaults to `simplified`; `overview=full` returns every vertex.
 
-### Deprecated (sunset 2027-05-31)
+### Deprecated (removed on 2026-11-18)
 - Style IDs `karte`, `luftbild`, `gelaende`, `hybrid` and the other German IDs.
 - Tileset names `basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`.
 - The 49 German search category IDs (for example `bahnhof`, `apotheke`).
-- Parcel fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` and elevation field `stichtag` (both names are in the response until the sunset).
+- Parcel fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` and elevation field `stichtag`.
 
 ### Removed
 - The alias paths `/v1/{tileset}.json` and `/v1/{tileset}/{z}/{x}/{y}.{ext}`. Use `/v1/tiles/…`.

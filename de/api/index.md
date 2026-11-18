@@ -12,7 +12,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 - **Fehler** sind `application/problem+json` (RFC 9457) mit stabilem `code`. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 - **Limits** gelten pro IP-Adresse und Zone, dazu ein Minutenlimit je Token; `429` trägt `Retry-After`. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 - **Caching:** Tiles, Styles und TileJSON tragen `ETag`; mit `If-None-Match` kommt `304`.
-- **Versionierung:** Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu. Deprecations werden im [Changelog](https://docs.mapx.at/de/reference/changelog.md) mit Stichtag angekündigt.
+- **Versionierung:** Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu. Änderungen stehen im [Changelog](https://docs.mapx.at/de/reference/changelog.md).
 
 ## APIs
 
@@ -36,5 +36,5 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 
 - [Tilesets](https://docs.mapx.at/de/tilesets/index.md): Datenblätter aller Tilesets.
 - [Style-Spezifikation](https://docs.mapx.at/de/reference/style-spec.md), [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md), [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
-- [Fehler und Limits](https://docs.mapx.at/de/api/errors.md), [Migration](https://docs.mapx.at/de/api/migration.md), [Changelog](https://docs.mapx.at/de/reference/changelog.md), [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+- [Fehler und Limits](https://docs.mapx.at/de/api/errors.md), [Changelog](https://docs.mapx.at/de/reference/changelog.md), [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 - [Status](https://api.mapx.at/health): Health-Check der API.

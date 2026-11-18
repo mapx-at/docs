@@ -2,9 +2,7 @@
 
 Source: https://docs.mapx.at/de/reference/changelog/
 
-> Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt, mit Stichtagen und Abschaltterminen.
-
-Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. Details zur Umbenennung: [Migration](https://docs.mapx.at/de/api/migration.md).
+> Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
 ## 2026-11-18
 
@@ -14,6 +12,19 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 
 ### Geändert
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
+
+### Entfernt
+- Alte deutsche Namen und doppelte Felder (Übergang seit 2026-11-08) sind entfernt, es gelten nur die englischen Namen. Alte Namen liefern den gleichen Fehler wie jeder unbekannte Name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); die Header `Deprecation`, `Sunset` und `Link: …; rel="successor-version"` entfallen. Zuordnung:
+
+| Bereich | alt → neu |
+|---|---|
+| Style-IDs | `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`, `satellit-aktuell` → `satellite-current` |
+| Tilesets | `basis`, `mapx-basis` → `streets`; `kataster`, `mapx-kataster` → `cadastre`; `hoehenlinien` → `contours`; `relief`, `relief-terrainrgb` → `terrain-rgb` (Kurzname `dtm` bleibt); `relief-dsm-terrainrgb` → `dsm`; `dop`, `dop-ortho` → `orthophoto`; `dop_flugblock`, `dop-flugblock` → `orthophoto-flight-blocks`; `rastanlagen` → `rest-areas`; `bike_routes` → `bike-routes`; `gip_poi` → `gip-poi`; `sentinel2-datum` → `sentinel2-date` |
+| Suchkategorien | `bahnhof` → `train_station`, `haltestelle` → `bus_stop`, `kirche` → `place_of_worship_church`, `religion` → `place_of_worship`, `schule` → `school`, `universitaet` → `university`, `krankenhaus` → `hospital`, `ambulatorium` → `clinic`, `apotheke` → `pharmacy`, `arzt` → `doctor`, `rettung` → `ambulance_station`, `polizei` → `police`, `feuerwehr` → `fire_station`, `gemeindeamt` → `town_hall`, `zoll` → `customs`, `tankstelle` → `gas_station`, `ladestation` → `charging_station`, `parkplatz` → `parking`, `sharing` → `vehicle_sharing`, `rastplatz` → `rest_area`, `faehre` → `ferry_terminal`, `hubschrauberlandeplatz` → `heliport`, `mautstelle` → `toll_booth`, `huette` → `alpine_hut`, `gasthaus` → `restaurant`, `unterkunft` → `lodging`, `campingplatz` → `campground`, `gipfel` → `peak`, `pass` → `mountain_pass`, `hoehle` → `cave`, `schwimmbad` → `swimming_pool`, `sportanlage` → `sports_centre`, `golfplatz` → `golf_course`, `spielplatz` → `playground`, `tiergarten` → `zoo`, `friedhof` → `cemetery`, `bibliothek` → `library`, `theater` → `theatre`, `burg` → `castle`, `denkmal` → `monument`, `sehenswuerdigkeit` → `tourist_attraction`, `markt` → `marketplace`, `forst` → `forest`, `toilette` → `toilets`, `trinkwasser` → `drinking_water` |
+| Felder `/v1/parcel` | `gstnr` → `parcel_number`, `kgnr` → `cadastral_municipality_id`, `bauflaeche` → `is_building_land`, `quelle` → `source` |
+| Felder Höhe und Tilequery | `stichtag` → `reference_date` |
+| Felder `/v1/tiles` und TileJSON | `stand` → `reference_date`, `aliases` entfällt; TileJSON `mapx:stand` → `mapx:reference_date` |
+| Feld Adressprüfung | `adrcd` → `address_code` |
 
 ## 2026-11-08
 
@@ -35,11 +46,11 @@ Deprecations tragen einen Stichtag: Ab diesem Tag wird der alte Name entfernt. D
 - Die OpenAPI-Beschreibung ist OpenAPI 3.1 mit Antwortschemas und Beispielen.
 - Bei Directions ist `overview` standardmäßig `simplified`; `overview=full` liefert jeden Stützpunkt.
 
-### Veraltet (Deprecated, Stichtag 2027-05-31)
+### Veraltet (am 2026-11-18 entfernt)
 - Style-IDs `karte`, `luftbild`, `gelaende`, `hybrid` und die übrigen deutschen IDs.
 - Tileset-Namen `basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`.
 - Die 49 deutschen Suchkategorie-IDs (zum Beispiel `bahnhof`, `apotheke`).
-- Grundstücksfelder `gstnr`, `kgnr`, `bauflaeche`, `quelle` und Höhenfeld `stichtag` (bis zum Stichtag stehen beide Namen in der Antwort).
+- Grundstücksfelder `gstnr`, `kgnr`, `bauflaeche`, `quelle` und Höhenfeld `stichtag`.
 
 ### Entfernt
 - Die Alias-Pfade `/v1/{tileset}.json` und `/v1/{tileset}/{z}/{x}/{y}.{ext}`. Stattdessen `/v1/tiles/…` verwenden.

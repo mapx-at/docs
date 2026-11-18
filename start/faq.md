@@ -64,10 +64,6 @@ Raster tiles are 512 px. Set `tileSize: 512` in your client. See [Tile scheme](h
 
 No. It shows parcel boundaries for orientation and does not replace a land register extract or a survey.
 
-## Which old names still work?
-
-The former German style, tileset and category names work until 2027-05-31. See [Migration](https://docs.mapx.at/api/migration.md).
-
 ## Where do I report a problem?
 
 Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).

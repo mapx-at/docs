@@ -68,7 +68,6 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Climate API: solar, snow, heat days](https://docs.mapx.at/api/climate.md): Climate API for a point in Austria: solar potential, climate normals, heat days, snow and drought from GeoSphere Austria, with parameters and examples.
 - [Traffic API: incidents and speed limits](https://docs.mapx.at/api/traffic.md): Traffic API for Austria: traffic incidents, motorway speed limits, signs and traffic tiles, with parameters and example requests.
 - [Errors, status codes and rate limits](https://docs.mapx.at/api/errors.md): Error codes (problem+json), HTTP status codes, rate limits per zone and caching rules of all mapx APIs, with Retry-After on 429.
-- [Migration to English API names](https://docs.mapx.at/api/migration.md): Former German API IDs and field names, their English successors, the deprecation headers and the sunset date 2027-05-31.
 
 ## Tilesets
 
@@ -94,7 +93,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Tile scheme: Web Mercator, z/x/y](https://docs.mapx.at/reference/tile-scheme.md): Tile scheme of the mapx tiles: Web Mercator, z/x/y addressing, 512-pixel tiles, resolution per zoom level and overzoom.
 - [Coordinates: lon,lat, WGS84, Web Mercator](https://docs.mapx.at/reference/coordinates.md): Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
 - [Attribution and license (CC BY 4.0)](https://docs.mapx.at/reference/attribution.md): Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
-- [Changelog: API and tileset changes](https://docs.mapx.at/reference/changelog.md): Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates and sunset notices.
+- [Changelog: API and tileset changes](https://docs.mapx.at/reference/changelog.md): Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
 - [SDK reference](https://docs.mapx.at/reference/sdk/index.md): Type reference of mapx-gl: functions, controls, options and response types.
 
 ## Optional

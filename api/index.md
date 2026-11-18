@@ -12,7 +12,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - **Errors** are `application/problem+json` (RFC 9457) with a stable `code`, including `401`/`403` for token problems. See [Errors and limits](https://docs.mapx.at/api/errors.md).
 - **Limits** apply per IP address and zone, plus a per-minute limit per token; `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 - **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
-- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Deprecations are announced in the [Changelog](https://docs.mapx.at/reference/changelog.md) with a sunset date.
+- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Changes are listed in the [Changelog](https://docs.mapx.at/reference/changelog.md).
 
 ## APIs
 
@@ -36,5 +36,5 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 
 - [Tilesets](https://docs.mapx.at/tilesets/index.md): data sheets of every tileset.
 - [Style specification](https://docs.mapx.at/reference/style-spec.md), [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md), [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
-- [Errors and limits](https://docs.mapx.at/api/errors.md), [Migration](https://docs.mapx.at/api/migration.md), [Changelog](https://docs.mapx.at/reference/changelog.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
+- [Errors and limits](https://docs.mapx.at/api/errors.md), [Changelog](https://docs.mapx.at/reference/changelog.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
 - [Status](https://api.mapx.at/health): health check of the API.

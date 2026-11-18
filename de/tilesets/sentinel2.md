@@ -49,7 +49,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:stand` (jüngste eingepflegte Szene); PMTiles direkt: `https://tiles.mapx.at/sentinel2.pmtiles` (Cache 5 Minuten).
+> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:reference_date` (jüngste eingepflegte Szene); PMTiles direkt: `https://tiles.mapx.at/sentinel2.pmtiles` (Cache 5 Minuten).
 
 ## TileJSON, Zoom und Aktualisierung
 
@@ -76,7 +76,7 @@ Aus demselben Composite entstehen vier weitere feste Tilesets. Wo kein Wert vorl
 
 | Tileset | Zeigt | Wert und Farbe |
 |---|---|---|
-| `sentinel2-datum` | Aufnahmedatum je Pixel | Alter in Tagen vor `mapx:stand`: 0 grün, 20 gelb, 45 orange, 90 rot, 180 dunkelrot |
+| `sentinel2-date` | Aufnahmedatum je Pixel | Alter in Tagen vor `mapx:reference_date`: 0 grün, 20 gelb, 45 orange, 90 rot, 180 dunkelrot |
 | `sentinel2-ndvi` | Vegetation, (NIR - Rot) / (NIR + Rot) | -0,1 grau, 0,05 kahl, 0,2 sandfarben, 0,4 hellgrün, 0,85 dunkelgrün |
 | `sentinel2-ndwi` | Wasser, (Grün - NIR) / (Grün + NIR) | nur Werte über 0: hellblau (0) bis dunkelblau (0,7) |
 | `sentinel2-ndsi` | Schnee, (Grün - SWIR) / (Grün + SWIR) | nur Werte ab 0,4: hellblau bis weiß (0,8); Wasser fällt über eine NIR-Schwelle heraus |

@@ -29,7 +29,7 @@ Use a tileset by name:
 map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
 ```
 
-The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`. Former German names still work until 2027-05-31, see [Migration](https://docs.mapx.at/api/migration.md).
+The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
 
 ## Next
 

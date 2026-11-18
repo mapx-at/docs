@@ -231,7 +231,7 @@ Was tun: Einen normalen Pfad aus der [OpenAPI-Beschreibung](https://api.mapx.at/
 
 Diesen Pfad gibt es nicht.
 
-Was tun: Pfad mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) vergleichen. Die früheren Aliase `/v1/{tileset}...` wurden entfernt. Ein unbekanntes Routing-Profil wie das frühere `driving-ev` antwortet mit `400` `invalid-parameter`.
+Was tun: Pfad mit der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) vergleichen. Ein unbekanntes Routing-Profil wie das frühere `driving-ev` antwortet mit `400` `invalid-parameter`.
 
 ### not-found
 

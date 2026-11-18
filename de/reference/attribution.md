@@ -34,7 +34,7 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 | `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
 | `rest-areas` | ASFINAG, CC BY 4.0 |
 | `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
-| `sentinel2`, `sentinel2-datum`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (Jahr der Aufnahmen; steht im TileJSON) |
+| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (Jahr der Aufnahmen; steht im TileJSON) |
 
 ## Text je API
 

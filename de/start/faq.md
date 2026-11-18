@@ -64,10 +64,6 @@ Raster-Tiles haben 512 px. Im Client `tileSize: 512` setzen. Siehe [Tile-Schema]
 
 Nein. Er zeigt Grundstücksgrenzen zur Orientierung und ersetzt weder einen Grundbuchauszug noch eine Vermessung.
 
-## Welche alten Namen funktionieren noch?
-
-Die früheren deutschen Style-, Tileset- und Kategorienamen funktionieren bis 2027-05-31. Siehe [Migration](https://docs.mapx.at/de/api/migration.md).
-
 ## Wo melde ich ein Problem?
 
 An [support@mapx.at](mailto:support@mapx.at) schreiben (technische Fragen und Fehler) oder an [info@mapx.at](mailto:info@mapx.at) (alles andere).

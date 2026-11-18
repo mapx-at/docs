@@ -68,7 +68,6 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Klima-API: Sonne, Schnee, Hitzetage](https://docs.mapx.at/de/api/climate.md): Klima-API für einen Punkt in Österreich: Sonnenpotenzial, Klimanormale, Hitzetage, Schnee und Dürre von GeoSphere Austria, mit Parametern und Beispielen.
 - [Verkehrs-API: Meldungen und Tempolimits](https://docs.mapx.at/de/api/traffic.md): Verkehrs-API für Österreich: Verkehrsmeldungen, Tempolimits auf Autobahnen, Anzeigen und Verkehrskacheln, mit Parametern und Beispielanfragen.
 - [Fehlercodes und Rate Limits der API](https://docs.mapx.at/de/api/errors.md): Fehlercodes (problem+json), HTTP-Statuscodes, Rate Limits je Zone und Caching aller mapx-APIs, dazu Retry-After bei 429.
-- [Migration auf englische API-Namen](https://docs.mapx.at/de/api/migration.md): Alte deutsche IDs und Feldnamen der API, ihre englischen Nachfolger, die Deprecation-Header und das Sunset-Datum 31.05.2027.
 
 ## Tilesets
 
@@ -94,7 +93,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Kachelschema: Web-Mercator, z/x/y](https://docs.mapx.at/de/reference/tile-scheme.md): Kachelschema der mapx-Kacheln: Web-Mercator, z/x/y-Adressierung, 512-Pixel-Kacheln, Auflösung je Zoomstufe und Overzoom.
 - [Koordinaten: lon,lat, WGS84, Web-Mercator](https://docs.mapx.at/de/reference/coordinates.md): Koordinatenreihenfolge lon,lat in allen mapx-APIs, WGS84 und Web-Mercator (EPSG:3857) sowie amtliche österreichische Quellen in MGI und ETRS89.
 - [Quellenangabe und Lizenz (CC BY 4.0)](https://docs.mapx.at/de/reference/attribution.md): Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
-- [Changelog: Änderungen an API und Tilesets](https://docs.mapx.at/de/reference/changelog.md): Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt, mit Stichtagen und Abschaltterminen.
+- [Changelog: Änderungen an API und Tilesets](https://docs.mapx.at/de/reference/changelog.md): Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 - [SDK-Referenz (TypeDoc)](https://docs.mapx.at/de/reference/sdk/index.md): Typreferenz von mapx-gl: Funktionen, Controls, Optionen und Antworttypen (englisch).
 
 ## Optional

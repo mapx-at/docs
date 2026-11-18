@@ -231,7 +231,7 @@ What to do: Send a normal path as listed in the [OpenAPI description](https://ap
 
 The path does not exist.
 
-What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). The former aliases `/v1/{tileset}...` were removed. An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
+What to do: Check the path against the [OpenAPI description](https://api.mapx.at/v1/openapi.json). An unknown routing profile such as the former `driving-ev` answers `400` `invalid-parameter`.
 
 ### not-found
 

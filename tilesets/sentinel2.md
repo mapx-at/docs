@@ -49,7 +49,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -o tile.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:stand` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
+> The tileset is replaced daily (fixed tileset `sentinel2`, no versioned file name). The TileJSON states the date in the field `mapx:reference_date` (most recent ingested scene). PMTiles directly: `https://tiles.mapx.at/sentinel2.pmtiles?access_token=YOUR_TOKEN` (cached for 5 minutes).
 
 ## TileJSON, zoom and update
 
@@ -76,7 +76,7 @@ Four further fixed tilesets are derived from the same composite. They are transp
 
 | Tileset | Shows | Value and colour |
 |---|---|---|
-| `sentinel2-datum` | Acquisition date per pixel | age in days before `mapx:stand`: 0 green, 20 yellow, 45 orange, 90 red, 180 dark red |
+| `sentinel2-date` | Acquisition date per pixel | age in days before `mapx:reference_date`: 0 green, 20 yellow, 45 orange, 90 red, 180 dark red |
 | `sentinel2-ndvi` | Vegetation, (NIR - red) / (NIR + red) | -0.1 grey, 0.05 bare, 0.2 sand, 0.4 light green, 0.85 dark green |
 | `sentinel2-ndwi` | Water, (green - NIR) / (green + NIR) | only values above 0: light blue (0) to dark blue (0.7) |
 | `sentinel2-ndsi` | Snow, (green - SWIR) / (green + SWIR) | only values from 0.4: light blue to white (0.8); water is excluded by a NIR threshold |

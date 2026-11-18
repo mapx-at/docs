@@ -2,9 +2,7 @@
 
 Source: https://docs.mapx.at/reference/changelog/
 
-> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates and sunset notices.
-
-Deprecations carry a sunset date: from that day the old name is removed. Details of the rename: [Migration](https://docs.mapx.at/api/migration.md).
+> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
 
 ## 2026-11-18
 
@@ -14,6 +12,19 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 
 ### Changed
 - Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
+
+### Removed
+- The former German names and duplicate fields (transition since 2026-11-08) are removed; only the English names apply. Old names return the same error as any unknown name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"` are gone. Mapping:
+
+| Area | old → new |
+|---|---|
+| Style IDs | `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`, `satellit-aktuell` → `satellite-current` |
+| Tilesets | `basis`, `mapx-basis` → `streets`; `kataster`, `mapx-kataster` → `cadastre`; `hoehenlinien` → `contours`; `relief`, `relief-terrainrgb` → `terrain-rgb` (short name `dtm` stays); `relief-dsm-terrainrgb` → `dsm`; `dop`, `dop-ortho` → `orthophoto`; `dop_flugblock`, `dop-flugblock` → `orthophoto-flight-blocks`; `rastanlagen` → `rest-areas`; `bike_routes` → `bike-routes`; `gip_poi` → `gip-poi`; `sentinel2-datum` → `sentinel2-date` |
+| Search categories | `bahnhof` → `train_station`, `haltestelle` → `bus_stop`, `kirche` → `place_of_worship_church`, `religion` → `place_of_worship`, `schule` → `school`, `universitaet` → `university`, `krankenhaus` → `hospital`, `ambulatorium` → `clinic`, `apotheke` → `pharmacy`, `arzt` → `doctor`, `rettung` → `ambulance_station`, `polizei` → `police`, `feuerwehr` → `fire_station`, `gemeindeamt` → `town_hall`, `zoll` → `customs`, `tankstelle` → `gas_station`, `ladestation` → `charging_station`, `parkplatz` → `parking`, `sharing` → `vehicle_sharing`, `rastplatz` → `rest_area`, `faehre` → `ferry_terminal`, `hubschrauberlandeplatz` → `heliport`, `mautstelle` → `toll_booth`, `huette` → `alpine_hut`, `gasthaus` → `restaurant`, `unterkunft` → `lodging`, `campingplatz` → `campground`, `gipfel` → `peak`, `pass` → `mountain_pass`, `hoehle` → `cave`, `schwimmbad` → `swimming_pool`, `sportanlage` → `sports_centre`, `golfplatz` → `golf_course`, `spielplatz` → `playground`, `tiergarten` → `zoo`, `friedhof` → `cemetery`, `bibliothek` → `library`, `theater` → `theatre`, `burg` → `castle`, `denkmal` → `monument`, `sehenswuerdigkeit` → `tourist_attraction`, `markt` → `marketplace`, `forst` → `forest`, `toilette` → `toilets`, `trinkwasser` → `drinking_water` |
+| Fields `/v1/parcel` | `gstnr` → `parcel_number`, `kgnr` → `cadastral_municipality_id`, `bauflaeche` → `is_building_land`, `quelle` → `source` |
+| Fields elevation and tilequery | `stichtag` → `reference_date` |
+| Fields `/v1/tiles` and TileJSON | `stand` → `reference_date`, `aliases` removed; TileJSON `mapx:stand` → `mapx:reference_date` |
+| Field address validation | `adrcd` → `address_code` |
 
 ## 2026-11-08
 
@@ -35,11 +46,11 @@ Deprecations carry a sunset date: from that day the old name is removed. Details
 - The OpenAPI description is OpenAPI 3.1 with response schemas and examples.
 - Directions `overview` defaults to `simplified`; `overview=full` returns every vertex.
 
-### Deprecated (sunset 2027-05-31)
+### Deprecated (removed on 2026-11-18)
 - Style IDs `karte`, `luftbild`, `gelaende`, `hybrid` and the other German IDs.
 - Tileset names `basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`.
 - The 49 German search category IDs (for example `bahnhof`, `apotheke`).
-- Parcel fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` and elevation field `stichtag` (both names are in the response until the sunset).
+- Parcel fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` and elevation field `stichtag`.
 
 ### Removed
 - The alias paths `/v1/{tileset}.json` and `/v1/{tileset}/{z}/{x}/{y}.{ext}`. Use `/v1/tiles/…`.

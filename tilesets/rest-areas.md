@@ -12,7 +12,7 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 
 | | |
 |---|---|
-| Tileset | `rest-areas` (old name `rastanlagen` deprecated until 2027-05-31), vector, z7 to z14 |
+| Tileset | `rest-areas`, vector, z7 to z14 |
 | Layer | `rastanlagen` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
 | Style | group `rest_areas`, off by default: point, name from z12; sites with truck spaces darker |
 | Search | category `rastplatz` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
