@@ -12,6 +12,10 @@ Source: https://docs.mapx.at/reference/changelog/
 
 ### Changed
 - Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
+- Consistent error responses: authentication errors and all gateway errors are now `application/problem+json` with their own `title` and `detail` per code (instead of `Unauthorized`/`Forbidden` without `detail`); `429` always has the title `Rate limit exceeded`; `405` with an `Allow` header also comes from the gateway, before the token check. New codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) and `upstream-timeout` (504). See [Errors and limits](https://docs.mapx.at/api/errors.md).
+
+### Fixed
+- POST requests with a body over 16 KB returned `500` instead of `413` `payload-too-large`.
 
 ### Removed
 - The `mapx-gl` SDK is removed without replacement, as are the files served under `https://map.mapx.at/sdk/v1/` and the SDK pages of these docs (old addresses redirect to the examples). Instead the [examples](https://docs.mapx.at/examples/index.md) show each use case with MapLibre GL JS, OpenLayers or Leaflet and direct API calls (`fetch`).

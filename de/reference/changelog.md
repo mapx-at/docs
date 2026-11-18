@@ -12,6 +12,10 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 ### Geändert
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
+- Einheitliche Fehlerantworten: Auch Anmeldefehler und alle Fehler des Gateways kommen als `application/problem+json` mit eigenem `title` und `detail` je Code (statt `Unauthorized`/`Forbidden` ohne `detail`); `429` hat immer den Titel `Rate limit exceeded`; `405` kommt mit Header `Allow` auch vom Gateway, und zwar vor der Token-Prüfung. Neue Codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) und `upstream-timeout` (504). Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
+
+### Behoben
+- POST-Anfragen mit mehr als 16 KB Körper lieferten `500` statt `413` `payload-too-large`.
 
 ### Entfernt
 - SDK `mapx-gl` entfällt ersatzlos, ebenso die ausgelieferten Dateien unter `https://map.mapx.at/sdk/v1/` und die SDK-Seiten der Doku (alte Adressen leiten auf die Beispiele um). Stattdessen zeigen die [Beispiele](https://docs.mapx.at/de/examples/index.md) jeden Anwendungsfall mit MapLibre GL JS, OpenLayers oder Leaflet und direkten API-Aufrufen (`fetch`).

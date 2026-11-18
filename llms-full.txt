@@ -6808,7 +6808,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 | `type` | URI of the error type (anchor on this page) |
 | `title` | Short summary of the type |
 | `status` | HTTP status |
-| `detail` | Explanation for this request; English by default. Missing on authentication and token errors (see below) |
+| `detail` | Explanation for this request; English by default |
 | `code` | Stable machine-readable code, equals the anchor |
 | `param` | Offending parameter (where applicable) |
 | `allowed` | Accepted values for enumerations (where applicable) |
@@ -6817,11 +6817,13 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 
 Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Authentication errors answer `401` or `403` as `application/problem+json`; the code is also in the response header `X-Mapx-Reason` (readable from browser scripts). Requests without a token get `401` `missing-token`.
 
-These answers come from the token check in front of the API and are terser than the others: `title` is generic (`Unauthorized` for 401, `Forbidden` for 403, `Too many requests` for a 429 from the per-token minute limit), always English, and there is no `detail`. Branch on `code` or `X-Mapx-Reason`.
+These answers come from the token check in the gateway in front of the API. They have the same shape as all other errors: a `title` and `detail` per reason (for example `Access token required` for `missing-token`, `Invalid access token` for `invalid-token`), always English. Branch on `code` or `X-Mapx-Reason`.
 
 ```json
-{"type": "https://docs.mapx.at/api/errors/#missing-token", "title": "Unauthorized", "status": 401, "code": "missing-token"}
+{"type": "https://docs.mapx.at/api/errors/#missing-token", "title": "Access token required", "status": 401, "detail": "Send the token as 'Authorization: Bearer <token>' or '?access_token=<token>'.", "code": "missing-token"}
 ```
+
+The other errors the gateway produces itself (`404` `unknown-path`, `405`, `413`, `414`, `429`, `500`, `502`, `503`, `504`) are `application/problem+json` too, with `type`, `title`, `detail` and `code`. The gateway checks the method before the token: a method that is not allowed gives `405` even when the token is missing.
 
 ```bash
 # with an invalid or unknown token (here the placeholder itself) the answer is 401 invalid-token
@@ -6830,7 +6832,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 
 ## Language
 
-`title` and `detail` are English by default. Except for authentication errors, send `Accept-Language: de` to get German texts; `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
+`title` and `detail` are English by default. Send `Accept-Language: de` to get German texts, except for authentication errors and the other gateway errors (`405`, `413`, `414`, `429`, `5xx`), which are always English (`unknown-path` is available in German); `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
 
 ## Catalog
 
@@ -6841,18 +6843,19 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`invalid-parameter`](#invalid-parameter) | 400 | Invalid parameter |
 | [`invalid-coordinates`](#invalid-coordinates) | 400 | Invalid coordinates |
 | [`invalid-body`](#invalid-body) | 400 | Invalid request body |
-| [`missing-token`](#missing-token) | 401 | Unauthorized (token missing) |
-| [`invalid-token`](#invalid-token) | 401 | Unauthorized (invalid token) |
-| [`token-expired`](#token-expired) | 401 | Unauthorized (token expired) |
-| [`token-blocked`](#token-blocked) | 403 | Forbidden (token blocked) |
-| [`origin-not-allowed`](#origin-not-allowed) | 403 | Forbidden (origin not allowed) |
-| [`origin-missing`](#origin-missing) | 403 | Forbidden (origin missing) |
-| [`pk-not-allowed`](#pk-not-allowed) | 403 | Forbidden (public token not allowed here) |
-| [`app-not-allowed`](#app-not-allowed) | 403 | Forbidden (app not allowed) |
-| [`ip-not-allowed`](#ip-not-allowed) | 403 | Forbidden (IP address not allowed) |
-| [`mcp-token-only`](#mcp-token-only) | 403 | Forbidden (MCP token only valid at the MCP server) |
+| [`missing-token`](#missing-token) | 401 | Access token required |
+| [`invalid-token`](#invalid-token) | 401 | Invalid access token |
+| [`token-expired`](#token-expired) | 401 | Access token expired |
+| [`token-blocked`](#token-blocked) | 403 | Access token blocked |
+| [`origin-not-allowed`](#origin-not-allowed) | 403 | Origin not allowed |
+| [`origin-missing`](#origin-missing) | 403 | Origin missing |
+| [`pk-not-allowed`](#pk-not-allowed) | 403 | Public token not allowed here |
+| [`app-not-allowed`](#app-not-allowed) | 403 | App not allowed |
+| [`ip-not-allowed`](#ip-not-allowed) | 403 | IP not allowed |
+| [`mcp-token-only`](#mcp-token-only) | 403 | MCP token only valid at the MCP server |
 | [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
-| [`invalid-path`](#invalid-path) | 403 | Forbidden (invalid request path) |
+| [`invalid-path`](#invalid-path) | 403 | Invalid request path |
+| [`forbidden`](#forbidden) | 403 | Forbidden |
 | [`unknown-path`](#unknown-path) | 404 | Unknown path |
 | [`not-found`](#not-found) | 404 | Not found |
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
@@ -6862,15 +6865,18 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Method not allowed |
+| [`payload-too-large`](#payload-too-large) | 413 | Payload too large |
+| [`uri-too-long`](#uri-too-long) | 414 | URI too long |
 | [`unprocessable`](#unprocessable) | 422 | Unprocessable request |
-| [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded or Too many requests |
+| [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded |
 | [`internal-error`](#internal-error) | 500 | Internal error |
 | [`upstream-error`](#upstream-error) | 502 | Upstream error |
 | [`service-unavailable`](#service-unavailable) | 503 | Service unavailable |
 | [`service-busy`](#service-busy) | 503 | Service busy |
 | [`cache-unavailable`](#cache-unavailable) | 503 | Authorization backend unavailable |
+| [`upstream-timeout`](#upstream-timeout) | 504 | Upstream timeout |
 
-For authentication errors the parentheses give the meaning; the API only sends the generic title in front.
+Titles of authentication errors and the other gateway errors are given as sent (English).
 
 ### bad-request
 
@@ -6914,7 +6920,7 @@ What to do: Check the JSON against the schema in the OpenAPI description.
 
 ### missing-token
 
-**401** · Token missing
+**401** · Access token required
 
 The request carries no token.
 
@@ -6922,7 +6928,7 @@ What to do: Create a token at [account.mapx.at](https://account.mapx.at/) and se
 
 ### invalid-token
 
-**401** · Invalid token
+**401** · Invalid access token
 
 The token is malformed or unknown (also after it was deleted or rotated).
 
@@ -6930,7 +6936,7 @@ What to do: Copy the token again from your account, check for a stray space or l
 
 ### token-expired
 
-**401** · Token expired
+**401** · Access token expired
 
 The token is past its expiry date.
 
@@ -6938,7 +6944,7 @@ What to do: Create or rotate a token in your account.
 
 ### token-blocked
 
-**403** · Token blocked
+**403** · Access token blocked
 
 The token was blocked in your account.
 
@@ -6978,7 +6984,7 @@ What to do: Send the headers `X-Mapx-Android-Package` and `X-Mapx-Android-Cert` 
 
 ### ip-not-allowed
 
-**403** · IP address not allowed
+**403** · IP not allowed
 
 The secret token is restricted to IP ranges and the request comes from another address.
 
@@ -7007,6 +7013,14 @@ What to do: Create a token of type AI assistant (MCP) at [account.mapx.at](https
 The request path has an invalid percent-encoding, a NUL byte or leaves the root with `..`.
 
 What to do: Send a normal path as listed in the [OpenAPI description](https://api.mapx.at/v1/openapi.json).
+
+### forbidden
+
+**403** · Forbidden
+
+Access is refused without a more specific reason, for example a path that is blocked at the gateway.
+
+What to do: Compare path and host with the [OpenAPI description](https://api.mapx.at/v1/openapi.json).
 
 ### unknown-path
 
@@ -7076,9 +7090,25 @@ What to do: Stay within `minzoom`/`maxzoom` and `bounds` of the TileJSON.
 
 **405** · Method not allowed
 
-Only GET (and HEAD) is allowed, POST only for batch geocoding, optimization, address validation and traffic incidents.
+Only GET (and HEAD) is allowed, POST only for batch geocoding, optimization, address validation and traffic incidents. The `Allow` header lists the allowed methods (e.g. `POST /v1/geocode` → `405`, `Allow: GET, HEAD`). The gateway checks the method before the token, so `405` also comes when the token is missing as well.
 
-What to do: Use the documented method.
+What to do: Use a method from `Allow`.
+
+### payload-too-large
+
+**413** · Payload too large
+
+The request body is larger than the endpoint accepts: batch geocoding 512 KB, optimization 256 KB, traffic incidents 64 KB, all other POST endpoints (such as address validation) 16 KB; the MCP server 256 KB.
+
+What to do: Split or shrink the request.
+
+### uri-too-long
+
+**414** · URI too long
+
+The request URL is longer than about 8 KB, for example very many `points` on `/v1/elevation`.
+
+What to do: Send fewer values per request or, where the endpoint offers it, use POST with a JSON body.
 
 ### unprocessable
 
@@ -7092,7 +7122,7 @@ What to do: Change the points or the time; read `detail`.
 
 **429** · Rate limit exceeded
 
-Too many requests. `429` has two causes: the limit per IP address and zone (endpoint group; answer with `title` `Rate limit exceeded` and a `detail`) or the per-minute limit of the token (answer from the token check with `title` `Too many requests`, no `detail`). Both carry `Retry-After`. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
+Too many requests. `429` has two causes: the limit per IP address and zone (endpoint group) or the per-minute limit of the token. Both answer with `title` `Rate limit exceeded`, a `detail` and `Retry-After`. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
 
@@ -7100,7 +7130,7 @@ What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `R
 
 **500** · Internal error
 
-An unexpected error occurred on the server.
+An unexpected error occurred on the server or in the gateway.
 
 What to do: Retry once; if it persists, report the request.
 
@@ -7135,6 +7165,14 @@ What to do: Wait `Retry-After` seconds and retry.
 The store behind the token check is briefly unreachable and the token is not in the local cache. The request is refused to stay on the safe side.
 
 What to do: Retry after a few seconds.
+
+### upstream-timeout
+
+**504** · Upstream timeout
+
+The service behind the gateway did not answer in time.
+
+What to do: Retry after a few seconds; split large requests.
 
 See also: [Access and limits](https://docs.mapx.at/start/access-and-limits.md) for rate limits and caching.
 
@@ -8701,6 +8739,10 @@ Source: https://docs.mapx.at/reference/changelog/
 
 ### Changed
 - Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
+- Consistent error responses: authentication errors and all gateway errors are now `application/problem+json` with their own `title` and `detail` per code (instead of `Unauthorized`/`Forbidden` without `detail`); `429` always has the title `Rate limit exceeded`; `405` with an `Allow` header also comes from the gateway, before the token check. New codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) and `upstream-timeout` (504). See [Errors and limits](https://docs.mapx.at/api/errors.md).
+
+### Fixed
+- POST requests with a body over 16 KB returned `500` instead of `413` `payload-too-large`.
 
 ### Removed
 - The `mapx-gl` SDK is removed without replacement, as are the files served under `https://map.mapx.at/sdk/v1/` and the SDK pages of these docs (old addresses redirect to the examples). Instead the [examples](https://docs.mapx.at/examples/index.md) show each use case with MapLibre GL JS, OpenLayers or Leaflet and direct API calls (`fetch`).
