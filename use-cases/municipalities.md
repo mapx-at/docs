@@ -4,16 +4,19 @@ Source: https://docs.mapx.at/use-cases/municipalities/
 
 > Parcels, address validation, transit departures and an embedded map for municipal websites and administration tools.
 
-Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once, or `accessToken` in `mapx.map`. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
+Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
 
 ## Parcels
 
 The cadastre is available as a vector tileset for drawing and as an API for the parcel at a point.
 
 ```js
-const map = mapx.map({ accessToken: "YOUR_TOKEN", container: "map", style: "satellite-streets", center: [15.3294, 48.2272], zoom: 17 });
-new mapx.ParcelPopup(map); // click: number, area, cadastral municipality, buildings
+const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
+const p = r.features[0]?.properties; // parcel at the point: number, cadastral municipality, area
+console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
 ```
+
+On the map with a click: example [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
 
 Search for a parcel by its number (the cadastral municipality is part of the identity):
 
@@ -40,12 +43,13 @@ While the person types, offer [address autofill](https://docs.mapx.at/examples/a
 Residents ask "When does the next bus go?". The timetable (scheduled, no real-time data) is one request away:
 
 ```js
-const [stop] = await mapx.stops({ near: [15.3294, 48.2272], radius: 400, limit: 1 });
-const board = await mapx.departures(stop.id, { limit: 6 });
-document.querySelector("#abfahrten").innerHTML = board.map((d) => `<li>${d.time.slice(11, 16)} ${d.line.name} → ${d.headsign}</li>`).join("");
+const H = { headers: { Authorization: "Bearer YOUR_TOKEN" } };
+const { stops: [stop] } = await (await fetch("https://api.mapx.at/v1/stops?near=15.3294,48.2272&radius=400&limit=1", H)).json();
+const { departures } = await (await fetch(`https://api.mapx.at/v1/departures?stop=${encodeURIComponent(stop.id)}&limit=6`, H)).json();
+document.querySelector("#abfahrten").replaceChildren(...departures.map((d) => Object.assign(document.createElement("li"), { textContent: `${d.time.slice(11, 16)} ${d.line.name} → ${d.headsign}` })));
 ```
 
-Or add `new mapx.DeparturesPopup(map)` to a map. See [Transit departures](https://docs.mapx.at/guides/transit.md) and the [example](https://docs.mapx.at/examples/departures.md). Timetable data: ÖBB-Personenverkehr AG, data source Mobilitätsverbünde Österreich (CC BY 4.0).
+On a map, the [example](https://docs.mapx.at/examples/departures.md) does the same with a click. See [Transit departures](https://docs.mapx.at/guides/transit.md). Timetable data: ÖBB-Personenverkehr AG, data source Mobilitätsverbünde Österreich (CC BY 4.0).
 
 ## Embed a map in the municipal website
 

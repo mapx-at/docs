@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/use-cases/logistics/
 
 Flotten- und Zustellsoftware braucht eine Route, die ein Lkw wirklich fahren kann, Fahrzeiten für viele Paare, eine gute Reihenfolge der Stopps und die aktuellen Verkehrsmeldungen. Alle vier sind je eine Anfrage. Koordinaten sind `lon,lat`, Zeiten in Sekunden, Distanzen in Metern.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Im Servercode einen geheimen Token (`mx_sk_…`) verwenden und ihn nie in eine Webseite einbauen. Das SDK setzt ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Im Servercode einen geheimen Token (`mx_sk_…`) verwenden und ihn nie in eine Webseite einbauen.
 
 ## Lkw-Routen
 
@@ -19,10 +19,11 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions
 
 `routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
 
-Mit dem SDK:
+In JavaScript:
 
 ```js
-const r = await mapx.directions("driving-truck", [[15.6256, 48.2049], [15.3294, 48.2272]], { truck: { weight: 40, height: 4, width: 2.55, length: 16.5, type: "semi" }, steps: true });
+const q = new URLSearchParams({ weight: 40, height: 4, width: 2.55, length: 16.5, truck_type: "semi", steps: true });
+const r = await (await fetch(`https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?${q}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notices ?? []);
 ```
 

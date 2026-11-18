@@ -20,7 +20,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors (old ids `karte`, `luftbild`, ... as deprecated alias) |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
@@ -74,7 +74,7 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors (old ids `karte`, `luftbild`, ... as deprecated alias) |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
 | `overlay` | path | string | yes | – | pin-..., path-..., geojson(...), comma-separated |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |

@@ -20,7 +20,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Get started with mapx](https://docs.mapx.at/start/index.md): Start with the mapx maps and location APIs for Austria: get a free API token, then copy working code for a map, a search and a route.
 - [What is mapx? Maps API for Austria](https://docs.mapx.at/start/what-is-mapx.md): mapx is a set of maps and location APIs for Austria built only on official open data: tiles, geocoding, routing, elevation, transit and more.
 - [API token, access and rate limits](https://docs.mapx.at/start/access-and-limits.md): Get a free mapx API token, learn the difference between public and secret tokens, how to send them, rate limits per zone, CORS and caching.
-- [First map with MapLibre in 5 minutes](https://docs.mapx.at/start/first-map.md): Build your first mapx web map: a complete HTML file with MapLibre GL JS or the mapx-gl SDK and a public token. Copy, save and open it in a browser.
+- [First map with MapLibre in 5 minutes](https://docs.mapx.at/start/first-map.md): Build your first mapx web map: a complete HTML file with MapLibre GL JS and a public token. Copy, save and open it in a browser.
 - [First search: geocoding request](https://docs.mapx.at/start/first-search.md): Find an address or place in Austria with one geocoding request (curl, JavaScript, Python), then show the result as a marker on a map.
 - [First route: routing request](https://docs.mapx.at/start/first-route.md): Request a driving route from Vienna to Melk with the mapx routing API (curl, JavaScript, Python) and draw the result as a line on a map.
 - [Glossary of mapx and GIS terms](https://docs.mapx.at/start/glossary.md): Glossary of terms used in the mapx documentation: annotations, cadastral municipality (KG), contours, isochrones, PMTiles, Terrain-RGB and more.
@@ -46,10 +46,6 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [mapx maps with OpenLayers](https://docs.mapx.at/guides/openlayers.md): Add the mapx basemap to OpenLayers: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
 - [Self-host PMTiles files](https://docs.mapx.at/guides/self-host-pmtiles.md): Download or mirror PMTiles files and serve them with range requests, CORS and caching from your own server, S3 or CDN.
 - [mapx maps with Leaflet](https://docs.mapx.at/guides/leaflet.md): Add the mapx basemap to Leaflet: rendered raster tiles of the style, token, attribution, your own GeoJSON and the limits compared with MapLibre.
-- [SDK mapx-gl for MapLibre](https://docs.mapx.at/guides/sdk/index.md): A small add-on for MapLibre GL JS: map factory, typed helpers for every API, route planner, layer switcher, parcel and departures popups.
-- [SDK helpers: one function per API](https://docs.mapx.at/guides/sdk/helpers.md): One typed function per API: search, geocoding, routing, matrix, optimization, parcels, elevation, traffic, transit, weather and static images.
-- [SDK controls and popups for MapLibre](https://docs.mapx.at/guides/sdk/controls.md): RouteControl, LayerControl, SearchControl, ParcelPopup and DeparturesPopup: ready-made map tools of the mapx-gl SDK in one line each.
-- [SDK errors and retries (MapxError)](https://docs.mapx.at/guides/sdk/errors.md): MapxError carries code, status, param and allowed values from the problem+json response of the mapx APIs; retry only what is worth retrying.
 
 ## API reference
 
@@ -89,18 +85,17 @@ mapx provides maps and location APIs for Austria, built only on official open da
 
 ## Reference
 
-- [Reference: tiles, styles, attribution](https://docs.mapx.at/reference/index.md): Reference pages for the mapx APIs: attribution and license, changelog, coordinates, tile scheme, Terrain-RGB encoding, style specification and the SDK type reference.
+- [Reference: tiles, styles, attribution](https://docs.mapx.at/reference/index.md): Reference pages for the mapx APIs: attribution and license, changelog, coordinates, tile scheme, Terrain-RGB encoding and style specification.
 - [Basemap layers and style specification](https://docs.mapx.at/reference/style-spec.md): All layers of the mapx streets vector tileset with fields and values, plus the ready-made style IDs. Reference for custom MapLibre styles.
 - [Terrain-RGB elevation encoding](https://docs.mapx.at/reference/terrain-rgb.md): How mapx encodes elevation as color in Terrain-RGB tiles (Mapbox encoding, 0.1 m): value range, rounding and decoding functions.
 - [Tile scheme: Web Mercator, z/x/y](https://docs.mapx.at/reference/tile-scheme.md): Tile scheme of the mapx tiles: Web Mercator, z/x/y addressing, 512-pixel tiles, resolution per zoom level and overzoom.
 - [Coordinates: lon,lat, WGS84, Web Mercator](https://docs.mapx.at/reference/coordinates.md): Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
 - [Attribution and license (CC BY 4.0)](https://docs.mapx.at/reference/attribution.md): Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 - [Changelog: API and tileset changes](https://docs.mapx.at/reference/changelog.md): Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
-- [SDK reference](https://docs.mapx.at/reference/sdk/index.md): Type reference of mapx-gl: functions, controls, options and response types.
 
 ## Optional
 
-- [Examples: runnable map code](https://docs.mapx.at/examples/index.md): 27 runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+- [Examples: runnable map code](https://docs.mapx.at/examples/index.md): 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 - [Embed a map in an HTML page](https://docs.mapx.at/examples/embed-map.md): Embed a mapx map with the ready-made style in any HTML page with MapLibre GL JS: a minimal runnable example with a public token.
 - [Switch basemap example](https://docs.mapx.at/examples/switch-basemap.md): Switch between the map, aerial imagery (orthophoto) and terrain with MapLibre GL JS and mapx styles: a runnable basemap switcher example.
 - [Time of day and night mode example](https://docs.mapx.at/examples/time-of-day.md): Show the default mapx style in four lighting moods, including a night mode, with MapLibre GL JS: runnable example code to copy.
@@ -127,7 +122,6 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Traffic incidents and closures example](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible map area: show road incidents and closures in Austria with the mapx traffic API.
 - [Static image example for a listing](https://docs.mapx.at/examples/static-image.md): Click a place and get a ready-made static map image URL with a pin, for example for a real estate listing: static images API, runnable code.
 - [GeoJSON overlay on the map example](https://docs.mapx.at/examples/geojson-overlay.md): Show your own GeoJSON points, line and polygon over the mapx style, with a popup on click, in MapLibre GL JS. Runnable code to copy.
-- [SDK example: route planner and layers](https://docs.mapx.at/examples/sdk-controls.md): RouteControl with truck profile, LayerControl, search and style switcher: ready-made map controls of the mapx-gl SDK in one runnable example.
 
 
 

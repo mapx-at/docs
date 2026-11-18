@@ -6,16 +6,19 @@ Source: https://docs.mapx.at/de/use-cases/municipalities/
 
 Gemeindewerkzeuge arbeiten mit Grundstücken und Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Kataster, Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
 ## Grundstücke
 
 Der Kataster liegt als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt vor.
 
 ```js
-const map = mapx.map({ container: "map", style: "satellite-streets", center: [15.3294, 48.2272], zoom: 17 });
-new mapx.ParcelPopup(map); // Klick: Nummer, Fläche, Katastralgemeinde, Gebäude
+const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
+const p = r.features[0]?.properties; // Grundstück am Punkt: Nummer, Katastralgemeinde, Fläche
+console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
 ```
+
+Auf der Karte per Klick: Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
 
 Ein Grundstück über seine Nummer suchen (die Katastralgemeinde gehört zur Identität):
 
@@ -42,12 +45,13 @@ Während der Eingabe das [Adress-Autofill](https://docs.mapx.at/de/examples/auto
 Bürgerinnen und Bürger fragen „Wann fährt der nächste Bus?“. Der Fahrplan (Soll, keine Echtzeitdaten) ist eine Anfrage entfernt:
 
 ```js
-const [stop] = await mapx.stops({ near: [15.3294, 48.2272], radius: 400, limit: 1 });
-const board = await mapx.departures(stop.id, { limit: 6 });
-document.querySelector("#abfahrten").innerHTML = board.map((d) => `<li>${d.time.slice(11, 16)} ${d.line.name} → ${d.headsign}</li>`).join("");
+const H = { headers: { Authorization: "Bearer DEIN_TOKEN" } };
+const { stops: [stop] } = await (await fetch("https://api.mapx.at/v1/stops?near=15.3294,48.2272&radius=400&limit=1", H)).json();
+const { departures } = await (await fetch(`https://api.mapx.at/v1/departures?stop=${encodeURIComponent(stop.id)}&limit=6`, H)).json();
+document.querySelector("#abfahrten").replaceChildren(...departures.map((d) => Object.assign(document.createElement("li"), { textContent: `${d.time.slice(11, 16)} ${d.line.name} → ${d.headsign}` })));
 ```
 
-Oder `new mapx.DeparturesPopup(map)` an eine Karte hängen. Siehe [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md) und das [Beispiel](https://docs.mapx.at/de/examples/departures.md). Fahrplandaten: ÖBB-Personenverkehr AG, Datenquelle Mobilitätsverbünde Österreich (CC BY 4.0).
+Auf einer Karte per Klick zeigt das [Beispiel](https://docs.mapx.at/de/examples/departures.md) dasselbe. Siehe [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md). Fahrplandaten: ÖBB-Personenverkehr AG, Datenquelle Mobilitätsverbünde Österreich (CC BY 4.0).
 
 ## Karte in die Gemeinde-Website einbetten
 

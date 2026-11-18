@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/examples/
 
-> 27 runnable examples with MapLibre GL JS and the mapx-gl SDK: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+> 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 
 Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.18.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
 
@@ -32,10 +32,8 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 - [Traffic flow and incidents](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible area.
 - [Static image for a listing](https://docs.mapx.at/examples/static-image.md): Click a place, get a ready-made image URL with a pin.
 - [Your own GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md): Points, line and area over the mapx style, popup on click.
-- [SDK: route planner and layers](https://docs.mapx.at/examples/sdk-controls.md): RouteControl with truck profile, LayerControl, search and style switcher.
 
 ## Notes
 
 - All data comes from official sources, no OSM data. Attribution: [License](https://docs.mapx.at/reference/attribution.md).
 - All examples call the endpoints under `https://api.mapx.at/v1/`, without an access token.
-- Examples marked SDK use [`mapx-gl`](https://docs.mapx.at/guides/sdk/index.md).

@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/use-cases/tourism/
 
 > Bike and mountain-bike routes, cycle-route layer, elevation profile and weather for tours and visitor information, built on the mapx APIs.
 
-The snippets that use `mapx.…` expect `mapx.setAccessToken("YOUR_TOKEN")` once ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
+All requests need a token; replace `YOUR_TOKEN` with your own ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
 
 Visitors ask "Which way by bike, how steep is it, and what is the weather?". The answers come from the same API: routes with the profiles `cycling` and `cycling-mtb`, a profile of the heights, the signposted cycle routes on the map and the forecast for the destination.
 
@@ -18,7 +18,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 ```
 
 ```js
-const r = await mapx.directions("cycling", [[15.3294, 48.2272], [15.6141, 48.4097]], { steps: true, alternatives: true, annotations: ["elevation"] });
+const r = await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?steps=true&alternatives=true&annotations=elevation", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.summary?.ascent_m} m`));
 ```
 
@@ -27,12 +27,20 @@ console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.su
 The `streets` style contains the signposted cycle and MTB routes as the layer group `bike_routes`. Switch it on with the style metadata, or let the user toggle it:
 
 ```js
-const map = mapx.map({ accessToken: "YOUR_TOKEN", container: "map", style: "streets", center: [15.45, 48.3], zoom: 10 });
-map.addControl(new mapx.LayerControl({ groups: ["bike_routes", "relief"] }), "top-right");
-map.addControl(new mapx.RouteControl({ profiles: ["cycling", "cycling-mtb", "walking"] }), "top-right");
+const TOKEN = "YOUR_TOKEN";
+// the style uses PMTiles sources: load pmtiles.js as in the examples
+maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
+const map = new maplibregl.Map({
+  container: "map", style: "https://api.mapx.at/v1/styles/streets", center: [15.45, 48.3], zoom: 10,
+  transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
+});
+map.on("load", () => {
+  // switch on the layers of the group bike_routes (off by default in the style)
+  for (const id of map.getStyle().metadata["mapx:groups"].bike_routes) map.setLayoutProperty(id, "visibility", "visible");
+});
 ```
 
-The [SDK example](https://docs.mapx.at/examples/sdk-controls.md) shows both controls together.
+The example [Route](https://docs.mapx.at/examples/route.md) calculates and draws a route on the map (MapLibre, OpenLayers, Leaflet).
 
 ## Elevation profile
 
@@ -41,8 +49,9 @@ Every tour page benefits from a profile. Feed the route geometry (2 to 512 point
 ```js
 const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?access_token=YOUR_TOKEN")).json()).routes[0];
 // the default overview=simplified keeps the line below the 512-point limit
-const p = await mapx.elevationProfile(route.geometry.coordinates, 120);
-console.log(`up ${Math.round(p.ascent)} m, down ${Math.round(p.descent)} m, ${Math.round(p.min)}-${Math.round(p.max)} m`);
+const line = route.geometry.coordinates.map((c) => c.join(",")).join(";");
+const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120&access_token=YOUR_TOKEN`)).json()).properties;
+console.log(`up ${Math.round(p.ascent_m)} m, down ${Math.round(p.descent_m)} m, ${Math.round(p.min_m)}-${Math.round(p.max_m)} m`);
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
 
@@ -53,21 +62,21 @@ The height model is the official DTM of the BEV. See [Elevation profile](https:/
 Which destinations can guests reach in 30 minutes by bike? One isochrone request:
 
 ```js
-const iso = await mapx.isochrone("cycling", [15.3294, 48.2272], { minutes: [15, 30, 45] }); // largest area first
+const iso = await (await fetch("https://api.mapx.at/v1/isochrone/cycling/15.3294,48.2272?contours_minutes=15,30,45", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // largest area first
 map.addSource("reach", { type: "geojson", data: iso });
 map.addLayer({ id: "reach", type: "fill", source: "reach", paint: { "fill-color": "#2346d8", "fill-opacity": 0.12 } });
 ```
 
-For public transport to the trailhead use [`transitDirections`](https://docs.mapx.at/guides/sdk/helpers.md) with `bike: true` to ride to the stop.
+For public transport to the trailhead use the profile `bike_transit` (`GET /v1/directions/bike_transit/{start};{end}`, [Transit](https://docs.mapx.at/guides/transit.md)) to ride to the stop.
 
 ## Weather for the destination
 
 ```js
-const f = await mapx.weatherForecast([12.694, 47.074], { hours: 12 }); // Grossglockner
+const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
 console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`weatherCurrent` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
+`GET /v1/weather/current?lon=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
 
 ## Next steps
 

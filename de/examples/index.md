@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/examples/
 
-> 27 lauffähige Beispiele mit MapLibre GL JS und dem SDK mapx-gl: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+> 26 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
 
 Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.18.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Viele Beispiele gibt es zusätzlich für OpenLayers (10.11.0) und Leaflet (1.9.4); der Umschalter über der Karte wählt die Bibliothek für alle Beispiele. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt oder Kartenbibliothek filtern:
 
@@ -32,10 +32,8 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 - [Verkehrslage und Meldungen](https://docs.mapx.at/de/examples/traffic.md): Verkehrsstil plus die aktiven Meldungen im sichtbaren Ausschnitt.
 - [Static Image fürs Exposé](https://docs.mapx.at/de/examples/static-image.md): Ort anklicken, fertige Bild-URL mit Marker erhalten.
 - [Eigenes GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md): Punkte, Linie und Fläche über dem mapx-Stil, Popup per Klick.
-- [SDK: Routenplaner und Ebenen](https://docs.mapx.at/de/examples/sdk-controls.md): RouteControl mit Lkw-Profil, LayerControl, Suche und Stilumschalter.
 
 ## Hinweise
 
 - Alle Daten stammen aus amtlichen Quellen, keine OSM-Daten. Attribution: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 - Alle Beispiele rufen die Endpunkte unter `https://api.mapx.at/v1/` mit einem öffentlichen Token auf (siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
-- Beispiele mit SDK-Kennzeichnung nutzen [`mapx-gl`](https://docs.mapx.at/de/guides/sdk/index.md).

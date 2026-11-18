@@ -22,7 +22,7 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
 | `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
-| `poi_category` | query | string |  | – | Comma-separated category ids (English, e.g. `gas_station`; old German ids deprecated until 2027-05-31), see `/v1/searchbox/list/category` |
+| `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
@@ -154,7 +154,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids are English (e.g. `gas_station`, `train_station`); the old German ids (`tankstelle`, `bahnhof`, ...) work as aliases until 2027-05-31 (`Deprecation`, `Sunset`).
+Places of the category (several comma-separated), nearest first with `proximity`. Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`).
 
 **Parameter**
 

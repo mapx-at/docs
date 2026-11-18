@@ -27,7 +27,6 @@ Each guide shows the common tasks of one product with code that runs as it is.
 
 ## Techniques
 
-- [SDK mapx-gl](https://docs.mapx.at/guides/sdk/index.md): [helpers](https://docs.mapx.at/guides/sdk/helpers.md), [controls and popups](https://docs.mapx.at/guides/sdk/controls.md), [errors and retries](https://docs.mapx.at/guides/sdk/errors.md).
 - [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md), [Overlay contour lines](https://docs.mapx.at/guides/overlay-contours.md), [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md), [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md).
 - [QGIS](https://docs.mapx.at/guides/qgis.md) and [Self-host PMTiles](https://docs.mapx.at/guides/self-host-pmtiles.md).
 

@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/use-cases/real-estate/
 
 Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne), nutzbar mit einem kostenlosen Token. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
 
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die SDK-Beispiele setzen ihn einmal mit `mapx.setAccessToken("DEIN_TOKEN")`.
+Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
 ## Grundstück finden
 
@@ -34,7 +34,7 @@ console.log(
 );
 ```
 
-Fehlende Daten sind `null` oder leere Listen, nie abwesend. Mit dem [SDK](https://docs.mapx.at/de/guides/sdk/helpers.md): `mapx.parcelDossier(id)` oder `mapx.parcel(point, { dossier: true })`. Für einen Kartenklick `new mapx.ParcelPopup(map)`.
+Fehlende Daten sind `null` oder leere Listen, nie abwesend. Für einen Punkt statt einer ID liefert `GET /v1/parcel/{lon},{lat}?include=dossier` dasselbe Dossier. Für einen Kartenklick siehe das Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md).
 
 ## Ein Bild fürs Exposé
 

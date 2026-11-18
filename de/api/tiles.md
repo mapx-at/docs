@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (1
 
 `GET /v1/tiles`
 
-Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution and data date (`stand`) per tileset. Old German names (`basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`, `rastanlagen`) are listed under `aliases` and remain valid until 2027-05-31 (responses carry `Deprecation`, `Sunset` and `Link` headers).
+Name, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution, data date (`reference_date`) and build time (`built`) per tileset. `dtm` is accepted as short name of `terrain-rgb` (not listed separately).
 
 **Beispiel**
 
@@ -45,9 +45,6 @@ data = res.json()
   "tilesets": [
     {
       "name": "streets",
-      "aliases": [
-        "basis"
-      ],
       "type": "vector",
       "format": "pbf",
       "tilejson": "https://api.mapx.at/v1/tiles/streets.json",
@@ -60,7 +57,8 @@ data = res.json()
         49.1
       ],
       "attribution": "...",
-      "stand": "2026-10-01"
+      "reference_date": "2026-10-01",
+      "built": "2026-11-15 10:26:41"
     }
   ]
 }

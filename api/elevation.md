@@ -88,7 +88,7 @@ data = res.json()
 
 `GET /v1/elevation/{coordinate}`
 
-One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date` (`stichtag` deprecated until 2027-05-31).
+One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date`.
 
 **Parameters**
 

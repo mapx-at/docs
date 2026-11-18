@@ -27,7 +27,6 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 
 ## Techniken
 
-- [SDK mapx-gl](https://docs.mapx.at/de/guides/sdk/index.md): [Helfer](https://docs.mapx.at/de/guides/sdk/helpers.md), [Controls und Popups](https://docs.mapx.at/de/guides/sdk/controls.md), [Fehler und Wiederholungen](https://docs.mapx.at/de/guides/sdk/errors.md).
 - [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md), [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md), [3D-Gelände mit Orthophoto](https://docs.mapx.at/de/guides/3d-terrain.md), [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md).
 - [QGIS](https://docs.mapx.at/de/guides/qgis.md) und [PMTiles selbst hosten](https://docs.mapx.at/de/guides/self-host-pmtiles.md).
 

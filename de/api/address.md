@@ -174,9 +174,9 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `adrcd`.
+Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `address_code`.
 
-Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `adrcd` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
+Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
 
 **Parameter**
 
@@ -256,7 +256,7 @@ data = res.json()
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
 | `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `adrcd` | string,null | Address code of the BEV address register. |
+| `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
@@ -372,7 +372,7 @@ data = res.json()
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
 | `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `adrcd` | string,null | Address code of the BEV address register. |
+| `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 

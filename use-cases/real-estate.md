@@ -32,7 +32,7 @@ console.log(
 );
 ```
 
-Missing data are `null` or empty lists, never absent. With the [SDK](https://docs.mapx.at/guides/sdk/helpers.md): `mapx.parcelDossier(id)` or `mapx.parcel(point, { dossier: true })`. For a map click use `new mapx.ParcelPopup(map)`.
+Missing data are `null` or empty lists, never absent. For a point instead of an id, `GET /v1/parcel/{lon},{lat}?include=dossier` returns the same dossier. For a map click see the example [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md).
 
 ## A picture for the listing
 

@@ -14,6 +14,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
 
 ### Entfernt
+- SDK `mapx-gl` entfällt ersatzlos, ebenso die ausgelieferten Dateien unter `https://map.mapx.at/sdk/v1/` und die SDK-Seiten der Doku (alte Adressen leiten auf die Beispiele um). Stattdessen zeigen die [Beispiele](https://docs.mapx.at/de/examples/index.md) jeden Anwendungsfall mit MapLibre GL JS, OpenLayers oder Leaflet und direkten API-Aufrufen (`fetch`).
 - Alte deutsche Namen und doppelte Felder (Übergang seit 2026-11-08) sind entfernt, es gelten nur die englischen Namen. Alte Namen liefern den gleichen Fehler wie jeder unbekannte Name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); die Header `Deprecation`, `Sunset` und `Link: …; rel="successor-version"` entfallen. Zuordnung:
 
 | Bereich | alt → neu |

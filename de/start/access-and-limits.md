@@ -64,8 +64,6 @@ const map = new maplibregl.Map({
 
 Wird ein Style mit `?access_token=…` angefordert, schreibt die API den Token in alle `mapx.at`-URLs des Styles (Tiles, Glyphs, Sprites). Clients ohne `transformRequest` kommen dann mit `style: "https://api.mapx.at/v1/styles/streets?access_token=DEIN_TOKEN"` aus. Diese Antwort ist `private` und darf nicht geteilt werden.
 
-**Mit dem SDK.** `mapx.map({ accessToken: "DEIN_TOKEN", … })` oder einmal `mapx.setAccessToken("DEIN_TOKEN")`; Helfer, Styles, Tiles und `staticImageUrl()` tragen den Token dann mit. Siehe [SDK](https://docs.mapx.at/de/guides/sdk/index.md).
-
 **PMTiles-Dateien.** Token an die Datei-URL hängen: `pmtiles://https://tiles.mapx.at/<datei>.pmtiles?access_token=DEIN_TOKEN`.
 
 **Android.** `Authorization: Bearer <öffentlicher Token>` plus `X-Mapx-Android-Package` (Paketname) und `X-Mapx-Android-Cert` (SHA-256 des Signaturzertifikats, zur Laufzeit per `PackageManager` gelesen).
