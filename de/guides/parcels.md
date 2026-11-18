@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/parcels/
 
 > Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen auf der Karte zeichnen und die Attribute lesen: Kataster-Abfrage mit mapx für Österreich.
 
-Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich.
+Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Verwendung |
 |---|---|

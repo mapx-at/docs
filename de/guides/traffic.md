@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/guides/traffic/
 
-> Verkehrsmeldungen, Tempolimits auf Autobahnen und eine Verkehrsebene auf der Karte zeigen und Routen mit Verkehrslage nutzen, mit der mapx-Verkehrs-API.
+> Verkehrsmeldungen, Tempolimits auf Autobahnen und eine Verkehrsebene auf der Karte zeigen und Routen um Sperren führen, mit der mapx-Verkehrs-API.
 
-Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde, und brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt |
 |---|---|
@@ -13,7 +13,7 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 | Positionen der Zeichen | [`/v1/traffic/signs`](https://docs.mapx.at/de/api/traffic.md) |
 | Verkehr auf einer Karte zeichnen | `/v1/traffic/tiles.json` |
 | Prüfen, ob die Daten aktuell sind | `/v1/traffic/status` |
-| Um Sperren herum routen | Profil `driving-traffic` |
+| Um Sperren herum routen | Profil `driving-traffic` (auch `driving` umfährt verbindliche Sperren) |
 
 ## Störungen auflisten
 
@@ -33,23 +33,23 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/in
 
 ## Fahrstreifen auf Autobahnen
 
-Baustellen auf Autobahnen und Schnellstraßen enthalten `lanes` von der ASFINAG: ein Eintrag je Richtung und Fahrbahn mit den gesperrten Fahrstreifen (`right`, `middle`, `left`, `hard_shoulder`), der Zahl offener Fahrstreifen (`open`) von `original`, `contraflow`, `road_closed` und dem vorübergehenden `speed_limit_kmh`. `direction` ist `aligned` (in Richtung steigender Betriebskilometer) oder `opposite`. `sources` nennt die Herkunft einer Meldung (`evis`, `asfinag`); `source` benennt den Datensatz (`evis-planned+asfinag`, wenn beide passen, `asfinag-roadworks` für Baustellen, die nur die ASFINAG meldet). Der Text einer EVIS-Meldung bleibt unverändert.
+Baustellen auf Autobahnen und Schnellstraßen enthalten meist `lanes` von der ASFINAG: ein Eintrag je Richtung und Fahrbahn mit den gesperrten Fahrstreifen (`right`, `middle`, `left`, `hard_shoulder`), der Zahl offener Fahrstreifen (`open`) von `original`, `contraflow`, `road_closed` und dem vorübergehenden `speed_limit_kmh`. `direction` ist `aligned` (in Richtung steigender Betriebskilometer) oder `opposite`. `sources` nennt die Herkunft einer Meldung (`evis`, `asfinag`); `source` benennt den Datensatz (`evis-planned+asfinag`, wenn beide passen, `asfinag-roadworks` für Baustellen, die nur die ASFINAG meldet). Der Text einer EVIS-Meldung bleibt unverändert.
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction";
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=construction";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
+for (const f of features) for (const l of f.properties.lanes ?? []) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
 
 ## Störungen entlang einer Route
 
-Die Route als `route` übergeben (kodierte Polyline oder GeoJSON). Die Ergebnisse sind nach der Position auf der Route sortiert. Für lange Routen `POST` mit JSON-Body verwenden.
+Die Route als `route` übergeben (kodierte Polyline, Präzision mit `route_precision` 5 oder 6, oder GeoJSON-LineString). Die Ergebnisse sind nach der Position auf der Route sortiert. Für lange Routen `POST` mit JSON-Body verwenden.
 
 ```bash
-curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
-  "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
-  "type": "road_closure,construction", "buffer": 50
-}' | jq '.total'
+# Route Wien–Graz als polyline6, dann die Meldungen im 50-m-Korridor
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.4395,47.0707?geometries=polyline6" \
+  | jq '{route: .routes[0].geometry, route_precision: "6", type: "road_closure,construction", buffer: 50}' > body.json
+curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" -H "Content-Type: application/json" https://api.mapx.at/v1/traffic/incidents --data @body.json | jq '.total'
 ```
 
 `buffer` ist die halbe Korridorbreite in Metern (1 bis 1000, Standard 25).
@@ -66,13 +66,13 @@ map.on("load", () => {
 
 Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
-## Route mit Verkehrslage
+## Route um Sperren
 
 ```
 GET /v1/directions/driving-traffic/{coordinates}
 ```
 
-Die Route meidet aktuelle Sperren und listet Störungen in `legs[].incidents`. Mit `incidents=true` kommt die Liste auch bei anderen Auto-Profilen.
+Die Route meidet die aktuellen verbindlichen Sperren aus den Meldungen von ASFINAG und EVIS.AT, erschwert zeitlich bedingte Sperren und listet die Meldungen entlang der Strecke in `legs[].incidents`. Eine flächendeckende Verkehrslage (gemessene Geschwindigkeiten, Stau auf allen Straßen) fließt nicht ein. Mit `incidents=true` kommt die Liste auch bei anderen Auto-Profilen.
 
 ## Nächste Schritte
 

@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/guides/traffic/
 
-> Show traffic incidents, motorway speed limits and a traffic layer on the map and use traffic-aware routes, with the mapx traffic API.
+> Show traffic incidents, motorway speed limits and a traffic layer on the map and route around closures, with the mapx traffic API.
 
-Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](https://docs.mapx.at/start/first-map.md).
+Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint |
 |---|---|
@@ -13,13 +13,13 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 | Positions of the signs | [`/v1/traffic/signs`](https://docs.mapx.at/api/traffic.md) |
 | Draw traffic on a map | `/v1/traffic/tiles.json` |
 | Check whether the data is fresh | `/v1/traffic/status` |
-| Route around closures | profile `driving-traffic` |
+| Route around closures | profile `driving-traffic` (`driving` also avoids binding closures) |
 
 ## List incidents
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20&access_token=YOUR_TOKEN";
-const { features, total, next_cursor } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
+const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
@@ -33,23 +33,23 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/in
 
 ## Lane details on motorways
 
-Roadworks on motorways and expressways carry `lanes` from ASFINAG: one entry per direction and carriageway with the closed lanes (`right`, `middle`, `left`, `hard_shoulder`), the number of open lanes (`open`) out of `original`, `contraflow`, `road_closed` and the temporary `speed_limit_kmh`. `direction` is `aligned` (with increasing road kilometers) or `opposite`. `sources` lists where a report comes from (`evis`, `asfinag`); `source` names the dataset (`evis-planned+asfinag` when both match, `asfinag-roadworks` for roadworks only ASFINAG reports). The text of an EVIS report is never changed.
+Roadworks on motorways and expressways usually carry `lanes` from ASFINAG: one entry per direction and carriageway with the closed lanes (`right`, `middle`, `left`, `hard_shoulder`), the number of open lanes (`open`) out of `original`, `contraflow`, `road_closed` and the temporary `speed_limit_kmh`. `direction` is `aligned` (with increasing road kilometers) or `opposite`. `sources` lists where a report comes from (`evis`, `asfinag`); `source` names the dataset (`evis-planned+asfinag` when both match, `asfinag-roadworks` for roadworks only ASFINAG reports). The text of an EVIS report is never changed.
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction&access_token=YOUR_TOKEN";
-const { features } = await (await fetch(url)).json();
-for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=construction";
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
+for (const f of features) for (const l of f.properties.lanes ?? []) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
 
 ## Incidents along a route
 
-Pass the route as `route` (encoded polyline or GeoJSON). Results are sorted by position on the route. For long routes use `POST` with a JSON body.
+Pass the route as `route` (encoded polyline, precision via `route_precision` 5 or 6, or a GeoJSON LineString). Results are sorted by position on the route. For long routes use `POST` with a JSON body.
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
-  "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
-  "type": "road_closure,construction", "buffer": 50
-}' | jq '.total'
+# route Vienna–Graz as polyline6, then the reports in a 50 m corridor
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.4395,47.0707?geometries=polyline6" \
+  | jq '{route: .routes[0].geometry, route_precision: "6", type: "road_closure,construction", buffer: 50}' > body.json
+curl -s -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: application/json" https://api.mapx.at/v1/traffic/incidents --data @body.json | jq '.total'
 ```
 
 `buffer` is the corridor half-width in meters (1 to 1000, default 25).
@@ -66,13 +66,13 @@ map.on("load", () => {
 
 The style `traffic-day` already contains the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
 
-## Route with traffic
+## Route around closures
 
 ```
 GET /v1/directions/driving-traffic/{coordinates}
 ```
 
-The route avoids current closures and lists incidents in `legs[].incidents`. Use `incidents=true` to get the list with other car profiles.
+The route avoids the current binding closures from the ASFINAG and EVIS.AT reports, discourages conditional closures and lists the reports along the way in `legs[].incidents`. Network-wide traffic flow (measured speeds, congestion on all roads) is not taken into account. Use `incidents=true` to get the list with other car profiles.
 
 ## Next
 

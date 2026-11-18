@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/transit/
 
 > ÖV-Verbindungen, Haltestellen und Abfahrtstafeln in Österreich aus dem Soll-Fahrplan mit der mapx-ÖV-API abfragen und in der Karte anzeigen.
 
-Die Fahrplandaten decken Österreich ab (ÖBB und die regionalen Verkehrsverbünde). Es ist der Soll-Fahrplan: `realtime` ist immer `false`. Anfragen für Verbindungen liegen in der Zone `route`, für Haltestellen und Abfahrten in der Zone `search`.
+Die Fahrplandaten decken Österreich ab (ÖBB und die regionalen Verkehrsverbünde). Es ist der Soll-Fahrplan: `realtime` ist immer `false`. Anfragen für Verbindungen liegen in der Zone `route`, für Haltestellen und Abfahrten in der Zone `search`. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt |
 |---|---|

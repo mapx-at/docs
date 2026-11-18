@@ -189,7 +189,7 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Beispielfragen
 
-- „Wo liegt die Herrengasse 13 in Wien, und wo ist die nächste Tankstelle?“
+- „Wo liegt die Herrengasse 13 in 1010 Wien, und wo ist die nächste Tankstelle?“
 - „Wie lange braucht ein Lkw mit 40 t von Wien nach Linz, und gibt es Sperren auf dem Weg?“
 - „Was erreiche ich vom Bahnhof Melk in 15 Minuten zu Fuß?“
 - „Was sind die nächsten Abfahrten am Bahnhof Melk?“

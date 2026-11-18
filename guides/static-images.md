@@ -20,7 +20,7 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 
 | Part | Values |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
 | `view` | `lon,lat,zoom[,bearing]` or `auto` (fits the overlays) |
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
@@ -46,8 +46,8 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/str
 With `auto` instead of the view, the image shows all overlays.
 
 ```js
-const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified&access_token=YOUR_TOKEN";
-const { routes } = await (await fetch(dir)).json();
+const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified";
+const { routes } = await (await fetch(dir, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const path = encodeURIComponent(routes[0].geometry); // encoded polyline, precision 5
 const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=YOUR_TOKEN`;
 ```

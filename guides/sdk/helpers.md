@@ -42,7 +42,7 @@ console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0]
 const iso = await mapx.isochrone("cycling", melk, { minutes: [10, 20, 30] });          // GeoJSON polygons
 const m = await mapx.matrix("driving", [vienna, melk, [14.2858, 48.3069]]);           // m.durations[i][j] in seconds
 
-// Tour planning: one vehicle, two jobs
+// Tour planning: one vehicle, two jobs (secret token mx_sk_… only, otherwise 403 pk-not-allowed)
 const tour = await mapx.optimization({
   vehicles: [{ id: 1, start: vienna, end: vienna }],
   services: [{ id: 1, location: melk, service: 300 }, { id: 2, location: [14.2858, 48.3069], service: 300 }],

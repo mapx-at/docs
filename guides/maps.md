@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/guides/maps/
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
-**Before you start:** a page with MapLibre GL JS, see [First map](https://docs.mapx.at/start/first-map.md). You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the snippets show `YOUR_TOKEN` only where it matters. The map options below assume the `transformRequest` from First map, which adds the token to every request to `mapx.at`.
+**Before you start:** a page with MapLibre GL JS, see [First map](https://docs.mapx.at/start/first-map.md). You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the snippets show `YOUR_TOKEN` only where it matters. The style example shows the handover with `transformRequest`; the later snippets assume it.
 
 ## Use a style
 
@@ -19,10 +19,14 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `outdoors` | Contours, hillshade, trails |
 
 ```js
+const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
-  transformRequest: withToken, // from First map: adds the token to every mapx.at request
+  // adds the token to every request to mapx.at
+  transformRequest: (url) => ({
+    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+  }),
   center: [12.694, 47.074], zoom: 12, // Grossglockner
 });
 ```
@@ -53,7 +57,7 @@ Layer names and fields: [Tilesets](https://docs.mapx.at/tilesets/index.md). Add 
 
 ## Weather and traffic overlays
 
-Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](https://docs.mapx.at/api/air-quality.md). Official weather warnings are GeoJSON (`/v1/weather/warnings`, add it as a `geojson` source and colour by `level`).
+Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](https://docs.mapx.at/api/air-quality.md).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });

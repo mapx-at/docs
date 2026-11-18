@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/guides/maps/
 
 mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Style entsteht.
 
-**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt, die Übergabe steht dort.
+**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt. Das Style-Beispiel zeigt die Übergabe mit `transformRequest`, die späteren Ausschnitte setzen sie voraus.
 
 ## Einen Style verwenden
 
@@ -19,9 +19,14 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 
 ```js
+const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
+  // Token an alle Anfragen an mapx.at hängen
+  transformRequest: (url) => ({
+    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+  }),
   center: [12.694, 47.074], zoom: 12, // Großglockner
 });
 ```
@@ -52,7 +57,7 @@ Layernamen und Felder: [Tilesets](https://docs.mapx.at/de/tilesets/index.md). Ei
 
 ## Wetter- und Verkehrs-Overlays
 
-Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](https://docs.mapx.at/de/api/air-quality.md). Die amtlichen Wetterwarnungen sind GeoJSON (`/v1/weather/warnings`, als `geojson`-Source einbinden und nach `level` einfärben).
+Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](https://docs.mapx.at/de/api/air-quality.md).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
@@ -66,7 +71,7 @@ Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](https://docs.mapx.at/d
 Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles:
 
 ```
-https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}
+https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TOKEN
 ```
 
 ## Offline und Massennutzung

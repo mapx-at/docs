@@ -531,7 +531,7 @@ Source: https://docs.mapx.at/guides/maps/
 
 mapx delivers maps as ready-made styles and as tiles. Use a style to get a complete map in one line; use tilesets when you build your own style.
 
-**Before you start:** a page with MapLibre GL JS, see [First map](https://docs.mapx.at/start/first-map.md). You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the snippets show `YOUR_TOKEN` only where it matters. The map options below assume the `transformRequest` from First map, which adds the token to every request to `mapx.at`.
+**Before you start:** a page with MapLibre GL JS, see [First map](https://docs.mapx.at/start/first-map.md). You need a free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the snippets show `YOUR_TOKEN` only where it matters. The style example shows the handover with `transformRequest`; the later snippets assume it.
 
 ## Use a style
 
@@ -544,10 +544,14 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `outdoors` | Contours, hillshade, trails |
 
 ```js
+const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
-  transformRequest: withToken, // from First map: adds the token to every mapx.at request
+  // adds the token to every request to mapx.at
+  transformRequest: (url) => ({
+    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+  }),
   center: [12.694, 47.074], zoom: 12, // Grossglockner
 });
 ```
@@ -578,7 +582,7 @@ Layer names and fields: [Tilesets](https://docs.mapx.at/tilesets/index.md). Add 
 
 ## Weather and traffic overlays
 
-Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](https://docs.mapx.at/api/air-quality.md). Official weather warnings are GeoJSON (`/v1/weather/warnings`, add it as a `geojson` source and colour by `level`).
+Raster weather tiles have a time dimension; the TileJSON of `temperature`, `precipitation`, `wind`, `humidity`, `cloud` or `pressure` lists the available times. The same URL scheme serves the air quality layers `aqi` (daily index), `no2`, `o3`, `pm10`, `pm25` and `dust` (Saharan dust), see [Air Quality API](https://docs.mapx.at/api/air-quality.md).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
@@ -626,17 +630,17 @@ Pick the endpoint by what the user does.
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
 | Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
-All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Geocode an address
 
 ```js
-const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3&access_token=YOUR_TOKEN";
-const { features } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const [lon, lat] = features[0].center;
 ```
 
-Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
+Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
 ## Reverse geocode
 
@@ -650,9 +654,9 @@ Call `suggest` on every pause in typing (debounce 200 ms), then `retrieve` once 
 
 ```js
 const token = crypto.randomUUID();
-const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}&access_token=YOUR_TOKEN`)).json();
+const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const id = s.suggestions[0].mapbox_id;
-const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}&access_token=YOUR_TOKEN`)).json();
+const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
@@ -672,7 +676,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 Autofill returns split fields that map to form inputs.
 
 ```js
-const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3&access_token=YOUR_TOKEN")).json();
+const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const { address_line1, postcode, place, coordinates } = a.suggestions[0];
 ```
 
@@ -686,7 +690,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/va
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute).
+`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute). Batch geocoding needs a secret token (`mx_sk_…`) and therefore belongs on a server; with a public token the API answers `403` `pk-not-allowed`.
 
 ## Next
 
@@ -702,7 +706,7 @@ Source: https://docs.mapx.at/guides/navigation/
 
 > Plan routes for car, truck, bike and foot in Austria: tolls, isochrones, travel-time matrices, map matching and tour planning.
 
-Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint | Zone |
 |---|---|---|
@@ -718,7 +722,7 @@ Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joi
 | Profile | For |
 |---|---|
 | `driving` | Car |
-| `driving-traffic` | Car with current traffic and closures |
+| `driving-traffic` | Car, taking into account closures and traffic reports from ASFINAG and EVIS.AT (no network-wide traffic flow), lists reports in `legs[].incidents` |
 | `driving-truck` | Trucks over 3.5 t |
 | `cycling` | Bike: prefers cycle paths, lanes and signposted routes, rates unpaved sections and steep grades worse |
 | `cycling-mtb` | Mountain bike: prefers forest tracks and singletrails, considers the MTB difficulty |
@@ -729,8 +733,8 @@ Public transport is a separate API: [Transit](https://docs.mapx.at/guides/transi
 ## A route
 
 ```js
-const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=en&access_token=YOUR_TOKEN";
-const { routes } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=en";
+const { routes } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const r = routes[0];
 console.log(r.distance, "m", r.duration, "s");
 ```
@@ -752,7 +756,7 @@ Write the polyline without a trailing newline (`jq -j`). Long routes can exceed 
 
 ## Offline rerouting
 
-`GET /v1/corridor-graph` returns the road network around a route as one compact binary file (gzip stream, `application/vnd.mapx.corridor-graph+gzip`), so an app can recompute a route without network, for example after a wrong turn in a dead zone. Pass the route as polyline6 in `polyline`, the radius in `buffer` (100 to 5000 m, default 3000) and `profile` (`driving` default, `cycling` or `walking`). The file holds nodes, arcs with the travel times the router uses, road names, speed limits and turn restrictions; expect 1 to 3 MB per 100 km of route. Zone `heavy`. Source: GIP.at, CC BY 4.0.
+`GET /v1/corridor-graph` returns the road network around a route as one compact binary file (gzip stream, `application/vnd.mapx.corridor-graph+gzip`), so an app can recompute a route without network, for example after a wrong turn in a dead zone. Pass the route as polyline6 in `polyline`, the radius in `buffer` (100 to 5000 m, default 3000) and `profile` (`driving` default, `cycling` or `walking`). The file holds nodes, arcs with the travel times the router uses, road names, speed limits and turn restrictions; expect 1 to 3 MB per 100 km of route. Zone `heavy`. The endpoint needs a secret token (`mx_sk_…`); with a public token the API answers `403` `pk-not-allowed`. Source: GIP.at, CC BY 4.0.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -G "https://api.mapx.at/v1/corridor-graph" --data-urlencode "polyline@route.txt" -d buffer=500 -o corridor.mxcg
@@ -804,17 +808,17 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 
 ```js
 // Where can I walk in 5, 10 and 15 minutes?
-const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15&access_token=YOUR_TOKEN")).json();
+const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 
 // Travel times from the first point to the others
-const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance&access_token=YOUR_TOKEN")).json();
+const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 ```
 
 The isochrone result is a `FeatureCollection` of polygons, largest first. Show it with a `fill` layer; see [Isochrone](https://docs.mapx.at/examples/isochrone.md) and [Matrix](https://docs.mapx.at/examples/matrix.md). Map matching takes a GPS trace and returns the matched route.
 
 ## Tour planning
 
-`optimized-trips` orders up to 25 stops (round trip or fixed start and end). `POST /v1/optimization` plans tours for several vehicles with capacities and time windows.
+`optimized-trips` orders up to 25 stops (round trip or fixed start and end). `POST /v1/optimization` plans tours for several vehicles with capacities and time windows. `POST /v1/optimization` needs a secret token (`mx_sk_…`) and belongs on a server; with a public token the API answers `403` `pk-not-allowed`.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/optimization -H "Content-Type: application/json" -d '{
@@ -840,9 +844,9 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/opt
 
 Source: https://docs.mapx.at/guides/traffic/
 
-> Show traffic incidents, motorway speed limits and a traffic layer on the map and use traffic-aware routes, with the mapx traffic API.
+> Show traffic incidents, motorway speed limits and a traffic layer on the map and route around closures, with the mapx traffic API.
 
-Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`. The map source below takes the token from the `transformRequest` of [First map](https://docs.mapx.at/start/first-map.md).
+Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and planned roadworks on other roads. Requests are in the `search` zone, 10 per second, and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint |
 |---|---|
@@ -851,13 +855,13 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 | Positions of the signs | [`/v1/traffic/signs`](https://docs.mapx.at/api/traffic.md) |
 | Draw traffic on a map | `/v1/traffic/tiles.json` |
 | Check whether the data is fresh | `/v1/traffic/status` |
-| Route around closures | profile `driving-traffic` |
+| Route around closures | profile `driving-traffic` (`driving` also avoids binding closures) |
 
 ## List incidents
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20&access_token=YOUR_TOKEN";
-const { features, total, next_cursor } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
+const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
@@ -871,23 +875,23 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/in
 
 ## Lane details on motorways
 
-Roadworks on motorways and expressways carry `lanes` from ASFINAG: one entry per direction and carriageway with the closed lanes (`right`, `middle`, `left`, `hard_shoulder`), the number of open lanes (`open`) out of `original`, `contraflow`, `road_closed` and the temporary `speed_limit_kmh`. `direction` is `aligned` (with increasing road kilometers) or `opposite`. `sources` lists where a report comes from (`evis`, `asfinag`); `source` names the dataset (`evis-planned+asfinag` when both match, `asfinag-roadworks` for roadworks only ASFINAG reports). The text of an EVIS report is never changed.
+Roadworks on motorways and expressways usually carry `lanes` from ASFINAG: one entry per direction and carriageway with the closed lanes (`right`, `middle`, `left`, `hard_shoulder`), the number of open lanes (`open`) out of `original`, `contraflow`, `road_closed` and the temporary `speed_limit_kmh`. `direction` is `aligned` (with increasing road kilometers) or `opposite`. `sources` lists where a report comes from (`evis`, `asfinag`); `source` names the dataset (`evis-planned+asfinag` when both match, `asfinag-roadworks` for roadworks only ASFINAG reports). The text of an EVIS report is never changed.
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction&access_token=YOUR_TOKEN";
-const { features } = await (await fetch(url)).json();
-for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=construction";
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
+for (const f of features) for (const l of f.properties.lanes ?? []) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
 
 ## Incidents along a route
 
-Pass the route as `route` (encoded polyline or GeoJSON). Results are sorted by position on the route. For long routes use `POST` with a JSON body.
+Pass the route as `route` (encoded polyline, precision via `route_precision` 5 or 6, or a GeoJSON LineString). Results are sorted by position on the route. For long routes use `POST` with a JSON body.
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
-  "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
-  "type": "road_closure,construction", "buffer": 50
-}' | jq '.total'
+# route Vienna–Graz as polyline6, then the reports in a 50 m corridor
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.4395,47.0707?geometries=polyline6" \
+  | jq '{route: .routes[0].geometry, route_precision: "6", type: "road_closure,construction", buffer: 50}' > body.json
+curl -s -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: application/json" https://api.mapx.at/v1/traffic/incidents --data @body.json | jq '.total'
 ```
 
 `buffer` is the corridor half-width in meters (1 to 1000, default 25).
@@ -904,13 +908,13 @@ map.on("load", () => {
 
 The style `traffic-day` already contains the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
 
-## Route with traffic
+## Route around closures
 
 ```
 GET /v1/directions/driving-traffic/{coordinates}
 ```
 
-The route avoids current closures and lists incidents in `legs[].incidents`. Use `incidents=true` to get the list with other car profiles.
+The route avoids the current binding closures from the ASFINAG and EVIS.AT reports, discourages conditional closures and lists the reports along the way in `legs[].incidents`. Network-wide traffic flow (measured speeds, congestion on all roads) is not taken into account. Use `incidents=true` to get the list with other car profiles.
 
 ## Next
 
@@ -926,7 +930,7 @@ Source: https://docs.mapx.at/guides/transit/
 
 > Query public transport journeys, stops and departure boards in Austria from the scheduled timetable with the mapx transit API.
 
-The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint |
 |---|---|
@@ -947,8 +951,8 @@ Stops of the same station from different operators are merged and share one `id`
 Pass a stop `id`, or a coordinate to get the departures of all stops around it.
 
 ```js
-const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8&access_token=YOUR_TOKEN";
-const { departures } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8";
+const { departures } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 
@@ -1024,7 +1028,7 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 
 | Part | Values |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
 | `view` | `lon,lat,zoom[,bearing]` or `auto` (fits the overlays) |
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
@@ -1050,8 +1054,8 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/static/str
 With `auto` instead of the view, the image shows all overlays.
 
 ```js
-const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified&access_token=YOUR_TOKEN";
-const { routes } = await (await fetch(dir)).json();
+const dir = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?geometries=polyline&overview=simplified";
+const { routes } = await (await fetch(dir, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const path = encodeURIComponent(routes[0].geometry); // encoded polyline, precision 5
 const url = `https://api.mapx.at/v1/static/outdoors/path-5+e11d48(${path})/auto/800x500@2x.webp?access_token=YOUR_TOKEN`;
 ```
@@ -1086,7 +1090,7 @@ Source: https://docs.mapx.at/guides/elevation/
 
 > Get heights at points and elevation profiles, use terrain models and show 3D terrain in the map: elevation API and terrain tilesets for Austria.
 
-mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Height at a point
 
@@ -1097,8 +1101,8 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/
 Several points, up to 512, in one request:
 
 ```js
-const url = "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm&access_token=YOUR_TOKEN";
-const { features } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm";
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(features.map((f) => f.properties.elevation)); // meters above sea level
 ```
 
@@ -1107,8 +1111,8 @@ Heights are in meters with 0.1 m steps. Outside the data area the value is `null
 ## Elevation profile
 
 ```js
-const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50&access_token=YOUR_TOKEN";
-const { properties: p } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
+const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
@@ -1148,7 +1152,7 @@ Source: https://docs.mapx.at/guides/parcels/
 
 > Find the cadastral parcel at a point, draw parcel boundaries on the map and read the parcel attributes with the mapx cadastre for Austria.
 
-The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Use |
 |---|---|
@@ -1174,7 +1178,7 @@ map.on("load", () => {
 });
 map.on("click", async (e) => {
   const { lng, lat } = e.lngLat;
-  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}?access_token=YOUR_TOKEN`);
+  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } });
   const [parcel] = (await res.json()).features;
   if (!parcel) return;
   const p = parcel.properties;
@@ -1200,7 +1204,7 @@ Combine tilesets with a comma, for example `streets,cadastre`. Each feature has 
 Combine the parcel with a [static image](https://docs.mapx.at/guides/static-images.md) using the polygon as GeoJSON overlay:
 
 ```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
+const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).features[0];
 const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry }));
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp?access_token=YOUR_TOKEN`;
 ```
@@ -1438,7 +1442,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Example questions
 
-- "Where is Herrengasse 13 in Vienna, and where is the nearest fuel station?"
+- "Where is Herrengasse 13 in 1010 Vienna, and where is the nearest fuel station?"
 - "How long does a truck with 40 t take from Vienna to Linz, and are there closures on the way?"
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"
@@ -1711,7 +1715,7 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
    };
    ```
 
-   `text-font` must be a font that `/v1/fonts` lists (`GET /v1/fonts`), for example `Open Sans Semibold` or `Noto Sans Regular`.
+   `text-font` must be a font that `/v1/fonts` lists (`GET /v1/fonts`), for example `Open Sans Semibold` or `Noto Sans Regular`. Without labels, drop this layer and `glyphs`.
 
 4. **Start the map.**
 
@@ -1839,7 +1843,7 @@ Source: https://docs.mapx.at/guides/elevation-profile/
 
 **Goal:** Query an elevation profile (distance against elevation) for a route and draw it as a chart.
 
-**Prerequisites:** a browser. A free token, no framework, no library.
+**Prerequisites:** a browser. A free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)), no framework, no library.
 
 With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevation.md) endpoint returns elevation values spaced evenly by length along the line.
 
@@ -1865,8 +1869,8 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    ```html
    <script type="module">
      const line = "12.69,47.07;12.70,47.08";
-     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm&access_token=YOUR_TOKEN`;
-     const data = await (await fetch(url)).json();
+     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm`;
+     const data = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 
      // skip samples without elevation (outside the data)
      const pts = data.features
@@ -1903,7 +1907,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    </script>
    ```
 
-4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly.
+4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly. For web pages use a public token (`mx_pk_…`) with your own origin; allow `localhost` only during development.
 
 ## Result
 
@@ -2079,7 +2083,7 @@ Source: https://docs.mapx.at/guides/sdk/
 
 > A small add-on for MapLibre GL JS: map factory, typed helpers for every API, route planner, layer switcher, parcel and departures popups.
 
-`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@6.18.0` and `pmtiles@{V.pmtiles}`.
+`mapx-gl` is a small add-on (ESM, TypeScript) for MapLibre GL JS. It sets the style URLs, registers the `pmtiles://` protocol, wraps the [APIs](https://docs.mapx.at/api/index.md) in typed functions and adds ready-made controls. Peer dependencies: `maplibre-gl@6.18.0` and `pmtiles@4.5.0`.
 
 ## Install
 
@@ -2088,7 +2092,7 @@ Load the bundle from `https://map.mapx.at/sdk/v1/` (CORS is open) or download th
 | File | Use |
 |---|---|
 | `mapx-gl.bundle.js` | Everything included, load as `<script type="module">` |
-| `maplibre-gl-worker.js` | Worker of MapLibre GL JS {V.maplibre}, loaded by the bundle itself; when downloading, put it in the same directory as `mapx-gl.bundle.js` |
+| `maplibre-gl-worker.js` | Worker of MapLibre GL JS 6.18.0, loaded by the bundle itself; when downloading, put it in the same directory as `mapx-gl.bundle.js` |
 | `mapx-gl.js` | Without peers, for projects with their own build |
 | `mapx-gl.css` | Styles for the controls, load after `maplibre-gl.css` |
 | `mapx-gl.d.ts` | TypeScript types |
@@ -2110,7 +2114,7 @@ A complete example is at [map.mapx.at/sdk/v1/example.html](https://map.mapx.at/s
 
 ## Map
 
-`mapx.map(options)` returns a MapLibre map. `accessToken` is your public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); it applies to the map and to all helpers. Without a map, call `mapx.setAccessToken("YOUR_TOKEN")` once. `style` is a short name (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) that becomes `https://api.mapx.at/v1/styles/{id}`, or any style URL or object. `terrain: true` turns on 3D terrain.
+`mapx.map(options)` returns a MapLibre map. `accessToken` is your public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); it applies to the map and to all helpers. Without a map, call `mapx.setAccessToken("YOUR_TOKEN")` once; helpers, styles, tiles and `staticImageUrl()` then carry it. Use a public token (`mx_pk_…`) on web pages; secret tokens (`mx_sk_…`) belong on servers only. `style` is a short name (`streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors`) that becomes `https://api.mapx.at/v1/styles/{id}`, or any style URL or object. `terrain: true` turns on 3D terrain.
 
 ## What is in the box
 
@@ -2179,7 +2183,7 @@ console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0]
 const iso = await mapx.isochrone("cycling", melk, { minutes: [10, 20, 30] });          // GeoJSON polygons
 const m = await mapx.matrix("driving", [vienna, melk, [14.2858, 48.3069]]);           // m.durations[i][j] in seconds
 
-// Tour planning: one vehicle, two jobs
+// Tour planning: one vehicle, two jobs (secret token mx_sk_… only, otherwise 403 pk-not-allowed)
 const tour = await mapx.optimization({
   vehicles: [{ id: 1, start: vienna, end: vienna }],
   services: [{ id: 1, location: melk, service: 300 }, { id: 2, location: [14.2858, 48.3069], service: 300 }],

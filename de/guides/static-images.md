@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/static-images/
 
 > Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-Static-Images-API.
 
-Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
+Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen. Der Token steht als `access_token` in der URL, weil ein Bild-Tag keinen Header senden kann. Für Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Seite als erlaubter Origin verwenden; Bilder für E-Mails und PDFs auf dem eigenen Server mit einem geheimen Token (`mx_sk_…`) erzeugen, damit der geheime Token nicht in der Nachricht landet.
 
 ```html
 <img alt="Wiener Innenstadt" width="600" height="400"
@@ -20,12 +20,12 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 
 | Teil | Werte |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
 | `view` | `lon,lat,zoom[,bearing]` oder `auto` (passt auf die Overlays) |
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Der Token gehört an jede Bild-URL (`?access_token=…`, [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
+Details zum Token: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 
 ## Overlays
 

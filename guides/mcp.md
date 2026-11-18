@@ -189,7 +189,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Example questions
 
-- "Where is Herrengasse 13 in Vienna, and where is the nearest fuel station?"
+- "Where is Herrengasse 13 in 1010 Vienna, and where is the nearest fuel station?"
 - "How long does a truck with 40 t take from Vienna to Linz, and are there closures on the way?"
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"

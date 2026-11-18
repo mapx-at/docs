@@ -527,7 +527,7 @@ Source: https://docs.mapx.at/de/guides/maps/
 
 mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Style entsteht.
 
-**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt, die Übergabe steht dort.
+**Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt. Das Style-Beispiel zeigt die Übergabe mit `transformRequest`, die späteren Ausschnitte setzen sie voraus.
 
 ## Einen Style verwenden
 
@@ -540,9 +540,14 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 
 ```js
+const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
 const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
+  // Token an alle Anfragen an mapx.at hängen
+  transformRequest: (url) => ({
+    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+  }),
   center: [12.694, 47.074], zoom: 12, // Großglockner
 });
 ```
@@ -573,7 +578,7 @@ Layernamen und Felder: [Tilesets](https://docs.mapx.at/de/tilesets/index.md). Ei
 
 ## Wetter- und Verkehrs-Overlays
 
-Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](https://docs.mapx.at/de/api/air-quality.md). Die amtlichen Wetterwarnungen sind GeoJSON (`/v1/weather/warnings`, als `geojson`-Source einbinden und nach `level` einfärben).
+Raster-Wetter-Tiles haben eine Zeitdimension; das TileJSON von `temperature`, `precipitation`, `wind`, `humidity`, `cloud` oder `pressure` listet die verfügbaren Zeiten. Dasselbe URL-Schema bedient die Luftqualitätsebenen `aqi` (Tagesindex), `no2`, `o3`, `pm10`, `pm25` und `dust` (Saharastaub), siehe [Air Quality API](https://docs.mapx.at/de/api/air-quality.md).
 
 ```js
 map.addSource("temp", { type: "raster", url: "https://api.mapx.at/v1/weather/tiles/temperature.json", tileSize: 256 });
@@ -587,7 +592,7 @@ Die Verkehrsebene ist eine Vektor-Source, siehe [Verkehr](https://docs.mapx.at/d
 Die Style- und TileJSON-Formate funktionieren in MapLibre, in Mapbox-GL-JS-Clients mit eigenen URLs, in Leaflet mit Vektor-Plugin, in OpenLayers und in QGIS. Für Clients ohne Vektor-Unterstützung liefern [Static Tiles](https://docs.mapx.at/de/api/styles.md) den gerenderten Style als Raster-Tiles:
 
 ```
-https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}
+https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TOKEN
 ```
 
 ## Offline und Massennutzung
@@ -621,17 +626,17 @@ Den Endpunkt nach der Aktion der Nutzer wählen.
 | Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
 | Orte einer Art zeigen (Tankstelle, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
-Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 ## Eine Adresse geocodieren
 
 ```js
-const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&types=address&limit=3";
+const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const [lon, lat] = features[0].center;
 ```
 
-Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
+Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
 ## Reverse Geocoding
 
@@ -667,21 +672,21 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/
 Autofill liefert getrennte Felder, die sich auf Formularfelder abbilden lassen.
 
 ```js
-const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
+const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const { address_line1, postcode, place, coordinates } = a.suggestions[0];
 ```
 
 Die Validierung prüft, was der Nutzer eingegeben hat:
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/validate?q=Hauptstr.%2012a,%203390" | jq '{status, confidence, address}'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
 `status` ist `match`, `corrected`, `ambiguous` (dann `candidates[]`) oder `not_found`. Abkürzungen, Umlaute und `ß` werden verstanden. Für strukturierte Eingaben POST mit JSON verwenden.
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute).
+`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute). Batch-Geocoding braucht einen geheimen Token (`mx_sk_…`) und gehört deshalb auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`.
 
 ## Nächste Schritte
 
@@ -697,7 +702,7 @@ Source: https://docs.mapx.at/de/guides/navigation/
 
 > Routen für Auto, Lkw, Rad und zu Fuß in Österreich planen: Maut, Isochronen, Fahrzeitmatrizen, Map Matching und Tourenplanung.
 
-Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`.
+Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt | Zone |
 |---|---|---|
@@ -713,7 +718,7 @@ Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinat
 | Profil | Für |
 |---|---|
 | `driving` | Auto |
-| `driving-traffic` | Auto mit aktuellem Verkehr und Sperren |
+| `driving-traffic` | Auto unter Berücksichtigung der Sperren und Verkehrsmeldungen von ASFINAG und EVIS.AT (keine flächendeckende Verkehrslage), listet Meldungen in `legs[].incidents` |
 | `driving-truck` | Lkw über 3,5 t |
 | `cycling` | Rad: bevorzugt Radwege, Radstreifen und beschilderte Routen, wertet Unbefestigtes und Steigungen schlechter |
 | `cycling-mtb` | Mountainbike: bevorzugt Forststraßen und Singletrails, berücksichtigt die MTB-Schwierigkeit |
@@ -739,11 +744,19 @@ console.log(r.distance, "m", r.duration, "s");
 ```bash
 # Route als polyline6, dann die Limits in einem 30-m-Korridor
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq '.features | length'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -r '.routes[0].geometry' > route.txt
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -j '.routes[0].geometry' > route.txt
 curl -s -G -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits" --data-urlencode "corridor@route.txt" -d buffer=30 | jq '.features | length'
 ```
 
-Lange Routen können die URL-Länge einer GET-Anfrage überschreiten; in Abschnitte von etwa 500 Punkten teilen. Quelle: GIP.at, CC BY 4.0.
+Die Polyline ohne abschließenden Zeilenumbruch schreiben (`jq -j`). Lange Routen können die URL-Länge einer GET-Anfrage überschreiten; in Abschnitte von etwa 500 Punkten teilen. Quelle: GIP.at, CC BY 4.0.
+
+## Offline neu berechnen
+
+`GET /v1/corridor-graph` liefert das Straßennetz um eine Route als eine kompakte Binärdatei (gzip-Strom, `application/vnd.mapx.corridor-graph+gzip`), damit eine App ohne Netz neu routen kann, etwa nach einer falschen Abzweigung im Funkloch. Die Route als polyline6 in `polyline` übergeben, den Radius in `buffer` (100 bis 5000 m, Standard 3000) und `profile` (`driving` als Standard, `cycling` oder `walking`). Die Datei enthält Knoten, Kanten mit den Fahrzeiten des Routers, Straßennamen, Tempolimits und Abbiegeverbote; zu erwarten sind 1 bis 3 MB je 100 km Route. Zone `heavy`. Der Endpunkt braucht einen geheimen Token (`mx_sk_…`), mit einem öffentlichen antwortet die API mit `403` `pk-not-allowed`. Quelle: GIP.at, CC BY 4.0.
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -G "https://api.mapx.at/v1/corridor-graph" --data-urlencode "polyline@route.txt" -d buffer=500 -o corridor.mxcg
+```
 
 ## Lkw-Routen
 
@@ -801,7 +814,7 @@ Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte
 
 ## Tourenplanung
 
-`optimized-trips` ordnet bis zu 25 Stopps (Rundreise oder fester Start und Ende). `POST /v1/optimization` plant Touren für mehrere Fahrzeuge mit Kapazitäten und Zeitfenstern.
+`optimized-trips` ordnet bis zu 25 Stopps (Rundreise oder fester Start und Ende). `POST /v1/optimization` plant Touren für mehrere Fahrzeuge mit Kapazitäten und Zeitfenstern. `POST /v1/optimization` braucht einen geheimen Token (`mx_sk_…`) und gehört auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`.
 
 ```bash
 curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/optimization -H "Content-Type: application/json" -d '{
@@ -827,9 +840,9 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/opt
 
 Source: https://docs.mapx.at/de/guides/traffic/
 
-> Verkehrsmeldungen, Tempolimits auf Autobahnen und eine Verkehrsebene auf der Karte zeigen und Routen mit Verkehrslage nutzen, mit der mapx-Verkehrs-API.
+> Verkehrsmeldungen, Tempolimits auf Autobahnen und eine Verkehrsebene auf der Karte zeigen und Routen um Sperren führen, mit der mapx-Verkehrs-API.
 
-Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT) und geplante Baustellen auf anderen Straßen ab. Anfragen liegen in der Zone `search`, 10 pro Sekunde, und brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt |
 |---|---|
@@ -838,7 +851,7 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 | Positionen der Zeichen | [`/v1/traffic/signs`](https://docs.mapx.at/de/api/traffic.md) |
 | Verkehr auf einer Karte zeichnen | `/v1/traffic/tiles.json` |
 | Prüfen, ob die Daten aktuell sind | `/v1/traffic/status` |
-| Um Sperren herum routen | Profil `driving-traffic` |
+| Um Sperren herum routen | Profil `driving-traffic` (auch `driving` umfährt verbindliche Sperren) |
 
 ## Störungen auflisten
 
@@ -858,23 +871,23 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/in
 
 ## Fahrstreifen auf Autobahnen
 
-Baustellen auf Autobahnen und Schnellstraßen enthalten `lanes` von der ASFINAG: ein Eintrag je Richtung und Fahrbahn mit den gesperrten Fahrstreifen (`right`, `middle`, `left`, `hard_shoulder`), der Zahl offener Fahrstreifen (`open`) von `original`, `contraflow`, `road_closed` und dem vorübergehenden `speed_limit_kmh`. `direction` ist `aligned` (in Richtung steigender Betriebskilometer) oder `opposite`. `sources` nennt die Herkunft einer Meldung (`evis`, `asfinag`); `source` benennt den Datensatz (`evis-planned+asfinag`, wenn beide passen, `asfinag-roadworks` für Baustellen, die nur die ASFINAG meldet). Der Text einer EVIS-Meldung bleibt unverändert.
+Baustellen auf Autobahnen und Schnellstraßen enthalten meist `lanes` von der ASFINAG: ein Eintrag je Richtung und Fahrbahn mit den gesperrten Fahrstreifen (`right`, `middle`, `left`, `hard_shoulder`), der Zahl offener Fahrstreifen (`open`) von `original`, `contraflow`, `road_closed` und dem vorübergehenden `speed_limit_kmh`. `direction` ist `aligned` (in Richtung steigender Betriebskilometer) oder `opposite`. `sources` nennt die Herkunft einer Meldung (`evis`, `asfinag`); `source` benennt den Datensatz (`evis-planned+asfinag`, wenn beide passen, `asfinag-roadworks` für Baustellen, die nur die ASFINAG meldet). Der Text einer EVIS-Meldung bleibt unverändert.
 
 ```js
-const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=lane_restriction";
+const url = "https://api.mapx.at/v1/traffic/incidents?road=A12&type=construction";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-for (const f of features) for (const l of f.properties.lanes) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
+for (const f of features) for (const l of f.properties.lanes ?? []) console.log(f.properties.road, l.closed, l.open, l.speed_limit_kmh);
 ```
 
 ## Störungen entlang einer Route
 
-Die Route als `route` übergeben (kodierte Polyline oder GeoJSON). Die Ergebnisse sind nach der Position auf der Route sortiert. Für lange Routen `POST` mit JSON-Body verwenden.
+Die Route als `route` übergeben (kodierte Polyline, Präzision mit `route_precision` 5 oder 6, oder GeoJSON-LineString). Die Ergebnisse sind nach der Position auf der Route sortiert. Für lange Routen `POST` mit JSON-Body verwenden.
 
 ```bash
-curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/traffic/incidents -H "Content-Type: application/json" -d '{
-  "route": { "type": "LineString", "coordinates": [[16.37, 48.21], [16.3, 48.19]] },
-  "type": "road_closure,construction", "buffer": 50
-}' | jq '.total'
+# Route Wien–Graz als polyline6, dann die Meldungen im 50-m-Korridor
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.4395,47.0707?geometries=polyline6" \
+  | jq '{route: .routes[0].geometry, route_precision: "6", type: "road_closure,construction", buffer: 50}' > body.json
+curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" -H "Content-Type: application/json" https://api.mapx.at/v1/traffic/incidents --data @body.json | jq '.total'
 ```
 
 `buffer` ist die halbe Korridorbreite in Metern (1 bis 1000, Standard 25).
@@ -891,13 +904,13 @@ map.on("load", () => {
 
 Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
-## Route mit Verkehrslage
+## Route um Sperren
 
 ```
 GET /v1/directions/driving-traffic/{coordinates}
 ```
 
-Die Route meidet aktuelle Sperren und listet Störungen in `legs[].incidents`. Mit `incidents=true` kommt die Liste auch bei anderen Auto-Profilen.
+Die Route meidet die aktuellen verbindlichen Sperren aus den Meldungen von ASFINAG und EVIS.AT, erschwert zeitlich bedingte Sperren und listet die Meldungen entlang der Strecke in `legs[].incidents`. Eine flächendeckende Verkehrslage (gemessene Geschwindigkeiten, Stau auf allen Straßen) fließt nicht ein. Mit `incidents=true` kommt die Liste auch bei anderen Auto-Profilen.
 
 ## Nächste Schritte
 
@@ -913,7 +926,7 @@ Source: https://docs.mapx.at/de/guides/transit/
 
 > ÖV-Verbindungen, Haltestellen und Abfahrtstafeln in Österreich aus dem Soll-Fahrplan mit der mapx-ÖV-API abfragen und in der Karte anzeigen.
 
-Die Fahrplandaten decken Österreich ab (ÖBB und die regionalen Verkehrsverbünde). Es ist der Soll-Fahrplan: `realtime` ist immer `false`. Anfragen für Verbindungen liegen in der Zone `route`, für Haltestellen und Abfahrten in der Zone `search`.
+Die Fahrplandaten decken Österreich ab (ÖBB und die regionalen Verkehrsverbünde). Es ist der Soll-Fahrplan: `realtime` ist immer `false`. Anfragen für Verbindungen liegen in der Zone `route`, für Haltestellen und Abfahrten in der Zone `search`. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt |
 |---|---|
@@ -995,7 +1008,7 @@ Source: https://docs.mapx.at/de/guides/static-images/
 
 > Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-Static-Images-API.
 
-Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen.
+Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen. Der Token steht als `access_token` in der URL, weil ein Bild-Tag keinen Header senden kann. Für Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Seite als erlaubter Origin verwenden; Bilder für E-Mails und PDFs auf dem eigenen Server mit einem geheimen Token (`mx_sk_…`) erzeugen, damit der geheime Token nicht in der Nachricht landet.
 
 ```html
 <img alt="Wiener Innenstadt" width="600" height="400"
@@ -1011,12 +1024,12 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 
 | Teil | Werte |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
 | `view` | `lon,lat,zoom[,bearing]` oder `auto` (passt auf die Overlays) |
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Der Token gehört an jede Bild-URL (`?access_token=…`, [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
+Details zum Token: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 
 ## Overlays
 
@@ -1073,7 +1086,7 @@ Source: https://docs.mapx.at/de/guides/elevation/
 
 > Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Tilesets für Österreich.
 
-mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen.
+mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 ## Höhe an einem Punkt
 
@@ -1135,7 +1148,7 @@ Source: https://docs.mapx.at/de/guides/parcels/
 
 > Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen auf der Karte zeichnen und die Attribute lesen: Kataster-Abfrage mit mapx für Österreich.
 
-Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich.
+Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Verwendung |
 |---|---|
@@ -1425,7 +1438,7 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Beispielfragen
 
-- „Wo liegt die Herrengasse 13 in Wien, und wo ist die nächste Tankstelle?“
+- „Wo liegt die Herrengasse 13 in 1010 Wien, und wo ist die nächste Tankstelle?“
 - „Wie lange braucht ein Lkw mit 40 t von Wien nach Linz, und gibt es Sperren auf dem Weg?“
 - „Was erreiche ich vom Bahnhof Melk in 15 Minuten zu Fuß?“
 - „Was sind die nächsten Abfahrten am Bahnhof Melk?“
@@ -1480,7 +1493,7 @@ Source: https://docs.mapx.at/de/guides/style-the-basemap/
 
 **Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
 
-**Voraussetzungen:** ein Browser und ein statischer Webserver. Grundkenntnisse in MapLibre-Styles (Quellen und Ebenen).
+**Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Grundkenntnisse in MapLibre-Styles (Quellen und Ebenen).
 
 Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](https://docs.mapx.at/de/tilesets/streets.md).
 
@@ -1593,14 +1606,14 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
 
 Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Tileset.
 
-## Beschriftung braucht eigene Glyphen
+## Beschriftung und Schriften
 
-mapx liefert keine Schriften. Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Style ein `glyphs`-Feld, das auf eine selbst betriebene oder gewählte Schriftquelle zeigt:
+Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Style ein `glyphs`-Feld. mapx liefert Schriften unter `/v1/fonts/{fontstack}/{range}.pbf` (Liste: `GET /v1/fonts`, zum Beispiel `Open Sans Semibold`, `Noto Sans Regular`). Das `transformRequest` aus Schritt 7 hängt den Token auch an diese Anfragen:
 
 ```js
 style: {
   version: 8,
-  glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // eigene Glyphenquelle
+  glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
   sources: { streets: quelle },
   layers: [
     // ...
@@ -1612,7 +1625,7 @@ style: {
 }
 ```
 
-Das Beispiel nutzt die freien Demo-Glyphen von MapLibre (Schrift `Open Sans Semibold`). Für den Produktivbetrieb eine eigene Glyphenquelle verwenden; `text-font` muss einer Schrift entsprechen, die die Glyphenquelle ausliefert.
+`text-font` muss eine Schrift sein, die `GET /v1/fonts` auflistet.
 
 ## Nächste Schritte
 
@@ -1630,7 +1643,7 @@ Source: https://docs.mapx.at/de/guides/overlay-contours/
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
-**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine eigene Schriftquelle (Glyphen), siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-braucht-eigene-glyphen).
+**Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die Beschriftung nutzt die Schriften von mapx, siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-und-schriften).
 
 Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
@@ -1697,7 +1710,7 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
    };
    ```
 
-   `text-font` muss eine Schrift der Glyphenquelle sein. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
+   `text-font` muss eine Schrift sein, die `GET /v1/fonts` auflistet, zum Beispiel `Open Sans Semibold` oder `Noto Sans Regular`. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
 
 4. **Karte starten.**
 
@@ -1711,7 +1724,7 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
        }),
        style: {
          version: 8,
-         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // eigene Glyphenquelle
+         glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: quellen,
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
        }
@@ -1914,7 +1927,7 @@ Source: https://docs.mapx.at/de/guides/qgis/
 
 > DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung, Vektorkachel-Verbindung und PMTiles direkt.
 
-**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). QGIS sendet keine Webseiten-Origin; dafür einen geheimen Token (`mx_sk_…`) verwenden und nur auf dem eigenen Rechner ablegen.
+**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Auf dem eigenen Rechner einen geheimen Token (`mx_sk_…`) verwenden: ein öffentlicher Token gilt nur für seine erlaubten Origins, und QGIS ist keine Webseite.
 
 **Voraussetzungen:** QGIS 3.x (für PMTiles direkt ab 3.32).
 
@@ -1927,7 +1940,7 @@ Source: https://docs.mapx.at/de/guides/qgis/
    https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN
    ```
 
-3. **Min. Zoom** 5, **Max. Zoom** 18, **Kachelauflösung** 512 (Mapbox-Stil, 512 px). Bei **Referer** und **Authentifizierung** nichts eintragen.
+3. **Min. Zoom** 5, **Max. Zoom** 18, **Kachelauflösung** 512 (Mapbox-Stil, 512 px). Bei **Referer** und **Authentifizierung** nichts eintragen; der Token in der URL genügt.
 4. Mit OK speichern, die Verbindung per Doppelklick in die Karte laden.
 
 Das Projekt-KBS darf beliebig sein, QGIS rechnet die Web-Mercator-Kacheln um.
@@ -1940,7 +1953,7 @@ Die Höhenkacheln sind [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-r
 https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN
 ```
 
-(Max. Zoom 16; für das Oberflächenmodell `dsm` statt `dtm`). Der Layer zeigt zunächst die kodierte Farbe. Die Höhe ergibt sich im **Raster-Rechner** aus den drei Bändern:
+(Max. Zoom 16; für das Oberflächenmodell `dsm` statt `terrain-rgb`). Der Layer zeigt zunächst die kodierte Farbe. Die Höhe ergibt sich im **Raster-Rechner** aus den drei Bändern:
 
 ```
 -10000 + ("Layer@1" * 65536 + "Layer@2" * 256 + "Layer@3") * 0.1
@@ -2068,7 +2081,7 @@ Source: https://docs.mapx.at/de/guides/sdk/
 
 > Ein kleines Add-on für MapLibre GL JS: Karten-Factory, typisierte Helfer für jede API, Routenplaner, Ebenen-Schalter, Grundstücks- und Abfahrts-Popups.
 
-`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@6.18.0` und `pmtiles@{V.pmtiles}`.
+`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@6.18.0` und `pmtiles@4.5.0`.
 
 ## Installation
 
@@ -2077,7 +2090,7 @@ Das Bundle von `https://map.mapx.at/sdk/v1/` laden (CORS ist offen) oder die Dat
 | Datei | Verwendung |
 |---|---|
 | `mapx-gl.bundle.js` | Alles enthalten, als `<script type="module">` laden |
-| `maplibre-gl-worker.js` | Worker von MapLibre GL JS {V.maplibre}, lädt das Bundle selbst; beim Herunterladen ins selbe Verzeichnis wie `mapx-gl.bundle.js` legen |
+| `maplibre-gl-worker.js` | Worker von MapLibre GL JS 6.18.0, lädt das Bundle selbst; beim Herunterladen ins selbe Verzeichnis wie `mapx-gl.bundle.js` legen |
 | `mapx-gl.js` | Ohne Peers, für Projekte mit eigenem Build |
 | `mapx-gl.css` | Stile der Controls, nach `maplibre-gl.css` laden |
 | `mapx-gl.d.ts` | TypeScript-Typen |
@@ -2144,8 +2157,8 @@ const sessionToken = crypto.randomUUID();
 const hits = await mapx.searchSuggest("Stephansplatz", { sessionToken, proximity: [16.37, 48.21], types: ["poi", "street"], limit: 5 });
 const place = await mapx.searchRetrieve(hits[0].mapbox_id, { sessionToken });
 
-// Geocoding, auch Grundstücke: "KG 14105 Gst 102/3"
-const parcels = await mapx.geocode("14105/102/3", { types: ["parcel"], limit: 3 });
+// Geocoding, auch Grundstücke: "KG 14143 Gst 473/1"
+const parcels = await mapx.geocode("14143/473/1", { types: ["parcel"], limit: 3 });
 
 // Reverse Geocoding: nächste Adresse, Straße oder Ort
 const [nearest] = await mapx.reverse([16.3725, 48.2085], { types: ["address"], limit: 1 });
@@ -2165,14 +2178,14 @@ const bus = await mapx.transitDirections(vienna, [16.4, 48.19], { departAt: "202
 console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0].steps.length);
 ```
 
-`exclude` gilt nur für das Profil `driving`, `truck` nur für `driving-truck`. Beides wird geprüft: eine falsche Kombination wirft einen `MapxError` mit `code: "bad-request"`.
+`exclude` (`motorway`, `toll`) gilt für `driving`, `driving-traffic` und `driving-truck`, `truck` nur für `driving-truck`. Der Server prüft beides: eine falsche Kombination wirft einen `MapxError` mit `code: "bad-request"`. Den Ausschluss `ferry` kennen die typisierten Optionen noch nicht; dafür die [Directions API](https://docs.mapx.at/de/api/directions.md) verwenden.
 
 ```js
 // Erreichbarkeit und Fahrzeiten
 const iso = await mapx.isochrone("cycling", melk, { minutes: [10, 20, 30] });          // GeoJSON-Flächen
 const m = await mapx.matrix("driving", [vienna, melk, [14.2858, 48.3069]]);           // m.durations[i][j] in Sekunden
 
-// Tourenplanung: ein Fahrzeug, zwei Aufträge
+// Tourenplanung: ein Fahrzeug, zwei Aufträge (nur mit geheimem Token mx_sk_…, sonst 403 pk-not-allowed)
 const tour = await mapx.optimization({
   vehicles: [{ id: 1, start: vienna, end: vienna }],
   services: [{ id: 1, location: melk, service: 300 }, { id: 2, location: [14.2858, 48.3069], service: 300 }],

@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/qgis/
 
 > DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung, Vektorkachel-Verbindung und PMTiles direkt.
 
-**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). QGIS sendet keine Webseiten-Origin; dafür einen geheimen Token (`mx_sk_…`) verwenden und nur auf dem eigenen Rechner ablegen.
+**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Auf dem eigenen Rechner einen geheimen Token (`mx_sk_…`) verwenden: ein öffentlicher Token gilt nur für seine erlaubten Origins, und QGIS ist keine Webseite.
 
 **Voraussetzungen:** QGIS 3.x (für PMTiles direkt ab 3.32).
 
@@ -17,7 +17,7 @@ Source: https://docs.mapx.at/de/guides/qgis/
    https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN
    ```
 
-3. **Min. Zoom** 5, **Max. Zoom** 18, **Kachelauflösung** 512 (Mapbox-Stil, 512 px). Bei **Referer** und **Authentifizierung** nichts eintragen.
+3. **Min. Zoom** 5, **Max. Zoom** 18, **Kachelauflösung** 512 (Mapbox-Stil, 512 px). Bei **Referer** und **Authentifizierung** nichts eintragen; der Token in der URL genügt.
 4. Mit OK speichern, die Verbindung per Doppelklick in die Karte laden.
 
 Das Projekt-KBS darf beliebig sein, QGIS rechnet die Web-Mercator-Kacheln um.
@@ -30,7 +30,7 @@ Die Höhenkacheln sind [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-r
 https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN
 ```
 
-(Max. Zoom 16; für das Oberflächenmodell `dsm` statt `dtm`). Der Layer zeigt zunächst die kodierte Farbe. Die Höhe ergibt sich im **Raster-Rechner** aus den drei Bändern:
+(Max. Zoom 16; für das Oberflächenmodell `dsm` statt `terrain-rgb`). Der Layer zeigt zunächst die kodierte Farbe. Die Höhe ergibt sich im **Raster-Rechner** aus den drei Bändern:
 
 ```
 -10000 + ("Layer@1" * 65536 + "Layer@2" * 256 + "Layer@3") * 0.1

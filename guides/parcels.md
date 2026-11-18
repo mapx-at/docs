@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/parcels/
 
 > Find the cadastral parcel at a point, draw parcel boundaries on the map and read the parcel attributes with the mapx cadastre for Austria.
 
-The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Use |
 |---|---|
@@ -30,7 +30,7 @@ map.on("load", () => {
 });
 map.on("click", async (e) => {
   const { lng, lat } = e.lngLat;
-  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}?access_token=YOUR_TOKEN`);
+  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } });
   const [parcel] = (await res.json()).features;
   if (!parcel) return;
   const p = parcel.properties;
@@ -56,7 +56,7 @@ Combine tilesets with a comma, for example `streets,cadastre`. Each feature has 
 Combine the parcel with a [static image](https://docs.mapx.at/guides/static-images.md) using the polygon as GeoJSON overlay:
 
 ```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
+const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).features[0];
 const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry }));
 const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp?access_token=YOUR_TOKEN`;
 ```

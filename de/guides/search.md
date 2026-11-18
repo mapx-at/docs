@@ -15,17 +15,17 @@ Den Endpunkt nach der Aktion der Nutzer wählen.
 | Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
 | Orte einer Art zeigen (Tankstelle, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
-Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 ## Eine Adresse geocodieren
 
 ```js
-const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&types=address&limit=3";
+const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const [lon, lat] = features[0].center;
 ```
 
-Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
+Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
 ## Reverse Geocoding
 
@@ -61,21 +61,21 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/
 Autofill liefert getrennte Felder, die sich auf Formularfelder abbilden lassen.
 
 ```js
-const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=3", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
+const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const { address_line1, postcode, place, coordinates } = a.suggestions[0];
 ```
 
 Die Validierung prüft, was der Nutzer eingegeben hat:
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/validate?q=Hauptstr.%2012a,%203390" | jq '{status, confidence, address}'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
 `status` ist `match`, `corrected`, `ambiguous` (dann `candidates[]`) oder `not_found`. Abkürzungen, Umlaute und `ß` werden verstanden. Für strukturierte Eingaben POST mit JSON verwenden.
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute).
+`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute). Batch-Geocoding braucht einen geheimen Token (`mx_sk_…`) und gehört deshalb auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`.
 
 ## Nächste Schritte
 

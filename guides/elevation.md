@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/elevation/
 
 > Get heights at points and elevation profiles, use terrain models and show 3D terrain in the map: elevation API and terrain tilesets for Austria.
 
-mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+mapx has two height models of 1 m resolution (BEV, laser scanning): the terrain model `dtm` (bare ground) and the surface model `dsm` (including trees and buildings). Use `dtm` for gradients, profiles and trails, `dsm` for visibility and building heights. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Height at a point
 
@@ -15,8 +15,8 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation/
 Several points, up to 512, in one request:
 
 ```js
-const url = "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm&access_token=YOUR_TOKEN";
-const { features } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/elevation?points=12.694,47.074;15.3294,48.2272&model=dtm";
+const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(features.map((f) => f.properties.elevation)); // meters above sea level
 ```
 
@@ -25,8 +25,8 @@ Heights are in meters with 0.1 m steps. Outside the data area the value is `null
 ## Elevation profile
 
 ```js
-const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50&access_token=YOUR_TOKEN";
-const { properties: p } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
+const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```

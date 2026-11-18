@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/guides/elevation-profile/
 
 **Goal:** Query an elevation profile (distance against elevation) for a route and draw it as a chart.
 
-**Prerequisites:** a browser. A free token, no framework, no library.
+**Prerequisites:** a browser. A free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)), no framework, no library.
 
 With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevation.md) endpoint returns elevation values spaced evenly by length along the line.
 
@@ -32,8 +32,8 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    ```html
    <script type="module">
      const line = "12.69,47.07;12.70,47.08";
-     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm&access_token=YOUR_TOKEN`;
-     const data = await (await fetch(url)).json();
+     const url = `https://api.mapx.at/v1/elevation?path=${line}&samples=100&model=dtm`;
+     const data = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 
      // skip samples without elevation (outside the data)
      const pts = data.features
@@ -70,7 +70,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    </script>
    ```
 
-4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly.
+4. **Open it.** Open `profile.html` through a static server (`npx serve`); the browser may call the API directly. For web pages use a public token (`mx_pk_…`) with your own origin; allow `localhost` only during development.
 
 ## Result
 

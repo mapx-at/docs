@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/navigation/
 
 > Plan routes for car, truck, bike and foot in Austria: tolls, isochrones, travel-time matrices, map matching and tour planning.
 
-Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joined with `;`. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint | Zone |
 |---|---|---|
@@ -20,7 +20,7 @@ Routing runs on the Austrian road graph (GIP.at). Coordinates are `lon,lat`, joi
 | Profile | For |
 |---|---|
 | `driving` | Car |
-| `driving-traffic` | Car with current traffic and closures |
+| `driving-traffic` | Car, taking into account closures and traffic reports from ASFINAG and EVIS.AT (no network-wide traffic flow), lists reports in `legs[].incidents` |
 | `driving-truck` | Trucks over 3.5 t |
 | `cycling` | Bike: prefers cycle paths, lanes and signposted routes, rates unpaved sections and steep grades worse |
 | `cycling-mtb` | Mountain bike: prefers forest tracks and singletrails, considers the MTB difficulty |
@@ -31,8 +31,8 @@ Public transport is a separate API: [Transit](https://docs.mapx.at/guides/transi
 ## A route
 
 ```js
-const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=en&access_token=YOUR_TOKEN";
-const { routes } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=en";
+const { routes } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const r = routes[0];
 console.log(r.distance, "m", r.duration, "s");
 ```
@@ -54,7 +54,7 @@ Write the polyline without a trailing newline (`jq -j`). Long routes can exceed 
 
 ## Offline rerouting
 
-`GET /v1/corridor-graph` returns the road network around a route as one compact binary file (gzip stream, `application/vnd.mapx.corridor-graph+gzip`), so an app can recompute a route without network, for example after a wrong turn in a dead zone. Pass the route as polyline6 in `polyline`, the radius in `buffer` (100 to 5000 m, default 3000) and `profile` (`driving` default, `cycling` or `walking`). The file holds nodes, arcs with the travel times the router uses, road names, speed limits and turn restrictions; expect 1 to 3 MB per 100 km of route. Zone `heavy`. Source: GIP.at, CC BY 4.0.
+`GET /v1/corridor-graph` returns the road network around a route as one compact binary file (gzip stream, `application/vnd.mapx.corridor-graph+gzip`), so an app can recompute a route without network, for example after a wrong turn in a dead zone. Pass the route as polyline6 in `polyline`, the radius in `buffer` (100 to 5000 m, default 3000) and `profile` (`driving` default, `cycling` or `walking`). The file holds nodes, arcs with the travel times the router uses, road names, speed limits and turn restrictions; expect 1 to 3 MB per 100 km of route. Zone `heavy`. The endpoint needs a secret token (`mx_sk_…`); with a public token the API answers `403` `pk-not-allowed`. Source: GIP.at, CC BY 4.0.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -G "https://api.mapx.at/v1/corridor-graph" --data-urlencode "polyline@route.txt" -d buffer=500 -o corridor.mxcg
@@ -106,17 +106,17 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 
 ```js
 // Where can I walk in 5, 10 and 15 minutes?
-const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15&access_token=YOUR_TOKEN")).json();
+const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 
 // Travel times from the first point to the others
-const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance&access_token=YOUR_TOKEN")).json();
+const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 ```
 
 The isochrone result is a `FeatureCollection` of polygons, largest first. Show it with a `fill` layer; see [Isochrone](https://docs.mapx.at/examples/isochrone.md) and [Matrix](https://docs.mapx.at/examples/matrix.md). Map matching takes a GPS trace and returns the matched route.
 
 ## Tour planning
 
-`optimized-trips` orders up to 25 stops (round trip or fixed start and end). `POST /v1/optimization` plans tours for several vehicles with capacities and time windows.
+`optimized-trips` orders up to 25 stops (round trip or fixed start and end). `POST /v1/optimization` plans tours for several vehicles with capacities and time windows. `POST /v1/optimization` needs a secret token (`mx_sk_…`) and belongs on a server; with a public token the API answers `403` `pk-not-allowed`.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/optimization -H "Content-Type: application/json" -d '{

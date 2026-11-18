@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/transit/
 
 > Query public transport journeys, stops and departure boards in Austria from the scheduled timetable with the mapx transit API.
 
-The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
+The timetable data covers Austria (ÖBB and the regional transport associations). It is the scheduled timetable: `realtime` is always `false`. Requests are in the `route` zone for journeys and the `search` zone for stops and departures. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 | Task | Endpoint |
 |---|---|
@@ -25,8 +25,8 @@ Stops of the same station from different operators are merged and share one `id`
 Pass a stop `id`, or a coordinate to get the departures of all stops around it.
 
 ```js
-const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8&access_token=YOUR_TOKEN";
-const { departures } = await (await fetch(url)).json();
+const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8";
+const { departures } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 

@@ -14,8 +14,8 @@ const sessionToken = crypto.randomUUID();
 const hits = await mapx.searchSuggest("Stephansplatz", { sessionToken, proximity: [16.37, 48.21], types: ["poi", "street"], limit: 5 });
 const place = await mapx.searchRetrieve(hits[0].mapbox_id, { sessionToken });
 
-// Geocoding, auch Grundstücke: "KG 14105 Gst 102/3"
-const parcels = await mapx.geocode("14105/102/3", { types: ["parcel"], limit: 3 });
+// Geocoding, auch Grundstücke: "KG 14143 Gst 473/1"
+const parcels = await mapx.geocode("14143/473/1", { types: ["parcel"], limit: 3 });
 
 // Reverse Geocoding: nächste Adresse, Straße oder Ort
 const [nearest] = await mapx.reverse([16.3725, 48.2085], { types: ["address"], limit: 1 });
@@ -35,14 +35,14 @@ const bus = await mapx.transitDirections(vienna, [16.4, 48.19], { departAt: "202
 console.log(car.routes[0].distance, truck.routes[0].truck, mtb.routes[0].legs[0].steps.length);
 ```
 
-`exclude` gilt nur für das Profil `driving`, `truck` nur für `driving-truck`. Beides wird geprüft: eine falsche Kombination wirft einen `MapxError` mit `code: "bad-request"`.
+`exclude` (`motorway`, `toll`) gilt für `driving`, `driving-traffic` und `driving-truck`, `truck` nur für `driving-truck`. Der Server prüft beides: eine falsche Kombination wirft einen `MapxError` mit `code: "bad-request"`. Den Ausschluss `ferry` kennen die typisierten Optionen noch nicht; dafür die [Directions API](https://docs.mapx.at/de/api/directions.md) verwenden.
 
 ```js
 // Erreichbarkeit und Fahrzeiten
 const iso = await mapx.isochrone("cycling", melk, { minutes: [10, 20, 30] });          // GeoJSON-Flächen
 const m = await mapx.matrix("driving", [vienna, melk, [14.2858, 48.3069]]);           // m.durations[i][j] in Sekunden
 
-// Tourenplanung: ein Fahrzeug, zwei Aufträge
+// Tourenplanung: ein Fahrzeug, zwei Aufträge (nur mit geheimem Token mx_sk_…, sonst 403 pk-not-allowed)
 const tour = await mapx.optimization({
   vehicles: [{ id: 1, start: vienna, end: vienna }],
   services: [{ id: 1, location: melk, service: 300 }, { id: 2, location: [14.2858, 48.3069], service: 300 }],

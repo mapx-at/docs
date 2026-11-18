@@ -75,7 +75,7 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
    };
    ```
 
-   `text-font` must be a font that `/v1/fonts` lists (`GET /v1/fonts`), for example `Open Sans Semibold` or `Noto Sans Regular`.
+   `text-font` must be a font that `/v1/fonts` lists (`GET /v1/fonts`), for example `Open Sans Semibold` or `Noto Sans Regular`. Without labels, drop this layer and `glyphs`.
 
 4. **Start the map.**
 

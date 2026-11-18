@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/sdk/
 
 > Ein kleines Add-on für MapLibre GL JS: Karten-Factory, typisierte Helfer für jede API, Routenplaner, Ebenen-Schalter, Grundstücks- und Abfahrts-Popups.
 
-`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@6.18.0` und `pmtiles@{V.pmtiles}`.
+`mapx-gl` ist ein kleines Add-on (ESM, TypeScript) für MapLibre GL JS. Es setzt die Style-URLs, registriert das `pmtiles://`-Protokoll, verpackt die [APIs](https://docs.mapx.at/de/api/index.md) in typisierte Funktionen und bringt fertige Controls mit. Peer-Abhängigkeiten: `maplibre-gl@6.18.0` und `pmtiles@4.5.0`.
 
 ## Installation
 
@@ -13,7 +13,7 @@ Das Bundle von `https://map.mapx.at/sdk/v1/` laden (CORS ist offen) oder die Dat
 | Datei | Verwendung |
 |---|---|
 | `mapx-gl.bundle.js` | Alles enthalten, als `<script type="module">` laden |
-| `maplibre-gl-worker.js` | Worker von MapLibre GL JS {V.maplibre}, lädt das Bundle selbst; beim Herunterladen ins selbe Verzeichnis wie `mapx-gl.bundle.js` legen |
+| `maplibre-gl-worker.js` | Worker von MapLibre GL JS 6.18.0, lädt das Bundle selbst; beim Herunterladen ins selbe Verzeichnis wie `mapx-gl.bundle.js` legen |
 | `mapx-gl.js` | Ohne Peers, für Projekte mit eigenem Build |
 | `mapx-gl.css` | Stile der Controls, nach `maplibre-gl.css` laden |
 | `mapx-gl.d.ts` | TypeScript-Typen |

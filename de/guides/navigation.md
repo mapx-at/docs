@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/navigation/
 
 > Routen für Auto, Lkw, Rad und zu Fuß in Österreich planen: Maut, Isochronen, Fahrzeitmatrizen, Map Matching und Tourenplanung.
 
-Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`.
+Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinaten sind `lon,lat`, verbunden mit `;`. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
 | Aufgabe | Endpunkt | Zone |
 |---|---|---|
@@ -20,7 +20,7 @@ Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinat
 | Profil | Für |
 |---|---|
 | `driving` | Auto |
-| `driving-traffic` | Auto mit aktuellem Verkehr und Sperren |
+| `driving-traffic` | Auto unter Berücksichtigung der Sperren und Verkehrsmeldungen von ASFINAG und EVIS.AT (keine flächendeckende Verkehrslage), listet Meldungen in `legs[].incidents` |
 | `driving-truck` | Lkw über 3,5 t |
 | `cycling` | Rad: bevorzugt Radwege, Radstreifen und beschilderte Routen, wertet Unbefestigtes und Steigungen schlechter |
 | `cycling-mtb` | Mountainbike: bevorzugt Forststraßen und Singletrails, berücksichtigt die MTB-Schwierigkeit |
@@ -46,11 +46,19 @@ console.log(r.distance, "m", r.duration, "s");
 ```bash
 # Route als polyline6, dann die Limits in einem 30-m-Korridor
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq '.features | length'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -r '.routes[0].geometry' > route.txt
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -j '.routes[0].geometry' > route.txt
 curl -s -G -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits" --data-urlencode "corridor@route.txt" -d buffer=30 | jq '.features | length'
 ```
 
-Lange Routen können die URL-Länge einer GET-Anfrage überschreiten; in Abschnitte von etwa 500 Punkten teilen. Quelle: GIP.at, CC BY 4.0.
+Die Polyline ohne abschließenden Zeilenumbruch schreiben (`jq -j`). Lange Routen können die URL-Länge einer GET-Anfrage überschreiten; in Abschnitte von etwa 500 Punkten teilen. Quelle: GIP.at, CC BY 4.0.
+
+## Offline neu berechnen
+
+`GET /v1/corridor-graph` liefert das Straßennetz um eine Route als eine kompakte Binärdatei (gzip-Strom, `application/vnd.mapx.corridor-graph+gzip`), damit eine App ohne Netz neu routen kann, etwa nach einer falschen Abzweigung im Funkloch. Die Route als polyline6 in `polyline` übergeben, den Radius in `buffer` (100 bis 5000 m, Standard 3000) und `profile` (`driving` als Standard, `cycling` oder `walking`). Die Datei enthält Knoten, Kanten mit den Fahrzeiten des Routers, Straßennamen, Tempolimits und Abbiegeverbote; zu erwarten sind 1 bis 3 MB je 100 km Route. Zone `heavy`. Der Endpunkt braucht einen geheimen Token (`mx_sk_…`), mit einem öffentlichen antwortet die API mit `403` `pk-not-allowed`. Quelle: GIP.at, CC BY 4.0.
+
+```bash
+curl -s -H "Authorization: Bearer DEIN_TOKEN" -G "https://api.mapx.at/v1/corridor-graph" --data-urlencode "polyline@route.txt" -d buffer=500 -o corridor.mxcg
+```
 
 ## Lkw-Routen
 
@@ -108,7 +116,7 @@ Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte
 
 ## Tourenplanung
 
-`optimized-trips` ordnet bis zu 25 Stopps (Rundreise oder fester Start und Ende). `POST /v1/optimization` plant Touren für mehrere Fahrzeuge mit Kapazitäten und Zeitfenstern.
+`optimized-trips` ordnet bis zu 25 Stopps (Rundreise oder fester Start und Ende). `POST /v1/optimization` plant Touren für mehrere Fahrzeuge mit Kapazitäten und Zeitfenstern. `POST /v1/optimization` braucht einen geheimen Token (`mx_sk_…`) und gehört auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`.
 
 ```bash
 curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/optimization -H "Content-Type: application/json" -d '{

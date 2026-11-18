@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/guides/overlay-contours/
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
-**Voraussetzungen:** ein Browser und ein statischer Webserver. Beschriftung braucht eine eigene Schriftquelle (Glyphen), siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-braucht-eigene-glyphen).
+**Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die Beschriftung nutzt die Schriften von mapx, siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-und-schriften).
 
 Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
@@ -73,7 +73,7 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
    };
    ```
 
-   `text-font` muss eine Schrift der Glyphenquelle sein. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
+   `text-font` muss eine Schrift sein, die `GET /v1/fonts` auflistet, zum Beispiel `Open Sans Semibold` oder `Noto Sans Regular`. Ohne Beschriftung entfällt diese Ebene und `glyphs`.
 
 4. **Karte starten.**
 
@@ -87,7 +87,7 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
        }),
        style: {
          version: 8,
-         glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",   // eigene Glyphenquelle
+         glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: quellen,
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
        }
