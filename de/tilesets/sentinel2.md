@@ -27,7 +27,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
+TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellite-current` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellite-current` (alte ID `satellit-aktuell` bis 31.05.2027 abgekündigt).
 
   
 

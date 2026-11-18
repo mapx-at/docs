@@ -173,13 +173,13 @@ Checks an address against the official register. `status`: match | corrected | a
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -188,7 +188,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

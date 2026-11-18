@@ -38,8 +38,9 @@ Gilt für `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/sty
 | `luftbild` | `satellite` |
 | `hybrid` | `satellite-streets` |
 | `gelaende` | `outdoors` |
+| `satellit-aktuell` | `satellite-current` (seit 18.11.2026) |
 
-Die Metadaten der Stile heißen jetzt `mapx:style` und `mapx:api_style` (früher `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` bleibt unverändert.
+Die Metadaten der Stile heißen jetzt `mapx:style` und `mapx:api_style` (früher `mapx:stil`, `mapx:api-stil`). Nachtrag 18.11.2026: `satellit-aktuell` heißt jetzt `satellite-current` (gleiche Header und gleicher Sunset); Static Images unterstützen weiterhin nur die dort genannten Stile.
 
 ## Kachelsätze
 
@@ -53,8 +54,9 @@ Gilt für `/v1/tiles`, TileJSON, XYZ-Kachelpfade und `/v1/tilequery`. `dtm` und 
 | `relief` | `terrain-rgb` |
 | `dop` | `orthophoto` |
 | `dop_flugblock` | `orthophoto-flight-blocks` |
+| `rastanlagen` | `rest-areas` (seit 18.11.2026) |
 
-Die Namen in `aliases` der Antwort von `GET /v1/tiles` führen alle gleichwertigen Namen auf. Style-interne Quell-IDs und Ebenen-IDs (zum Beispiel `basis`, `hoehenlinien-index`) bleiben vorerst unverändert.
+Die Namen in `aliases` der Antwort von `GET /v1/tiles` führen alle gleichwertigen Namen auf. Style-interne Quell-IDs und Ebenen-IDs (zum Beispiel `basis`, `hoehenlinien-index`) und die Layer-Namen in den Kacheln (zum Beispiel `rastanlagen`) bleiben vorerst unverändert.
 
 ## Suchkategorien
 

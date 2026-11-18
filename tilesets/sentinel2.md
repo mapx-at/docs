@@ -27,7 +27,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellite-current` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellite-current` (old id `satellit-aktuell` deprecated until 2027-05-31).
 
   
 

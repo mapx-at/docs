@@ -3911,13 +3911,13 @@ Checks an address against the official register. `status`: match | corrected | a
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -3926,7 +3926,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -7379,8 +7379,9 @@ Applies to `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/st
 | `luftbild` | `satellite` |
 | `hybrid` | `satellite-streets` |
 | `gelaende` | `outdoors` |
+| `satellit-aktuell` | `satellite-current` (since 2026-11-18) |
 
-Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` is unchanged.
+Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). Added on 2026-11-18: `satellit-aktuell` became `satellite-current` (same headers and sunset); the static images keep supporting only the styles listed there.
 
 ## Tilesets
 
@@ -7394,8 +7395,9 @@ Applies to `/v1/tiles`, TileJSON, XYZ tile paths and `/v1/tilequery`. `dtm` and 
 | `relief` | `terrain-rgb` |
 | `dop` | `orthophoto` |
 | `dop_flugblock` | `orthophoto-flight-blocks` |
+| `rastanlagen` | `rest-areas` (since 2026-11-18) |
 
-The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) stay unchanged for now.
+The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) and the layer names inside the tiles (for example `rastanlagen`) stay unchanged for now.
 
 ## Search categories
 
@@ -8255,7 +8257,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellit-aktuell` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellit-aktuell`.
+TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellite-current` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellite-current` (old id `satellit-aktuell` deprecated until 2027-05-31).
 
   
 
@@ -8440,7 +8442,7 @@ More: [License](https://docs.mapx.at/reference/attribution.md).
 
 Source: https://docs.mapx.at/tilesets/rest-areas/
 
-> Rest areas and truck parking of ASFINAG as vector tiles (tileset rastanlagen) and as the search category rastplatz in the mapx search.
+> Rest areas and truck parking of ASFINAG as vector tiles (tileset rest-areas) and as the search category rastplatz in the mapx search.
 
 Rest, commuter and truck parking sites along motorways and expressways from the ASFINAG traffic data, 314 locations.
 
@@ -8450,11 +8452,11 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 
 | | |
 |---|---|
-| Tileset | `rastanlagen`, vector, z7 to z14 |
+| Tileset | `rest-areas` (old name `rastanlagen` deprecated until 2027-05-31), vector, z7 to z14 |
 | Layer | `rastanlagen` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
 | Style | group `rest_areas`, off by default: point, name from z12; sites with truck spaces darker |
 | Search | category `rastplatz` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
-| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `rastanlagen` as tileset |
+| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `rest-areas` as tileset |
 
 Real-time occupancy is not part of the tiles (yet).
 

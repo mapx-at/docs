@@ -3915,13 +3915,13 @@ Checks an address against the official register. `status`: match | corrected | a
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -3930,7 +3930,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/address/validate?q=Herrengasse%2013,%201010%20Wien", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -7383,8 +7383,9 @@ Gilt für `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/sty
 | `luftbild` | `satellite` |
 | `hybrid` | `satellite-streets` |
 | `gelaende` | `outdoors` |
+| `satellit-aktuell` | `satellite-current` (seit 18.11.2026) |
 
-Die Metadaten der Stile heißen jetzt `mapx:style` und `mapx:api_style` (früher `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` bleibt unverändert.
+Die Metadaten der Stile heißen jetzt `mapx:style` und `mapx:api_style` (früher `mapx:stil`, `mapx:api-stil`). Nachtrag 18.11.2026: `satellit-aktuell` heißt jetzt `satellite-current` (gleiche Header und gleicher Sunset); Static Images unterstützen weiterhin nur die dort genannten Stile.
 
 ## Kachelsätze
 
@@ -7398,8 +7399,9 @@ Gilt für `/v1/tiles`, TileJSON, XYZ-Kachelpfade und `/v1/tilequery`. `dtm` und 
 | `relief` | `terrain-rgb` |
 | `dop` | `orthophoto` |
 | `dop_flugblock` | `orthophoto-flight-blocks` |
+| `rastanlagen` | `rest-areas` (seit 18.11.2026) |
 
-Die Namen in `aliases` der Antwort von `GET /v1/tiles` führen alle gleichwertigen Namen auf. Style-interne Quell-IDs und Ebenen-IDs (zum Beispiel `basis`, `hoehenlinien-index`) bleiben vorerst unverändert.
+Die Namen in `aliases` der Antwort von `GET /v1/tiles` führen alle gleichwertigen Namen auf. Style-interne Quell-IDs und Ebenen-IDs (zum Beispiel `basis`, `hoehenlinien-index`) und die Layer-Namen in den Kacheln (zum Beispiel `rastanlagen`) bleiben vorerst unverändert.
 
 ## Suchkategorien
 
@@ -8261,7 +8263,7 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellit-aktuell` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellit-aktuell`.
+TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellite-current` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellite-current` (alte ID `satellit-aktuell` bis 31.05.2027 abgekündigt).
 
   
 
@@ -8445,7 +8447,7 @@ Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
 Source: https://docs.mapx.at/de/tilesets/rest-areas/
 
-> Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Tileset rastanlagen) und als Suchkategorie rastplatz in der mapx-Suche.
+> Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Tileset rest-areas) und als Suchkategorie rastplatz in der mapx-Suche.
 
 Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Verkehrsdaten der ASFINAG, 314 Standorte.
 
@@ -8455,11 +8457,11 @@ Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Ve
 
 | | |
 |---|---|
-| Tileset | `rastanlagen`, Vektor, z7 bis z14 |
+| Tileset | `rest-areas` (alter Name `rastanlagen` bis 31.05.2027 abgekündigt), Vektor, z7 bis z14 |
 | Layer | `rastanlagen` (Punkte) mit `id`, `name`, `road`, `car` und `lorry` (Stellplätze), `free` (kostenfrei), `usage`, `min_zoom` |
 | Stil | Gruppe `rest_areas`, standardmäßig aus: Punkt, ab z12 Name; Anlagen mit Lkw-Plätzen dunkler |
 | Suche | Kategorie `rastplatz` in [Search Box](https://docs.mapx.at/de/api/search-box.md) und Geocoding |
-| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `rastanlagen` als Tileset |
+| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `rest-areas` als Tileset |
 
 Die Belegung in Echtzeit ist (noch) nicht Teil der Kacheln.
 

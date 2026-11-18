@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/tilesets/rest-areas/
 
-> Rest areas and truck parking of ASFINAG as vector tiles (tileset rastanlagen) and as the search category rastplatz in the mapx search.
+> Rest areas and truck parking of ASFINAG as vector tiles (tileset rest-areas) and as the search category rastplatz in the mapx search.
 
 Rest, commuter and truck parking sites along motorways and expressways from the ASFINAG traffic data, 314 locations.
 
@@ -12,10 +12,10 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 
 | | |
 |---|---|
-| Tileset | `rastanlagen`, vector, z7 to z14 |
+| Tileset | `rest-areas` (old name `rastanlagen` deprecated until 2027-05-31), vector, z7 to z14 |
 | Layer | `rastanlagen` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
 | Style | group `rest_areas`, off by default: point, name from z12; sites with truck spaces darker |
 | Search | category `rastplatz` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
-| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `rastanlagen` as tileset |
+| Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `rest-areas` as tileset |
 
 Real-time occupancy is not part of the tiles (yet).

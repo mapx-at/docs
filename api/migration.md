@@ -38,8 +38,9 @@ Applies to `/v1/styles`, `/v1/styles/{id}`, `/v1/styles/{id}/tiles/…`, `/v1/st
 | `luftbild` | `satellite` |
 | `hybrid` | `satellite-streets` |
 | `gelaende` | `outdoors` |
+| `satellit-aktuell` | `satellite-current` (since 2026-11-18) |
 
-Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). `satellit-aktuell` is unchanged.
+Style metadata is now called `mapx:style` and `mapx:api_style` (formerly `mapx:stil`, `mapx:api-stil`). Added on 2026-11-18: `satellit-aktuell` became `satellite-current` (same headers and sunset); the static images keep supporting only the styles listed there.
 
 ## Tilesets
 
@@ -53,8 +54,9 @@ Applies to `/v1/tiles`, TileJSON, XYZ tile paths and `/v1/tilequery`. `dtm` and 
 | `relief` | `terrain-rgb` |
 | `dop` | `orthophoto` |
 | `dop_flugblock` | `orthophoto-flight-blocks` |
+| `rastanlagen` | `rest-areas` (since 2026-11-18) |
 
-The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) stay unchanged for now.
+The `aliases` of `GET /v1/tiles` list all equivalent names. Style-internal source IDs and layer IDs (for example `basis`, `hoehenlinien-index`) and the layer names inside the tiles (for example `rastanlagen`) stay unchanged for now.
 
 ## Search categories
 
