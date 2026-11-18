@@ -126,13 +126,13 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI, Grundstück oder Straßenkilometer | `query`, `near`, `types`, `limit` |
 | Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius_m`, `types` |
 | Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
-| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `limit` |
+| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `radius_m`, `limit` |
 | Suche | `list_place_categories` | Kategorie-Ids für `search_places` | keine |
 | Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `waypoints` (2 bis 25), `exclude`, `truck` |
 | Routing | `isochrone` | Gebiet, das in gegebenen Minuten oder Metern erreichbar ist | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Fahrzeiten zwischen 2 bis 25 Punkten | `profile`, `points`, `sources`, `destinations` |
 | Routing | `optimize_stops` | Schnellste Reihenfolge von 2 bis 25 Stopps | `profile`, `stops`, `roundtrip`, `start`, `end` |
-| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `from`, `to`, `depart_at`, `arrive_by`, `connections` |
+| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `from`, `to`, `depart_at`, `arrive_by`, `access`, `connections` |
 | ÖV | `departures` | Nächste planmäßige Abfahrten an einer Haltestelle oder um einen Punkt | `stop_id` oder `near`, `time`, `limit` |
 | ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Höhe | `elevation` | Höhe über dem Meer (Gelände- oder Oberflächenmodell) | `points`, `model` |
@@ -146,6 +146,10 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | Wetter | `climate` | Langfristige Klimadaten, Solarpotenzial | `lon`, `lat`, `sections` |
 | Wetter | `air_quality` | Luftgüteindex und Schadstoffe | `lon`, `lat`, `hours` |
 | Karte | `static_map` | Kartenbild mit Markern und Linie | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
+
+`search_places` mit Freitext und `near` sucht nur im Umkreis `radius_m` (500 bis 100000 Meter, Standard 25000), sortiert nach Entfernung und sagt ausdrücklich, wenn es auf weiter entfernte Treffer ausweichen muss. Die Kategoriesuche liefert immer die nächsten zuerst und ignoriert `radius_m`.
+
+Zeitangaben im Antworttext sind österreichische Ortszeit mit Versatz, zum Beispiel `2026-11-18T08:00+01:00`; das gilt für Wetter, Warnungen, Luftqualität und Verkehrsmeldungen. ÖV-Zeiten sind ebenfalls Ortszeit. Der strukturierte Teil des Ergebnisses (`structuredContent`) behält die Zeitstempel der API.
 
 Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb` und `walking`; `isochrone` kennt zusätzlich `transit`.
 
@@ -162,7 +166,7 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Limits und Zählung
 
-Jeder Werkzeugaufruf zählt wie ein API-Aufruf und erscheint in deiner Nutzungsansicht als MCP. Manche Werkzeuge lösen mehrere API-Aufrufe aus, etwa die Freitextsuche in `search_places` (bis zu 11). Die Protokollnachrichten selbst (jede Anfrage an `/mcp`) stehen getrennt als Produkt `mcp` in der Nutzung; sie verbrauchen das Minutenlimit nicht. Es gelten das Minutenlimit deines Tokens (standardmäßig 6000) und die Zonenlimits der API, über MCP je Token statt je IP-Adresse ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Der MCP-Endpunkt selbst nimmt 10 Anfragen pro Sekunde je IP-Adresse an (Burst 40), Anfragekörper bis 256 KB. Bei Überschreitung bekommt der Assistent eine Fehlermeldung mit Wartezeit.
+Jeder Werkzeugaufruf zählt wie ein API-Aufruf und erscheint in deiner Nutzungsansicht als MCP. Manche Werkzeuge lösen mehrere API-Aufrufe aus, etwa die Freitextsuche in `search_places` (bis zu 11). Die Protokollnachrichten selbst (jede Anfrage an `/mcp`) stehen getrennt als Produkt `mcp` in der Nutzung; sie verbrauchen das Minutenlimit nicht. Es gelten das Minutenlimit deines Tokens (standardmäßig 6000) und die Zonenlimits der API, über MCP je Token statt je IP-Adresse ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Der MCP-Endpunkt selbst nimmt 10 Anfragen pro Sekunde je IP-Adresse an (Burst 40), Anfragekörper bis 256 KB. Je Token laufen höchstens 4 Aufrufe gleichzeitig; weitere warten oder scheitern mit einer Wartezeit. Bei Überschreitung bekommt der Assistent eine Fehlermeldung mit Wartezeit.
 
 ## Fehler
 
@@ -173,7 +177,7 @@ Der Assistent erhält den Fehler als Text und kann darauf reagieren. Fehlercodes
 - Nur Österreich; die Daten stammen aus amtlichen offenen Daten, jede Antwort nennt die Quelle.
 - Alle Werkzeuge lesen nur; nichts wird geändert oder gespeichert.
 - ÖV-Antworten stammen aus dem Fahrplan, ohne Echtzeitdaten.
-- Klima, Wetter und Warnungen stammen von der GeoSphere Austria, Verkehrsmeldungen von ASFINAG und EVIS.AT.
+- Klima, Wetter, Warnungen und Luftqualität stammen von der GeoSphere Austria, Verkehrsmeldungen von ASFINAG und EVIS.AT.
 - Lange Ergebnisse werden gekürzt.
 
 ## Datenschutz

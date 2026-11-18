@@ -1371,13 +1371,13 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Search | `geocode` | Coordinates for an address, street, place, postcode, POI, parcel or road kilometer | `query`, `near`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
-| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `limit` |
+| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `radius_m`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `waypoints` (2 to 25), `exclude`, `truck` |
 | Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Travel times between 2 to 25 points | `profile`, `points`, `sources`, `destinations` |
 | Routing | `optimize_stops` | Fastest order of 2 to 25 stops | `profile`, `stops`, `roundtrip`, `start`, `end` |
-| Public transport | `transit_route` | Connections between two points from the scheduled timetable | `from`, `to`, `depart_at`, `arrive_by`, `connections` |
+| Public transport | `transit_route` | Connections between two points from the scheduled timetable | `from`, `to`, `depart_at`, `arrive_by`, `access`, `connections` |
 | Public transport | `departures` | Next scheduled departures at a stop or around a point | `stop_id` or `near`, `time`, `limit` |
 | Public transport | `find_stops` | Stops near a point or in a box, with `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Elevation | `elevation` | Height above sea level (terrain or surface model) | `points`, `model` |
@@ -1391,6 +1391,10 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Weather | `climate` | Long-term climate facts, solar potential | `lon`, `lat`, `sections` |
 | Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
+
+`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`.
+
+Times in the answer text are Austrian local time with the offset, for example `2026-11-18T08:00+01:00`; this applies to weather, warnings, air quality and traffic reports. Public transport times are local time as well. The structured part of the result (`structuredContent`) keeps the timestamps of the API.
 
 Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb` and `walking`; `isochrone` also accepts `transit`.
 
@@ -1407,7 +1411,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Limits and counting
 
-Every tool call counts like an API call and appears in your usage view as MCP. Some tools make several API calls, for example free-text search in `search_places` (up to 11). The protocol messages themselves (each request to `/mcp`) are listed separately as product `mcp`; they do not use up the per-minute limit. The per-minute limit of your token (6000 by default) and the zone limits of the API apply, over MCP per token instead of per IP address ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB. If a limit is exceeded, the assistant gets an error message with a waiting time.
+Every tool call counts like an API call and appears in your usage view as MCP. Some tools make several API calls, for example free-text search in `search_places` (up to 11). The protocol messages themselves (each request to `/mcp`) are listed separately as product `mcp`; they do not use up the per-minute limit. The per-minute limit of your token (6000 by default) and the zone limits of the API apply, over MCP per token instead of per IP address ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB. Per token, at most 4 calls run at the same time; further ones wait or fail with a waiting time. If a limit is exceeded, the assistant gets an error message with a waiting time.
 
 ## Errors
 
@@ -1418,7 +1422,7 @@ The assistant receives the error as text and can react to it. Error codes and ca
 - Austria only; data comes from official open data, and each answer names the source.
 - All tools only read; nothing is changed or stored.
 - Public transport answers come from the scheduled timetable, without real-time data.
-- Climate, weather and warnings come from GeoSphere Austria, traffic reports from ASFINAG and EVIS.AT.
+- Climate, weather, warnings and air quality come from GeoSphere Austria, traffic reports from ASFINAG and EVIS.AT.
 - Long results are shortened.
 
 ## Privacy
