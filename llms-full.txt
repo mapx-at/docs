@@ -624,7 +624,7 @@ Pick the endpoint by what the user does.
 | Fill a postal address form | [`/v1/autofill/suggest`](https://docs.mapx.at/api/address.md) |
 | Check an address | [`/v1/address/validate`](https://docs.mapx.at/api/address.md) |
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
-| Show places of a kind (pharmacy, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
+| Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
 All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
@@ -662,7 +662,7 @@ Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` returns all category IDs with localized names (`language=de` or `en`).
@@ -1271,7 +1271,7 @@ There are two ways. Signing in with your account is the simpler one: you only en
 1. Add `https://mcp.mapx.at/mcp` as an MCP server in your application (see below).
 2. The assistant sends you to account.mapx.at. Sign in or register.
 3. The consent page shows the application, the redirect target, your account and what the access allows: read-only tools only, calls count towards your usage, no access to your account or your other tokens. Confirm the connection.
-4. Ask a question that needs Austrian data, for example "Which pharmacies are within 500 m of Melk station?".
+4. Ask a question that needs Austrian data, for example "How do I get by bike from Melk station to Melk Abbey, and how long does it take?".
 
 The connection then appears at [account.mapx.at](https://account.mapx.at/) → **Tokens** as "connected via <host>". Each application can hold up to five connections at the same time, for example browser, desktop and phone. The connection does not expire on its own.
 
@@ -1438,7 +1438,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Example questions
 
-- "Where is Herrengasse 13 in Vienna, and what is the nearest pharmacy?"
+- "Where is Herrengasse 13 in Vienna, and where is the nearest fuel station?"
 - "How long does a truck with 40 t take from Vienna to Linz, and are there closures on the way?"
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"
@@ -3617,13 +3617,13 @@ Places of the category (several comma-separated), nearest first with `proximity`
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -3632,7 +3632,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 

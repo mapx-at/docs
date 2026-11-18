@@ -13,7 +13,7 @@ Pick the endpoint by what the user does.
 | Fill a postal address form | [`/v1/autofill/suggest`](https://docs.mapx.at/api/address.md) |
 | Check an address | [`/v1/address/validate`](https://docs.mapx.at/api/address.md) |
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
-| Show places of a kind (pharmacy, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
+| Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
 All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); `curl` samples send it as a header, browser samples as `access_token`.
 
@@ -51,7 +51,7 @@ Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` returns all category IDs with localized names (`language=de` or `en`).

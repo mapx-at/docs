@@ -22,7 +22,7 @@ There are two ways. Signing in with your account is the simpler one: you only en
 1. Add `https://mcp.mapx.at/mcp` as an MCP server in your application (see below).
 2. The assistant sends you to account.mapx.at. Sign in or register.
 3. The consent page shows the application, the redirect target, your account and what the access allows: read-only tools only, calls count towards your usage, no access to your account or your other tokens. Confirm the connection.
-4. Ask a question that needs Austrian data, for example "Which pharmacies are within 500 m of Melk station?".
+4. Ask a question that needs Austrian data, for example "How do I get by bike from Melk station to Melk Abbey, and how long does it take?".
 
 The connection then appears at [account.mapx.at](https://account.mapx.at/) → **Tokens** as "connected via <host>". Each application can hold up to five connections at the same time, for example browser, desktop and phone. The connection does not expire on its own.
 
@@ -189,7 +189,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Example questions
 
-- "Where is Herrengasse 13 in Vienna, and what is the nearest pharmacy?"
+- "Where is Herrengasse 13 in Vienna, and where is the nearest fuel station?"
 - "How long does a truck with 40 t take from Vienna to Linz, and are there closures on the way?"
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"

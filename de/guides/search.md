@@ -13,7 +13,7 @@ Den Endpunkt nach der Aktion der Nutzer wählen.
 | Ein Postadress-Formular ausfüllen | [`/v1/autofill/suggest`](https://docs.mapx.at/de/api/address.md) |
 | Eine Adresse prüfen | [`/v1/address/validate`](https://docs.mapx.at/de/api/address.md) |
 | Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
-| Orte einer Art zeigen (Apotheke, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
+| Orte einer Art zeigen (Tankstelle, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
 Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
@@ -51,7 +51,7 @@ Vorschläge tragen eine Kategorie (`poi_category_ids`, zum Beispiel `place_of_wo
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/category/pharmacy?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` liefert alle Kategorie-IDs mit lokalisierten Namen (`language=de` oder `en`).

@@ -22,7 +22,7 @@ Es gibt zwei Wege. Die Anmeldung über dein Konto ist der einfachere: Du trägst
 1. Trage `https://mcp.mapx.at/mcp` als MCP-Server in deiner Anwendung ein (siehe unten).
 2. Der Assistent leitet dich zu account.mapx.at. Melde dich an oder registriere dich.
 3. Auf der Zustimmungsseite siehst du die Anwendung, das Weiterleitungsziel, dein Konto und was der Zugriff erlaubt: nur lesende Werkzeuge, Aufrufe zählen zu deiner Nutzung, kein Zugriff auf dein Konto oder deine anderen Tokens. Bestätige die Verbindung.
-4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Welche Apotheken liegen im Umkreis von 500 m um den Bahnhof Melk?“.
+4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Wie komme ich mit dem Rad vom Bahnhof Melk zum Stift Melk, und wie lange dauert das?“.
 
 Die Verbindung erscheint danach unter [account.mapx.at](https://account.mapx.at/) → **Tokens** als „verbunden über <Host>“. Je Anwendung sind bis zu fünf Verbindungen gleichzeitig möglich, zum Beispiel Browser, Desktop und Handy. Die Verbindung läuft nicht von selbst ab.
 
@@ -189,7 +189,7 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Beispielfragen
 
-- „Wo liegt die Herrengasse 13 in Wien, und wo ist die nächste Apotheke?“
+- „Wo liegt die Herrengasse 13 in Wien, und wo ist die nächste Tankstelle?“
 - „Wie lange braucht ein Lkw mit 40 t von Wien nach Linz, und gibt es Sperren auf dem Weg?“
 - „Was erreiche ich vom Bahnhof Melk in 15 Minuten zu Fuß?“
 - „Was sind die nächsten Abfahrten am Bahnhof Melk?“
