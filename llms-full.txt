@@ -7486,6 +7486,7 @@ Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](http
 | [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261107 |
 | [`bike-routes`](https://docs.mapx.at/tilesets/bike-routes.md) | vector | z5–14 | 20260708 |
 | [`gip-poi`](https://docs.mapx.at/tilesets/gip-poi.md) | vector | z12–15 | 20260708 |
+| [`sentinel2`](https://docs.mapx.at/tilesets/sentinel2.md) | raster | z5–z13 | daily |
 
 Not in the table because it is replaced daily instead of versioned: [Sentinel-2 current](https://docs.mapx.at/tilesets/sentinel2.md) (`sentinel2`, raster, z5 to z13).
 
@@ -8000,7 +8001,7 @@ The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain on
 
 ## Notes
 
-- Quantization 0.1 m. The deviation from the source is within the rounding range.
+- Quantization 0.1 m. The deviation from the source is within the rounding range (at most 0.05 m).
 - Vertical accuracy per BEV ± 0.50 m, see [Vertical resolution and accuracy](#vertical-resolution-and-accuracy).
 - The DTM shows the terrain without buildings, trees and bridges. For the surface there is the [DSM](https://docs.mapx.at/tilesets/dsm.md).
 - Coverage is the rectangle 9.53–17.17° E, 46.37–49.02° N. Outside Austria and in gaps the value is a smooth continuation of the terrain, not a measurement.
@@ -8213,7 +8214,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.
 
 - All of Austria is covered.
 - Color seams between surveys are visible; there is no color matching.
-- At the borders to DE, CH, LI, IT, SI, CZ and SK the imagery partly extends abroad; at the border to Hungary it ends at the border.
+- At the borders to DE, CH, LI, IT, SI, CZ and SK the imagery partly extends more than 3 km abroad; at the border to Hungary it ends at the border.
 - Below z18, pixels of both surveys mix at block boundaries; the assignment is unambiguous at z18.
 
 ## Attribution
@@ -9425,6 +9426,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9438,9 +9440,9 @@ map.on('click', async (e) => {
   try {
     const { features } = await (await fetch(url, AUTH)).json();
     const h = features[0].properties.elevation;
-    popup.setLngLat(e.lngLat).setText(h == null ? 'Outside the data' : `${h.toLocaleString('de-AT')} m (${modell.toUpperCase()})`).addTo(map);
+    popup.setLngLat(e.lngLat).setText(h == null ? (de ? 'Außerhalb der Daten' : 'Outside the data') : `${h.toLocaleString(de ? 'de-AT' : 'en')} m (${modell.toUpperCase()})`).addTo(map);
   } catch (err) {
-    popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map);
+    popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map);
   }
 });
 ````
@@ -9469,6 +9471,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9488,7 +9491,7 @@ async function zeichne() {
   map.getSource('linie').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: punkte } });
   const canvas = document.getElementById('profil'), g = canvas.getContext('2d');
   g.clearRect(0, 0, canvas.width, canvas.height);
-  if (punkte.length < 2) { document.getElementById('info').textContent = 'Mindestens zwei Punkte setzen.'; return; }
+  if (punkte.length < 2) { document.getElementById('info').textContent = de ? 'Mindestens zwei Punkte setzen.' : 'Set at least two points.'; return; }
   const pfad = punkte.map((p) => p.map((v) => v.toFixed(5)).join(',')).join(';');
   const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`, AUTH);
   const { distances, elevations } = (await antwort.json()).properties;
@@ -9500,7 +9503,7 @@ async function zeichne() {
   g.fillStyle = '#6b7079'; g.font = '12px sans-serif';
   g.fillText(`${Math.round(hMax)} m`, 4, 16); g.fillText(`${Math.round(hMin)} m`, 4, H - 28); g.fillText(`${(dMax / 1000).toFixed(2)} km`, W - 60, H - 6);
   let auf = 0, ab = 0; pts.forEach((p, i) => { if (i) { const dh = p.h - pts[i - 1].h; dh > 0 ? (auf += dh) : (ab -= dh); } });
-  document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, Aufstieg ${Math.round(auf)} m, Abstieg ${Math.round(ab)} m`;
+  document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, ${de ? 'Aufstieg' : 'ascent'} ${Math.round(auf)} m, ${de ? 'Abstieg' : 'descent'} ${Math.round(ab)} m`;
 }
 ````
 
@@ -9528,6 +9531,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9554,7 +9558,7 @@ eingabe.addEventListener('input', async () => {
       });
       li.append(b); liste.append(li);
     }
-  } catch (e) { liste.textContent = 'Error: ' + e.message; }
+  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 ````
 
@@ -9582,6 +9586,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9607,7 +9612,7 @@ map.on('click', async (e) => {
     const route = (await r.json()).routes[0]; // Mapbox shape: routes[0].geometry is a GeoJSON line
     map.getSource('route').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
     info.textContent = `${(route.distance / 1000).toFixed(2)} km, ${Math.round(route.duration / 60)} min`;
-  } catch (err) { info.textContent = 'Error: ' + err.message; }
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 });
 ````
 
@@ -9697,6 +9702,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9716,7 +9722,7 @@ function zeigen(i) {
 
 function abspielen() {
   const btn = document.getElementById('play');
-  if (timer) { clearInterval(timer); timer = null; btn.textContent = 'Play'; return; }
+  if (timer) { clearInterval(timer); timer = null; btn.textContent = de ? 'Abspielen' : 'Play'; return; }
   btn.textContent = 'Pause';
   timer = setInterval(() => zeigen((Number(document.getElementById('zeit').value) + 1) % times.length), 700);
 }
@@ -9766,6 +9772,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9787,7 +9794,7 @@ async function abfragen(ort) {
     const r = await fetch(url, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     map.getSource('iso').setData(await r.json()); // one MultiPolygon per step, largest first
-  } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
 
@@ -9815,6 +9822,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9832,7 +9840,7 @@ document.getElementById('los').addEventListener('click', async () => {
     const { durations } = await r.json(); // seconds, null = not routable
     tabelle.innerHTML = '<tr><th></th>' + namen.map((n) => `<th>${n}</th>`).join('') + '</tr>' +
       durations.map((zeile, i) => `<tr><th>${namen[i]}</th>` + zeile.map((s) => `<td>${s == null ? '–' : Math.round(s / 60) + ' min'}</td>`).join('') + '</tr>').join('');
-  } catch (err) { tabelle.textContent = 'Error: ' + err.message; }
+  } catch (err) { tabelle.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 });
 ````
 
@@ -9859,6 +9867,7 @@ import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -9872,7 +9881,7 @@ map.on('load', () => {
 map.on('click', (e) => {
   const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
   const f = map.queryRenderedFeatures(box, { layers: ['parcel'] })[0];
-  const text = f ? `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}` : 'No parcel boundary hit (visible from zoom 16).';
+  const text = f ? (de ? `Grundstück ${f.properties.gstnr}, Katastralgemeinde ${f.properties.kgnr}` : `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}`) : (de ? 'Keine Grundstücksgrenze getroffen (sichtbar ab Zoom 16).' : 'No parcel boundary hit (visible from zoom 16).');
   new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
 });
 ````
@@ -9979,6 +9988,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10001,7 +10011,7 @@ input.addEventListener('input', async () => {
       b.addEventListener('click', () => pick(s.mapbox_id));
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = 'Error: ' + e.message; }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 
 async function pick(id) {
@@ -10040,6 +10050,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10067,7 +10078,7 @@ f.street.addEventListener('input', async () => {
       });
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = 'Error: ' + e.message; }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 ````
 
@@ -10095,6 +10106,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10110,11 +10122,11 @@ document.getElementById('pruefen').addEventListener('click', async () => {
     const res = await fetch('https://api.mapx.at/v1/address/validate?' + p, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const r = await res.json(); // status: match, corrected, ambiguous, not_found
-    const hit = r.address ? { text: r.address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
-    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, deviations: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (hit ? `, ${r.address ? 'address' : 'first candidate'}: ${hit.text}` : '');
+    const hit = r.address ? { text: r.address.full_address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
+    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, ${de ? 'Abweichungen' : 'deviations'}: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (hit ? `, ${r.address ? (de ? 'Adresse' : 'address') : (de ? 'erster Kandidat' : 'first candidate')}: ${hit.text}` : '');
     marker?.remove();
     if (hit) { marker = new maplibregl.Marker().setLngLat(hit.at).addTo(map); map.flyTo({ center: hit.at, zoom: 16 }); }
-  } catch (e) { out.textContent = 'Error: ' + e.message; }
+  } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 ````
 
@@ -10142,6 +10154,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10155,8 +10168,8 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    popup.setLngLat(e.lngLat).setText(f ? f.place_name : 'Nothing found nearby').addTo(map);
-  } catch (err) { popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map); }
+    popup.setLngLat(e.lngLat).setText(f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
+  } catch (err) { popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map); }
 });
 ````
 
@@ -10184,6 +10197,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10215,8 +10229,8 @@ async function route() {
     const { routes } = await res.json();
     map.getSource('routes').setData({ type: 'FeatureCollection', features: routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 ? 1 : 0 }, geometry: r.geometry })).reverse() });
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km subject to GO toll` : '') + (routes.length > 1 ? `, ${routes.length - 1} alternative(s)` : '');
-  } catch (err) { $('info').textContent = 'Error: ' + err.message; }
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+  } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
 
@@ -10247,6 +10261,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 // Note: POST needs a secret token (mx_sk_…), public tokens are read-only. Run this call from your server, not from a web page.
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10271,7 +10286,7 @@ map.on('click', (e) => {
 document.getElementById('reset').addEventListener('click', () => {
   stops.length = 0; markers.splice(0).forEach((m) => m.remove());
   map.getSource('tour').setData({ type: 'FeatureCollection', features: [] });
-  document.getElementById('info').textContent = 'Click at least two stops.';
+  document.getElementById('info').textContent = de ? 'Mindestens zwei Stopps anklicken.' : 'Click at least two stops.';
 });
 
 async function plan() {
@@ -10285,8 +10300,8 @@ async function plan() {
     res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`, AUTH);
     const route = (await res.json()).routes[0];
     map.getSource('tour').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
-    document.getElementById('info').textContent = `Order: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min driving`;
-  } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
+    document.getElementById('info').textContent = `${de ? 'Reihenfolge' : 'Order'}: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min ${de ? 'Fahrzeit' : 'driving'}`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
 
@@ -10315,6 +10330,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -10339,8 +10355,8 @@ map.on('click', async (e) => {
     if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
     const route = (await res.json()).routes[0];
     map.getSource('legs').setData({ type: 'FeatureCollection', features: route.legs.map((l) => ({ type: 'Feature', properties: { mode: l.mode }, geometry: l.geometry })) });
-    info.textContent = `${route.departure.slice(11, 16)} to ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} transfer(s): ` + route.legs.map((l) => l.summary).join(' > ');
-  } catch (err) { info.textContent = 'Error: ' + err.message; }
+    info.textContent = `${route.departure.slice(11, 16)} ${de ? 'bis' : 'to'} ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} ${de ? 'Umstieg(e)' : 'transfer(s)'}: ` + route.legs.map((l) => l.summary).join(' > ');
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 });
 ````
 
@@ -10501,16 +10517,17 @@ import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const data = {
   type: 'FeatureCollection',
   features: [
-    { type: 'Feature', properties: { name: 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
+    { type: 'Feature', properties: { name: de ? 'Stift Melk' : 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
     { type: 'Feature', properties: { name: 'Krems' }, geometry: { type: 'Point', coordinates: [15.6141, 48.4097] } },
-    { type: 'Feature', properties: { name: 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
-    { type: 'Feature', properties: { name: 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
+    { type: 'Feature', properties: { name: de ? 'Donauradweg (Abschnitt)' : 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
+    { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
   ],
 };
 const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });

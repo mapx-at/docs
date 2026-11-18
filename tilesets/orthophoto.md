@@ -82,7 +82,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.
 
 - All of Austria is covered.
 - Color seams between surveys are visible; there is no color matching.
-- At the borders to DE, CH, LI, IT, SI, CZ and SK the imagery partly extends abroad; at the border to Hungary it ends at the border.
+- At the borders to DE, CH, LI, IT, SI, CZ and SK the imagery partly extends more than 3 km abroad; at the border to Hungary it ends at the border.
 - Below z18, pixels of both surveys mix at block boundaries; the assignment is unambiguous at z18.
 
 ## Attribution

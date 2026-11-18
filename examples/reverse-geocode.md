@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -29,8 +30,8 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    popup.setLngLat(e.lngLat).setText(f ? f.place_name : 'Nothing found nearby').addTo(map);
-  } catch (err) { popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map); }
+    popup.setLngLat(e.lngLat).setText(f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
+  } catch (err) { popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map); }
 });
 ````
 

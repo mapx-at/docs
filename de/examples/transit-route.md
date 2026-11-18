@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -40,8 +41,8 @@ map.on('click', async (e) => {
     if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
     const route = (await res.json()).routes[0];
     map.getSource('legs').setData({ type: 'FeatureCollection', features: route.legs.map((l) => ({ type: 'Feature', properties: { mode: l.mode }, geometry: l.geometry })) });
-    info.textContent = `${route.departure.slice(11, 16)} to ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} transfer(s): ` + route.legs.map((l) => l.summary).join(' > ');
-  } catch (err) { info.textContent = 'Error: ' + err.message; }
+    info.textContent = `${route.departure.slice(11, 16)} ${de ? 'bis' : 'to'} ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} ${de ? 'Umstieg(e)' : 'transfer(s)'}: ` + route.legs.map((l) => l.summary).join(' > ');
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 });
 ````
 

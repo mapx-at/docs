@@ -48,7 +48,7 @@ const map = new maplibregl.Map({
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@?access_token=DEIN_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
@@ -61,7 +61,7 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 **QGIS**
 
 1. Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
-2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
+2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
 3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
 
   

@@ -156,7 +156,7 @@ The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain on
 
 ## Notes
 
-- Quantization 0.1 m. The deviation from the source is within the rounding range.
+- Quantization 0.1 m. The deviation from the source is within the rounding range (at most 0.05 m).
 - Vertical accuracy per BEV ± 0.50 m, see [Vertical resolution and accuracy](#vertical-resolution-and-accuracy).
 - The DTM shows the terrain without buildings, trees and bridges. For the surface there is the [DSM](https://docs.mapx.at/tilesets/dsm.md).
 - Coverage is the rectangle 9.53–17.17° E, 46.37–49.02° N. Outside Austria and in gaps the value is a smooth continuation of the terrain, not a measurement.

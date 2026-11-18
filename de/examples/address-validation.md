@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -31,11 +32,11 @@ document.getElementById('pruefen').addEventListener('click', async () => {
     const res = await fetch('https://api.mapx.at/v1/address/validate?' + p, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const r = await res.json(); // status: match, corrected, ambiguous, not_found
-    const hit = r.address ? { text: r.address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
-    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, deviations: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (hit ? `, ${r.address ? 'address' : 'first candidate'}: ${hit.text}` : '');
+    const hit = r.address ? { text: r.address.full_address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
+    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, ${de ? 'Abweichungen' : 'deviations'}: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (hit ? `, ${r.address ? (de ? 'Adresse' : 'address') : (de ? 'erster Kandidat' : 'first candidate')}: ${hit.text}` : '');
     marker?.remove();
     if (hit) { marker = new maplibregl.Marker().setLngLat(hit.at).addTo(map); map.flyTo({ center: hit.at, zoom: 16 }); }
-  } catch (e) { out.textContent = 'Error: ' + e.message; }
+  } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 ````
 

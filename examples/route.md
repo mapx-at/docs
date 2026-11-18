@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -41,7 +42,7 @@ map.on('click', async (e) => {
     const route = (await r.json()).routes[0]; // Mapbox shape: routes[0].geometry is a GeoJSON line
     map.getSource('route').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
     info.textContent = `${(route.distance / 1000).toFixed(2)} km, ${Math.round(route.duration / 60)} min`;
-  } catch (err) { info.textContent = 'Error: ' + err.message; }
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 });
 ````
 

@@ -45,14 +45,14 @@ new maplibregl.Map({
   }
 });
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution; direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles"` (Protokoll wie im [Schnellstart](https://docs.mapx.at/de/start/index.md)).
+TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen. Direkt per PMTiles geht `url: "pmtiles://https://tiles.mapx.at/dop-ortho-20251003-272a54b3.pmtiles?access_token=DEIN_TOKEN"` (Protokoll wie im [PMTiles-Guide](https://docs.mapx.at/de/guides/self-host-pmtiles.md)).
 
   
 
 **Leaflet**
 
 ```js
-L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp", {
+L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
   attribution: "BEV, CC BY 4.0"
 }).addTo(map);
@@ -62,7 +62,7 @@ L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp", {
 
 **QGIS**
 
-XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
+XYZ Tiles → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN`. Alternativ die PMTiles-Datei direkt als Layer öffnen (QGIS ab 3.32 liest PMTiles per HTTP).
 
   
 

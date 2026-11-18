@@ -15,16 +15,17 @@ import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const data = {
   type: 'FeatureCollection',
   features: [
-    { type: 'Feature', properties: { name: 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
+    { type: 'Feature', properties: { name: de ? 'Stift Melk' : 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
     { type: 'Feature', properties: { name: 'Krems' }, geometry: { type: 'Point', coordinates: [15.6141, 48.4097] } },
-    { type: 'Feature', properties: { name: 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
-    { type: 'Feature', properties: { name: 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
+    { type: 'Feature', properties: { name: de ? 'Donauradweg (Abschnitt)' : 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
+    { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
   ],
 };
 const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });

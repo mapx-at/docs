@@ -15,6 +15,7 @@ import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -28,7 +29,7 @@ map.on('load', () => {
 map.on('click', (e) => {
   const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
   const f = map.queryRenderedFeatures(box, { layers: ['parcel'] })[0];
-  const text = f ? `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}` : 'No parcel boundary hit (visible from zoom 16).';
+  const text = f ? (de ? `Grundstück ${f.properties.gstnr}, Katastralgemeinde ${f.properties.kgnr}` : `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}`) : (de ? 'Keine Grundstücksgrenze getroffen (sichtbar ab Zoom 16).' : 'No parcel boundary hit (visible from zoom 16).');
   new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
 });
 ````

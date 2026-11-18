@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -35,7 +36,7 @@ async function zeichne() {
   map.getSource('linie').setData({ type: 'Feature', geometry: { type: 'LineString', coordinates: punkte } });
   const canvas = document.getElementById('profil'), g = canvas.getContext('2d');
   g.clearRect(0, 0, canvas.width, canvas.height);
-  if (punkte.length < 2) { document.getElementById('info').textContent = 'Mindestens zwei Punkte setzen.'; return; }
+  if (punkte.length < 2) { document.getElementById('info').textContent = de ? 'Mindestens zwei Punkte setzen.' : 'Set at least two points.'; return; }
   const pfad = punkte.map((p) => p.map((v) => v.toFixed(5)).join(',')).join(';');
   const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`, AUTH);
   const { distances, elevations } = (await antwort.json()).properties;
@@ -47,7 +48,7 @@ async function zeichne() {
   g.fillStyle = '#6b7079'; g.font = '12px sans-serif';
   g.fillText(`${Math.round(hMax)} m`, 4, 16); g.fillText(`${Math.round(hMin)} m`, 4, H - 28); g.fillText(`${(dMax / 1000).toFixed(2)} km`, W - 60, H - 6);
   let auf = 0, ab = 0; pts.forEach((p, i) => { if (i) { const dh = p.h - pts[i - 1].h; dh > 0 ? (auf += dh) : (ab -= dh); } });
-  document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, Aufstieg ${Math.round(auf)} m, Abstieg ${Math.round(ab)} m`;
+  document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, ${de ? 'Aufstieg' : 'ascent'} ${Math.round(auf)} m, ${de ? 'Abstieg' : 'descent'} ${Math.round(ab)} m`;
 }
 ````
 

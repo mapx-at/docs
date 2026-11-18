@@ -19,6 +19,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 // Note: POST needs a secret token (mx_sk_…), public tokens are read-only. Run this call from your server, not from a web page.
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -43,7 +44,7 @@ map.on('click', (e) => {
 document.getElementById('reset').addEventListener('click', () => {
   stops.length = 0; markers.splice(0).forEach((m) => m.remove());
   map.getSource('tour').setData({ type: 'FeatureCollection', features: [] });
-  document.getElementById('info').textContent = 'Click at least two stops.';
+  document.getElementById('info').textContent = de ? 'Mindestens zwei Stopps anklicken.' : 'Click at least two stops.';
 });
 
 async function plan() {
@@ -57,8 +58,8 @@ async function plan() {
     res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`, AUTH);
     const route = (await res.json()).routes[0];
     map.getSource('tour').setData({ type: 'Feature', geometry: route.geometry, properties: {} });
-    document.getElementById('info').textContent = `Order: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min driving`;
-  } catch (err) { document.getElementById('info').textContent = 'Error: ' + err.message; }
+    document.getElementById('info').textContent = `${de ? 'Reihenfolge' : 'Order'}: ${tour.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(tour.distance / 1000).toFixed(0)} km, ${Math.round(tour.duration / 60)} min ${de ? 'Fahrzeit' : 'driving'}`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
 

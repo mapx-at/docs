@@ -19,6 +19,7 @@ Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.
 | [`sharing`](https://docs.mapx.at/de/tilesets/sharing.md) | Vektor | z8–14 | 20261107 |
 | [`bike-routes`](https://docs.mapx.at/de/tilesets/bike-routes.md) | Vektor | z5–14 | 20260708 |
 | [`gip-poi`](https://docs.mapx.at/de/tilesets/gip-poi.md) | Vektor | z12–15 | 20260708 |
+| [`sentinel2`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
 
 Nicht in der Tabelle, weil es täglich ersetzt statt versioniert wird: [Sentinel-2 aktuell](https://docs.mapx.at/de/tilesets/sentinel2.md) (`sentinel2`, Raster, z5 bis z13).
 

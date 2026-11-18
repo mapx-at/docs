@@ -16,6 +16,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
@@ -29,9 +30,9 @@ map.on('click', async (e) => {
   try {
     const { features } = await (await fetch(url, AUTH)).json();
     const h = features[0].properties.elevation;
-    popup.setLngLat(e.lngLat).setText(h == null ? 'Outside the data' : `${h.toLocaleString('de-AT')} m (${modell.toUpperCase()})`).addTo(map);
+    popup.setLngLat(e.lngLat).setText(h == null ? (de ? 'Außerhalb der Daten' : 'Outside the data') : `${h.toLocaleString(de ? 'de-AT' : 'en')} m (${modell.toUpperCase()})`).addTo(map);
   } catch (err) {
-    popup.setLngLat(e.lngLat).setText('Error: ' + err.message).addTo(map);
+    popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map);
   }
 });
 ````
