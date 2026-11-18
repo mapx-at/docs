@@ -93,7 +93,7 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next_cursor`, `next` as relative URL, `next_offset`).
+Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next` as relative URL or `null` on the last page; `next_cursor` and `next_offset` only when there is a further page).
 
 Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
@@ -147,8 +147,6 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "total": 1,
-  "next_offset": null,
-  "next_cursor": null,
   "next": null,
   "features": [
     {
@@ -173,6 +171,8 @@ data = res.json()
         "text": "A23: Sperre Richtung Wien",
         "road": "A23",
         "planned": true,
+        "closed": true,
+        "mandatory": true,
   …
 ```
 
@@ -190,7 +190,7 @@ data = res.json()
 
 `POST /v1/traffic/incidents`
 
-Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString.
+Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString, numbers (e.g. `route_precision`, `limit`, `buffer`) as JSON number or string. The gateway accepts bodies up to 64 KB (larger: 413); for longer routes simplify the line or split it.
 
 **Request-Body (JSON)**
 
@@ -283,8 +283,6 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "total": 1,
-  "next_offset": null,
-  "next_cursor": null,
   "next": null,
   "features": [
     {
@@ -309,6 +307,8 @@ data = res.json()
         "text": "A23: Sperre Richtung Wien",
         "road": "A23",
         "planned": true,
+        "closed": true,
+        "mandatory": true,
   …
 ```
 

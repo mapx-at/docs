@@ -63,16 +63,17 @@ data = res.json()
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.37,
-          48.21
+          16.37253,
+          48.20852
         ]
       },
       "properties": {
-        "name": "Herrengasse",
+        "gstnr": "817",
+        "kgnr": 1004,
         "tilequery": {
-          "distance": 3.2,
+          "distance": 2.9,
           "geometry": "linestring",
-          "layer": "road_l"
+          "layer": "parcel_l"
         }
       }
     }
@@ -103,7 +104,7 @@ Buildings return the building parcel (`parcel_number` starts with a dot). Parcel
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
-| `radius` | query | string |  | `0` | Meters, 0 to 100, default 0 |
+| `radius` | query | number (0–100) |  | `0` | Meters, 0 to 100, default 0 (other values: 400). Accepted for compatibility; the result is always the parcel containing the point |
 | `include` | query | `dossier` |  | – | `dossier` returns the full dossier per feature |
 
 **Example**

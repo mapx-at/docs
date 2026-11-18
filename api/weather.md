@@ -133,10 +133,12 @@ data = res.json()
 
 ```json
 {
-  "location": [
-    16.37,
-    48.21
-  ],
+  "location": {
+    "lon": 16.3725,
+    "lat": 48.2085,
+    "grid_lon": 16.3717,
+    "grid_lat": 48.213
+  },
   "reference_time": "2026-11-08T06:00:00Z",
   "hours": [
     {
@@ -159,8 +161,6 @@ data = res.json()
       "cape_jkg": 0,
       "snowfall_mm": 0,
       "uncertainty": {
-        "temperature_c": {
-          "p10": 8.9,
   …
 ```
 
@@ -371,7 +371,7 @@ open("result.png", "wb").write(res.content)
 
 `GET /v1/weather/warnings`
 
-Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` carry `de` and `en`.
+Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` (each with `de` and `en`) are optional: they are present only when GeoSphere has published a text for the warning and are often missing.
 
 Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 

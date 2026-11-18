@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (1
 
 `GET /v1/tiles`
 
-Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution and data date (`stand`) per tileset. Old German names (`basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`) are listed under `aliases` and remain valid until 2027-05-31 (responses carry `Deprecation`, `Sunset` and `Link` headers).
+Name, aliases, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution and data date (`stand`) per tileset. Old German names (`basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`, `rastanlagen`) are listed under `aliases` and remain valid until 2027-05-31 (responses carry `Deprecation`, `Sunset` and `Link` headers).
 
 **Beispiel**
 

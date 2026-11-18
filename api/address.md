@@ -84,7 +84,9 @@ data = res.json()
 
 `GET /v1/autofill/retrieve/{id}`
 
-`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature, properties as in suggest.
+`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature; `features[].id` is the address id, `properties` carry the same fields as a suggestion (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
+
+`session_token` echoes the parameter (`null` without it). 404 for an unknown id.
 
 **Parameters**
 
@@ -122,23 +124,41 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
+  "session_token": null,
+  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
+      "id": "address-7065749",
       "geometry": {
         "type": "Point",
         "coordinates": [
-          15.3298,
-          48.2273
+          16.242382,
+          47.813929
         ]
       },
       "properties": {
-        "name": "Hauptplatz 3"
-      }
-    }
-  ]
-}
+        "id": "address-7065749",
+        "address_line1": "Herrengasse 13",
+        "street": "Herrengasse",
+        "housenumber": "13",
+        "postcode": "2700",
+        "place": "Wiener Neustadt",
+        "municipality": "Wiener Neustadt",
+        "state": "Niederösterreich",
+        "full_address": "Herrengasse 13, 2700 Wiener Neustadt",
+        "coordinates": [
+          16.242382,
+          47.813929
+        ]
+  …
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `session_token` | string,null | The `session_token` parameter, echoed back (`null` without it). |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
+| `features` | array | One point feature; `id` is the address id `address-<AdrCD>`, `properties` hold `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` and `coordinates` [lon, lat]. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -154,15 +174,15 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the normalized address, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), coordinate, `id` and `adrcd`. Understands Str./Straße, abbreviations, umlauts and ß.
+Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `adrcd`.
 
-`ambiguous` returns `candidates[]` (up to 5) instead of `address`.
+Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `adrcd` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `q` | query | string |  | – | Free text, e.g. `Hauptstr. 12a, 3390 Melk` (or structured fields) |
+| `q` | query | string |  | – | Free text, e.g. `Haubtplatz 1, 3390 Melk` (or structured fields) |
 | `street` | query | string |  | – | Street |
 | `housenumber` | query | string |  | – | House number |
 | `postcode` | query | string |  | – | Postcode |
@@ -197,26 +217,48 @@ data = res.json()
 ```json
 {
   "status": "corrected",
-  "confidence": 0.93,
-  "address": {
-    "street": "Hauptstraße",
-    "housenumber": "12a",
+  "confidence": 0.96,
+  "input": {
+    "street": "Haubtplatz",
+    "housenumber": "1",
     "postcode": "3390",
     "place": "Melk"
   },
+  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
+      "input": "Haubtplatz",
+      "expected": "Hauptplatz",
       "kind": "spelling"
     }
   ],
-  "id": "address-1234567",
-  "coordinates": [
-    15.33,
-    48.23
-  ]
-}
+  "address": {
+    "id": "address-6444187",
+    "address_line1": "Hauptplatz 1",
+    "street": "Hauptplatz",
+    "housenumber": "1",
+    "postcode": "3390",
+    "place": "Melk",
+    "municipality": "Melk",
+    "state": "Niederösterreich",
+    "full_address": "Hauptplatz 1, 3390 Melk",
+    "coordinates": [
+  …
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
+| `confidence` | number | 0 to 1. |
+| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
+| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
+| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
+| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
+| `adrcd` | string,null | Address code of the BEV address register. |
+| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -238,9 +280,10 @@ Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `p
 
 ```json
 {
-  "street": "Hauptstr.",
-  "housenumber": "12a",
-  "postcode": "3390"
+  "street": "Haubtplatz",
+  "housenumber": "1",
+  "postcode": "3390",
+  "place": "Melk"
 }
 ```
 
@@ -252,7 +295,7 @@ Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `p
 curl -s -X POST "https://api.mapx.at/v1/address/validate" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"street":"Hauptstr.","housenumber":"12a","postcode":"3390"}' | jq
+  -d '{"street":"Haubtplatz","housenumber":"1","postcode":"3390","place":"Melk"}' | jq
 ```
 
 **JavaScript**
@@ -262,9 +305,10 @@ const res = await fetch("https://api.mapx.at/v1/address/validate", {
   method: "POST",
   headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify({
-    "street": "Hauptstr.",
-    "housenumber": "12a",
-    "postcode": "3390"
+    "street": "Haubtplatz",
+    "housenumber": "1",
+    "postcode": "3390",
+    "place": "Melk"
   }),
 });
 const data = await res.json();
@@ -276,9 +320,10 @@ const data = await res.json();
 import requests
 
 res = requests.post("https://api.mapx.at/v1/address/validate", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
-    "street": "Hauptstr.",
-    "housenumber": "12a",
-    "postcode": "3390"
+    "street": "Haubtplatz",
+    "housenumber": "1",
+    "postcode": "3390",
+    "place": "Melk"
   })
 data = res.json()
 ```
@@ -288,26 +333,48 @@ data = res.json()
 ```json
 {
   "status": "corrected",
-  "confidence": 0.93,
-  "address": {
-    "street": "Hauptstraße",
-    "housenumber": "12a",
+  "confidence": 0.96,
+  "input": {
+    "street": "Haubtplatz",
+    "housenumber": "1",
     "postcode": "3390",
     "place": "Melk"
   },
+  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
+      "input": "Haubtplatz",
+      "expected": "Hauptplatz",
       "kind": "spelling"
     }
   ],
-  "id": "address-1234567",
-  "coordinates": [
-    15.33,
-    48.23
-  ]
-}
+  "address": {
+    "id": "address-6444187",
+    "address_line1": "Hauptplatz 1",
+    "street": "Hauptplatz",
+    "housenumber": "1",
+    "postcode": "3390",
+    "place": "Melk",
+    "municipality": "Melk",
+    "state": "Niederösterreich",
+    "full_address": "Hauptplatz 1, 3390 Melk",
+    "coordinates": [
+  …
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
+| `confidence` | number | 0 to 1. |
+| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
+| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
+| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
+| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
+| `adrcd` | string,null | Address code of the BEV address register. |
+| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

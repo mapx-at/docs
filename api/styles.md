@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, outdoors.
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors.
 
 **Example**
 
@@ -61,7 +61,7 @@ data = res.json()
 
 `GET /v1/styles/{id}`
 
-Style JSON (version 8), generated from the style generator. Old ids (`karte`, `karte-morgen`, `karte-abend`, `karte-nacht`, `karte-verkehr`, `luftbild`, `hybrid`, `gelaende`) are aliases until 2027-05-31 (`Deprecation`, `Sunset`, `Link rel=successor-version`).
+Style JSON (version 8), generated from the style generator. Old ids (`karte`, `karte-morgen`, `karte-abend`, `karte-nacht`, `karte-verkehr`, `luftbild`, `hybrid`, `gelaende`, `satellit-aktuell`) are aliases until 2027-05-31 (`Deprecation`, `Sunset`, `Link rel=successor-version`).
 
 Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` gives 304. With `sources=tilejson` the PMTiles vector/raster sources are replaced by https TileJSON URLs (`https://tiles.mapx.at/v1/tiles/<tileset>.json`), for clients without PMTiles support such as the MapLibre Native offline manager.
 

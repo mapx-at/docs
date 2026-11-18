@@ -154,13 +154,13 @@ open("result.bin", "wb").write(res.content)
 
 Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/flow`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (with current traffic and closures), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
@@ -443,7 +443,7 @@ data = res.json()
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (with current traffic and closures), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `sources` | query | string |  | – | Indices, semicolon-separated |
 | `destinations` | query | string |  | – | Indices, semicolon-separated |
@@ -527,13 +527,13 @@ data = res.json()
 
 `GET /v1/matching/{profile}/{coordinates}`
 
-2 to 100 GPS points snapped to the road network. Longer traces: POST /match at routing.mapx.at.
+2 to 100 GPS points snapped to the road network. Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (with current traffic and closures), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
 | `radiuses` | query | string |  | – | Meters per point (largest value counts, 5 to 500) |

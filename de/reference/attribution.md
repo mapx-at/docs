@@ -32,7 +32,7 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 | `orthophoto-flight-blocks` | Das TileJSON liefert derzeit keinen Attributionstext. Da die Flugblöcke Metadaten zum Orthophoto des BEV sind, `BEV, CC BY 4.0` nennen. |
 | `bike-routes` | Datenquelle: GIP.at, CC BY 4.0 |
 | `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
-| `rastanlagen` | ASFINAG, CC BY 4.0 |
+| `rest-areas` | ASFINAG, CC BY 4.0 |
 | `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
 | `sentinel2`, `sentinel2-datum`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (Jahr der Aufnahmen; steht im TileJSON) |
 

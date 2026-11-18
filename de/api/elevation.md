@@ -12,13 +12,15 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `elevation` (10/s), `search
 
 `GET /v1/elevation`
 
-Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null.
+Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414 as HTML), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
+
+Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or use `/v1/elevation/profile`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512) |
+| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
 | `path` | query | string |  | – | lon,lat;lon,lat;... (2 to 512 vertices) |
 | `samples` | query | integer (2–1024) |  | `100` | With path only |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain) or dsm (surface) |
