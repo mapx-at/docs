@@ -160,7 +160,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Search | `geocode` | Coordinates for an address, street, place, postcode, POI, parcel or road kilometer | `query`, `near`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
-| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `radius_m`, `limit` |
+| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `waypoints` (2 to 25), `exclude`, `truck` |
 | Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
@@ -181,7 +181,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
-`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`.
+`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.
 
 Times in the answer text are Austrian local time with the offset, for example `2026-11-18T08:00+01:00`; this applies to weather, warnings, air quality and traffic reports. Public transport times are local time as well. The structured part of the result (`structuredContent`) keeps the timestamps of the API.
 

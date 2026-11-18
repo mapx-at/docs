@@ -1409,7 +1409,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Search | `geocode` | Coordinates for an address, street, place, postcode, POI, parcel or road kilometer | `query`, `near`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
-| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `radius_m`, `limit` |
+| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `waypoints` (2 to 25), `exclude`, `truck` |
 | Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
@@ -1430,7 +1430,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
-`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`.
+`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.
 
 Times in the answer text are Austrian local time with the offset, for example `2026-11-18T08:00+01:00`; this applies to weather, warnings, air quality and traffic reports. Public transport times are local time as well. The structured part of the result (`structuredContent`) keeps the timestamps of the API.
 
@@ -3469,7 +3469,7 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
 | `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
-| `poi_category` | query | string |  | – | Comma-separated category ids (English, e.g. `pharmacy`; old German ids deprecated until 2027-05-31), see `/v1/searchbox/list/category` |
+| `poi_category` | query | string |  | – | Comma-separated category ids (English, e.g. `gas_station`; old German ids deprecated until 2027-05-31), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
@@ -3601,7 +3601,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids are English (e.g. `pharmacy`, `train_station`); the old German ids (`apotheke`, `bahnhof`, ...) work as aliases until 2027-05-31 (`Deprecation`, `Sunset`).
+Places of the category (several comma-separated), nearest first with `proximity`. Ids are English (e.g. `gas_station`, `train_station`); the old German ids (`tankstelle`, `bahnhof`, ...) work as aliases until 2027-05-31 (`Deprecation`, `Sunset`).
 
 **Parameters**
 
@@ -3652,7 +3652,7 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Apotheke Zum Hirschen"
+        "name": "Tankstelle Am Stadtrand"
       }
     }
   ]
@@ -3711,9 +3711,9 @@ data = res.json()
 {
   "listItems": [
     {
-      "canonical_id": "pharmacy",
-      "icon": "pharmacy",
-      "name": "Apotheke"
+      "canonical_id": "gas_station",
+      "icon": "fuel",
+      "name": "Tankstelle"
     }
   ]
 }
