@@ -23,12 +23,13 @@ All endpoints under `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `http
 
 The OpenAPI description `https://api.mapx.at/v1/openapi.json` and CORS preflight requests (`OPTIONS`) work without a token.
 
-## Two kinds of token
+## Kinds of token
 
 | Kind | Prefix | Use | Restrictions |
 |---|---|---|---|
 | Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
 | Secret | `mx_sk_…` | Servers, scripts and CI. Never put it into a web page or an app. | No origin binding; optionally bound to IP ranges (CIDR). |
+| AI assistant (MCP) | `mx_mcp_…` | AI assistants and agents that use the [mapx MCP server](https://docs.mapx.at/guides/mcp.md). | Works only at `https://mcp.mapx.at/mcp`, no origin or IP binding, optional expiry date. Direct API calls with it answer `403` `mcp-token-only`. |
 
 A public token is checked against the `Origin` header (for tiles and images without one, against the `Referer` host). Requests from other sites get `403` with the reason `origin-not-allowed`. Add `localhost` to the origins only while you develop.
 
@@ -83,6 +84,8 @@ Limits apply per token and zone (requests without a valid token count per IP add
 | `elevation` | 10/s, burst 20 | elevation and profile |
 | `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
 | `heavy` | 30/min, burst 5 | static images, isochrone, matrix, matching, optimization, batch geocoding |
+
+**Over MCP.** Every tool call of the [MCP server](https://docs.mapx.at/guides/mcp.md) counts like an API call (some tools make several) and shows up as MCP in the usage view. The per-minute limit of the token and the zone limits above apply, per token instead of per IP address. The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB.
 
 For bulk work, download the [PMTiles](https://docs.mapx.at/tilesets/index.md) file once instead of requesting millions of tiles. Details and retry advice: [Errors and limits](https://docs.mapx.at/api/errors.md).
 

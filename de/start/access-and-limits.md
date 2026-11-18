@@ -23,12 +23,13 @@ Alle Endpunkte unter `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `htt
 
 Die OpenAPI-Beschreibung `https://api.mapx.at/v1/openapi.json` und CORS-Preflights (`OPTIONS`) funktionieren ohne Token.
 
-## Zwei Token-Arten
+## Token-Arten
 
 | Art | Präfix | Einsatz | Einschränkung |
 |---|---|---|---|
 | Öffentlich | `mx_pk_…` | Webseiten und Apps. Der Token ist im Quelltext bzw. in der APK sichtbar und wirkt deshalb nur dort, wo es erlaubt ist. | Nur lesende Produkte, nur `GET`/`HEAD`. Gebunden an **erlaubte Origins** (etwa `https://example.com`, `*.example.com`) oder an eine **Android-App** (Paketname plus SHA-256 des Signaturzertifikats). |
 | Geheim | `mx_sk_…` | Server, Skripte und CI. Nie in eine Webseite oder App einbauen. | Keine Origin-Bindung; optional an IP-Bereiche (CIDR) gebunden. |
+| KI-Assistent (MCP) | `mx_mcp_…` | KI-Assistenten und Agenten, die den [mapx-MCP-Server](https://docs.mapx.at/de/guides/mcp.md) nutzen. | Gilt nur am `https://mcp.mapx.at/mcp`, keine Origin- oder IP-Bindung, optional ein Ablaufdatum. Direkte API-Aufrufe damit ergeben `403` `mcp-token-only`. |
 
 Ein öffentlicher Token wird gegen den Header `Origin` geprüft (bei Kachel- und Bildanfragen ohne Origin gegen den Host des `Referer`). Anfragen von anderen Seiten bekommen `403` mit dem Grund `origin-not-allowed`. `localhost` nur während der Entwicklung als Origin eintragen.
 
@@ -83,6 +84,8 @@ Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro 
 | `elevation` | 10/s, Burst 20 | Höhe und Profil |
 | `static` | 5/s, Burst 60 | Static Tiles, Verkehrs-Tiles |
 | `heavy` | 30/min, Burst 5 | Static Images, Isochrone, Matrix, Matching, Optimization, Batch-Geocoding |
+
+**Über MCP.** Jeder Werkzeugaufruf des [MCP-Servers](https://docs.mapx.at/de/guides/mcp.md) zählt wie ein API-Aufruf (manche Werkzeuge lösen mehrere aus) und erscheint in der Nutzungsansicht als MCP. Es gelten das Minutenlimit des Tokens und die Zonenlimits oben, je Token statt je IP-Adresse. Der MCP-Endpunkt selbst nimmt 10 Anfragen pro Sekunde je IP-Adresse an (Burst 40) und Anfragekörper bis 256 KB.
 
 Für Massenabfragen die [PMTiles](https://docs.mapx.at/de/tilesets/index.md)-Datei einmal herunterladen statt Millionen Tiles anzufordern. Details und Hinweise zum Wiederholen: [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 

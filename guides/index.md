@@ -16,6 +16,7 @@ Each guide shows the common tasks of one product with code that runs as it is.
 - [Static images](https://docs.mapx.at/guides/static-images.md): Map images for reports and web pages.
 - [Elevation and terrain](https://docs.mapx.at/guides/elevation.md): Heights, profiles, 3D terrain.
 - [Parcels](https://docs.mapx.at/guides/parcels.md): Cadastral parcels at a point.
+- [MCP server](https://docs.mapx.at/guides/mcp.md): Use mapx from AI assistants.
 
 ## Use cases
 

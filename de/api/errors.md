@@ -43,6 +43,9 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
 | [`invalid-parameter`](#invalid-parameter) | 400 | Ungültiger Parameter |
 | [`invalid-coordinates`](#invalid-coordinates) | 400 | Ungültige Koordinaten |
 | [`invalid-body`](#invalid-body) | 400 | Ungültiger Anfragekörper |
+| [`mcp-token-only`](#mcp-token-only) | 403 | MCP-Token nur am MCP-Server gültig |
+| [`mcp-token-required`](#mcp-token-required) | 403 | MCP-Token erforderlich |
+| [`invalid-path`](#invalid-path) | 403 | Ungültiger Anfragepfad |
 | [`unknown-path`](#unknown-path) | 404 | Unbekannter Pfad |
 | [`not-found`](#not-found) | 404 | Nicht gefunden |
 | [`unknown-style`](#unknown-style) | 404 | Unbekannter Stil |
@@ -100,6 +103,30 @@ Was tun: `lon,lat` in WGS84-Grad senden (Länge -180 bis 180, Breite -90 bis 90)
 Der Körper einer POST-Anfrage ist kein gültiges JSON oder hat nicht die erwartete Form.
 
 Was tun: Das JSON gegen das Schema der OpenAPI-Beschreibung prüfen.
+
+### mcp-token-only
+
+**403** · MCP-Token nur am MCP-Server gültig
+
+Ein Token vom Typ KI-Assistent (`mx_mcp_`) wurde für einen direkten API-Aufruf verwendet. Er gilt nur am [MCP-Server](https://docs.mapx.at/de/guides/mcp.md).
+
+Was tun: Für direkte API-Aufrufe einen geheimen Token (`mx_sk_`) verwenden.
+
+### mcp-token-required
+
+**403** · MCP-Token erforderlich
+
+Der MCP-Server `https://mcp.mapx.at/mcp` nimmt nur Tokens vom Typ KI-Assistent (`mx_mcp_`) an; gesendet wurde ein öffentlicher oder geheimer Token.
+
+Was tun: Unter [account.mapx.at](https://account.mapx.at/tokens/new?kind=mcp) einen Token vom Typ KI-Assistent (MCP) anlegen.
+
+### invalid-path
+
+**403** · Ungültiger Anfragepfad
+
+Der Anfragepfad hat eine ungültige Prozent-Kodierung, ein NUL-Byte oder verlässt mit `..` die Wurzel.
+
+Was tun: Einen normalen Pfad aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) senden.
 
 ### unknown-path
 

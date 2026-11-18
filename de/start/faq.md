@@ -8,6 +8,10 @@ Source: https://docs.mapx.at/de/start/faq/
 
 Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) registrieren, Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
+## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
+
+Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. Lege einen Token vom Typ „KI-Assistent (MCP)“ an und trage `https://mcp.mapx.at/mcp` in Claude Code, Cursor, VS Code oder Gemini CLI ein. Connectoren in claude.ai und ChatGPT folgen später.
+
 ## Was kostet es?
 
 Nichts. Rate Limits gelten pro Token und Zone.

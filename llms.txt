@@ -8,7 +8,8 @@ mapx provides maps and location APIs for Austria, built only on official open da
 
 - **Base URLs:** API `https://api.mapx.at/v1/`, routing `https://routing.mapx.at/`, search `https://search.mapx.at/`, tiles `https://tiles.mapx.at/`. Data covers Austria only.
 - **Authentication:** free account at https://account.mapx.at, create a token under "Tokens" (no usage-based charge). Servers and scripts send `Authorization: Bearer YOUR_TOKEN`; browsers, images and MapLibre tile URLs use the query parameter `access_token=YOUR_TOKEN`.
-- **Token kinds:** public `mx_pk_…` for websites and apps (`GET`/`HEAD` only, read-only products, bound to allowed origins or an Android app); secret `mx_sk_…` for servers, scripts and CI (never in a web page or app, optionally bound to IP ranges).
+- **Token kinds:** public `mx_pk_…` for websites and apps (`GET`/`HEAD` only, read-only products, bound to allowed origins or an Android app); secret `mx_sk_…` for servers, scripts and CI (never in a web page or app, optionally bound to IP ranges); `mx_mcp_…` (AI assistant) only for the MCP server.
+- **MCP server:** `https://mcp.mapx.at/mcp` (Streamable HTTP, read-only tools for Austria), token of type "AI assistant (MCP)" (`mx_mcp_…`) in the header `Authorization: Bearer …`; setup in the guide "MCP server for Austrian geodata".
 - **Coordinates:** always `lon,lat` (WGS84), several points separated by `;`, so longitude comes first.
 - **OpenAPI:** https://api.mapx.at/v1/openapi.json (works without a token). CORS is open.
 - **Limits:** per token and zone (`tiles`, `search`, `route`, `elevation`, `static`, `heavy`); exceeding one returns `429` with `Retry-After`; numbers in [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Errors are `application/problem+json` with a stable `code`.
@@ -36,6 +37,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Static images guide: map as image](https://docs.mapx.at/guides/static-images.md): Render map images as PNG or WebP with pins, paths and GeoJSON for reports, e-mails and web pages, using the mapx static images API.
 - [Elevation guide: height profile and terrain](https://docs.mapx.at/guides/elevation.md): Get heights at points and elevation profiles, use terrain models and show 3D terrain in the map: elevation API and terrain tilesets for Austria.
 - [Parcels guide: cadastre lookup](https://docs.mapx.at/guides/parcels.md): Find the cadastral parcel at a point, draw parcel boundaries on the map and read the parcel attributes with the mapx cadastre for Austria.
+- [MCP server for Austrian geodata](https://docs.mapx.at/guides/mcp.md): Connect Claude Code, Cursor, VS Code or Gemini CLI to mapx: 23 read-only tools for search, routing, transit, elevation, parcels, traffic and weather in Austria.
 - [Custom map style from the basemap](https://docs.mapx.at/guides/style-the-basemap.md): Write your own MapLibre style for the mapx vector basemap of Austria: style land use, water, roads, buildings and boundaries layer by layer.
 - [Contour lines over orthophoto](https://docs.mapx.at/guides/overlay-contours.md): Place contour lines (Höhenlinien) with index lines and elevation labels over the orthophoto or the basemap in MapLibre GL JS.
 - [3D terrain map with orthophoto](https://docs.mapx.at/guides/3d-terrain.md): A 3D map with real elevation relief, hillshading and aerial imagery on top, using MapLibre GL JS and a free token.

@@ -12,6 +12,10 @@ Yes, a free account and API token. Register at [account.mapx.at](https://account
 
 `401` means the token is missing, invalid or expired. `403` means it is blocked, or a public token is used from an origin or app that is not allowed (`origin-not-allowed`). The `code` in the error body names the reason. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
+## Can I use mapx with Claude, ChatGPT or Cursor?
+
+Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 23 read-only tools for Austrian data. Create a token of type "AI assistant (MCP)" and add `https://mcp.mapx.at/mcp` to Claude Code, Cursor, VS Code or Gemini CLI. Connectors in claude.ai and ChatGPT follow later.
+
 ## What does it cost?
 
 Nothing. Rate limits apply per token and zone.

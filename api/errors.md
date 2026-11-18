@@ -61,6 +61,9 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`pk-not-allowed`](#pk-not-allowed) | 403 | Public token not allowed here |
 | [`app-not-allowed`](#app-not-allowed) | 403 | App not allowed |
 | [`ip-not-allowed`](#ip-not-allowed) | 403 | IP address not allowed |
+| [`mcp-token-only`](#mcp-token-only) | 403 | MCP token only valid at the MCP server |
+| [`mcp-token-required`](#mcp-token-required) | 403 | MCP token required |
+| [`invalid-path`](#invalid-path) | 403 | Invalid request path |
 | [`unknown-path`](#unknown-path) | 404 | Unknown path |
 | [`not-found`](#not-found) | 404 | Not found |
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
@@ -188,6 +191,30 @@ What to do: Send the headers `X-Mapx-Android-Package` and `X-Mapx-Android-Cert` 
 The secret token is restricted to IP ranges and the request comes from another address.
 
 What to do: Add the address (CIDR) to the token or send from an allowed host.
+
+### mcp-token-only
+
+**403** · MCP token only valid at the MCP server
+
+A token of type AI assistant (`mx_mcp_`) was used for a direct API call. It only works at the [MCP server](https://docs.mapx.at/guides/mcp.md).
+
+What to do: Use a secret token (`mx_sk_`) for direct API calls.
+
+### mcp-token-required
+
+**403** · MCP token required
+
+The MCP server `https://mcp.mapx.at/mcp` only accepts tokens of type AI assistant (`mx_mcp_`); a public or secret token was sent.
+
+What to do: Create a token of type AI assistant (MCP) at [account.mapx.at](https://account.mapx.at/tokens/new?kind=mcp).
+
+### invalid-path
+
+**403** · Invalid request path
+
+The request path has an invalid percent-encoding, a NUL byte or leaves the root with `..`.
+
+What to do: Send a normal path as listed in the [OpenAPI description](https://api.mapx.at/v1/openapi.json).
 
 ### unknown-path
 

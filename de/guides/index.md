@@ -16,6 +16,7 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 - [Static Images](https://docs.mapx.at/de/guides/static-images.md): Kartenbilder für Berichte und Webseiten.
 - [Höhen und Gelände](https://docs.mapx.at/de/guides/elevation.md): Höhen, Profile, 3D-Gelände.
 - [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Katastergrundstücke an einem Punkt.
+- [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): mapx aus KI-Assistenten nutzen.
 
 ## Anwendungsfälle
 
