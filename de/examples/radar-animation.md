@@ -4,9 +4,11 @@ Source: https://docs.mapx.at/de/examples/radar-animation/
 
 > Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation auf der Karte: Nowcast von GeoSphere Austria, lauffähiger Code.
 
-Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`.
+Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`. OpenLayers lädt einen Layer erst, wenn er sichtbar wird: Die OpenLayers-Fassung holt jeden Schritt beim ersten Zeigen, danach kommt er aus dem Cache.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -59,9 +61,110 @@ document.getElementById('play').addEventListener('click', abspielen);
 document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const API = 'https://api.mapx.at/v1';
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const map = new ol.Map({ target: 'map', layers: [base], view: new ol.View({ center: ol.proj.fromLonLat([13.3, 47.6]), zoom: 7.5 }) });
+let times = [], layers = [], timer = null;
+
+function zeigen(i) {
+  const t = times[i];
+  document.getElementById('zeit').value = i;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `Radar nowcast ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
+  // one layer per time step, only the selected one is visible: OpenLayers loads a step when first shown, later from the cache
+  layers.forEach((l, k) => l.setVisible(k === i));
+}
+
+function abspielen() {
+  const btn = document.getElementById('play');
+  if (timer) { clearInterval(timer); timer = null; btn.textContent = de ? 'Abspielen' : 'Play'; return; }
+  btn.textContent = 'Pause';
+  timer = setInterval(() => zeigen((Number(document.getElementById('zeit').value) + 1) % times.length), 700);
+}
+
+(async () => {
+  const tj = await (await fetch(`${API}/weather/tiles/rr_nowcast.json`, AUTH)).json();
+  times = tj['mapx:time'].times; // 15-minute steps (UTC)
+  document.getElementById('zeit').max = times.length - 1;
+  layers = times.map((t, k) => new ol.layer.Tile({
+    opacity: 0.85, visible: false,
+    source: new ol.source.XYZ({ url: tj['mapx:time'].template.replace('{time}', t) + '?access_token=' + TOKEN, tileSize: 512, maxZoom: 10, transition: 0, attributions: k ? undefined : 'Wetter: GeoSphere Austria, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>' }),
+  }));
+  layers.forEach((l) => map.addLayer(l));
+  zeigen(0);
+})();
+document.getElementById('play').addEventListener('click', abspielen);
+document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; the radar layers add their own; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const API = 'https://api.mapx.at/v1';
+
+const map = L.map('map').setView([47.6, 13.3], 7);
+L.tileLayer(API + '/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+let times = [], template = '', layers = [], timer = null;
+function zeigen(i) {
+  document.getElementById('zeit').value = i;
+  document.getElementById('info').textContent = `Radar nowcast ${times[i]} (UTC), ${de ? 'Quelle' : 'Source'}: GeoSphere Austria, CC BY 4.0`;
+  // one layer per time step, created on first use and then kept hidden: the second round plays without waiting for tiles
+  layers[i] ??= L.tileLayer(template.replace('{time}', times[i]) + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, maxNativeZoom: 11, maxZoom: 21, opacity: 0, attribution: 'Wetter: GeoSphere Austria, CC BY 4.0' }).addTo(map);
+  layers.forEach((l, k) => l?.setOpacity(k === i ? 0.85 : 0));
+}
+function abspielen() {
+  const btn = document.getElementById('play');
+  if (timer) { clearInterval(timer); timer = null; btn.textContent = de ? 'Abspielen' : 'Play'; return; }
+  btn.textContent = 'Pause';
+  timer = setInterval(() => zeigen((Number(document.getElementById('zeit').value) + 1) % times.length), 700);
+}
+(async () => {
+  try {
+    const res = await fetch(`${API}/weather/tiles/rr_nowcast.json`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const time = (await res.json())['mapx:time'];
+    times = time.times; // 15-minute steps (UTC)
+    template = time.template; // tile URL with {time}
+    document.getElementById('zeit').max = times.length - 1;
+    zeigen(0);
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+})();
+document.getElementById('play').addEventListener('click', abspielen);
+document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
+````
+
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
+
+In Leaflet ist jeder Schritt eine eigene `L.tileLayer`, umgeschaltet wird über die Deckkraft.
 
 ## Verwendete APIs
 
 - [Wetter](https://docs.mapx.at/de/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
 - [Niederschlags-Nowcast](https://docs.mapx.at/de/api/weather.md) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)

@@ -8957,9 +8957,11 @@ Source: https://docs.mapx.at/de/examples/switch-basemap/
 
 > Zwischen Karte, Luftbild (Orthophoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Styles: lauffähiges Beispiel für einen Basiskarten-Umschalter.
 
-Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt.
+Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt. In OpenLayers tauscht `setSource()` die Rasterkacheln des Stils, die Ansicht bleibt ebenso.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -8987,9 +8989,70 @@ for (const knopf of document.querySelectorAll('[data-stil]')) {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Switch the basemap: map, aerial imagery and terrain are three ready-made styles, here as raster tiles.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = {
+  streets: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  satellite: 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; <a href="https://www.gip.gv.at">GIP.at</a>; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  outdoors: '<a href="https://www.bev.gv.at">BEV</a> (incl. ALS-DTM), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+};
+const tiles = (style) => new ol.source.XYZ({ url: `https://api.mapx.at/v1/styles/${style}/tiles/512/{z}/{x}/{y}?access_token=` + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION[style], attributionsCollapsible: false });
+const base = new ol.layer.Tile({ source: tiles('streets') });
+const map = new ol.Map({ target: 'map', layers: [base], view: new ol.View({ center: ol.proj.fromLonLat([11.4, 47.27]), zoom: 12 }) }); // Innsbruck
+
+for (const knopf of document.querySelectorAll('[data-stil]')) {
+  knopf.addEventListener('click', () => {
+    base.setSource(tiles(knopf.dataset.stil)); // position and zoom are kept
+    for (const k of document.querySelectorAll('[data-stil]')) k.setAttribute('aria-pressed', String(k === knopf));
+  });
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Switch the basemap: map, aerial imagery and terrain are three ready-made styles, here as raster tiles (Static Tiles).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources per style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const CC = '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = {
+  streets: `<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, ${CC}`,
+  satellite: `Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; <a href="https://www.gip.gv.at">GIP.at</a>, ${CC}`,
+  outdoors: `<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM), <a href="https://www.gip.gv.at">GIP.at</a>, ${CC}`,
+};
+const tiles = (style) => L.tileLayer(`https://api.mapx.at/v1/styles/${style}/tiles/512/{z}/{x}/{y}?access_token=${TOKEN}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION[style] });
+
+const map = L.map('map').setView([47.27, 11.4], 12); // Innsbruck
+let base = tiles('streets').addTo(map);
+for (const knopf of document.querySelectorAll('[data-stil]')) {
+  knopf.addEventListener('click', () => {
+    base.remove(); // position and zoom are kept
+    base = tiles(knopf.dataset.stil).addTo(map);
+    for (const k of document.querySelectorAll('[data-stil]')) k.setAttribute('aria-pressed', String(k === knopf));
+  });
+}
+````
+
+In Leaflet tauscht das Beispiel die Kachelebene (`L.tileLayer`) samt Quellenangabe, die Ansicht bleibt ebenso.
+
 ## Verwendete APIs
 
 - [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{streets|satellite|outdoors}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -8999,9 +9062,11 @@ Source: https://docs.mapx.at/de/examples/time-of-day/
 
 > Den mapx-Standardstil in vier Lichtstimmungen samt Nachtmodus mit MapLibre GL JS zeigen: lauffähiger Beispielcode zum Kopieren.
 
-Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dunkle Oberfläche genügt die Nacht-Variante.
+Morgen, Tag, Abend und Nacht sind eigene Paletten desselben Stils. Für eine dunkle Oberfläche genügt die Nacht-Variante. In OpenLayers tauscht `setSource()` die Rasterkacheln der Lichtstimmung.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9026,9 +9091,63 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Time of day and night mode: the standard style comes in four lighting moods, here as raster tiles.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
+const tiles = (style) => new ol.source.XYZ({ url: `https://api.mapx.at/v1/styles/${style}/tiles/512/{z}/{x}/{y}?access_token=` + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false });
+const base = new ol.layer.Tile({ source: tiles(STIL.tag) });
+const map = new ol.Map({ target: 'map', layers: [base], view: new ol.View({ center: ol.proj.fromLonLat([16.37, 48.21]), zoom: 13 }) }); // Wien
+
+for (const knopf of document.querySelectorAll('[data-licht]')) {
+  knopf.addEventListener('click', () => {
+    base.setSource(tiles(STIL[knopf.dataset.licht]));
+    for (const k of document.querySelectorAll('[data-licht]')) k.setAttribute('aria-pressed', String(k === knopf));
+  });
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Time of day and night mode: the standard styles come in four lighting moods, here as raster tiles (Static Tiles).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
+const url = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}/tiles/512/{z}/{x}/{y}?access_token=${TOKEN}`;
+
+const map = L.map('map').setView([48.21, 16.37], 13); // Wien
+const base = L.tileLayer(url('tag'), { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+for (const knopf of document.querySelectorAll('[data-licht]')) {
+  knopf.addEventListener('click', () => {
+    base.setUrl(url(knopf.dataset.licht)); // same layer, new tiles
+    for (const k of document.querySelectorAll('[data-licht]')) k.setAttribute('aria-pressed', String(k === knopf));
+  });
+}
+````
+
+In Leaflet wechselt `setUrl()` die Rasterkacheln der Variante auf derselben Ebene.
+
 ## Verwendete APIs
 
 - [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{streets-dawn|streets|streets-dusk|streets-night}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9090,6 +9209,8 @@ Die Höhen-API liefert GeoJSON mit `elevation` in Metern. DTM zeigt das Gelände
 
 ## Code
 
+### MapLibre GL JS
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
@@ -9119,9 +9240,76 @@ map.on('click', async (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Query elevation: a click asks /v1/elevation (DTM or DSM) for the point.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([12.694, 47.074]), zoom: 13 }) }); // Großglockner
+
+map.on('click', async (e) => {
+  const [lng, lat] = ol.proj.toLonLat(e.coordinate);
+  const modell = document.getElementById('modell').value; // dtm or dsm
+  const url = `https://api.mapx.at/v1/elevation?points=${lng.toFixed(6)},${lat.toFixed(6)}&model=${modell}`;
+  try {
+    const r = await fetch(url, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const h = (await r.json()).features[0].properties.elevation;
+    label.textContent = h == null ? (de ? 'Außerhalb der Daten' : 'Outside the data') : `${h.toLocaleString(de ? 'de-AT' : 'en')} m (${modell.toUpperCase()})`;
+  } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+  popup.setPosition(e.coordinate);
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Query elevation: a click asks /v1/elevation (DTM or DSM) for the point.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the elevation model (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.074, 12.694], 13); // Großglockner
+L.tileLayer('https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const popup = L.popup({ closeButton: false });
+const show = (latlng, s) => popup.setLatLng(latlng).setContent(Object.assign(document.createElement('span'), { textContent: s })).openOn(map);
+map.on('click', async (e) => {
+  const modell = document.getElementById('modell').value; // dtm or dsm
+  const url = `https://api.mapx.at/v1/elevation?points=${e.latlng.lng.toFixed(6)},${e.latlng.lat.toFixed(6)}&model=${modell}`;
+  try {
+    const res = await fetch(url, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const h = (await res.json()).features[0].properties.elevation;
+    show(e.latlng, h == null ? (de ? 'Außerhalb der Daten' : 'Outside the data') : `${h.toLocaleString(de ? 'de-AT' : 'en')} m (${modell.toUpperCase()})`);
+  } catch (err) { show(e.latlng, (de ? 'Fehler: ' : 'Error: ') + err.message); }
+});
+````
+
 ## Verwendete APIs
 
 - [Höhe](https://docs.mapx.at/de/api/elevation.md) `GET /v1/elevation`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9134,6 +9322,8 @@ Source: https://docs.mapx.at/de/examples/elevation-profile/
 Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `samples` gleichmäßig verteilte Messpunkte samt Auf- und Abstieg liefert. Ein Canvas zeichnet das Profil.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9179,9 +9369,103 @@ async function zeichne() {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const linie = new ol.Feature(new ol.geom.LineString([]));
+const stroke = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#2346d8', width: 4 }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: new ol.source.Vector({ features: [linie] }), style: stroke })], view: new ol.View({ center: ol.proj.fromLonLat([12.70, 47.08]), zoom: 13 }) });
+let punkte = [[12.67, 47.065], [12.71, 47.09]];
+
+map.on('click', (e) => { punkte.push(ol.proj.toLonLat(e.coordinate)); zeichne(); });
+document.getElementById('neu').addEventListener('click', () => { punkte = []; zeichne(); });
+zeichne();
+
+async function zeichne() {
+  linie.getGeometry().setCoordinates(punkte.map((p) => ol.proj.fromLonLat(p)));
+  const canvas = document.getElementById('profil'), g = canvas.getContext('2d');
+  g.clearRect(0, 0, canvas.width, canvas.height);
+  if (punkte.length < 2) { document.getElementById('info').textContent = de ? 'Mindestens zwei Punkte setzen.' : 'Set at least two points.'; return; }
+  const pfad = punkte.map((p) => p.map((v) => v.toFixed(5)).join(',')).join(';');
+  try {
+    const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`, AUTH);
+    if (!antwort.ok) throw new Error('HTTP ' + antwort.status);
+    const { distances, elevations } = (await antwort.json()).properties;
+    const pts = distances.map((d, i) => ({ d, h: elevations[i] })).filter((p) => p.h != null);
+    const dMax = pts.at(-1).d, hMin = Math.min(...pts.map((p) => p.h)), hMax = Math.max(...pts.map((p) => p.h));
+    const W = canvas.width, H = canvas.height, x = (d) => 50 + (d / dMax) * (W - 60), y = (h) => H - 24 - ((h - hMin) / (hMax - hMin || 1)) * (H - 40);
+    g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(x(p.d), y(p.h)) : g.moveTo(x(p.d), y(p.h))));
+    g.strokeStyle = '#2346d8'; g.lineWidth = 2; g.stroke();
+    g.fillStyle = '#6b7079'; g.font = '12px sans-serif';
+    g.fillText(`${Math.round(hMax)} m`, 4, 16); g.fillText(`${Math.round(hMin)} m`, 4, H - 28); g.fillText(`${(dMax / 1000).toFixed(2)} km`, W - 60, H - 6);
+    let auf = 0, ab = 0; pts.forEach((p, i) => { if (i) { const dh = p.h - pts[i - 1].h; dh > 0 ? (auf += dh) : (ab -= dh); } });
+    document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, ${de ? 'Aufstieg' : 'ascent'} ${Math.round(auf)} m, ${de ? 'Abstieg' : 'descent'} ${Math.round(ab)} m`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the elevation model (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.08, 12.70], 13);
+L.tileLayer('https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+let punkte = [[12.67, 47.065], [12.71, 47.09]]; // lng, lat
+const linie = L.polyline([], { color: '#2346d8', weight: 4, opacity: 1 }).addTo(map);
+map.on('click', (e) => { punkte.push([e.latlng.lng, e.latlng.lat]); zeichne(); });
+document.getElementById('neu').addEventListener('click', () => { punkte = []; zeichne(); });
+zeichne();
+async function zeichne() {
+  linie.setLatLngs(punkte.map(([lng, lat]) => [lat, lng]));
+  const canvas = document.getElementById('profil'), g = canvas.getContext('2d');
+  g.clearRect(0, 0, canvas.width, canvas.height);
+  if (punkte.length < 2) { document.getElementById('info').textContent = de ? 'Mindestens zwei Punkte setzen.' : 'Set at least two points.'; return; }
+  const pfad = punkte.map((p) => p.map((v) => v.toFixed(5)).join(',')).join(';');
+  try {
+    const antwort = await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${pfad}&samples=120`, AUTH);
+    if (!antwort.ok) throw new Error('HTTP ' + antwort.status);
+    const { distances, elevations } = (await antwort.json()).properties;
+    const pts = distances.map((d, i) => ({ d, h: elevations[i] })).filter((p) => p.h != null);
+    const dMax = pts.at(-1).d, hMin = Math.min(...pts.map((p) => p.h)), hMax = Math.max(...pts.map((p) => p.h));
+    const W = canvas.width, H = canvas.height, x = (d) => 50 + (d / dMax) * (W - 60), y = (h) => H - 24 - ((h - hMin) / (hMax - hMin || 1)) * (H - 40);
+    g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(x(p.d), y(p.h)) : g.moveTo(x(p.d), y(p.h))));
+    g.strokeStyle = '#2346d8'; g.lineWidth = 2; g.stroke();
+    g.fillStyle = '#6b7079'; g.font = '12px sans-serif';
+    g.fillText(`${Math.round(hMax)} m`, 4, 16); g.fillText(`${Math.round(hMin)} m`, 4, H - 28); g.fillText(`${(dMax / 1000).toFixed(2)} km`, W - 60, H - 6);
+    let auf = 0, ab = 0; pts.forEach((p, i) => { if (i) { const dh = p.h - pts[i - 1].h; dh > 0 ? (auf += dh) : (ab -= dh); } });
+    document.getElementById('info').textContent = `${(dMax / 1000).toFixed(2)} km, ${de ? 'Aufstieg' : 'ascent'} ${Math.round(auf)} m, ${de ? 'Abstieg' : 'descent'} ${Math.round(ab)} m`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
 ## Verwendete APIs
 
 - [Höhe und Profil](https://docs.mapx.at/de/api/elevation.md#elevation-profile-along-a-line) `GET api.mapx.at/v1/elevation/profile`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9194,6 +9478,8 @@ Source: https://docs.mapx.at/de/examples/search/
 Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9234,9 +9520,96 @@ eingabe.addEventListener('input', async () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const hit = new ol.source.Vector(); // the chosen result
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: hit, style: pin('#3fb1ce') })], view: new ol.View({ center: ol.proj.fromLonLat([14.3, 47.6]), zoom: 8 }) });
+
+const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
+eingabe.addEventListener('input', async () => {
+  const q = eingabe.value.trim();
+  liste.replaceChildren();
+  if (q.length < 2) return;
+  try {
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    for (const f of (await r.json()).features) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = f.place_name;
+      b.addEventListener('click', () => {
+        hit.clear();
+        hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.center))));
+        const view = map.getView();
+        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 600 }) : view.animate({ center: ol.proj.fromLonLat(f.center), zoom: (f.properties.zoom ?? 14) + 1 });
+        liste.replaceChildren();
+      });
+      li.append(b); liste.append(li);
+    }
+  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the search (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.6, 14.3], 8);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+let marker;
+const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
+eingabe.addEventListener('input', async () => {
+  const q = eingabe.value.trim();
+  liste.replaceChildren();
+  if (q.length < 2) return;
+  try {
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    for (const f of (await r.json()).features) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = f.place_name;
+      b.addEventListener('click', () => {
+        const [lng, lat] = f.center;
+        marker?.remove();
+        marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
+        f.bbox ? map.fitBounds([[f.bbox[1], f.bbox[0]], [f.bbox[3], f.bbox[2]]], { padding: [60, 60], maxZoom: 18 }) : map.flyTo([lat, lng], (f.properties.zoom ?? 14) + 1);
+        liste.replaceChildren();
+      });
+      li.append(b); liste.append(li);
+    }
+  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Geocoding](https://docs.mapx.at/de/api/geocoding.md) `GET api.mapx.at/v1/geocode`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9385,9 +9758,11 @@ Source: https://docs.mapx.at/de/examples/weather-overlay/
 
 > Temperatur, Niederschlag oder Wind als Overlay über der Karte, Stunde per Regler: Wetterkacheln von GeoSphere Austria, lauffähiger Code.
 
-Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Raster-Layer.
+Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Raster-Layer. In OpenLayers ist jede Stunde eine eigene `ol.source.XYZ`.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9433,11 +9808,101 @@ document.getElementById('param').addEventListener('change', () => { document.get
 document.getElementById('stunde').addEventListener('input', (e) => zeigen(document.getElementById('param').value, Number(e.target.value)));
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const API = 'https://api.mapx.at/v1';
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const wetter = new ol.layer.Tile({ opacity: 0.85 });
+const map = new ol.Map({ target: 'map', layers: [base, wetter], view: new ol.View({ center: ol.proj.fromLonLat([13.3, 47.6]), zoom: 7.5 }) });
+let times = [];
+
+async function laden() {
+  const param = document.getElementById('param').value; // temperature, precipitation, wind ...
+  const tj = await (await fetch(`${API}/weather/tiles/${param}.json`, AUTH)).json();
+  times = tj['mapx:time'].times; // available hours (UTC)
+  const slider = document.getElementById('stunde');
+  slider.max = times.length - 1;
+  zeigen(param, Number(slider.value));
+}
+
+function zeigen(param, i) {
+  const t = times[Math.min(i, times.length - 1)];
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `${param}, ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
+  wetter.setSource(new ol.source.XYZ({
+    url: `${API}/weather/tiles/${param}/${t}/{z}/{x}/{y}.png?access_token=` + TOKEN,
+    tileSize: 512, maxZoom: 11, transition: 0, // smooth fields: fewer, larger tiles keep the request count low
+    attributions: 'Wetter: GeoSphere Austria, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  }));
+}
+
+laden();
+document.getElementById('param').addEventListener('change', () => { document.getElementById('stunde').value = 0; laden(); });
+document.getElementById('stunde').addEventListener('input', (e) => zeigen(document.getElementById('param').value, Number(e.target.value)));
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; the weather layer adds its own; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const API = 'https://api.mapx.at/v1';
+
+const map = L.map('map').setView([47.6, 13.3], 7);
+L.tileLayer(API + '/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+// smooth fields: 512 px tiles up to zoom 11 (Leaflet 12), Leaflet scales them up beyond
+const wetter = L.tileLayer('', { tileSize: 512, zoomOffset: -1, maxNativeZoom: 12, maxZoom: 21, opacity: 0.85, attribution: 'Wetter: GeoSphere Austria, CC BY 4.0' }).addTo(map);
+let times = [];
+async function laden() {
+  const param = document.getElementById('param').value; // temperature, precipitation, wind ...
+  try {
+    const res = await fetch(`${API}/weather/tiles/${param}.json`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    times = (await res.json())['mapx:time'].times; // available hours (UTC)
+    const slider = document.getElementById('stunde');
+    slider.max = times.length - 1;
+    zeigen(param, Number(slider.value));
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+function zeigen(param, i) {
+  const t = times[Math.min(i, times.length - 1)];
+  document.getElementById('info').textContent = `${param}, ${t} (UTC), ${de ? 'Quelle' : 'Source'}: GeoSphere Austria, CC BY 4.0`;
+  wetter.setUrl(`${API}/weather/tiles/${param}/${t}/{z}/{x}/{y}.png?access_token=${TOKEN}`);
+}
+laden();
+document.getElementById('param').addEventListener('change', () => { document.getElementById('stunde').value = 0; laden(); });
+document.getElementById('stunde').addEventListener('input', (e) => zeigen(document.getElementById('param').value, Number(e.target.value)));
+````
+
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
+
+In Leaflet bleibt es eine `L.tileLayer`, `setUrl()` wechselt Größe und Stunde.
 
 ## Verwendete APIs
 
 - [Wetter](https://docs.mapx.at/de/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/{parameter}.json`, `GET api.mapx.at/v1/weather/tiles/{parameter}/{time}/{z}/{x}/{y}.png`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9447,9 +9912,11 @@ Source: https://docs.mapx.at/de/examples/radar-animation/
 
 > Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation auf der Karte: Nowcast von GeoSphere Austria, lauffähiger Code.
 
-Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`.
+Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`. OpenLayers lädt einen Layer erst, wenn er sichtbar wird: Die OpenLayers-Fassung holt jeden Schritt beim ersten Zeigen, danach kommt er aus dem Cache.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9502,12 +9969,113 @@ document.getElementById('play').addEventListener('click', abspielen);
 document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const API = 'https://api.mapx.at/v1';
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const map = new ol.Map({ target: 'map', layers: [base], view: new ol.View({ center: ol.proj.fromLonLat([13.3, 47.6]), zoom: 7.5 }) });
+let times = [], layers = [], timer = null;
+
+function zeigen(i) {
+  const t = times[i];
+  document.getElementById('zeit').value = i;
+  const source = document.documentElement.lang.startsWith('de') ? 'Quelle' : 'Source'; // page language
+  document.getElementById('info').textContent = `Radar nowcast ${t} (UTC), ${source}: GeoSphere Austria, CC BY 4.0`;
+  // one layer per time step, only the selected one is visible: OpenLayers loads a step when first shown, later from the cache
+  layers.forEach((l, k) => l.setVisible(k === i));
+}
+
+function abspielen() {
+  const btn = document.getElementById('play');
+  if (timer) { clearInterval(timer); timer = null; btn.textContent = de ? 'Abspielen' : 'Play'; return; }
+  btn.textContent = 'Pause';
+  timer = setInterval(() => zeigen((Number(document.getElementById('zeit').value) + 1) % times.length), 700);
+}
+
+(async () => {
+  const tj = await (await fetch(`${API}/weather/tiles/rr_nowcast.json`, AUTH)).json();
+  times = tj['mapx:time'].times; // 15-minute steps (UTC)
+  document.getElementById('zeit').max = times.length - 1;
+  layers = times.map((t, k) => new ol.layer.Tile({
+    opacity: 0.85, visible: false,
+    source: new ol.source.XYZ({ url: tj['mapx:time'].template.replace('{time}', t) + '?access_token=' + TOKEN, tileSize: 512, maxZoom: 10, transition: 0, attributions: k ? undefined : 'Wetter: GeoSphere Austria, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>' }),
+  }));
+  layers.forEach((l) => map.addLayer(l));
+  zeigen(0);
+})();
+document.getElementById('play').addEventListener('click', abspielen);
+document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; the radar layers add their own; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const API = 'https://api.mapx.at/v1';
+
+const map = L.map('map').setView([47.6, 13.3], 7);
+L.tileLayer(API + '/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+let times = [], template = '', layers = [], timer = null;
+function zeigen(i) {
+  document.getElementById('zeit').value = i;
+  document.getElementById('info').textContent = `Radar nowcast ${times[i]} (UTC), ${de ? 'Quelle' : 'Source'}: GeoSphere Austria, CC BY 4.0`;
+  // one layer per time step, created on first use and then kept hidden: the second round plays without waiting for tiles
+  layers[i] ??= L.tileLayer(template.replace('{time}', times[i]) + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, maxNativeZoom: 11, maxZoom: 21, opacity: 0, attribution: 'Wetter: GeoSphere Austria, CC BY 4.0' }).addTo(map);
+  layers.forEach((l, k) => l?.setOpacity(k === i ? 0.85 : 0));
+}
+function abspielen() {
+  const btn = document.getElementById('play');
+  if (timer) { clearInterval(timer); timer = null; btn.textContent = de ? 'Abspielen' : 'Play'; return; }
+  btn.textContent = 'Pause';
+  timer = setInterval(() => zeigen((Number(document.getElementById('zeit').value) + 1) % times.length), 700);
+}
+(async () => {
+  try {
+    const res = await fetch(`${API}/weather/tiles/rr_nowcast.json`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const time = (await res.json())['mapx:time'];
+    times = time.times; // 15-minute steps (UTC)
+    template = time.template; // tile URL with {time}
+    document.getElementById('zeit').max = times.length - 1;
+    zeigen(0);
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+})();
+document.getElementById('play').addEventListener('click', abspielen);
+document.getElementById('zeit').addEventListener('input', (e) => zeigen(Number(e.target.value)));
+````
+
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
+
+In Leaflet ist jeder Schritt eine eigene `L.tileLayer`, umgeschaltet wird über die Deckkraft.
 
 ## Verwendete APIs
 
 - [Wetter](https://docs.mapx.at/de/api/weather.md#weather-raster-tile-png-256-transparent-outside-the-data) `GET api.mapx.at/v1/weather/tiles/rr_nowcast.json`, `GET api.mapx.at/v1/weather/tiles/rr_nowcast/{time}/{z}/{x}/{y}.png`
 - [Niederschlags-Nowcast](https://docs.mapx.at/de/api/weather.md) `GET api.mapx.at/v1/weather/nowcast/{lon},{lat}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9520,6 +10088,8 @@ Source: https://docs.mapx.at/de/examples/isochrone/
 Ein Klick setzt den Startpunkt. Die Isochronen-API liefert je Stufe ein MultiPolygon, die größte Fläche zuerst.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9555,9 +10125,77 @@ async function abfragen(ort) {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Isochrones: areas reachable in 5, 10 and 15 minutes.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const iso = new ol.source.Vector();
+const area = new ol.style.Style({ fill: new ol.style.Fill({ color: 'rgba(35, 70, 216, 0.12)' }), stroke: new ol.style.Stroke({ color: '#2346d8', width: 2 }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: iso, style: area })], view: new ol.View({ center: ol.proj.fromLonLat([15.33, 48.23]), zoom: 14 }) }); // Melk
+const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
+
+map.on('click', (e) => abfragen(ol.proj.toLonLat(e.coordinate)));
+abfragen([15.33, 48.23]);
+
+async function abfragen(ort) {
+  const profil = document.getElementById('profil').value; // walking, cycling or driving
+  const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
+  try {
+    const r = await fetch(url, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    iso.clear();
+    iso.addFeatures(geojson.readFeatures(await r.json())); // one MultiPolygon per step, largest first
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Isochrones: areas reachable in 5, 10 and 15 minutes.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.23, 15.33], 14); // Melk
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const iso = L.geoJSON(null, { style: { color: '#2346d8', weight: 2, opacity: 1, fillColor: '#2346d8', fillOpacity: 0.12 } }).addTo(map);
+map.on('click', (e) => abfragen([e.latlng.lng, e.latlng.lat]));
+abfragen([15.33, 48.23]);
+async function abfragen(ort) {
+  const profil = document.getElementById('profil').value; // walking, cycling or driving
+  const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
+  try {
+    const r = await fetch(url, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    iso.clearLayers().addData(await r.json()); // one MultiPolygon per step, largest first
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
 ## Verwendete APIs
 
 - [Routing](https://docs.mapx.at/de/api/directions.md#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9570,6 +10208,8 @@ Source: https://docs.mapx.at/de/examples/matrix/
 Die Matrix-API nimmt Quellen (und optional Ziele) und liefert Dauer (und optional Distanz) für alle Paare, `null` heißt nicht routbar.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9601,9 +10241,87 @@ document.getElementById('los').addEventListener('click', async () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Matrix: driving times between several places in one request.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const places = new ol.source.Vector({ features: Object.entries(ORTE).map(([name, p]) => new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat(p)), name })) });
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: places, style: pin('#3fb1ce') })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([15.3, 48.25]), zoom: 9 }) });
+map.on('click', (e) => {
+  const f = map.forEachFeatureAtPixel(e.pixel, (x) => x);
+  label.textContent = f?.get('name') ?? '';
+  popup.setPosition(f?.getGeometry().getCoordinates());
+});
+
+document.getElementById('los').addEventListener('click', async () => {
+  const tabelle = document.getElementById('ergebnis'), namen = Object.keys(ORTE);
+  const zelle = (tag, text) => Object.assign(document.createElement(tag), { textContent: text });
+  const zeile = (kopf, zellen, tag = 'td') => tabelle.insertRow().append(zelle('th', kopf), ...zellen.map((z) => zelle(tag, z)));
+  try {
+    const koordinaten = Object.values(ORTE).map((p) => p.join(',')).join(';');
+    const r = await fetch(`https://api.mapx.at/v1/matrix/driving/${koordinaten}`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const { durations } = await r.json(); // seconds, null = not routable
+    tabelle.replaceChildren();
+    zeile('', namen, 'th');
+    durations.forEach((z, i) => zeile(namen[i], z.map((s) => (s == null ? '–' : Math.round(s / 60) + ' min'))));
+  } catch (err) { tabelle.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Matrix: driving times between several places in one request.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
+const map = L.map('map').setView([48.25, 15.3], 9);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+for (const [name, [lng, lat]] of Object.entries(ORTE)) L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).bindPopup(Object.assign(document.createElement('span'), { textContent: name })).addTo(map);
+document.getElementById('los').addEventListener('click', async () => {
+  const tabelle = document.getElementById('ergebnis'), namen = Object.keys(ORTE);
+  const zeile = (kopf, zellen) => { const tr = document.createElement('tr'); tr.append(Object.assign(document.createElement('th'), { textContent: kopf }), ...zellen.map((z) => Object.assign(document.createElement(z.th ? 'th' : 'td'), { textContent: z.text }))); return tr; };
+  try {
+    const koordinaten = Object.values(ORTE).map((p) => p.join(',')).join(';');
+    const r = await fetch(`https://api.mapx.at/v1/matrix/driving/${koordinaten}`, AUTH);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const { durations } = await r.json(); // seconds, null = not routable
+    tabelle.replaceChildren(zeile('', namen.map((n) => ({ th: true, text: n }))), ...durations.map((z, i) => zeile(namen[i], z.map((s) => ({ text: s == null ? '–' : Math.round(s / 60) + ' min' })))));
+  } catch (err) { tabelle.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Routing](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9732,9 +10450,13 @@ Source: https://docs.mapx.at/de/examples/tilejson-source/
 
 > Orthophoto und Höhenlinien von mapx als TileJSON-Quellen ohne fertigen Stil in MapLibre GL JS einbinden: lauffähiger Beispielcode zum Kopieren.
 
-Eine TileJSON-URL pro Produkt genügt: MapLibre liest Kachel-URL, Zoombereich und Attribution daraus. Hier ein eigener, minimaler Stil.
+Eine TileJSON-URL pro Produkt genügt: MapLibre liest Kachel-URL, Zoombereich und Attribution daraus. Hier ein eigener, minimaler Stil. OpenLayers liest das TileJSON nicht selbst: Die OpenLayers-Fassung lädt es per `fetch` und baut daraus `ol.source.XYZ` (Raster) und `ol.source.VectorTile` mit `ol.format.MVT` (Vektorkacheln).
 
 ## Code
+
+Leaflet zeigt nur den Rasterteil: Vektorkacheln kann es ohne Plugin nicht, die Höhenlinien fehlen dort.
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9763,9 +10485,63 @@ map.addControl(new maplibregl.NavigationControl());
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Use TileJSON: orthophoto (raster) and contour lines (vector tiles, MVT) as sources, without file names and without a style.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+// Data sources (CC BY 4.0), must stay visible on the map; this example takes the text from each TileJSON.
+
+const linie = new ol.style.Style({ stroke: new ol.style.Stroke({ color: 'rgba(255, 210, 74, 0.9)', width: 0.8 }) });
+const ortho = new ol.layer.Tile(), linien = new ol.layer.VectorTile({ style: linie });
+const map = new ol.Map({ target: 'map', layers: [ortho, linien], view: new ol.View({ center: ol.proj.fromLonLat([11.4, 47.27]), zoom: 13.5 }) }); // Innsbruck
+
+const plain = (html) => new DOMParser().parseFromString(html, 'text/html').body.textContent; // attribution as text, not as HTML
+async function tilejson(name) {
+  const r = await fetch(`https://api.mapx.at/v1/tiles/${name}.json`, AUTH);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const tj = await r.json(); // tile URL, zoom range and attribution
+  return { url: tj.tiles[0] + '?access_token=' + TOKEN, minZoom: tj.minzoom, maxZoom: tj.maxzoom, attributions: plain(tj.attribution ?? ''), attributionsCollapsible: false };
+}
+(async () => {
+  ortho.setSource(new ol.source.XYZ({ ...(await tilejson('orthophoto')), tileSize: 512 }));
+  linien.setSource(new ol.source.VectorTile({ ...(await tilejson('contours')), format: new ol.format.MVT({ layers: ['contour_l'] }) }));
+})();
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Use TileJSON: the orthophoto as a raster source, tile URL, zoom range and attribution come from the TileJSON.
+// Leaflet has no vector tiles without a plugin, so the contour lines of the MapLibre version are missing here.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+
+const map = L.map('map').setView([47.27, 11.4], 14); // Innsbruck
+(async () => {
+  const tj = await (await fetch('https://api.mapx.at/v1/tiles/orthophoto.json', AUTH)).json();
+  // the attribution text of the TileJSON (CC BY 4.0) must stay visible on the map; escaped, as it is API text, not HTML
+  L.tileLayer(tj.tiles[0] + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: tj.minzoom + 1, maxNativeZoom: tj.maxzoom + 1, maxZoom: 21, attribution: Object.assign(document.createElement('span'), { textContent: tj.attribution }).innerHTML }).addTo(map);
+})();
+````
+
+Leaflet liest kein TileJSON von selbst: Die Leaflet-Fassung holt es mit `fetch` und übernimmt `tiles`, `minzoom`, `maxzoom` und `attribution`, zeigt aber nur das Orthophoto, denn Vektorkacheln wie die Höhenlinien kann Leaflet ohne Plugin nicht.
+
 ## Verwendete APIs
 
 - [TileJSON](https://docs.mapx.at/de/api/tiles.md) `orthophoto`, `contours`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (Leaflet)
 
 ---
 
@@ -9816,6 +10592,8 @@ Die Search Box arbeitet in zwei Schritten: `suggest` liefert Vorschläge beim Ti
 
 ## Code
 
+### MapLibre GL JS
+
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
 
@@ -9861,10 +10639,115 @@ async function pick(id) {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const hit = new ol.source.Vector(); // the chosen result
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: hit, style: pin('#3fb1ce') })], view: new ol.View({ center: ol.proj.fromLonLat([14.3, 47.6]), zoom: 8 }) });
+const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
+let token = crypto.randomUUID();
+
+input.addEventListener('input', async () => {
+  list.replaceChildren();
+  if (input.value.trim().length < 2) return;
+  const [lon, lat] = ol.proj.toLonLat(map.getView().getCenter());
+  const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${lon},${lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
+  try {
+    const res = await fetch(url, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    for (const s of (await res.json()).suggestions) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
+      b.addEventListener('click', () => pick(s.mapbox_id));
+      li.append(b); list.append(li);
+    }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+
+async function pick(id) {
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${encodeURIComponent(id)}?session_token=${token}`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const f = (await res.json()).features[0];
+    const at = ol.proj.fromLonLat(f.geometry.coordinates);
+    hit.clear();
+    hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
+    map.getView().animate({ center: at, zoom: (f.properties.zoom ?? 15) + 1 });
+    list.replaceChildren();
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  token = crypto.randomUUID(); // the session ends with retrieve
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the search (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.6, 14.3], 8);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
+let marker, token = crypto.randomUUID();
+input.addEventListener('input', async () => {
+  list.replaceChildren();
+  if (input.value.trim().length < 2) return;
+  const c = map.getCenter();
+  const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${c.lng},${c.lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
+  try {
+    const res = await fetch(url, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    for (const s of (await res.json()).suggestions) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
+      b.addEventListener('click', () => pick(s.mapbox_id));
+      li.append(b); list.append(li);
+    }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+async function pick(id) {
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${encodeURIComponent(id)}?session_token=${token}`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const f = (await res.json()).features[0];
+    const [lng, lat] = f.geometry.coordinates;
+    marker?.remove();
+    marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
+    map.flyTo([lat, lng], (f.properties.zoom ?? 15) + 1);
+    list.replaceChildren();
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  token = crypto.randomUUID(); // the session ends with retrieve
+}
+````
+
 ## Verwendete APIs
 
 - [Search Box](https://docs.mapx.at/de/api/search-box.md) `GET api.mapx.at/v1/searchbox/suggest`
 - [Search Box](https://docs.mapx.at/de/api/search-box.md) `GET api.mapx.at/v1/searchbox/retrieve/{id}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9877,6 +10760,8 @@ Source: https://docs.mapx.at/de/examples/autofill/
 Autofill ist für Bestell- und Anmeldeformulare gedacht: ein Textfeld, eine Vorschlagsliste, und die übrigen Felder (Hausnummer, PLZ, Ort) werden aus dem gewählten Vorschlag gefüllt. Jeder Vorschlag bringt seine Koordinaten schon mit.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9918,9 +10803,98 @@ f.street.addEventListener('input', async () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Address autofill: type a street and number, pick a suggestion, the form fields fill themselves.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const hit = new ol.source.Vector(); // the chosen address
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: hit, style: pin('#3fb1ce') })], view: new ol.View({ center: ol.proj.fromLonLat([13.8, 47.7]), zoom: 7.5 }) });
+const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map((k) => [k, document.getElementById(k)]));
+const list = document.getElementById('treffer');
+
+f.street.addEventListener('input', async () => {
+  list.replaceChildren();
+  if (f.street.value.trim().length < 3) return;
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    for (const s of (await res.json()).suggestions) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = s.full_address;
+      b.addEventListener('click', () => {
+        for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
+        const at = ol.proj.fromLonLat(s.coordinates);
+        hit.clear();
+        hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
+        map.getView().animate({ center: at, zoom: 17 });
+        list.replaceChildren();
+      });
+      li.append(b); list.append(li);
+    }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Address autofill: type a street and number, pick a suggestion, the form fields fill themselves.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.7, 13.8], 7);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map((k) => [k, document.getElementById(k)]));
+const list = document.getElementById('treffer');
+let marker;
+f.street.addEventListener('input', async () => {
+  list.replaceChildren();
+  if (f.street.value.trim().length < 3) return;
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    for (const s of (await res.json()).suggestions) {
+      const li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = s.full_address;
+      b.addEventListener('click', () => {
+        for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
+        const [lng, lat] = s.coordinates;
+        marker?.remove();
+        marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
+        map.flyTo([lat, lng], 17);
+        list.replaceChildren();
+      });
+      li.append(b); list.append(li);
+    }
+  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Adressen](https://docs.mapx.at/de/api/address.md) `GET api.mapx.at/v1/autofill/suggest`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9933,6 +10907,8 @@ Source: https://docs.mapx.at/de/examples/address-validation/
 Die Validierung gleicht die vier Adressteile mit dem Adressregister des BEV ab. Das Ergebnis hat einen `status` (`match`, `corrected`, `ambiguous`, `not_found`), die Liste der `deviations` und entweder die passende `address` mit Koordinaten oder eine Liste von `candidates`. Die vorbelegte Adresse enthält absichtlich einen Tippfehler.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -9966,9 +10942,84 @@ document.getElementById('pruefen').addEventListener('click', async () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Address validation: check a typed address against the official register (BEV) and show the corrected result.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const hit = new ol.source.Vector(); // the validated address or first candidate
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: hit, style: pin('#3fb1ce') })], view: new ol.View({ center: ol.proj.fromLonLat([13.8, 47.7]), zoom: 7.5 }) });
+const out = document.getElementById('ergebnis');
+
+document.getElementById('pruefen').addEventListener('click', async () => {
+  const p = new URLSearchParams();
+  for (const k of ['street', 'housenumber', 'postcode', 'place']) p.set(k, document.getElementById(k).value);
+  try {
+    const res = await fetch('https://api.mapx.at/v1/address/validate?' + p, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const r = await res.json(); // status: match, corrected, ambiguous, not_found
+    const top = r.address ? { text: r.address.full_address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
+    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, ${de ? 'Abweichungen' : 'deviations'}: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (top ? `, ${r.address ? (de ? 'Adresse' : 'address') : (de ? 'erster Kandidat' : 'first candidate')}: ${top.text}` : '');
+    hit.clear();
+    if (top) { hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(top.at)))); map.getView().animate({ center: ol.proj.fromLonLat(top.at), zoom: 17 }); }
+  } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Address validation: check a typed address against the official register (BEV) and show the corrected result.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([47.7, 13.8], 7);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const out = document.getElementById('ergebnis');
+let marker;
+document.getElementById('pruefen').addEventListener('click', async () => {
+  const p = new URLSearchParams();
+  for (const k of ['street', 'housenumber', 'postcode', 'place']) p.set(k, document.getElementById(k).value);
+  try {
+    const res = await fetch('https://api.mapx.at/v1/address/validate?' + p, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const r = await res.json(); // status: match, corrected, ambiguous, not_found
+    const hit = r.address ? { text: r.address.full_address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
+    out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, ${de ? 'Abweichungen' : 'deviations'}: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (hit ? `, ${r.address ? (de ? 'Adresse' : 'address') : (de ? 'erster Kandidat' : 'first candidate')}: ${hit.text}` : '');
+    marker?.remove();
+    if (hit) {
+      const latlng = [hit.at[1], hit.at[0]];
+      marker = L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
+      map.flyTo(latlng, 17);
+    }
+  } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Adressen](https://docs.mapx.at/de/api/address.md) `GET api.mapx.at/v1/address/validate`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -9981,6 +11032,8 @@ Source: https://docs.mapx.at/de/examples/reverse-geocode/
 Reverse Geocoding macht aus einer Koordinate die nächste Adresse, Straße oder den nächsten Ort. `types` begrenzt die Art des Ergebnisses, `radius` die Suchdistanz in Metern.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10009,9 +11062,73 @@ map.on('click', async (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Reverse geocoding: click the map, get the nearest address, street or place.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([16.3725, 48.2085]), zoom: 16 }) }); // Stephansplatz, Vienna
+
+map.on('click', async (e) => {
+  const [lng, lat] = ol.proj.toLonLat(e.coordinate);
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const f = (await res.json()).features[0];
+    label.textContent = f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby');
+  } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+  popup.setPosition(e.coordinate);
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Reverse geocoding: click the map, get the nearest address, street or place.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.2085, 16.3725], 16);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const popup = L.popup({ closeButton: false });
+const show = (latlng, s) => popup.setLatLng(latlng).setContent(Object.assign(document.createElement('span'), { textContent: s })).openOn(map); // as text, not HTML
+map.on('click', async (e) => {
+  const { lng, lat } = e.latlng;
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const f = (await res.json()).features[0];
+    show(e.latlng, f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby'));
+  } catch (err) { show(e.latlng, (de ? 'Fehler: ' : 'Error: ') + err.message); }
+});
+````
+
 ## Verwendete APIs
 
 - [Geocoding](https://docs.mapx.at/de/api/geocoding.md) `GET api.mapx.at/v1/reverse`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -10024,6 +11141,8 @@ Source: https://docs.mapx.at/de/examples/truck-route/
 Das Profil `driving-truck` mit Gewicht und Höhe wählen: Straßen mit passenden Verboten und Beschränkungen werden gemieden, die Antwort nennt die GO-mautpflichtigen Kilometer. Für Pkw (`driving`) lassen sich Maut und Autobahn meiden, dazu gibt es bis zu zwei Alternativen. Start und Ziel anklicken.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10070,9 +11189,107 @@ async function route() {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const routes = new ol.source.Vector(), points = new ol.source.Vector();
+const style = (f) => new ol.style.Style({ zIndex: f.get('main'), stroke: new ol.style.Stroke({ color: f.get('main') ? '#2346d8' : '#9aa4b8', width: f.get('main') ? 6 : 4, lineCap: 'round' }) });
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: routes, style }), new ol.layer.Vector({ source: points })], view: new ol.View({ center: ol.proj.fromLonLat([15.4, 48.2]), zoom: 9 }) });
+const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
+const $ = (id) => document.getElementById(id);
+const pts = [];
+
+map.on('click', (e) => {
+  if (pts.length === 2) { pts.length = 0; points.clear(); routes.clear(); }
+  pts.push(ol.proj.toLonLat(e.coordinate));
+  const m = new ol.Feature(new ol.geom.Point(e.coordinate));
+  m.setStyle(pin(pts.length === 1 ? '#1d7f4e' : '#c8372d'));
+  points.addFeature(m);
+  if (pts.length === 2) route();
+});
+for (const id of ['profile', 'toll', 'motorway', 'weight', 'height']) $(id).addEventListener('change', () => pts.length === 2 && route());
+
+async function route() {
+  const profile = $('profile').value, q = new URLSearchParams({ overview: 'full', geometries: 'geojson', alternatives: 'true' });
+  if (profile === 'driving-truck') { q.set('weight', $('weight').value); q.set('height', $('height').value); q.delete('alternatives'); }
+  const exclude = ['toll', 'motorway'].filter((k) => $(k).checked);
+  if (profile === 'driving' && exclude.length) q.set('exclude', exclude.join(','));
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/directions/${profile}/${pts.map((p) => p.join(',')).join(';')}?${q}`, AUTH);
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const { routes: list } = await res.json();
+    routes.clear();
+    routes.addFeatures(list.map((r, i) => { const f = geojson.readFeature(r.geometry); f.set('main', i === 0 ? 1 : 0); return f; }));
+    const r = list[0];
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+  } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style, the routing and the toll data (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.2, 15.4], 9);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const $ = (id) => document.getElementById(id);
+const lines = L.geoJSON(null, { style: (f) => (f.properties.main ? { color: '#2346d8', weight: 6, opacity: 1 } : { color: '#9aa4b8', weight: 4, opacity: 1 }) }).addTo(map);
+const markers = L.layerGroup().addTo(map);
+const pts = [];
+map.on('click', (e) => {
+  if (pts.length === 2) { pts.length = 0; markers.clearLayers(); lines.clearLayers(); }
+  pts.push([e.latlng.lng, e.latlng.lat]);
+  L.circleMarker(e.latlng, { radius: 8, color: '#fff', weight: 2, fillColor: pts.length === 1 ? '#1d7f4e' : '#c8372d', fillOpacity: 1 }).addTo(markers);
+  if (pts.length === 2) route();
+});
+for (const id of ['profile', 'toll', 'motorway', 'weight', 'height']) $(id).addEventListener('change', () => pts.length === 2 && route());
+async function route() {
+  const profile = $('profile').value, q = new URLSearchParams({ overview: 'full', geometries: 'geojson', alternatives: 'true' });
+  if (profile === 'driving-truck') { q.set('weight', $('weight').value); q.set('height', $('height').value); q.delete('alternatives'); }
+  const exclude = ['toll', 'motorway'].filter((k) => $(k).checked);
+  if (profile === 'driving' && exclude.length) q.set('exclude', exclude.join(','));
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/directions/${profile}/${pts.map((p) => p.join(',')).join(';')}?${q}`, AUTH);
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const { routes } = await res.json();
+    lines.clearLayers();
+    // alternatives first, the main route last so it is drawn on top
+    lines.addData(routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 }, geometry: r.geometry })).reverse());
+    const r = routes[0];
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+  } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
 ## Verwendete APIs
 
 - [Directions](https://docs.mapx.at/de/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -10087,6 +11304,8 @@ Die Optimization-API ordnet Stopps für ein oder mehrere Fahrzeuge, mit Servicez
 `POST /v1/optimization` geht nur mit einem geheimen Token (`mx_sk_…`); ein öffentlicher Token bekommt `403 pk-not-allowed`. In der eigenen Anwendung die Anfrage daher über den eigenen Server schicken, nicht direkt aus der Webseite.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10141,10 +11360,120 @@ async function plan() {
 }
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Tour planning: click stops (up to 9), the optimization API finds the shortest order from the depot and back.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+// Note: POST needs a secret token (mx_sk_…), public tokens are read-only. Run this call from your server, not from a web page.
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const depot = [15.3294, 48.2272]; // Melk
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const tour = new ol.source.Vector(), points = new ol.source.Vector();
+const line = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#2346d8', width: 5, lineCap: 'round', lineJoin: 'round' }) });
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: tour, style: line }), new ol.layer.Vector({ source: points, style: pin('#c8372d') })], view: new ol.View({ center: ol.proj.fromLonLat(depot), zoom: 10 }) });
+const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
+const depotMarker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(depot)));
+depotMarker.setStyle(pin('#222'));
+const stops = [];
+let timer;
+points.addFeature(depotMarker);
+
+map.on('click', (e) => {
+  if (stops.length >= 9) return;
+  stops.push(ol.proj.toLonLat(e.coordinate));
+  points.addFeature(new ol.Feature(new ol.geom.Point(e.coordinate)));
+  clearTimeout(timer); // plan once after the last click
+  if (stops.length >= 2) timer = setTimeout(plan, 600);
+});
+document.getElementById('reset').addEventListener('click', () => {
+  stops.length = 0; points.clear(); points.addFeature(depotMarker); tour.clear();
+  document.getElementById('info').textContent = de ? 'Mindestens zwei Stopps anklicken.' : 'Click at least two stops.';
+});
+
+async function plan() {
+  const body = { vehicles: [{ id: 1, start: depot, end: depot }], services: stops.map((location, i) => ({ id: i + 1, location, service: 300 })) };
+  try {
+    let res = await fetch('https://api.mapx.at/v1/optimization', { method: 'POST', headers: { ...AUTH.headers, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const plan = (await res.json()).routes[0];
+    const order = plan.steps.map((s) => s.location);
+    // The tour only lists the order; draw the roads with one directions request through all stops.
+    res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    tour.clear();
+    tour.addFeature(geojson.readFeature((await res.json()).routes[0].geometry));
+    document.getElementById('info').textContent = `${de ? 'Reihenfolge' : 'Order'}: ${plan.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(plan.distance / 1000).toFixed(0)} km, ${Math.round(plan.duration / 60)} min ${de ? 'Fahrzeit' : 'driving'}`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Tour planning: click stops (up to 9), the optimization API finds the shortest order from the depot and back.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const depot = [15.3294, 48.2272]; // Melk (lng, lat)
+const map = L.map('map').setView([48.12, 15.33], 10); // depot in the upper half, room for stops to the south
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const pin = (latlng, color) => L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1 });
+const tour = L.geoJSON(null, { style: { color: '#2346d8', weight: 5, opacity: 1 } }).addTo(map);
+const markers = L.layerGroup().addTo(map);
+pin([depot[1], depot[0]], '#222').addTo(map);
+const stops = [];
+let timer;
+map.on('click', (e) => {
+  if (stops.length >= 9) return;
+  stops.push([e.latlng.lng, e.latlng.lat]);
+  pin(e.latlng, '#c8372d').addTo(markers);
+  clearTimeout(timer); // plan once after the last click
+  if (stops.length >= 2) timer = setTimeout(plan, 600);
+});
+document.getElementById('reset').addEventListener('click', () => {
+  stops.length = 0; markers.clearLayers(); tour.clearLayers();
+  document.getElementById('info').textContent = de ? 'Mindestens zwei Stopps anklicken.' : 'Click at least two stops.';
+});
+async function plan() {
+  const body = { vehicles: [{ id: 1, start: depot, end: depot }], services: stops.map((location, i) => ({ id: i + 1, location, service: 300 })) };
+  try {
+    let res = await fetch('https://api.mapx.at/v1/optimization', { method: 'POST', headers: { ...AUTH.headers, 'content-type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const plan = (await res.json()).routes[0];
+    const order = plan.steps.map((s) => s.location);
+    // The tour only lists the order; draw the roads with one directions request through all stops.
+    res = await fetch(`https://api.mapx.at/v1/directions/driving/${order.map((p) => p.join(',')).join(';')}?overview=full&geometries=geojson`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    tour.clearLayers().addData((await res.json()).routes[0].geometry);
+    document.getElementById('info').textContent = `${de ? 'Reihenfolge' : 'Order'}: ${plan.steps.filter((s) => s.type === 'job').map((s) => s.id).join(' > ')}, ${(plan.distance / 1000).toFixed(0)} km, ${Math.round(plan.duration / 60)} min ${de ? 'Fahrzeit' : 'driving'}`;
+  } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+````
+
 ## Verwendete APIs
 
 - [Optimization](https://docs.mapx.at/de/api/optimization.md) `POST api.mapx.at/v1/optimization`
 - [Directions](https://docs.mapx.at/de/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -10157,6 +11486,8 @@ Source: https://docs.mapx.at/de/examples/transit-route/
 Die Transit-API kombiniert Fußwege auf dem Wegenetz mit Fahrten aus dem Fahrplan. Ohne `depart_at` wird für jetzt geplant, `arrive_by` plant rückwärts. Fußabschnitte sind gestrichelt gezeichnet, Fahrten durchgezogen.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10196,9 +11527,89 @@ map.on('click', async (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Public transit: click start and destination, get walking and riding legs for the next departure.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const legs = new ol.source.Vector(), points = new ol.source.Vector();
+const ride = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#2346d8', width: 5, lineCap: 'round', lineJoin: 'round' }) });
+const walk = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#667', width: 5, lineJoin: 'round', lineDash: [5, 7.5] }) });
+const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: legs, style: (f) => (f.get('mode') === 'walking' ? walk : ride) }), new ol.layer.Vector({ source: points })], view: new ol.View({ center: ol.proj.fromLonLat([16.3725, 48.2085]), zoom: 13 }) });
+const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
+const pts = [];
+
+map.on('click', async (e) => {
+  if (pts.length === 2) { pts.length = 0; points.clear(); legs.clear(); }
+  pts.push(ol.proj.toLonLat(e.coordinate));
+  const m = new ol.Feature(new ol.geom.Point(e.coordinate));
+  m.setStyle(pin(pts.length === 1 ? '#1d7f4e' : '#c8372d'));
+  points.addFeature(m);
+  if (pts.length < 2) return;
+  const info = document.getElementById('info');
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/directions/transit/${pts.map((p) => p.join(',')).join(';')}?routes=1`, AUTH); // add depart_at=2026-11-09T08:00 for a fixed time
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const route = (await res.json()).routes[0];
+    legs.addFeatures(route.legs.map((l) => { const f = geojson.readFeature(l.geometry); f.set('mode', l.mode); return f; }));
+    info.textContent = `${route.departure.slice(11, 16)} ${de ? 'bis' : 'to'} ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} ${de ? 'Umstieg(e)' : 'transfer(s)'}: ` + route.legs.map((l) => l.summary).join(' > ');
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Public transit: click start and destination, get walking and riding legs for the next departure.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the timetables, must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
+
+const map = L.map('map').setView([48.2085, 16.3725], 13);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+// riding legs solid blue, walking legs dashed grey
+const legs = L.geoJSON(null, { style: (f) => (f.properties.mode === 'walking' ? { color: '#667', weight: 5, opacity: 1, dashArray: '5 8' } : { color: '#2346d8', weight: 5, opacity: 1 }) }).addTo(map);
+const markers = L.layerGroup().addTo(map);
+const pts = [];
+map.on('click', async (e) => {
+  if (pts.length === 2) { pts.length = 0; markers.clearLayers(); legs.clearLayers(); }
+  pts.push([e.latlng.lng, e.latlng.lat]);
+  L.circleMarker(e.latlng, { radius: 8, color: '#fff', weight: 2, fillColor: pts.length === 1 ? '#1d7f4e' : '#c8372d', fillOpacity: 1 }).addTo(markers);
+  if (pts.length < 2) return;
+  const info = document.getElementById('info');
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/directions/transit/${pts.map((p) => p.join(',')).join(';')}?routes=1`, AUTH); // add depart_at=2026-11-09T08:00 for a fixed time
+    if (!res.ok) throw new Error((await res.json()).detail ?? 'HTTP ' + res.status);
+    const route = (await res.json()).routes[0];
+    legs.addData(route.legs.map((l) => ({ type: 'Feature', properties: { mode: l.mode }, geometry: l.geometry })));
+    info.textContent = `${route.departure.slice(11, 16)} ${de ? 'bis' : 'to'} ${route.arrival.slice(11, 16)}, ${Math.round(route.duration / 60)} min, ${route.transfers} ${de ? 'Umstieg(e)' : 'transfer(s)'}: ` + route.legs.map((l) => l.summary).join(' > ');
+  } catch (err) { info.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
 ## Verwendete APIs
 
 - [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/directions/transit/{coordinates}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -10211,6 +11622,8 @@ Source: https://docs.mapx.at/de/examples/departures/
 Ein Klick sucht über `/v1/stops` die nächste Haltestelle im Umkreis von 150 m und listet über `/v1/departures` die nächsten Abfahrten aus dem Soll-Fahrplan (keine Echtzeitdaten). Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10265,10 +11678,121 @@ map.on('click', async (e) => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Departures: the stops of the visible area from /v1/stops; click a stop (or near one) for the next departures from /v1/departures.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const stops = new ol.source.Vector();
+const dot = new ol.style.Style({ image: new ol.style.Circle({ radius: 6, fill: new ol.style.Fill({ color: '#2346d8' }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) });
+const box = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+box.style.cssText = 'background:#fff;color:#000;padding:6px 10px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006;max-width:280px';
+const popup = new ol.Overlay({ element: box, positioning: 'bottom-center', offset: [0, -10] });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: stops, style: dot })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([16.3725, 48.2085]), zoom: 16.5 }) }); // Stephansplatz, Vienna
+
+map.on('moveend', async () => {
+  const [w, s, e, n] = ol.proj.transformExtent(map.getView().calculateExtent(map.getSize()), 'EPSG:3857', 'EPSG:4326');
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/stops?bbox=${w},${s},${e},${n}&limit=100`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    stops.clear();
+    stops.addFeatures((await res.json()).stops.map((st) => new ol.Feature({ geometry: new ol.geom.Point(ol.proj.fromLonLat(st.location)), id: st.id })));
+  } catch (err) { console.warn(err); }
+});
+
+map.on('click', async (e) => {
+  // a click on a dot asks for that stop, elsewhere for the stops within 150 m
+  const hit = map.forEachFeatureAtPixel(e.pixel, (f) => f);
+  const stop = hit ? hit.get('id') : ol.proj.toLonLat(e.coordinate).map((v) => v.toFixed(6)).join(',');
+  const title = document.createElement('strong');
+  box.replaceChildren(title);
+  popup.setPosition(hit ? hit.getGeometry().getCoordinates() : e.coordinate);
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/departures?stop=${encodeURIComponent(stop)}&limit=8&radius=150`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const { departures } = await res.json(); // scheduled timetable, no real-time data
+    if (!departures.length) { title.textContent = de ? 'Keine Abfahrten in der Nähe' : 'No departures nearby'; return; }
+    title.textContent = departures[0].stop.name;
+    for (const d of departures) {
+      const row = document.createElement('div');
+      row.textContent = `${d.time.slice(11, 16)}  ${d.line.name}  ${de ? 'nach' : 'to'} ${d.headsign}`; // API texts as text, never as HTML
+      box.append(row);
+    }
+  } catch (err) { title.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Departures: click near a stop to see the next departures (/v1/stops finds the stop, /v1/departures lists the departures).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the timetables, must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
+const api = async (path) => { const r = await fetch('https://api.mapx.at/v1' + path, AUTH); if (!r.ok) throw new Error((await r.json()).title || r.statusText); return r.json(); };
+const text = (s) => Object.assign(document.createElement('span'), { textContent: s }); // popup content as text, not HTML
+
+const map = L.map('map').setView([48.2085, 16.3725], 16); // Wien, Stephansplatz
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const popup = L.popup({ maxWidth: 340 });
+
+// Show the stops of the visible area as dots.
+const dots = L.layerGroup().addTo(map);
+async function load() {
+  const b = map.getBounds();
+  const { stops } = await api(`/stops?bbox=${[b.getWest(), b.getSouth(), b.getEast(), b.getNorth()].map((v) => v.toFixed(5)).join(',')}&limit=100`);
+  dots.clearLayers();
+  for (const s of stops) L.circleMarker([s.location[1], s.location[0]], { radius: 6, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(dots);
+}
+map.on('moveend', load);
+load();
+
+// A click finds the nearest stop within 150 m and lists its next 8 departures (timetable, no real-time data).
+let seq = 0;
+map.on('click', async (e) => {
+  const n = ++seq, at = `${e.latlng.lng.toFixed(6)},${e.latlng.lat.toFixed(6)}`;
+  popup.setLatLng(e.latlng).setContent(text(de ? 'Lade …' : 'Loading …')).openOn(map);
+  try {
+    const stop = (await api(`/stops?near=${at}&radius=150&limit=1`)).stops[0];
+    if (!stop) { popup.setContent(text(de ? 'Keine Haltestelle in 150 m' : 'No stop within 150 m')); return; }
+    const { departures } = await api(`/departures?stop=${encodeURIComponent(stop.id)}&limit=8`);
+    if (n !== seq) return; // a newer click has taken over
+    const el = document.createElement('div');
+    el.append(Object.assign(document.createElement('strong'), { textContent: stop.name }));
+    if (!departures.length) el.append(Object.assign(document.createElement('div'), { textContent: de ? 'Keine Abfahrten' : 'No departures' }));
+    for (const d of departures) {
+      const row = document.createElement('div');
+      row.append(Object.assign(document.createElement('b'), { textContent: d.time.slice(11, 16) }), ` ${d.line.name} → ${d.headsign}`);
+      el.append(row);
+    }
+    popup.setLatLng([stop.location[1], stop.location[0]]).setContent(el);
+  } catch (err) { if (n === seq) popup.setContent(text(err.message)); }
+});
+````
+
 ## Verwendete APIs
 
 - [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/stops`
 - [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/departures`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (Leaflet)
 
 ---
 
@@ -10281,6 +11805,8 @@ Source: https://docs.mapx.at/de/examples/traffic/
 Der Stil `traffic-day` zeigt die aktuellen Meldungen und färbt auf Autobahnen die Abschnitte, auf denen Wechselverkehrszeichen das Tempo beschränken; eine flächendeckende Verkehrslage gibt es nicht. Meldungen (Unfälle, Baustellen, Sperren) kommen von `/v1/traffic/incidents`; das Beispiel lädt die aktiven für den sichtbaren Ausschnitt und zeichnet sie darüber. Eine Linie anklicken zeigt den Text.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10318,10 +11844,101 @@ map.on('load', () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Traffic: the current incident list for the visible area on the street map (the traffic-day style has no raster tiles).
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Verkehr/traffic: ASFINAG, EVIS.AT; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const incidents = new ol.source.Vector();
+const style = (f) => new ol.style.Style({ stroke: new ol.style.Stroke({ color: f.get('closed') ? 'rgba(200, 55, 45, 0.8)' : 'rgba(232, 137, 12, 0.8)', width: 6, lineCap: 'round' }) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: incidents, style })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([16.2, 48.1]), zoom: 10 }) });
+const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
+const list = document.getElementById('meldungen');
+
+map.on('click', (e) => {
+  const f = map.forEachFeatureAtPixel(e.pixel, (x) => x, { hitTolerance: 4 });
+  label.textContent = f?.get('text') ?? '';
+  popup.setPosition(f ? e.coordinate : undefined);
+});
+map.on('moveend', async () => {
+  const [w, s, e, n] = ol.proj.transformExtent(map.getView().calculateExtent(map.getSize()), 'EPSG:3857', 'EPSG:4326');
+  const de = document.documentElement.lang.startsWith('de'); // page language: German or English text
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${w},${s},${e},${n}&active=true&limit=50`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const fc = await res.json();
+    incidents.clear();
+    incidents.addFeatures(geojson.readFeatures(fc));
+    const first = fc.features[0] ? `${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '';
+    list.textContent = de
+      ? `${fc.features.length} aktive Meldung(en) im Ausschnitt` + (first ? `, z. B. ${first}` : '')
+      : `${fc.features.length} active incident(s) in view` + (first ? `, e.g. ${first}` : '');
+  } catch (err) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+});
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Traffic: the current incident list of the visible area as lines over the map, closures in red, a click shows the report.
+// The traffic-day style (sign speed limits, traffic layers) has no raster tiles, so the streets style is the basemap here.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style and the traffic data (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Verkehr: ASFINAG / EVIS.AT, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const map = L.map('map').setView([48.1, 16.2], 10);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+const list = document.getElementById('meldungen');
+const popup = L.popup();
+const incidents = L.geoJSON(null, {
+  style: (f) => ({ color: f.properties.closed ? '#c8372d' : '#e8890c', weight: 6, opacity: 0.8, lineCap: 'round' }),
+  // a map popup, not one bound to the line: it stays open when moveend reloads the incidents
+  onEachFeature: (f, layer) => layer.on('click', (e) => popup.setLatLng(e.latlng).setContent(Object.assign(document.createElement('span'), { textContent: f.properties.text })).openOn(map)), // as text, not HTML
+}).addTo(map);
+async function load() {
+  const b = map.getBounds();
+  try {
+    const res = await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}&active=true&limit=50`, AUTH);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const fc = await res.json();
+    incidents.clearLayers().addData(fc);
+    const first = fc.features[0] ? `${fc.features[0].properties.road ?? ''} ${fc.features[0].properties.type}` : '';
+    list.textContent = de
+      ? `${fc.features.length} aktive Meldung(en) im Ausschnitt` + (first ? `, z. B. ${first}` : '')
+      : `${fc.features.length} active incident(s) in view` + (first ? `, e.g. ${first}` : '');
+  } catch (err) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
+}
+map.on('moveend', load);
+load();
+````
+
+Für `traffic-day` gibt es keine Rasterkacheln; die OpenLayers- und die Leaflet-Fassung zeigen die Meldungen deshalb über dem Stil `streets`, ohne die Tempo-Abschnitte.
+
 ## Verwendete APIs
 
 - [Verkehr](https://docs.mapx.at/de/api/traffic.md) `GET api.mapx.at/v1/traffic/incidents`
 - [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/traffic-day`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
@@ -10372,9 +11989,11 @@ Source: https://docs.mapx.at/de/examples/geojson-overlay/
 
 > Eigene GeoJSON-Punkte, -Linie und -Fläche über dem mapx-Stil zeigen, mit Popup per Klick, in MapLibre GL JS. Lauffähiger Code zum Kopieren.
 
-Eigene Daten liegen als GeoJSON-Quelle über dem mapx-Stil. Ein Filter auf den Geometrietyp erlaubt, Punkte, Linien und Flächen getrennt zu gestalten. Größere Datensätze funktionieren genauso als PMTiles.
+Eigene Daten liegen als GeoJSON-Quelle über dem mapx-Stil. Ein Filter auf den Geometrietyp erlaubt, Punkte, Linien und Flächen getrennt zu gestalten. Größere Datensätze funktionieren genauso als PMTiles. In OpenLayers wählt eine Stilfunktion den Stil je Geometrietyp.
 
 ## Code
+
+### MapLibre GL JS
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
@@ -10411,9 +12030,90 @@ map.on('load', () => {
 });
 ````
 
+### OpenLayers
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
+<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
+```
+
+````js
+// Own data: add a GeoJSON layer (points, line, area) on top of the mapx map and show a popup on click.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const data = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', properties: { name: de ? 'Stift Melk' : 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
+    { type: 'Feature', properties: { name: 'Krems' }, geometry: { type: 'Point', coordinates: [15.6141, 48.4097] } },
+    { type: 'Feature', properties: { name: de ? 'Donauradweg (Abschnitt)' : 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
+    { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
+  ],
+};
+const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
+const STYLE = {
+  Polygon: new ol.style.Style({ fill: new ol.style.Fill({ color: 'rgba(35, 70, 216, 0.12)' }) }),
+  LineString: new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#2346d8', width: 4 }) }),
+  Point: new ol.style.Style({ zIndex: 1, image: new ol.style.Circle({ radius: 8, fill: new ol.style.Fill({ color: '#e11d48' }), stroke: new ol.style.Stroke({ color: '#fff', width: 2 }) }) }),
+};
+const own = new ol.source.Vector({ features: new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }).readFeatures(data) });
+const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
+label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
+const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
+const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: own, style: (f) => STYLE[f.getGeometry().getType()] })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([15.45, 48.3]), zoom: 10.5 }) });
+
+const pointAt = (pixel) => map.forEachFeatureAtPixel(pixel, (f) => (f.getGeometry().getType() === 'Point' ? f : undefined));
+map.on('click', (e) => {
+  const f = pointAt(e.pixel);
+  label.textContent = f?.get('name') ?? '';
+  popup.setPosition(f?.getGeometry().getCoordinates());
+});
+map.on('pointermove', (e) => (map.getTargetElement().style.cursor = pointAt(e.pixel) ? 'pointer' : ''));
+// Your own vector tiles work the same way: new ol.layer.VectorTile({ source: new ol.source.VectorTile({ format: new ol.format.MVT(), url: 'https://example.com/{z}/{x}/{y}.pbf' }) })
+````
+
+### Leaflet
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+```
+
+````js
+// Own data: add a GeoJSON layer (points, line, area) on top of the mapx raster tiles and show a popup on click.
+const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
+const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
+// Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
+const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+
+const data = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', properties: { name: de ? 'Stift Melk' : 'Melk Abbey' }, geometry: { type: 'Point', coordinates: [15.3333, 48.2279] } },
+    { type: 'Feature', properties: { name: 'Krems' }, geometry: { type: 'Point', coordinates: [15.6141, 48.4097] } },
+    { type: 'Feature', properties: { name: de ? 'Donauradweg (Abschnitt)' : 'Danube cycle path (section)' }, geometry: { type: 'LineString', coordinates: [[15.3333, 48.2279], [15.4, 48.3], [15.5, 48.38], [15.6141, 48.4097]] } },
+    { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
+  ],
+};
+const map = L.map('map').setView([48.3, 15.45], 10);
+L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
+L.geoJSON(data, {
+  interactive: false, // area and line let clicks through to the points (circles set their own options)
+  style: (f) => ({ Polygon: { stroke: false, fillColor: '#2346d8', fillOpacity: 0.12 }, LineString: { color: '#2346d8', weight: 4, opacity: 1 } })[f.geometry.type], // one style per geometry type
+  pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillColor: '#e11d48', fillOpacity: 1 }),
+  onEachFeature: (f, layer) => f.geometry.type === 'Point' && layer.bindPopup(Object.assign(document.createElement('span'), { textContent: f.properties.name })), // as text, not HTML
+}).addTo(map);
+````
+
+In Leaflet übernimmt `L.geoJSON` mit einer `style`-Funktion je Geometrietyp diese Aufgabe, Punkte werden mit `pointToLayer` zu Kreisen.
+
 ## Verwendete APIs
 
 - [Styles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}`
+- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
 
