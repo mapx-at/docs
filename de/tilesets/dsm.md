@@ -16,7 +16,7 @@ Das DSM ist das Gegenstück zum [DTM](https://docs.mapx.at/de/tilesets/terrain-r
 
 ## Kennwerte
 
-**Tileset `relief-dsm-terrainrgb`**
+**Tileset `dsm`**
 
 | Kennwert | Wert |
 |---|---|

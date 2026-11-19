@@ -7196,7 +7196,7 @@ The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 la
 
 ## Specifications
 
-**Tileset `mapx-basis`**
+**Tileset `streets`**
 
 | Property | Value |
 |---|---|
@@ -7250,24 +7250,6 @@ A layer name ending in `_a` is an area, `_l` a line, `_p` a point. `min_zoom` on
 
 | Layer | Geometry | Zoom | Fields | Content |
 |---|---|---|---|---|
-| `aerialway_l` | line | z12–16 | `kind` string, `min_zoom` number, `name` string | Aerial ropeways and lifts (DLM): cable_car, gondola, chair_lift, drag_lift … |
-| `airport_p` | point | z8–16 | `icao` string, `kind` string, `min_zoom` number, `name` string | Airfields (BEV DLM Verkehr): airport, airfield, heliport, military |
-| `boundary_l` | line | z0–16 | `admin_level` number, `kind` string, `left` string, `min_zoom` number, `right` string | Boundaries (BEV VGD): country, state, district, municipality; left/right area on the left/right |
-| `boundary_label_p` | point | z4–16 | `admin_level` number, `code` string, `kind` string, `min_zoom` number, `name` string | Names of state, district, municipality; code identifier |
-| `building_a` | polygon | z12–16 | `height` number, `kind` string, `max_height` number, `min_zoom` number | Buildings (DKM) with height from the DLM; kind building or church, school, hospital, station, castle, hut …; merged at z12–14 |
-| `housenumber_p` | point | z16–16 | `housenumber` string, `kind` string, `street` string | House numbers (BEV address register): kind building = building coordinate, parcel = parcel address |
-| `landuse_a` | polygon | z2–16 | `kind` string, `kind_detail` string, `min_zoom` number, `sort_rank` number | Land use from the DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation |
-| `natural_p` | point | z8–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Mountains, saddles, valleys, field names, castles, ruins … |
-| `place_p` | point | z0–16 | `capital` string, `kind` string, `min_zoom` number, `name` string, `name_alt` string, `sort_rank` number | Places (BEV Geographical Names): city, town, village, hamlet, suburb, locality; capital |
-| `poi_p` | point | z13–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Churches, summit crosses and facilities (BEV DLM, in Vienna additionally Wien-OGD): schools, hospitals, huts, petrol stations, museums … |
-| `rail_l` | line | z6–16 | `construction` boolean, `kind` string, `kind_detail` string, `min_zoom` number, `structure` string | Rail (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry |
-| `road_l` | line | z6–16 | `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `oneway` boolean, `ref` string, `sort_rank` number, `structure` string | Roads and paths (GIP): highway, major_road, minor_road, service, track, path; structure bridge/tunnel |
-| `ski_a` | polygon | z10–16 | `kind` string, `min_zoom` number | Ski areas (Umweltbundesamt, as of 2017) |
-| `transit_p` | point | z10–16 | `kind` string, `min_zoom` number, `name` string | Railway stations, stops, lift stations |
-| `water_a` | polygon | z6–16 | `area_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Standing waters (GGN): lake, reservoir, pond |
-| `water_l` | line | z6–16 | `catchment_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number, `structure` string | Flowing waters (GGN): river, stream, canal, ditch |
-| `water_label_l` | line | z10–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Water names along the line |
-| `water_label_p` | point | z6–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Lake names, one point per lake |
 
 Every field and value of each layer: [Basemap: layer reference](https://docs.mapx.at/reference/style-spec.md).
 
@@ -7321,7 +7303,7 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 
 ## Specifications
 
-**Tileset `mapx-kataster`**
+**Tileset `cadastre`**
 
 | Property | Value |
 |---|---|
@@ -7423,7 +7405,7 @@ Contour lines for all of Austria as vector tiles, derived from the [DTM](https:/
 
 ## Specifications
 
-**Tileset `hoehenlinien`**
+**Tileset `contours`**
 
 | Property | Value |
 |---|---|
@@ -7540,7 +7522,7 @@ The DTM is an elevation tile set for all of Austria: ground height without build
 
 ## Specifications
 
-**Tileset `relief-terrainrgb`**
+**Tileset `terrain-rgb`**
 
 | Property | Value |
 |---|---|
@@ -7572,7 +7554,7 @@ const map = new maplibregl.Map({
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:terrain-rgb@@?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
@@ -7718,7 +7700,7 @@ The DSM is the counterpart to the [DTM](https://docs.mapx.at/tilesets/terrain-rg
 
 ## Specifications
 
-**Tileset `relief-dsm-terrainrgb`**
+**Tileset `dsm`**
 
 | Property | Value |
 |---|---|
@@ -7826,7 +7808,7 @@ The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolu
 
 ## Specifications
 
-**Tileset `dop-ortho`**
+**Tileset `orthophoto`**
 
 | Property | Value |
 |---|---|
@@ -8036,7 +8018,7 @@ For each pixel of the [orthophoto](https://docs.mapx.at/tilesets/orthophoto.md),
 
 ## Specifications
 
-**Tileset `dop-flugblock`**
+**Tileset `orthophoto-flight-blocks`**
 
 | Property | Value |
 |---|---|
@@ -8059,7 +8041,7 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
-    layers: [{ id: "dop_flugblock", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
+    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -8084,7 +8066,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ## Layer reference
 
-### dop_flugblock
+### orthophoto-flight-blocks
 
 Geometry: **Polygon**, Zoom: **z6–17**, Layer: `dop_flugblock`. Orthophoto flight blocks with acquisition date.
 
@@ -8691,6 +8673,7 @@ Source: https://docs.mapx.at/reference/changelog/
 
 ### Changed
 - The German [API reference](https://docs.mapx.at/de/api/) is fully translated: descriptions of endpoints, parameters and response fields and the hints in the playground are now in German.
+- Styles (`/v1/styles/*`, `style.json` on mapx.at): source ids match the tileset names (`basis` → `streets`, `kataster` → `cadastre`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks`, `rastanlagen` → `rest-areas`, `bike_routes` → `bike-routes`, `gip_poi` → `gip-poi`, `verkehr` → `traffic`), layer ids start in English (`grenzen-*` → `boundary-*`, `oev-*` → `transit-*`, `geonamen-*` → `place-*`, `hoehenlinien*` → `contours*`, `rastanlagen-*` → `rest-areas-*`, `verkehr-*` → `traffic-*`, `dop-flugblock-*` → `orthophoto-flight-blocks-*`), style metadata `mapx:gruppe` → `mapx:group`. Rendering and the layers inside the tiles (`source-layer`) stay the same. PMTiles files are named after the tilesets (e.g. `streets-20260401-611355ce.pmtiles`).
 
 ## 2026-11-18
 
@@ -8780,8 +8763,8 @@ Source: https://docs.mapx.at/reference/changelog/
 
 | Tileset | Source date | File |
 |---|---|---|
-| terrain-rgb | 20250915 | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
-| dsm | 20250915 | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
+| terrain-rgb | 20250915 | `terrain-rgb-20250915-ed2e4341.pmtiles` |
+| dsm | 20250915 | `dsm-20250915-d19cb434.pmtiles` |
 
 ---
 
@@ -10341,7 +10324,7 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
-  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "kataster", ab Zoom 16)
+  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "cadastre", ab Zoom 16)
   map.setLayoutProperty('parcel', 'visibility', 'visible');
 });
 map.on('click', (e) => {

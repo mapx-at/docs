@@ -16,7 +16,7 @@ Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK
 
 ## Kennwerte
 
-**Tileset `mapx-basis`**
+**Tileset `streets`**
 
 | Kennwert | Wert |
 |---|---|
@@ -70,24 +70,6 @@ Layername endet auf `_a` (Fläche), `_l` (Linie) oder `_p` (Punkt). `min_zoom` a
 
 | Layer | Geometrie | Zoom | Attribute | Inhalt |
 |---|---|---|---|---|
-| `aerialway_l` | Linie | z12–16 | `kind` string, `min_zoom` number, `name` string | Seilbahnen und Lifte (DLM): cable_car, gondola, chair_lift, drag_lift … |
-| `airport_p` | Punkt | z8–16 | `icao` string, `kind` string, `min_zoom` number, `name` string | Flugplätze (BEV DLM Verkehr): airport, airfield, heliport, military |
-| `boundary_l` | Linie | z0–16 | `admin_level` number, `kind` string, `left` string, `min_zoom` number, `right` string | Grenzen (BEV VGD): country, state, district, municipality; left/right Gebiet links/rechts |
-| `boundary_label_p` | Punkt | z4–16 | `admin_level` number, `code` string, `kind` string, `min_zoom` number, `name` string | Namen von Bundesland, Bezirk, Gemeinde; code Kennzahl |
-| `building_a` | Fläche | z12–16 | `height` number, `kind` string, `max_height` number, `min_zoom` number | Gebäude (DKM) mit Höhe aus dem DLM; kind building oder church, school, hospital, station, castle, hut …; z12–14 zusammengefasst |
-| `housenumber_p` | Punkt | z16–16 | `housenumber` string, `kind` string, `street` string | Hausnummern (BEV Adressregister): kind building = Gebäudekoordinate, parcel = Grundstücksadresse |
-| `landuse_a` | Fläche | z2–16 | `kind` string, `kind_detail` string, `min_zoom` number, `sort_rank` number | Bodennutzung aus der DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation |
-| `natural_p` | Punkt | z8–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Berge, Sättel, Täler, Flurnamen, Burgen, Ruinen … |
-| `place_p` | Punkt | z0–16 | `capital` string, `kind` string, `min_zoom` number, `name` string, `name_alt` string, `sort_rank` number | Orte (BEV Geographische Namen): city, town, village, hamlet, suburb, locality; capital |
-| `poi_p` | Punkt | z13–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Kirchen, Gipfelkreuze und Einrichtungen (BEV DLM, in Wien zusätzlich Wien-OGD): Schulen, Spitäler, Hütten, Tankstellen, Museen … |
-| `rail_l` | Linie | z6–16 | `construction` boolean, `kind` string, `kind_detail` string, `min_zoom` number, `structure` string | Bahn (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry |
-| `road_l` | Linie | z6–16 | `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `oneway` boolean, `ref` string, `sort_rank` number, `structure` string | Straßen und Wege (GIP): highway, major_road, minor_road, service, track, path; structure bridge/tunnel |
-| `ski_a` | Fläche | z10–16 | `kind` string, `min_zoom` number | Skigebiete (Umweltbundesamt, Stand 2017) |
-| `transit_p` | Punkt | z10–16 | `kind` string, `min_zoom` number, `name` string | Bahnhöfe, Halte, Liftstationen |
-| `water_a` | Fläche | z6–16 | `area_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Stehgewässer (GGN): lake, reservoir, pond |
-| `water_l` | Linie | z6–16 | `catchment_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number, `structure` string | Fließgewässer (GGN): river, stream, canal, ditch |
-| `water_label_l` | Linie | z10–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Gewässernamen entlang der Linie |
-| `water_label_p` | Punkt | z6–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Seenamen, ein Punkt je See |
 
 Alle Felder und Werte jedes Layers: [Basiskarte: Layer-Referenz](https://docs.mapx.at/de/reference/style-spec.md).
 

@@ -16,7 +16,7 @@ Contour lines for all of Austria as vector tiles, derived from the [DTM](https:/
 
 ## Specifications
 
-**Tileset `hoehenlinien`**
+**Tileset `contours`**
 
 | Property | Value |
 |---|---|

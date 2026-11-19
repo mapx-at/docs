@@ -16,7 +16,7 @@ Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grun
 
 ## Kennwerte
 
-**Tileset `mapx-kataster`**
+**Tileset `cadastre`**
 
 | Kennwert | Wert |
 |---|---|

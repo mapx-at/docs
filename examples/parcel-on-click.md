@@ -27,7 +27,7 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
-  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "kataster", ab Zoom 16)
+  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "cadastre", ab Zoom 16)
   map.setLayoutProperty('parcel', 'visibility', 'visible');
 });
 map.on('click', (e) => {

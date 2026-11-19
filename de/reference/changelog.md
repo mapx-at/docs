@@ -11,6 +11,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 ### Geändert
 - Die deutsche [API-Referenz](https://docs.mapx.at/de/api/index.md) ist vollständig übersetzt: Beschreibungen der Endpunkte, Parameter und Antwortfelder sowie die Hinweise im Playground sind jetzt deutsch.
+- Stile (`/v1/styles/*`, `style.json` auf mapx.at): Quellen-Ids heißen wie die Tilesets (`basis` → `streets`, `kataster` → `cadastre`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks`, `rastanlagen` → `rest-areas`, `bike_routes` → `bike-routes`, `gip_poi` → `gip-poi`, `verkehr` → `traffic`), Ebenen-Ids beginnen englisch (`grenzen-*` → `boundary-*`, `oev-*` → `transit-*`, `geonamen-*` → `place-*`, `hoehenlinien*` → `contours*`, `rastanlagen-*` → `rest-areas-*`, `verkehr-*` → `traffic-*`, `dop-flugblock-*` → `orthophoto-flight-blocks-*`), Stil-Metadaten `mapx:gruppe` → `mapx:group`. Darstellung und Ebenen in den Kacheln (`source-layer`) bleiben gleich. Die PMTiles-Dateien heißen wie die Tilesets (z. B. `streets-20260401-611355ce.pmtiles`).
 
 ## 2026-11-18
 
@@ -100,5 +101,5 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 | Tileset | Stichtag | Datei |
 |---|---|---|
-| terrain-rgb | 20250915 | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
-| dsm | 20250915 | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
+| terrain-rgb | 20250915 | `terrain-rgb-20250915-ed2e4341.pmtiles` |
+| dsm | 20250915 | `dsm-20250915-d19cb434.pmtiles` |

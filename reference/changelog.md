@@ -11,6 +11,7 @@ Source: https://docs.mapx.at/reference/changelog/
 
 ### Changed
 - The German [API reference](https://docs.mapx.at/de/api/) is fully translated: descriptions of endpoints, parameters and response fields and the hints in the playground are now in German.
+- Styles (`/v1/styles/*`, `style.json` on mapx.at): source ids match the tileset names (`basis` → `streets`, `kataster` → `cadastre`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks`, `rastanlagen` → `rest-areas`, `bike_routes` → `bike-routes`, `gip_poi` → `gip-poi`, `verkehr` → `traffic`), layer ids start in English (`grenzen-*` → `boundary-*`, `oev-*` → `transit-*`, `geonamen-*` → `place-*`, `hoehenlinien*` → `contours*`, `rastanlagen-*` → `rest-areas-*`, `verkehr-*` → `traffic-*`, `dop-flugblock-*` → `orthophoto-flight-blocks-*`), style metadata `mapx:gruppe` → `mapx:group`. Rendering and the layers inside the tiles (`source-layer`) stay the same. PMTiles files are named after the tilesets (e.g. `streets-20260401-611355ce.pmtiles`).
 
 ## 2026-11-18
 
@@ -100,5 +101,5 @@ Source: https://docs.mapx.at/reference/changelog/
 
 | Tileset | Source date | File |
 |---|---|---|
-| terrain-rgb | 20250915 | `relief-terrainrgb-20250915-ed2e4341.pmtiles` |
-| dsm | 20250915 | `relief-dsm-terrainrgb-20250915-d19cb434.pmtiles` |
+| terrain-rgb | 20250915 | `terrain-rgb-20250915-ed2e4341.pmtiles` |
+| dsm | 20250915 | `dsm-20250915-d19cb434.pmtiles` |

@@ -16,7 +16,7 @@ The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 la
 
 ## Specifications
 
-**Tileset `mapx-basis`**
+**Tileset `streets`**
 
 | Property | Value |
 |---|---|
@@ -70,24 +70,6 @@ A layer name ending in `_a` is an area, `_l` a line, `_p` a point. `min_zoom` on
 
 | Layer | Geometry | Zoom | Fields | Content |
 |---|---|---|---|---|
-| `aerialway_l` | line | z12–16 | `kind` string, `min_zoom` number, `name` string | Aerial ropeways and lifts (DLM): cable_car, gondola, chair_lift, drag_lift … |
-| `airport_p` | point | z8–16 | `icao` string, `kind` string, `min_zoom` number, `name` string | Airfields (BEV DLM Verkehr): airport, airfield, heliport, military |
-| `boundary_l` | line | z0–16 | `admin_level` number, `kind` string, `left` string, `min_zoom` number, `right` string | Boundaries (BEV VGD): country, state, district, municipality; left/right area on the left/right |
-| `boundary_label_p` | point | z4–16 | `admin_level` number, `code` string, `kind` string, `min_zoom` number, `name` string | Names of state, district, municipality; code identifier |
-| `building_a` | polygon | z12–16 | `height` number, `kind` string, `max_height` number, `min_zoom` number | Buildings (DKM) with height from the DLM; kind building or church, school, hospital, station, castle, hut …; merged at z12–14 |
-| `housenumber_p` | point | z16–16 | `housenumber` string, `kind` string, `street` string | House numbers (BEV address register): kind building = building coordinate, parcel = parcel address |
-| `landuse_a` | polygon | z2–16 | `kind` string, `kind_detail` string, `min_zoom` number, `sort_rank` number | Land use from the DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation |
-| `natural_p` | point | z8–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Mountains, saddles, valleys, field names, castles, ruins … |
-| `place_p` | point | z0–16 | `capital` string, `kind` string, `min_zoom` number, `name` string, `name_alt` string, `sort_rank` number | Places (BEV Geographical Names): city, town, village, hamlet, suburb, locality; capital |
-| `poi_p` | point | z13–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Churches, summit crosses and facilities (BEV DLM, in Vienna additionally Wien-OGD): schools, hospitals, huts, petrol stations, museums … |
-| `rail_l` | line | z6–16 | `construction` boolean, `kind` string, `kind_detail` string, `min_zoom` number, `structure` string | Rail (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry |
-| `road_l` | line | z6–16 | `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `oneway` boolean, `ref` string, `sort_rank` number, `structure` string | Roads and paths (GIP): highway, major_road, minor_road, service, track, path; structure bridge/tunnel |
-| `ski_a` | polygon | z10–16 | `kind` string, `min_zoom` number | Ski areas (Umweltbundesamt, as of 2017) |
-| `transit_p` | point | z10–16 | `kind` string, `min_zoom` number, `name` string | Railway stations, stops, lift stations |
-| `water_a` | polygon | z6–16 | `area_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Standing waters (GGN): lake, reservoir, pond |
-| `water_l` | line | z6–16 | `catchment_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number, `structure` string | Flowing waters (GGN): river, stream, canal, ditch |
-| `water_label_l` | line | z10–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Water names along the line |
-| `water_label_p` | point | z6–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Lake names, one point per lake |
 
 Every field and value of each layer: [Basemap: layer reference](https://docs.mapx.at/reference/style-spec.md).
 

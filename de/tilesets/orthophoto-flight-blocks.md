@@ -15,7 +15,7 @@ Zu jedem Pixel des [Orthophotos](https://docs.mapx.at/de/tilesets/orthophoto.md)
 
 ## Kennwerte
 
-**Tileset `dop-flugblock`**
+**Tileset `orthophoto-flight-blocks`**
 
 | Kennwert | Wert |
 |---|---|
@@ -38,7 +38,7 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
-    layers: [{ id: "dop_flugblock", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
+    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -63,7 +63,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ## Layer-Referenz
 
-### dop_flugblock
+### orthophoto-flight-blocks
 
 Geometrie: **Fläche**, Zoom: **z6–17**, Layer: `dop_flugblock`. Befliegungsblöcke der Orthofotos mit Aufnahmedatum.
 

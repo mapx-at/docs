@@ -16,7 +16,7 @@ Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](h
 
 ## Kennwerte
 
-**Tileset `hoehenlinien`**
+**Tileset `contours`**
 
 | Kennwert | Wert |
 |---|---|

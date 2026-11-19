@@ -16,7 +16,7 @@ The DSM is the counterpart to the [DTM](https://docs.mapx.at/tilesets/terrain-rg
 
 ## Specifications
 
-**Tileset `relief-dsm-terrainrgb`**
+**Tileset `dsm`**
 
 | Property | Value |
 |---|---|

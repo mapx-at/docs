@@ -16,7 +16,7 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 
 ## Specifications
 
-**Tileset `mapx-kataster`**
+**Tileset `cadastre`**
 
 | Property | Value |
 |---|---|

@@ -16,7 +16,7 @@ The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolu
 
 ## Specifications
 
-**Tileset `dop-ortho`**
+**Tileset `orthophoto`**
 
 | Property | Value |
 |---|---|

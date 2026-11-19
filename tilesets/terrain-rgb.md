@@ -16,7 +16,7 @@ The DTM is an elevation tile set for all of Austria: ground height without build
 
 ## Specifications
 
-**Tileset `relief-terrainrgb`**
+**Tileset `terrain-rgb`**
 
 | Property | Value |
 |---|---|
@@ -48,7 +48,7 @@ const map = new maplibregl.Map({
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:relief@@?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:terrain-rgb@@?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }

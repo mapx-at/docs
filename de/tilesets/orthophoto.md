@@ -16,7 +16,7 @@ Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native
 
 ## Kennwerte
 
-**Tileset `dop-ortho`**
+**Tileset `orthophoto`**
 
 | Kennwert | Wert |
 |---|---|
