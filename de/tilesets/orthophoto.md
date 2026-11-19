@@ -35,7 +35,8 @@ Klick zeigt den Flugblock am Punkt (Operat, Flugzeitraum).
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -43,6 +44,8 @@ new maplibregl.Map({
     layers: [{ id: "ortho", type: "raster", source: "ortho" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
 TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 

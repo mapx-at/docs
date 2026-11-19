@@ -17,7 +17,8 @@ A satellite image of Austria that updates every day: each pixel shows a **robust
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   center: [15.334, 48.227], zoom: 11,
   style: {
@@ -26,6 +27,8 @@ new maplibregl.Map({
     layers: [{ id: "s2", type: "raster", source: "s2" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellite-current` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellite-current` (old id `satellit-aktuell` deprecated until 2027-05-31).
 

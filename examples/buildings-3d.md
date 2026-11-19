@@ -20,8 +20,10 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 16.2, pitch: 62, bearing: -20 }); // Stephansplatz, Vienna
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 16.2, pitch: 62, bearing: -20 }); // Stephansplatz, Vienna
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('style.load', () => {
   // The style lists its layer groups in the metadata, so no layer names are hard-coded.

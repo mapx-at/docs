@@ -21,6 +21,7 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map',
   style: 'https://api.mapx.at/v1/styles/satellite', // aerial imagery, draped over the terrain
@@ -28,6 +29,8 @@ const map = new maplibregl.Map({
   zoom: 12.5, pitch: 70, bearing: 20, maxPitch: 80,
 });
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   map.addSource('hoehe', { type: 'raster-dem', url: 'https://api.mapx.at/v1/tiles/dtm.json', tileSize: 512, encoding: 'mapbox' });

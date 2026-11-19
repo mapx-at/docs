@@ -80,7 +80,8 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
 4. **Start the map.**
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [12.694, 47.074], zoom: 14,
@@ -91,6 +92,8 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...lineLayers, labels]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
    </script>
    ```
 

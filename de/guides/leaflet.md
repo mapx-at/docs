@@ -28,7 +28,7 @@ Der Token steht als `access_token` in der Kachel-URL, API-Aufrufe per `fetch` sc
 
 ## Quellenangabe
 
-Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte sichtbar sein. Leaflet zeigt den Text aus `attribution` unten rechts an; den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein. Leaflet zeigt den Text aus `attribution` unten rechts an; den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Eigenes GeoJSON
 

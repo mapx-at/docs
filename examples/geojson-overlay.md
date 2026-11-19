@@ -30,8 +30,10 @@ const data = {
     { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
   ],
 };
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   map.addSource('own', { type: 'geojson', data });

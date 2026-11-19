@@ -17,7 +17,8 @@ Ein Satellitenbild Österreichs, das sich täglich fortschreibt: Für jedes Pixe
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   center: [15.334, 48.227], zoom: 11,
   style: {
@@ -26,6 +27,8 @@ new maplibregl.Map({
     layers: [{ id: "s2", type: "raster", source: "s2" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
 TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellite-current` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellite-current` (alte ID `satellit-aktuell` bis 31.05.2027 abgekündigt).
 

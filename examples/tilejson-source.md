@@ -21,6 +21,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map', center: [11.4, 47.27], zoom: 12.5, // Innsbruck
   style: {
@@ -37,6 +38,7 @@ const map = new maplibregl.Map({
 });
 map.addControl(new maplibregl.NavigationControl());
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 ````
 
 ### OpenLayers

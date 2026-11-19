@@ -22,8 +22,10 @@ maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
 const stil = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}`;
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 for (const knopf of document.querySelectorAll('[data-licht]')) {
   knopf.addEventListener('click', () => {

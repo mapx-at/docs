@@ -21,6 +21,7 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
   // adds the token to every request to mapx.at
@@ -29,6 +30,8 @@ const map = new maplibregl.Map({
   }),
   center: [12.694, 47.074], zoom: 12, // Grossglockner
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 
 Switching style at runtime replaces layers and sources: call `map.setStyle(url)`. See [Switch the basemap](https://docs.mapx.at/examples/switch-basemap.md).
@@ -78,7 +81,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 Tiles and tilesets are available only through the API: style, TileJSON or `{z}/{x}/{y}`. mapx does not offer whole files for download. For many requests, cache tiles in the client, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
-> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 

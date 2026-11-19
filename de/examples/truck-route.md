@@ -22,8 +22,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const $ = (id) => document.getElementById(id);
 const pts = [], markers = [];
 

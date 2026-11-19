@@ -23,7 +23,8 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
     // the style loads PMTiles files: register the pmtiles:// protocol
     maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
-    new maplibregl.Map({
+    const map = new maplibregl.Map({
+      attributionControl: false,
       container: "map",
       style: "https://api.mapx.at/v1/styles/streets",
       // adds the token to every request to mapx.at (style, tiles, fonts, sprites)
@@ -31,6 +32,8 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
       center: [16.3725, 48.2085], // Vienna, lon,lat
       zoom: 13,
     });
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
+    map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
   </script>
 </body>
 </html>

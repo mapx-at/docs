@@ -25,8 +25,10 @@ const STILE = {
   satellite: 'https://api.mapx.at/v1/styles/satellite',
   outdoors: 'https://api.mapx.at/v1/styles/outdoors',
 };
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: STILE.streets, center: [11.4, 47.27], zoom: 11 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: STILE.streets, center: [11.4, 47.27], zoom: 11 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 for (const knopf of document.querySelectorAll('[data-stil]')) {
   knopf.addEventListener('click', () => {

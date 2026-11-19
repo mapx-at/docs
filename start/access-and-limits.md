@@ -54,12 +54,15 @@ const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/streets",
   transformRequest: (url) => ({
     url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
   }),
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 
 When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites). Clients that cannot set `transformRequest` then work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"`. Such a response is `private` and must not be shared.

@@ -78,7 +78,8 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
 4. **Karte starten.**
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        center: [12.694, 47.074], zoom: 14,
        // Token an alle Anfragen an mapx.at hängen
@@ -92,6 +93,8 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
    </script>
    ```
 

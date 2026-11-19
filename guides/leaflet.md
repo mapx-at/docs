@@ -28,7 +28,7 @@ The token goes into the tile URL as `access_token`; API calls with `fetch` send 
 
 ## Attribution
 
-The data is licensed CC BY 4.0 and the source must be visible on the map. Leaflet shows the `attribution` text in the bottom right corner; the text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+The data is licensed CC BY 4.0 and users must be able to reach the source on the map. Leaflet shows the `attribution` text in the bottom right corner; the text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Your own GeoJSON
 

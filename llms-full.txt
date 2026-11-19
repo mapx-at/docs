@@ -127,12 +127,15 @@ const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/streets",
   transformRequest: (url) => ({
     url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
   }),
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 
 When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites). Clients that cannot set `transformRequest` then work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"`. Such a response is `private` and must not be shared.
@@ -202,7 +205,8 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
     // the style loads PMTiles files: register the pmtiles:// protocol
     maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
-    new maplibregl.Map({
+    const map = new maplibregl.Map({
+      attributionControl: false,
       container: "map",
       style: "https://api.mapx.at/v1/styles/streets",
       // adds the token to every request to mapx.at (style, tiles, fonts, sprites)
@@ -210,6 +214,8 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
       center: [16.3725, 48.2085], // Vienna, lon,lat
       zoom: 13,
     });
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
+    map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
   </script>
 </body>
 </html>
@@ -512,6 +518,7 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
   // adds the token to every request to mapx.at
@@ -520,6 +527,8 @@ const map = new maplibregl.Map({
   }),
   center: [12.694, 47.074], zoom: 12, // Grossglockner
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 
 Switching style at runtime replaces layers and sources: call `map.setStyle(url)`. See [Switch the basemap](https://docs.mapx.at/examples/switch-basemap.md).
@@ -569,7 +578,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 Tiles and tilesets are available only through the API: style, TileJSON or `{z}/{x}/{y}`. mapx does not offer whole files for download. For many requests, cache tiles in the client, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
-> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 
@@ -1555,7 +1564,8 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
 7. **Assemble the map.** Order from bottom to top: land use, water, roads, buildings, boundaries.
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [15.334, 48.227], zoom: 14,
@@ -1568,6 +1578,8 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
          ]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
    </script>
    ```
 
@@ -1686,7 +1698,8 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
 4. **Start the map.**
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [12.694, 47.074], zoom: 14,
@@ -1697,6 +1710,8 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
          layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...lineLayers, labels]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
    </script>
    ```
 
@@ -1767,6 +1782,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    <script type="module">
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
      const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
@@ -1778,6 +1794,8 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
          terrain: { source: "dem", exaggeration: 1.3 }
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
    </script>
    ```
@@ -1984,7 +2002,7 @@ The token goes into the tile URL as `access_token`; API calls with `fetch` send 
 
 ## Attribution
 
-The data is licensed CC BY 4.0 and the source must be visible on the map. Raster tiles have no TileJSON for OpenLayers to read the text from: set `attributions` yourself and `attributionsCollapsible: false` so the text does not hide behind a button. The text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+The data is licensed CC BY 4.0 and users must be able to reach the source on the map. Raster tiles have no TileJSON for OpenLayers to read the text from: set `attributions` yourself. `attributionsCollapsible: false` shows the text permanently; without it OpenLayers puts it behind an "i" button, like the MapLibre examples in these docs. The text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Your own GeoJSON
 
@@ -2038,7 +2056,7 @@ The token goes into the tile URL as `access_token`; API calls with `fetch` send 
 
 ## Attribution
 
-The data is licensed CC BY 4.0 and the source must be visible on the map. Leaflet shows the `attribution` text in the bottom right corner; the text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+The data is licensed CC BY 4.0 and users must be able to reach the source on the map. Leaflet shows the `attribution` text in the bottom right corner; the text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Your own GeoJSON
 
@@ -7188,7 +7206,8 @@ The live map shows the layers with automatic colors; your own style defines the 
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -7196,6 +7215,8 @@ new maplibregl.Map({
     layers: [{ id: "road_l", type: "line", source: "v", "source-layer": "road_l", paint: { "line-color": "#b5651d" } }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -7308,7 +7329,8 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -7316,6 +7338,8 @@ new maplibregl.Map({
     layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -7407,7 +7431,8 @@ Contour lines for all of Austria as vector tiles, derived from the [DTM](https:/
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -7415,6 +7440,8 @@ new maplibregl.Map({
     layers: [{ id: "contour_l", type: "line", source: "v", "source-layer": "contour_l", paint: { "line-color": "#b5651d" } }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -7531,6 +7558,7 @@ import * as maplibregl from "maplibre-gl";
 
 maplibregl.addProtocol("pmtiles", new Protocol().tile);
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
@@ -7540,6 +7568,8 @@ const map = new maplibregl.Map({
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 ```
 
@@ -7699,7 +7729,8 @@ Clicking decodes the tile pixel (formula under [Terrain-RGB](https://docs.mapx.a
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -7708,6 +7739,8 @@ new maplibregl.Map({
     layers: [{ id: "hill", type: "hillshade", source: "dsm" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -7803,7 +7836,8 @@ Clicking shows the flight block at the point (survey, flight period).
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -7811,6 +7845,8 @@ new maplibregl.Map({
     layers: [{ id: "ortho", type: "raster", source: "ortho" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -7883,7 +7919,8 @@ A satellite image of Austria that updates every day: each pixel shows a **robust
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   center: [15.334, 48.227], zoom: 11,
   style: {
@@ -7892,6 +7929,8 @@ new maplibregl.Map({
     layers: [{ id: "s2", type: "raster", source: "s2" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options. The ready-made style `satellite-current` (Sentinel-2 with roads and labels) is available at `/v1/styles/satellite-current` (old id `satellit-aktuell` deprecated until 2027-05-31).
 
@@ -8005,7 +8044,8 @@ For each pixel of the [orthophoto](https://docs.mapx.at/tilesets/orthophoto.md),
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -8013,6 +8053,8 @@ new maplibregl.Map({
     layers: [{ id: "dop_flugblock", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
@@ -8575,11 +8617,11 @@ Source: https://docs.mapx.at/reference/attribution/
 
 > Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 
-The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. The credit has to be visible to the users of the map, for example in the corner, not only in an imprint.
+The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
 
 ## In a MapLibre map
 
-MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right, "i" icon). You add nothing as long as you do not hide it. If you set `attributionControl: false` or use `tiles: [...]` without TileJSON, add the text yourself:
+MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right). The examples in these docs collapse it so it does not cover the map: `attributionControl: false` in the map options and `map.addControl(new maplibregl.AttributionControl({ compact: true }))` show an "i" button, a click shows the sources. MapLibre first shows the compact form open and collapses it on the first map drag; the `map.once("load", …)` line from the examples collapses it right after loading. `attributionControl: false` without your own `AttributionControl` hides the sources completely, which is not allowed. If you use `tiles: [...]` without TileJSON, add the text to the source yourself:
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
@@ -8796,6 +8838,7 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map',
   style: 'https://api.mapx.at/v1/styles/streets',
@@ -8803,6 +8846,8 @@ const map = new maplibregl.Map({
   zoom: 12,
 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 map.addControl(new maplibregl.ScaleControl());
 ````
 
@@ -8885,8 +8930,10 @@ const STILE = {
   satellite: 'https://api.mapx.at/v1/styles/satellite',
   outdoors: 'https://api.mapx.at/v1/styles/outdoors',
 };
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: STILE.streets, center: [11.4, 47.27], zoom: 11 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: STILE.streets, center: [11.4, 47.27], zoom: 11 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 for (const knopf of document.querySelectorAll('[data-stil]')) {
   knopf.addEventListener('click', () => {
@@ -8987,8 +9034,10 @@ maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
 const stil = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}`;
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: stil('tag'), center: [16.37, 48.21], zoom: 12 }); // Wien
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 for (const knopf of document.querySelectorAll('[data-licht]')) {
   knopf.addEventListener('click', () => {
@@ -9081,6 +9130,7 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map',
   style: 'https://api.mapx.at/v1/styles/satellite', // aerial imagery, draped over the terrain
@@ -9088,6 +9138,8 @@ const map = new maplibregl.Map({
   zoom: 12.5, pitch: 70, bearing: 20, maxPitch: 80,
 });
 map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   map.addSource('hoehe', { type: 'raster-dem', url: 'https://api.mapx.at/v1/tiles/dtm.json', tileSize: 512, encoding: 'mapbox' });
@@ -9130,8 +9182,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.694, 47.074], zoom: 12 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.694, 47.074], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const popup = new maplibregl.Popup({ closeButton: false });
 
 map.on('click', async (e) => {
@@ -9244,8 +9298,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let punkte = [[12.67, 47.065], [12.71, 47.09]];
 
 map.on('load', () => {
@@ -9400,8 +9456,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let marker;
 
 const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
@@ -9544,8 +9602,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 }); // Melk
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 }); // Melk
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let a = null, b = null, markerA, markerB;
 
 map.on('load', () => {
@@ -9683,8 +9743,10 @@ const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const API = 'https://api.mapx.at/v1';
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let times = [];
 
 async function laden() {
@@ -9838,8 +9900,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const API = 'https://api.mapx.at/v1';
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: API + '/styles/streets', center: [13.3, 47.6], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let times = [], timer = null;
 
 function zeigen(i) {
@@ -10010,8 +10074,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.33, 48.23], zoom: 13 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   map.addSource('iso', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
@@ -10131,8 +10197,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.3, 48.25], zoom: 8 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.3, 48.25], zoom: 8 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 for (const [name, p] of Object.entries(ORTE)) new maplibregl.Marker().setLngLat(p).setPopup(new maplibregl.Popup().setText(name)).addTo(map);
 
 document.getElementById('los').addEventListener('click', async () => {
@@ -10255,8 +10323,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/satellite', center: [15.3306, 48.2275], zoom: 18 }); // Melk
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/satellite', center: [15.3306, 48.2275], zoom: 18 }); // Melk
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "kataster", ab Zoom 16)
@@ -10374,6 +10444,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map', center: [11.4, 47.27], zoom: 12.5, // Innsbruck
   style: {
@@ -10390,6 +10461,7 @@ const map = new maplibregl.Map({
 });
 map.addControl(new maplibregl.NavigationControl());
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 ````
 
 ### OpenLayers
@@ -10474,8 +10546,10 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 16.2, pitch: 62, bearing: -20 }); // Stephansplatz, Vienna
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 16.2, pitch: 62, bearing: -20 }); // Stephansplatz, Vienna
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('style.load', () => {
   // The style lists its layer groups in the metadata, so no layer names are hard-coded.
@@ -10513,8 +10587,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [14.3, 47.6], zoom: 7 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
 let marker, token = crypto.randomUUID();
 
@@ -10682,8 +10758,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map((k) => [k, document.getElementById(k)]));
 const list = document.getElementById('treffer');
 let marker;
@@ -10829,8 +10907,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [13.8, 47.7], zoom: 6.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const out = document.getElementById('ergebnis');
 let marker;
 
@@ -10954,8 +11034,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 15 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 15 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const popup = new maplibregl.Popup({ closeButton: false });
 
 map.on('click', async (e) => {
@@ -11063,8 +11145,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.4, 48.2], zoom: 8 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const $ = (id) => document.getElementById(id);
 const pts = [], markers = [];
 
@@ -11228,8 +11312,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const depot = [15.3294, 48.2272]; // Melk
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: depot, zoom: 9 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: depot, zoom: 9 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const stops = [], markers = [];
 let timer;
 new maplibregl.Marker({ color: '#222' }).setLngLat(depot).addTo(map);
@@ -11408,8 +11494,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 12 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const pts = [], markers = [];
 
 map.on('load', () => {
@@ -11545,8 +11633,10 @@ const api = async (path) => { const r = await fetch('https://api.mapx.at/v1' + p
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 15.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [16.3725, 48.2085], zoom: 15.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const popup = new maplibregl.Popup({ maxWidth: '340px' });
 
 // Show the stops of the visible area as dots.
@@ -11726,8 +11816,10 @@ const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/traffic-day', center: [16.2, 48.1], zoom: 9 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/traffic-day', center: [16.2, 48.1], zoom: 9 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const list = document.getElementById('meldungen');
 const popup = new maplibregl.Popup();
 
@@ -11869,8 +11961,10 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.3294, 48.2272], zoom: 14 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.3294, 48.2272], zoom: 14 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const img = document.getElementById('bild'), style = document.getElementById('style'), url = document.getElementById('url');
 let at = [15.3294, 48.2272]; // Melk
 
@@ -11922,8 +12016,10 @@ const data = {
     { type: 'Feature', properties: { name: de ? 'Wachau (grobe Fläche)' : 'Wachau (rough area)' }, geometry: { type: 'Polygon', coordinates: [[[15.3, 48.2], [15.7, 48.35], [15.7, 48.45], [15.4, 48.4], [15.3, 48.2]]] } },
   ],
 };
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/streets', center: [15.45, 48.3], zoom: 9.5 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 
 map.on('load', () => {
   map.addSource('own', { type: 'geojson', data });
@@ -12249,9 +12345,12 @@ const TOKEN = "YOUR_TOKEN";
 // the style uses PMTiles sources: load pmtiles.js as in the examples
 maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map", style: "https://api.mapx.at/v1/styles/streets", center: [15.45, 48.3], zoom: 10,
   transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 map.on("load", () => {
   // switch on the layers of the group bike_routes (off by default in the style)
   for (const id of map.getStyle().metadata["mapx:groups"].bike_routes) map.setLayoutProperty(id, "visibility", "visible");

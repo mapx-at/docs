@@ -31,9 +31,12 @@ const TOKEN = "DEIN_TOKEN";
 // Stil mit PMTiles-Quellen: pmtiles.js einbinden wie in den Beispielen
 maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map", style: "https://api.mapx.at/v1/styles/streets", center: [15.45, 48.3], zoom: 10,
   transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 map.on("load", () => {
   // Ebenen der Gruppe bike_routes einschalten (im Stil standardmäßig aus)
   for (const id of map.getStyle().metadata["mapx:groups"].bike_routes) map.setLayoutProperty(id, "visibility", "visible");

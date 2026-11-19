@@ -4,11 +4,11 @@ Source: https://docs.mapx.at/reference/attribution/
 
 > Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 
-The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. The credit has to be visible to the users of the map, for example in the corner, not only in an imprint.
+The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
 
 ## In a MapLibre map
 
-MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right, "i" icon). You add nothing as long as you do not hide it. If you set `attributionControl: false` or use `tiles: [...]` without TileJSON, add the text yourself:
+MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right). The examples in these docs collapse it so it does not cover the map: `attributionControl: false` in the map options and `map.addControl(new maplibregl.AttributionControl({ compact: true }))` show an "i" button, a click shows the sources. MapLibre first shows the compact form open and collapses it on the first map drag; the `map.once("load", …)` line from the examples collapses it right after loading. `attributionControl: false` without your own `AttributionControl` hides the sources completely, which is not allowed. If you use `tiles: [...]` without TileJSON, add the text to the source yourself:
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,

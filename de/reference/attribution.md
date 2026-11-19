@@ -4,11 +4,11 @@ Source: https://docs.mapx.at/de/reference/attribution/
 
 > Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
 
-Die amtlichen Daten in mapx stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Ausnahme sind die Sentinel-2-Kacheln: Sie enthalten veränderte Copernicus-Sentinel-Daten und folgen den Copernicus-Bedingungen, die Quellenangabe steht im TileJSON. Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer der Karte sichtbar sein, zum Beispiel in der Ecke, nicht nur im Impressum.
+Die amtlichen Daten in mapx stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Ausnahme sind die Sentinel-2-Kacheln: Sie enthalten veränderte Copernicus-Sentinel-Daten und folgen den Copernicus-Bedingungen, die Quellenangabe steht im TileJSON. Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer auf der Karte selbst erreichbar sein, zum Beispiel als Text in der Ecke oder hinter einem Info-Knopf „i“ auf der Karte, nicht nur im Impressum.
 
 ## In einer MapLibre-Karte
 
-MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON geladen wird (unten rechts, Symbol "i"). Es ist nichts zu ergänzen, solange sie nicht ausgeblendet wird. Bei `attributionControl: false` oder bei `tiles: [...]` ohne TileJSON den Text selbst ergänzen:
+MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON geladen wird (unten rechts). Die Beispiele dieser Doku klappen sie ein, damit sie die Karte nicht verdeckt: `attributionControl: false` in den Optionen der Karte und `map.addControl(new maplibregl.AttributionControl({ compact: true }))` zeigen den Knopf „i“, ein Klick darauf zeigt die Quellen. MapLibre lässt die eingeklappte Form zunächst offen und klappt sie erst bei der ersten Kartenbewegung zu; die Zeile `map.once("load", …)` aus den Beispielen klappt sie gleich nach dem Laden zu. `attributionControl: false` ohne eigene `AttributionControl` blendet die Quellen ganz aus, das ist nicht zulässig. Bei `tiles: [...]` ohne TileJSON den Text in der Quelle selbst ergänzen:
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN"], tileSize: 512,

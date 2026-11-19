@@ -49,6 +49,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    <script type="module">
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
      const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
@@ -60,6 +61,8 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
          terrain: { source: "dem", exaggeration: 1.3 }
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
    </script>
    ```

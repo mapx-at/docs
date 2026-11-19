@@ -23,7 +23,8 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
     // der Stil lädt PMTiles-Dateien: Protokoll pmtiles:// registrieren
     maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
-    new maplibregl.Map({
+    const map = new maplibregl.Map({
+      attributionControl: false,
       container: "map",
       style: "https://api.mapx.at/v1/styles/streets",
       // hängt den Token an jede Anfrage an mapx.at (Style, Tiles, Schriften, Sprites)
@@ -31,6 +32,8 @@ Den Code als `index.html` speichern und im Browser öffnen. `DEIN_TOKEN` durch e
       center: [16.3725, 48.2085], // Wien, lon,lat
       zoom: 13,
     });
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
+    map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
   </script>
 </body>
 </html>

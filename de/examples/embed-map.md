@@ -21,6 +21,7 @@ const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.tes
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
 const map = new maplibregl.Map({
+  attributionControl: false,
   transformRequest,
   container: 'map',
   style: 'https://api.mapx.at/v1/styles/streets',
@@ -28,6 +29,8 @@ const map = new maplibregl.Map({
   zoom: 12,
 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 map.addControl(new maplibregl.ScaleControl());
 ````
 

@@ -46,6 +46,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
      const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
        maxPitch: 80,
@@ -60,6 +61,8 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
          terrain: { source: "dem", exaggeration: 1.3 }
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
      map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }));
    </script>
    ```

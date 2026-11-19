@@ -33,7 +33,8 @@ The boundaries of all parcels as lines, with cadastral municipality number and p
 **MapLibre**
 
 ```js
-new maplibregl.Map({
+const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: {
     version: 8,
@@ -41,6 +42,8 @@ new maplibregl.Map({
     layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 

@@ -96,7 +96,8 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
 7. **Karte zusammensetzen.** Reihenfolge von unten nach oben: Nutzung, Wasser, Straßen, Gebäude, Grenzen.
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        center: [15.334, 48.227], zoom: 14,
        // Token an alle Anfragen an mapx.at hängen
@@ -112,6 +113,8 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
          ]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
    </script>
    ```
 

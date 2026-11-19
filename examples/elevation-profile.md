@@ -22,8 +22,10 @@ const de = document.documentElement.lang.startsWith('de'); // page language: Ger
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/outdoors', center: [12.70, 47.08], zoom: 12 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 let punkte = [[12.67, 47.065], [12.71, 47.09]];
 
 map.on('load', () => {

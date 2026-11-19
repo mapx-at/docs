@@ -32,7 +32,7 @@ The token goes into the tile URL as `access_token`; API calls with `fetch` send 
 
 ## Attribution
 
-The data is licensed CC BY 4.0 and the source must be visible on the map. Raster tiles have no TileJSON for OpenLayers to read the text from: set `attributions` yourself and `attributionsCollapsible: false` so the text does not hide behind a button. The text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+The data is licensed CC BY 4.0 and users must be able to reach the source on the map. Raster tiles have no TileJSON for OpenLayers to read the text from: set `attributions` yourself. `attributionsCollapsible: false` shows the text permanently; without it OpenLayers puts it behind an "i" button, like the MapLibre examples in these docs. The text per source is listed in [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Your own GeoJSON
 

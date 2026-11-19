@@ -32,7 +32,7 @@ Der Token steht als `access_token` in der Kachel-URL, API-Aufrufe per `fetch` sc
 
 ## Quellenangabe
 
-Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte sichtbar sein. Bei Rasterkacheln gibt es kein TileJSON, aus dem OpenLayers den Text liest: `attributions` selbst setzen und `attributionsCollapsible: false`, damit der Text nicht hinter einem Knopf verschwindet. Den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein. Bei Rasterkacheln gibt es kein TileJSON, aus dem OpenLayers den Text liest: `attributions` selbst setzen. `attributionsCollapsible: false` zeigt den Text dauerhaft; ohne diese Option legt OpenLayers ihn hinter einen Knopf „i“, wie die MapLibre-Beispiele dieser Doku. Den Text je Quelle nennt [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Eigenes GeoJSON
 

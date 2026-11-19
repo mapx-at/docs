@@ -43,6 +43,7 @@ import * as maplibregl from "maplibre-gl";
 
 maplibregl.addProtocol("pmtiles", new Protocol().tile);
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
@@ -52,6 +53,8 @@ const map = new maplibregl.Map({
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 ```
 

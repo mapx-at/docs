@@ -98,7 +98,8 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
 7. **Assemble the map.** Order from bottom to top: land use, water, roads, buildings, boundaries.
 
    ```js
-     new maplibregl.Map({
+     const map = new maplibregl.Map({
+       attributionControl: false,
        container: "map",
        transformRequest: withToken,
        center: [15.334, 48.227], zoom: 14,
@@ -111,6 +112,8 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
          ]
        }
      });
+     map.addControl(new maplibregl.AttributionControl({ compact: true }));
+     map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
    </script>
    ```
 

@@ -21,6 +21,7 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
 const map = new maplibregl.Map({
+  attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/outdoors",
   // Token an alle Anfragen an mapx.at hängen
@@ -29,6 +30,8 @@ const map = new maplibregl.Map({
   }),
   center: [12.694, 47.074], zoom: 12, // Großglockner
 });
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
 
 Ein Style-Wechsel zur Laufzeit ersetzt Layer und Sources: `map.setStyle(url)` aufrufen. Siehe [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md).
@@ -78,7 +81,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TO
 
 Kacheln und Tilesets gibt es nur über die API: Style, TileJSON oder `{z}/{x}/{y}`. Ganze Dateien zum Herunterladen bietet mapx nicht an. Für viele Anfragen die Kacheln im Client cachen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
-> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird; der Code oben klappt sie hinter den Knopf „i“ ein, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Nächste Schritte
 

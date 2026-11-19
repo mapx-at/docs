@@ -21,8 +21,10 @@ const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 
 maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
 
-const map = new maplibregl.Map({ transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/traffic-day', center: [16.2, 48.1], zoom: 9 });
+const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/traffic-day', center: [16.2, 48.1], zoom: 9 });
 map.addControl(new maplibregl.NavigationControl());
+map.addControl(new maplibregl.AttributionControl({ compact: true }));
+map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
 const list = document.getElementById('meldungen');
 const popup = new maplibregl.Popup();
 
