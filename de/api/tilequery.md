@@ -8,25 +8,25 @@ Tilequery liefert die Vektorobjekte nahe einer Koordinate. Parcel liefert das Gr
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
 
-## Tilequery: vector features around a point
+## Tilequery: Vektorobjekte um einen Punkt {#tilequery-vector-features-around-a-point}
 
 `GET /v1/tilequery/{tilesets}/{coordinate}.json`
 
-Reads the vector tile at the tileset's highest zoom (and neighbouring tiles for a radius). FeatureCollection, nearest feature first, `properties.tilequery = {distance (m), geometry (point|linestring|polygon), layer}`. Polygons containing the point have distance 0.
+Liest die Vektorkachel in der höchsten Zoomstufe des Tilesets (und für einen Radius die Nachbarkacheln). FeatureCollection, das nächste Objekt zuerst, `properties.tilequery = {distance (m), geometry (point|linestring|polygon), layer}`. Polygone, die den Punkt enthalten, haben die Distanz 0.
 
-Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the height as a point feature. Geometries are clipped to the tile.
+Mehrere Tilesets, durch Komma getrennt, ergänzen `tilequery.tileset`; `dtm`/`dsm` liefern die Höhe als Punktobjekt. Geometrien sind auf die Kachel zugeschnitten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tilesets` | path | string | ja | – | Tileset names, comma-separated (at most 15), e.g. `streets,cadastre` |
-| `coordinate` | path | string | ja | – | lon,lat (the path ends in `.json`) |
-| `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
-| `limit` | query | string |  | `5` | 1 to 50, default 5 |
-| `layers` | query | string |  | – | Comma-separated layer names |
-| `geometry` | query | string |  | – | point, linestring or polygon |
-| `dedupe` | query | string |  | – | true (default) removes duplicates across tile borders |
+| `tilesets` | path | string | ja | – | Tileset-Namen, durch Komma getrennt (höchstens 15), z. B. `streets,cadastre` |
+| `coordinate` | path | string | ja | – | lon,lat (der Pfad endet auf `.json`) |
+| `radius` | query | string |  | `0` | Meter, 0 bis 2000, Standard 0 |
+| `limit` | query | string |  | `5` | 1 bis 50, Standard 5 |
+| `layers` | query | string |  | – | Layer-Namen, durch Komma getrennt |
+| `geometry` | query | string |  | – | point, linestring oder polygon |
+| `dedupe` | query | string |  | – | true (Standard) entfernt Duplikate über Kachelgrenzen |
 
 **Beispiel**
 
@@ -91,21 +91,21 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Parcel at a point (BEV DKM)
+## Grundstück an einem Punkt (BEV DKM) {#parcel-at-a-point-bev-dkm}
 
 `GET /v1/parcel/{coordinate}`
 
-Parcel (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, plus `parcel_id` and `links.dossier`) as polygon, computed from the boundary lines of the cadastre tiles (area deviates by per mille from the register value). Buildings return the building parcel (`parcel_number` starts with a dot).
+Grundstück (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, dazu `parcel_id` und `links.dossier`) als Polygon, berechnet aus den Grenzlinien der Katasterkacheln (die Fläche weicht um Promille vom Wert im Register ab). Auf Gebäuden kommt das Bauflächengrundstück (`parcel_number` beginnt mit einem Punkt).
 
-Parcels extending beyond the tile window (about 2 km) are missing. Empty list outside the cadastre data. With `include=dossier` each feature is the full dossier of `/v1/parcels/{id}` (zone cost 4 plus the dossier).
+Grundstücke, die über den Kachelausschnitt (etwa 2 km) hinausreichen, fehlen. Außerhalb der Katasterdaten eine leere Liste. Mit `include=dossier` ist jedes Objekt das vollständige Dossier von `/v1/parcels/{id}` (Zonenkosten 4 plus Dossier).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
-| `radius` | query | number (0–100) |  | `0` | Meters, 0 to 100, default 0 (other values: 400). Accepted for compatibility; the result is always the parcel containing the point |
-| `include` | query | `dossier` |  | – | `dossier` returns the full dossier per feature |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `radius` | query | number (0–100) |  | `0` | Meter, 0 bis 100, Standard 0 (andere Werte: 400). Nur zur Kompatibilität angenommen; das Ergebnis ist immer das Grundstück, das den Punkt enthält |
+| `include` | query | `dossier` |  | – | `dossier` liefert je Objekt das vollständige Dossier |
 
 **Beispiel**
 
@@ -176,19 +176,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Parcel dossier (BEV DKM and further open data)
+## Grundstücksdossier (BEV DKM und weitere offene Daten) {#parcel-dossier-bev-dkm-and-further-open-data}
 
 `GET /v1/parcels/{id}`
 
-Everything the open data say about one parcel in one call: administrative assignment, area (`area_m2` in the plane of the Gauss-Krueger system as the cadastre computes it, `area_ellipsoidal_m2`), land use shares from the DKM, buildings (count, footprint, heights from BEV DLM where available), terrain statistics (min, mean, max elevation and mean/max slope from the terrain model, grid of up to 250 points inside the parcel), addresses assigned to the parcel, nearest public transit stop (`null` if the router is unavailable), year of the orthophoto flight, `climate` (the object of `/v1/climate/{coordinate}` at the inner point of the parcel: solar potential, normals, hot and snow days, drought; taken from a cache, sections are `null` with `status: partial` until the data of a new area are loaded), the geometry as GeoJSON and a ready-made `links.static_image`.
+Alles, was die offenen Daten über ein Grundstück sagen, in einem Aufruf: Verwaltungszuordnung, Fläche (`area_m2` in der Ebene des Gauß-Krüger-Systems, wie der Kataster sie berechnet, `area_ellipsoidal_m2`), Anteile der Nutzungen aus der DKM, Gebäude (Anzahl, Grundfläche, Höhen aus dem BEV-DLM, wo vorhanden), Geländestatistik (minimale, mittlere und maximale Höhe sowie mittlere und maximale Neigung aus dem Geländemodell, Raster von bis zu 250 Punkten im Grundstück), dem Grundstück zugeordnete Adressen, nächste Haltestelle des öffentlichen Verkehrs (`null`, wenn der Router nicht verfügbar ist), Jahr des Orthofoto-Bildflugs, `climate` (das Objekt von `/v1/climate/{coordinate}` am inneren Punkt des Grundstücks: Sonnenpotenzial, Klimanormale, Hitze- und Schneetage, Dürre; aus einem Cache, die Abschnitte sind `null` mit `status: partial`, bis die Daten eines neuen Gebiets geladen sind), die Geometrie als GeoJSON und ein fertiger `links.static_image`.
 
-The ID comes from `properties.parcel_id` of parcel search results and `/v1/parcel/{coordinate}`; the form `14143-288/4` (percent-encoded slash) is accepted as well. 404 for unknown parcels, 503 while the dossier service is unavailable. Cadastre key date: see `properties.reference_date`.
+Die ID kommt aus `properties.parcel_id` von Grundstückstreffern der Suche und aus `/v1/parcel/{coordinate}`; die Form `14143-288/4` (Schrägstrich prozentcodiert) wird ebenfalls angenommen. 404 bei unbekannten Grundstücken, 503, solange der Dossier-Dienst nicht verfügbar ist. Stichtag des Katasters: siehe `properties.reference_date`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Parcel ID `<KG number>-<parcel number>`, `/` written as `_`, building parcels with a leading dot: `14143-288_4`, `14143-.98` |
+| `id` | path | string | ja | – | Grundstücks-ID `<KG-Nummer>-<Grundstücksnummer>`, `/` als `_` geschrieben, Bauflächen mit führendem Punkt: `14143-288_4`, `14143-.98` |
 
 **Beispiel**
 
@@ -251,7 +251,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `id` | string | Parcel ID: `<KG number, 5 digits>-<parcel number>` with `/` written as `_`, building parcels start with a dot, e.g. `14143-288_4`, `14143-.98` |
+| `id` | string | Grundstücks-ID: `<KG-Nummer, 5 Ziffern>-<Grundstücksnummer>` mit `/` als `_`, Bauflächen beginnen mit einem Punkt, z. B. `14143-288_4`, `14143-.98` |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

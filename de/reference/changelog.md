@@ -4,6 +4,11 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 > Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
+## 2026-11-19
+
+### Geändert
+- Die deutsche [API-Referenz](https://docs.mapx.at/de/api/index.md) ist vollständig übersetzt: Beschreibungen der Endpunkte, Parameter und Antwortfelder sowie die Hinweise im Playground sind jetzt deutsch.
+
 ## 2026-11-18
 
 ### Neu
@@ -11,6 +16,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 - [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/), verlinkt aus Konto, Registrierung und Doku.
 
 ### Geändert
+- `/v1/geocode` und `/v1/geocode/batch` liefern in `properties.category` jetzt die öffentliche Kategorie-Id (z. B. `train_station` statt bisher `bahnhof`).
 - `tiles.mapx.at`: `GET` auf `.pmtiles`-Dateien nur noch mit genau einer geschlossenen `Range` (`bytes=<start>-<ende>`), sonst `403` [`range-required`](https://docs.mapx.at/de/api/errors.md#range-required). MapLibre mit pmtiles.js ist nicht betroffen. Die Hinweise auf direkte PMTiles-URLs in den Tileset-Seiten und unter Zugang und Limits sind entfernt; Karten laden über Style, TileJSON oder `{z}/{x}/{y}`.
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
 - Einheitliche Fehlerantworten: Auch Anmeldefehler und alle Fehler des Gateways kommen als `application/problem+json` mit eigenem `title` und `detail` je Code (statt `Unauthorized`/`Forbidden` ohne `detail`); `429` hat immer den Titel `Rate limit exceeded`; `405` kommt mit Header `Allow` auch vom Gateway, und zwar vor der Token-Prüfung. Neue Codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) und `upstream-timeout` (504). Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).

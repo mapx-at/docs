@@ -8,21 +8,21 @@ Routing auf dem österreichischen Straßengraphen (GIP.at). Profile: `driving`, 
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
-## Speed limits (GIP.at, statutory limits only)
+## Tempolimits (GIP.at, nur gesetzliche) {#speed-limits-gipat-statutory-limits-only}
 
 `GET /v1/speedlimits`
 
-Statutory speed limits of the road network as compact GeoJSON, either inside a box (`bbox`, at most 0.08 square degrees, about 28 x 28 km) or in a corridor around a route (`corridor` as polyline6, e.g. `routes[].geometry` with `geometries=polyline6`, plus `buffer` in meters).
+Gesetzliche Tempolimits des Straßennetzes als kompaktes GeoJSON, entweder in einem Rechteck (`bbox`, höchstens 0,08 Quadratgrad, etwa 28 x 28 km) oder in einem Korridor um eine Route (`corridor` als polyline6, z. B. `routes[].geometry` mit `geometries=polyline6`, dazu `buffer` in Metern).
 
-One LineString feature per road link in digitizing direction with `limit_kmh`, `direction` (`both`, `forward` or `backward` relative to the geometry) and `id` (GIP link id); if the directions differ there is one feature per direction. Only statutory limits (5, 10, 20 ... 130 km/h, including the default limits inside built-up areas and on rural roads) are returned. Links without a value (many motorways) and modeled speeds such as 53 or 84 km/h are left out. At most 60,000 features. Source: GIP.at (CC BY 4.0).
+Ein LineString-Objekt je Straßenabschnitt (Link) in Digitalisierungsrichtung mit `limit_kmh`, `direction` (`both`, `forward` oder `backward` bezogen auf die Geometrie) und `id` (GIP-Link-Id); unterscheiden sich die Richtungen, gibt es ein Objekt je Richtung. Geliefert werden nur gesetzliche Tempolimits (5, 10, 20 ... 130 km/h, einschließlich der allgemeinen Limits im Ortsgebiet und auf Freilandstraßen). Abschnitte ohne Wert (viele Autobahnen) und modellierte Geschwindigkeiten wie 53 oder 84 km/h fehlen. Höchstens 60.000 Objekte. Quelle: GIP.at (CC BY 4.0).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat in degrees, at most 0.08 square degrees; instead of corridor |
-| `corridor` | query | string |  | – | Route as polyline6 (at most 20,000 points); instead of bbox |
-| `buffer` | query | string |  | `30` | With corridor only: meters around the route, 1 to 500, default 30 |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat in Grad, höchstens 0,08 Quadratgrad; statt corridor |
+| `corridor` | query | string |  | – | Route als polyline6 (höchstens 20.000 Punkte); statt bbox |
+| `buffer` | query | string |  | `30` | Nur mit corridor: Meter um die Route, 1 bis 500, Standard 30 |
 
 **Beispiel**
 
@@ -83,7 +83,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `legal_only` | boolean | always true: only statutory limits are listed |
+| `legal_only` | boolean | immer true: nur gesetzliche Tempolimits sind enthalten |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -95,21 +95,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Corridor graph for offline rerouting
+## Korridorgraph für Neuberechnung offline {#corridor-graph-for-offline-rerouting}
 
 `GET /v1/corridor-graph`
 
-Compact binary subgraph of the road network around a route, for recomputing a route without network (for example in a dead zone after a wrong turn). `polyline` is the route as polyline6 (e.g. `routes[].geometry` with `geometries=polyline6`), `buffer` the radius around it in meters (default 3000, at most 5000).
+Kompakter binärer Teilgraph des Straßennetzes um eine Route, um eine Route ohne Netz neu zu berechnen (etwa in einem Funkloch nach falschem Abbiegen). `polyline` ist die Route als polyline6 (z. B. `routes[].geometry` mit `geometries=polyline6`), `buffer` der Radius darum in Metern (Standard 3000, höchstens 5000).
 
-The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, no `Content-Encoding`) of a `MXCG` v1 file: a version header and the graph id of the server graph, nodes (microdegrees), directed arcs with travel time and weight in ms (the same values the router uses, so offline costs equal server costs), simplified link geometry, road name and reference, road class (FRC/FOW), maximum speed with a statutory flag, link flags (roundabout, ramp, toll, urban, motorway) and the turn restrictions between the arcs including derived U-turn bans. Arcs that cannot be driven are left out. Typically 1 to 3 MB per 100 km of route (compressed). Source: GIP.at (CC BY 4.0).
+Der Antwortkörper ist ein gzip-Strom (`application/vnd.mapx.corridor-graph+gzip`, kein `Content-Encoding`) einer `MXCG`-v1-Datei: Versionskopf und Graph-Id des Servergraphen, Knoten (Mikrograd), gerichtete Kanten mit Fahrzeit und Gewicht in ms (dieselben Werte wie im Router, offline gerechnete Kosten entsprechen also denen am Server), vereinfachte Linkgeometrie, Straßenname und -nummer, Straßenklasse (FRC/FOW), Höchstgeschwindigkeit mit Kennzeichen für gesetzliche Werte, Link-Kennzeichen (Kreisverkehr, Rampe, Maut, Ortsgebiet, Autobahn) und die Abbiegeverbote zwischen den Kanten einschließlich abgeleiteter Wendeverbote. Nicht befahrbare Kanten fehlen. Typisch 1 bis 3 MB pro 100 km Route (komprimiert). Quelle: GIP.at (CC BY 4.0).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `polyline` | query | string | ja | – | Route as polyline6 (at most 20,000 points) |
-| `profile` | query | string |  | – | driving (default), cycling or walking |
-| `buffer` | query | string |  | `3000` | Meters around the route, 100 to 5000, default 3000 |
+| `polyline` | query | string | ja | – | Route als polyline6 (höchstens 20.000 Punkte) |
+| `profile` | query | string |  | – | driving (Standard), cycling oder walking |
+| `buffer` | query | string |  | `3000` | Meter um die Route, 100 bis 5000, Standard 3000 |
 
 **Beispiel**
 
@@ -135,7 +135,7 @@ res = requests.get("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C
 open("result.bin", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapx.corridor-graph+gzip` · Corridor graph (gzip of MXCG v1)
+**Beispielantwort**: `application/vnd.mapx.corridor-graph+gzip` · Korridorgraph (gzip von MXCG v1)
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -148,39 +148,39 @@ open("result.bin", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Routing
+## Routing {#routing}
 
 `GET /v1/directions/{profile}/{coordinates}`
 
-Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
+Lkw (`driving-truck`, über 3,5 t): Fahrzeugmaße über `weight`, `height`, `width`, `length`, `truck_type`; Straßen werden je Fahrzeug gesperrt (Gewichtsklassen-, Sattel- und Anhängerverbote, Höhen-, Breiten-, Gewichts- und Längenbeschränkungen). Lkw-Geschwindigkeiten: höchstens 80 km/h auf Autobahnen, 70 auf Freilandstraßen, 50 im Ortsgebiet.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/flow`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_km` (Kilometer mit GO-Maut; je Schritt `truck_go_m`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road`, `toll_road_m` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving` und `driving-traffic` umfahren verbindliche Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG) und listen sie in `routes[].closures_avoided`; `driving` ohne aktive Sperren entlang der Route bleibt unverändert. `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/flow`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
-| `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
-| `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
-| `language` | query | string |  | – | de (default) or en |
-| `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
-| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` |
-| `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
-| `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
-| `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
-| `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
-| `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
-| `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
-| `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
-| `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
-| `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
-| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
+| `steps` | query | string |  | – | true für Abbiegehinweise (mit Manövern und Kreuzungen) |
+| `geometries` | query | string |  | – | geojson (Standard) \| polyline \| polyline6 |
+| `overview` | query | string |  | – | simplified (Standard, vereinfachte Routengeometrie), full (alle Stützpunkte) oder false (keine Geometrie) |
+| `language` | query | string |  | – | de (Standard) oder en |
+| `alternatives` | query | string |  | – | true (bis zu 2), false oder 0 bis 3; nur mit genau 2 Koordinaten. Alternativen entstehen über seitlich versetzte Wegpunkte und erscheinen als zusätzliche `routes[]` |
+| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (durch Komma getrennt; `weather_warnings` ergänzt `routes[].weather_warnings`, die amtlichen Warnungen, deren Gebiet die Route quert, ohne Geometrie): `legs[].annotation` je Geometriesegment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (nur driving; `legal` ist true bei einem gesetzlichen Tempolimit und false bei einer modellierten Geschwindigkeit wie 53 oder 84, die nicht als Tempolimit angezeigt werden darf), elevation = mittlere Segmenthöhe in m |
+| `radiuses` | query | string |  | – | Suchradius je Koordinate in Metern, durch Strichpunkt getrennt, oder `unlimited` |
+| `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
+| `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
+| `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
+| `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
+| `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
+| `weight` | query | string |  | `40` | Nur driving-truck: Gesamtgewicht in t (Standard 40, 0.5 bis 60); meidet Gewichtsklassenverbote und Gewichtsbeschränkungen |
+| `height` | query | string |  | `4` | Nur driving-truck: Fahrzeughöhe in m (Standard 4, 1.5 bis 5); meidet Höhenbeschränkungen |
+| `width` | query | string |  | `2` | Nur driving-truck: Fahrzeugbreite in m (Standard 2.55, 1 bis 3.5) |
+| `length` | query | string |  | – | Nur driving-truck: Fahrzeuglänge in m (2 bis 40); Längenbeschränkungen werden nur geprüft, wenn angegeben |
+| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | Nur driving-truck: semi (Sattelzug, Standard), rigid (Lkw ohne Anhänger) oder trailer (Lkw mit Anhänger) |
 
 **Beispiel**
 
@@ -253,22 +253,22 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Directions with query parameters
+## Route mit Query-Parametern {#directions-with-query-parameters}
 
 `GET /v1/directions`
 
-Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query parameters of the path form apply.
+Gleiche Antwort wie `/v1/directions/{profile}/{coordinates}` (bevorzugt); alle Query-Parameter der Pfadform gelten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | query | string |  | `driving` | Default driving |
+| `profile` | query | string |  | `driving` | Standard driving |
 | `coordinates` | query | string | ja | – | lon,lat;lon,lat;... |
-| `steps` | query | string |  | – | true for steps |
+| `steps` | query | string |  | – | true für Schritte |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
-| `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de or en |
+| `overview` | query | string |  | – | simplified (Standard) \| full \| false |
+| `language` | query | string |  | – | de oder en |
 
 **Beispiel**
 
@@ -341,26 +341,26 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Isochrones
+## Isochronen {#isochrones}
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
+Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at`, `transit_stops` und `attribution`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400).
+`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`); `mapbox/` prefix allowed |
+| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking oder transit (zu Fuß und mit öffentlichem Verkehr ab `depart_at`); Präfix `mapbox/` erlaubt |
 | `coordinate` | path | string | ja | – | lon,lat |
-| `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
-| `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
-| `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
-| `access` | query | string |  | – | Only `transit`: foot (default) \| bike (Bike & Ride) \| car (Park & Ride) |
-| `park` | query | string |  | `bike every stop` | Only `transit` with bike/car: any (default: bike every stop, car rail stops) \| official (only official P+R/B+R sites) |
-| `sites` | query | string |  | `10` | Only `transit` with bike/car: number of access entries in `metadata.access_sites` (default 10, max 50) |
+| `contours_minutes` | query | string |  | `5` | Bis zu 4 Werte, durch Komma getrennt (Standard 5,10,15) |
+| `contours_meters` | query | string |  | – | Distanzen statt Minuten (nicht für `transit`) |
+| `depart_at` | query | string |  | `now` | Nur `transit`: Abfahrt, ISO 8601 in Ortszeit Europe/Vienna ohne Offset (`2026-11-10T08:00`), mit `Z`/Offset oder als Unix-Sekunden; Standard jetzt |
+| `access` | query | string |  | – | Nur `transit`: foot (Standard) \| bike (Bike & Ride) \| car (Park & Ride) |
+| `park` | query | string |  | `bike every stop` | Nur `transit` mit bike/car: any (Standard: Rad an jeder Haltestelle, Auto an Bahnhaltestellen) \| official (nur amtliche P+R/B+R-Anlagen) |
+| `sites` | query | string |  | `10` | Nur `transit` mit bike/car: Zahl der Zugangseinträge in `metadata.access_sites` (Standard 10, höchstens 50) |
 
 **Beispiel**
 
@@ -433,21 +433,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Travel time / distance matrix
+## Fahrzeit- und Distanzmatrix {#travel-time--distance-matrix}
 
 `GET /v1/matrix/{profile}/{coordinates}`
 
-2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`.
+2 bis 25 Koordinaten. `sources`/`destinations` als Indexliste (`0;2`) oder `all`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `sources` | query | string |  | – | Indices, semicolon-separated |
-| `destinations` | query | string |  | – | Indices, semicolon-separated |
-| `annotations` | query | string |  | – | duration (default), distance or both |
+| `sources` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
+| `destinations` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
+| `annotations` | query | string |  | – | duration (Standard), distance oder beides |
 
 **Beispiel**
 
@@ -510,8 +510,8 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `durations` | array | seconds |
-| `distances` | array | meters |
+| `durations` | array | Sekunden |
+| `distances` | array | Meter |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -523,20 +523,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Map matching
+## Map Matching {#map-matching}
 
 `GET /v1/matching/{profile}/{coordinates}`
 
-2 to 100 GPS points snapped to the road network. Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
+2 bis 100 GPS-Punkte, auf das Straßennetz eingepasst. Längere Spuren: `POST https://routing.mapx.at/match` mit einem geheimen Token (`mx_sk_…`; öffentliche Tokens erlauben nur GET) und dem JSON-Body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (höchstens 512 KB); die Antwort hat ein eigenes Format, nicht das von Mapbox: eine GeoJSON-FeatureCollection mit einem LineString je eingepasstem Abschnitt und `tracepoints` (eingepasster Punkt und Konfidenz je Eingabepunkt, `null`, wenn nicht zugeordnet).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
-| `radiuses` | query | string |  | – | Meters per point (largest value counts, 5 to 500) |
+| `timestamps` | query | string |  | – | Unix-Sekunden, durch Strichpunkt getrennt |
+| `radiuses` | query | string |  | – | Meter je Punkt (der größte Wert zählt, 5 bis 500) |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
 
 **Beispiel**

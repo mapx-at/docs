@@ -8,23 +8,23 @@ Suche mit Vorschlägen für Adressen und Orte. `suggest` beim Tippen aufrufen, d
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Search Box: suggestions
+## Search Box: Vorschläge {#search-box-suggestions}
 
 `GET /v1/searchbox/suggest`
 
-Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs, no OSM data.
+Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retrieve`), mit Kategorie (`poi_category`, `poi_category_ids`, `maki`) und `context`. Amtliche POIs, keine OSM-Daten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Search text |
-| `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
-| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
-| `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
+| `q` | query | string | ja | – | Suchtext |
+| `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
+| `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode, liefert auch die Entfernung |
+| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category haben keine Wirkung) |
+| `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `gas_station`), siehe `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
 
@@ -79,19 +79,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Search Box: resolve a suggestion
+## Search Box: Vorschlag auflösen {#search-box-resolve-a-suggestion}
 
 `GET /v1/searchbox/retrieve/{id}`
 
-FeatureCollection with one feature (point, bbox, coordinates, context); 404 for an unknown id.
+FeatureCollection mit einem Objekt (Punkt, bbox, Koordinaten, Kontext); 404 bei unbekannter Id.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | `mapbox_id` from suggest |
-| `session_token` | query | string |  | – | As in suggest |
-| `proximity` | query | string |  | – | lon,lat, only for the distance |
+| `id` | path | string | ja | – | `mapbox_id` aus suggest |
+| `session_token` | query | string |  | – | Wie bei suggest |
+| `proximity` | query | string |  | – | lon,lat, nur für die Entfernung |
 
 **Beispiel**
 
@@ -150,20 +150,20 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Search Box: places of a category
+## Search Box: Orte einer Kategorie {#search-box-places-of-a-category}
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`).
+Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten zuerst. Ids wie in `/v1/searchbox/list/category` (z. B. `gas_station`, `train_station`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `category` | path | string | ja | – | Category id(s) |
+| `category` | path | string | ja | – | Kategorie-Id(s) |
 | `proximity` | query | string |  | – | lon,lat |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `limit` | query | string |  | `10` | 1 to 25, default 10 |
+| `limit` | query | string |  | `10` | 1 bis 25, Standard 10 |
 
 **Beispiel**
 
@@ -222,17 +222,17 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Search Box: category list
+## Search Box: Kategorienliste {#search-box-category-list}
 
 `GET /v1/searchbox/list/category`
 
-Stable category ids (`canonical_id`), name and Maki icon.
+Stabile Kategorie-Ids (`canonical_id`), Name und Maki-Icon.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `language` | query | string |  | – | de (default) or en |
+| `language` | query | string |  | – | de (Standard) oder en |
 
 **Beispiel**
 

@@ -8,20 +8,20 @@ Täglicher Luftqualitätsindex und stündlich Stickstoffdioxid, Ozon, PM10 und P
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## Air quality index and pollutants for a point
+## Luftqualitätsindex und Schadstoffe für einen Punkt {#air-quality-index-and-pollutants-for-a-point}
 
 `GET /v1/air-quality/{coordinate}`
 
-GeoSphere chemical weather model (3 km) bilinear to the point: daily index `aqi` (3 days) and hourly NO2, O3, PM10, PM2.5 near the surface in ug/m3 with an hourly index (worst level by the EEA European Air Quality Index limits; SO2 is not provided by the model) plus the Saharan dust load (mg/m2, 0.2 degree grid).
+Chemisches Wettermodell von GeoSphere (3 km), bilinear auf den Punkt interpoliert: Tagesindex `aqi` (3 Tage) und stündlich NO2, O3, PM10, PM2.5 in Bodennähe in ug/m3 mit Stundenindex (schlechteste Stufe nach den Grenzen des European Air Quality Index der EEA; SO2 liefert das Modell nicht), dazu die Saharastaubbelastung (mg/m2, Raster 0,2 Grad).
 
-Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Österreich und Umgebung. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat, e.g. 16.37,48.21 |
-| `hours` | query | integer |  | `24` | 1 to 72, default 24 |
+| `coordinate` | path | string | ja | – | lon,lat, z. B. 16.37,48.21 |
+| `hours` | query | integer |  | `24` | 1 bis 72, Standard 24 |
 
 **Beispiel**
 

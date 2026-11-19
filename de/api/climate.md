@@ -8,20 +8,20 @@ Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Tempe
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
 
-## Climate at a point (solar potential, normals, heat days, snow, drought)
+## Klima an einem Punkt (Sonnenpotenzial, Klimanormale, Hitzetage, Schnee, Dürre) {#climate-at-a-point-solar-potential-normals-heat-days-snow-drought}
 
 `GET /v1/climate/{coordinate}`
 
-Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
+Klima eines Punktes aus offenen Daten von GeoSphere Austria: Sonnenpotenzial (jährliche Globalstrahlung in kWh/m2 und Sonnenstunden, Mittel der letzten 3 vollständigen Jahre, 100 m), Temperatur und Niederschlag (Klimanormale 1991-2020, letzte 10 Jahre, Trend, Monatsnormale, 1 km), Hitze-, Sommer-, Frost- und Eistage sowie Tropennächte pro Jahr, Schneetage pro Winter und die aktuelle Schneehöhe sowie der Dürreindex SPEI (90 und 365 Tage, letzter Wert mit Klasse).
 
-Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. The same object is part of the parcel dossier (`properties.climate`). Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
+Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Rasterzelle abgeleitet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie von der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Dasselbe Objekt ist Teil des Grundstücksdossiers (`properties.climate`). Außerhalb Österreichs 404; 503, solange die Quelle nicht verfügbar ist oder drosselt. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
-| `sections` | query | string |  | `all` | Comma-separated sections to return (default: all) |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `sections` | query | string |  | `all` | Gewünschte Abschnitte, durch Komma getrennt (Standard: alle) |
 
 **Beispiel**
 
@@ -84,14 +84,14 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `location` | array | [longitude, latitude] (WGS84), optional height. |
-| `status` | string | `partial`: some sections are still being loaded (parcel dossier: retry after `retry_after_s`) |
-| `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
-| `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
-| `precipitation` | object,null | Precipitation and sunshine (SPARTACUS, 1 km) |
-| `temperature_extremes` | object,null | Hot, summer, frost and ice days per year, tropical nights (SPARTACUS daily data, 1 km); normal period 1991-2020 and last 10 complete years |
-| `snow` | object,null | Snow cover (SNOWGRID-CL model, 1 km) |
-| `drought` | object,null | Drought index SPEI (WINFORE, 1 km), latest value |
+| `location` | array | [Länge, Breite] (WGS84), optional Höhe. |
+| `status` | string | `partial`: einige Abschnitte werden noch geladen (Grundstücksdossier: nach `retry_after_s` erneut anfragen) |
+| `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
+| `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
+| `precipitation` | object,null | Niederschlag und Sonnenschein (SPARTACUS, 1 km) |
+| `temperature_extremes` | object,null | Hitze-, Sommer-, Frost- und Eistage pro Jahr, Tropennächte (SPARTACUS-Tagesdaten, 1 km); Normalperiode 1991-2020 und letzte 10 vollständige Jahre |
+| `snow` | object,null | Schneedecke (Modell SNOWGRID-CL, 1 km) |
+| `drought` | object,null | Dürreindex SPEI (WINFORE, 1 km), letzter Wert |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

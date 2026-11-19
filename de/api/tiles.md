@@ -8,11 +8,11 @@ Listet die Tilesets, beschreibt jedes als TileJSON und liefert Kacheln als `{z}/
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (100/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## List tilesets
+## Tilesets auflisten {#list-tilesets}
 
 `GET /v1/tiles`
 
-Name, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution, data date (`reference_date`) and build time (`built`) per tileset. `dtm` is accepted as short name of `terrain-rgb` (not listed separately).
+Je Tileset Name, Typ (vector, raster, dem), Format, Zoombereich, Grenzen, TileJSON-URL, Attribution, Datenstand (`reference_date`) und Erstellungszeit (`built`). `dtm` wird als Kurzname von `terrain-rgb` angenommen (nicht eigens gelistet).
 
 **Beispiel**
 
@@ -72,17 +72,17 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## TileJSON 3.0.0
+## TileJSON 3.0.0 {#tilejson-300}
 
 `GET /v1/tiles/{tileset}.json`
 
-TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`Last-Modified`, `If-None-Match` gives 304.
+TileJSON eines Tilesets (Namen aus `/v1/tiles`, dazu `dtm` und `dsm`). `ETag`/`Last-Modified`, `If-None-Match` ergibt 304.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tileset` | path | string | ja | – | Tileset name |
+| `tileset` | path | string | ja | – | Tileset-Name |
 
 **Beispiel**
 
@@ -137,23 +137,23 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## XYZ tile
+## XYZ-Kachel {#xyz-tile}
 
 `GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
 
-`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
+`ext` muss zum Kacheltyp passen: `pbf` (Alias `mvt`) für Vektor, `webp`, `png` oder `jpg` für Raster. Kachel im Zoombereich, aber ohne Daten (z. B. Rand der Abdeckung innerhalb von `bounds`): 204 ohne Body. Falsche Endung oder Zoom außerhalb von `minzoom`/`maxzoom`: 404 problem+json.
 
-Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
+Vektorkacheln sind gzip-komprimiert (`Content-Encoding: gzip`, entpackt, wenn der Client kein gzip akzeptiert). `ETag` aus dem Datei-Hash, `If-None-Match` ergibt 304, `Cache-Control: public`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tileset` | path | string | ja | – | Tileset name, see `/v1/tiles` |
-| `z` | path | integer | ja | – | Zoom level |
-| `x` | path | integer | ja | – | Tile column |
-| `y` | path | integer | ja | – | Tile row |
-| `ext` | path | string | ja | – | pbf, mvt, webp, png or jpg |
+| `tileset` | path | string | ja | – | Tileset-Name, siehe `/v1/tiles` |
+| `z` | path | integer | ja | – | Zoomstufe |
+| `x` | path | integer | ja | – | Kachelspalte |
+| `y` | path | integer | ja | – | Kachelzeile |
+| `ext` | path | string | ja | – | pbf, mvt, webp, png oder jpg |
 
 **Beispiel**
 
@@ -179,13 +179,13 @@ res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", head
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
+**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Kachel
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
-| `204` | No data for this tile (empty) |
+| `204` | Keine Daten für diese Kachel (leer) |
 | `304` | Nicht geändert (mit `If-None-Match`) |
 | `400` | Parameter fehlt oder ist ungültig |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |

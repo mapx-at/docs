@@ -8,20 +8,20 @@ Messwerte der nächsten Stationen, Stundenvorhersage für einen Punkt und Raster
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## Current observations of the nearest TAWES stations
+## Aktuelle Messwerte der nächsten TAWES-Stationen {#current-observations-of-the-nearest-tawes-stations}
 
 `GET /v1/weather/current`
 
-GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first. Values come from a local cache, never fetched per request. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Messnetz von GeoSphere Austria, 10-Minuten-Werte (Temperatur, Luftfeuchte, Wind, Böe, Niederschlag, Luftdruck). Die nächste Station zuerst. Die Werte kommen aus einem lokalen Cache und werden nie je Anfrage abgerufen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string | ja | – | Longitude (also `lng`), WGS84 |
-| `lat` | query | string | ja | – | Latitude |
-| `limit` | query | string |  | `3` | 1 to 10, default 3 |
-| `radius` | query | string |  | `50` | Search radius in km, default 50 |
+| `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
+| `lat` | query | string | ja | – | Breite |
+| `limit` | query | string |  | `3` | 1 bis 10, Standard 3 |
+| `radius` | query | string |  | `50` | Suchradius in km, Standard 50 |
 
 **Beispiel**
 
@@ -90,20 +90,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Hourly point forecast (AROME, 1 km)
+## Stündliche Punktvorhersage (AROME, 1 km) {#hourly-point-forecast-arome-1-km}
 
 `GET /v1/weather/forecast`
 
-GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current hour. Austria plus margin. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Modell nwp-v2-1h-1km von GeoSphere Austria, bilinear auf den Punkt interpoliert, ab der aktuellen Stunde. Österreich mit Rand. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string | ja | – | Longitude (also `lng`), WGS84 |
-| `lat` | query | string | ja | – | Latitude |
-| `hours` | query | string |  | `24` | 1 to 60, default 24 |
-| `ensemble` | query | string |  | – | true: add `uncertainty` (p10/p50/p90 of the ensemble for temperature, gust, precipitation) to every hour |
+| `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
+| `lat` | query | string | ja | – | Breite |
+| `hours` | query | string |  | `24` | 1 bis 60, Standard 24 |
+| `ensemble` | query | string |  | – | true: `uncertainty` (p10/p50/p90 des Ensembles für Temperatur, Böe, Niederschlag) zu jeder Stunde ergänzen |
 
 **Beispiel**
 
@@ -175,17 +175,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Precipitation nowcast for a point (15 min steps, 3 h)
+## Niederschlags-Nowcast für einen Punkt (15-Minuten-Schritte, 3 h) {#precipitation-nowcast-for-a-point-15-min-steps-3-h}
 
 `GET /v1/weather/nowcast/{coordinates}`
 
-GeoSphere INCA nowcast nowcast-v1-15min-1km, bilinear to the point. `precipitation_starts_in_min` / `precipitation_ends_in_min` are derived from the 15-minute steps (wet from 0.1 mm/h); `null` when nothing changes within the horizon. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+INCA-Nowcast nowcast-v1-15min-1km von GeoSphere, bilinear auf den Punkt interpoliert. `precipitation_starts_in_min` / `precipitation_ends_in_min` werden aus den 15-Minuten-Schritten abgeleitet (nass ab 0,1 mm/h); `null`, wenn sich im Vorhersagezeitraum nichts ändert.
+
+Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | ja | – | lon,lat, e.g. 16.3725,48.2085 |
+| `coordinates` | path | string | ja | – | lon,lat, z. B. 16.3725,48.2085 |
 
 **Beispiel**
 
@@ -253,19 +255,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## TileJSON of weather tiles with time dimension
+## TileJSON der Wetterkacheln mit Zeitdimension {#tilejson-of-weather-tiles-with-time-dimension}
 
 `GET /v1/weather/tiles/{param}.json`
 
-param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (hourly, AROME) or rr_nowcast, pt_nowcast (precipitation radar nowcast, 15 min steps). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
+param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (stündlich, AROME) oder rr_nowcast, pt_nowcast (Niederschlagsradar-Nowcast, 15-Minuten-Schritte). `mapx:time.times` listet die verfügbaren Stunden (UTC), `mapx:time.template` enthält den Platzhalter `{time}`; `tiles` verwendet `now`.
 
-Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast or pt_nowcast, with .json |
+| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast oder pt_nowcast, mit .json |
 
 **Beispiel**
 
@@ -314,21 +316,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Weather raster tile (PNG 256, transparent outside the data)
+## Wetter-Rasterkachel (PNG 256, außerhalb der Daten transparent) {#weather-raster-tile-png-256-transparent-outside-the-data}
 
 `GET /v1/weather/tiles/{param}/{time}/{z}/{x}/{y}.png`
 
-Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour such as `2026-11-07T20:00Z`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Farbskala je Parameter (siehe Legende im TileJSON). time: `now` oder eine UTC-Stunde wie `2026-11-07T20:00Z`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast |
-| `time` | path | string | ja | – | now or 2026-11-07T20:00Z (nowcast: 15 min steps such as 2026-11-07T20:15Z) |
-| `z` | path | integer | ja | – | 0 to 14 |
-| `x` | path | integer | ja | – | Column |
-| `y` | path | string | ja | – | Row, with .png |
+| `time` | path | string | ja | – | now oder 2026-11-07T20:00Z (Nowcast: 15-Minuten-Schritte wie 2026-11-07T20:15Z) |
+| `z` | path | integer | ja | – | 0 bis 14 |
+| `x` | path | integer | ja | – | Spalte |
+| `y` | path | string | ja | – | Zeile, mit .png |
 
 **Beispiel**
 
@@ -354,7 +356,7 @@ res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png` · PNG; header X-Weather-Reference-Time
+**Beispielantwort**: `image/png` · PNG; Header X-Weather-Reference-Time
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -367,24 +369,24 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Official weather warnings (GeoSphere Austria)
+## Amtliche Wetterwarnungen (GeoSphere Austria) {#official-weather-warnings-geosphere-austria}
 
 `GET /v1/weather/warnings`
 
-Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` (each with `de` and `en`) are optional: they are present only when GeoSphere has published a text for the warning and are often missing.
+Aktive und kommende amtliche Wetterwarnungen (bis zu 4 Tage im Voraus) als GeoJSON-MultiPolygone in WGS84, ein Objekt je Warnung (zusammengefasste Gemeinden). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 gelb, 2 orange, 3 rot; `text`, `impact` und `recommendation` (jeweils mit `de` und `en`) sind optional: Sie sind nur vorhanden, wenn GeoSphere zur Warnung einen Text veröffentlicht hat, und fehlen oft.
 
-Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Zentral alle 5 Minuten abgerufen, nie je Anfrage. Ohne `bbox` und `lon`/`lat` kommen alle Warnungen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
-| `lat` | query | string |  | – | Latitude |
-| `bbox` | query | string |  | – | west,south,east,north in degrees (WGS84): only warnings touching the box |
-| `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat or cold |
-| `min_level` | query | string |  | – | 1 (yellow, default) to 3 (red) |
-| `active` | query | string |  | – | now: only warnings valid right now; all (default): also upcoming |
+| `lon` | query | string |  | – | Länge: nur Warnungen, die den Punkt enthalten (mit lat) |
+| `lat` | query | string |  | – | Breite |
+| `bbox` | query | string |  | – | west,south,east,north in Grad (WGS84): nur Warnungen, die das Rechteck berühren |
+| `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat oder cold |
+| `min_level` | query | string |  | – | 1 (gelb, Standard) bis 3 (rot) |
+| `active` | query | string |  | – | now: nur jetzt gültige Warnungen; all (Standard): auch kommende |
 
 **Beispiel**
 

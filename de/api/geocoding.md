@@ -8,23 +8,23 @@ Wandelt Adresse oder Ortsname in Koordinaten um und Koordinaten in die nächste 
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (30/min) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Forward geocoding
+## Geocoding {#forward-geocoding}
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and parcels. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Grundstücke. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
-Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`. Always pass `types` for cheap queries.
+Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`, `bbox`. Für günstige Abfragen immer `types` angeben.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Search text (also path form `/v1/geocode/{q}.json`) |
-| `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `q` | query | string | ja | – | Suchtext (auch Pfadform `/v1/geocode/{q}.json`) |
+| `limit` | query | integer (1–10) |  | `5` | 1 bis 10, Standard 5 |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better; exact place names stay on top; ignored when bbox is set |
+| `proximity` | query | string |  | – | lon,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen; exakte Ortsnamen bleiben oben; wird ignoriert, wenn bbox gesetzt ist |
 
 **Beispiel**
 
@@ -95,19 +95,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Forward geocoding, Mapbox path form
+## Geocoding, Mapbox-Pfadform {#forward-geocoding-mapbox-path-form}
 
 `GET /v1/geocode/{q}`
 
-Same as `/v1/geocode?q=...`; the search text is the path segment (optionally with `.json`).
+Wie `/v1/geocode?q=...`; der Suchtext ist das Pfadsegment (optional mit `.json`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | path | string | ja | – | Search text, URL-encoded |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `q` | path | string | ja | – | Suchtext, URL-codiert |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 
@@ -180,21 +180,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Reverse geocoding (nearest address, street, place)
+## Reverse Geocoding (nächste Adresse, Straße, Ort) {#reverse-geocoding-nearest-address-street-place}
 
 `GET /v1/reverse`
 
-Nearest features around a point, nearest first. Use `types` to restrict (e.g. `address`).
+Nächste Objekte um einen Punkt, das nächste zuerst. Mit `types` einschränken (z. B. `address`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lng` | query | string | ja | – | Longitude (also `lon`, `longitude`) |
-| `lat` | query | string | ja | – | Latitude |
-| `radius` | query | string |  | `500` | Meters, 1 to 5000, default 500 |
-| `limit` | query | string |  | `1` | 1 to 10, default 1 |
-| `types` | query | string |  | – | Like geocode |
+| `lng` | query | string | ja | – | Länge (auch `lon`, `longitude`) |
+| `lat` | query | string | ja | – | Breite |
+| `radius` | query | string |  | `500` | Meter, 1 bis 5000, Standard 500 |
+| `limit` | query | string |  | `1` | 1 bis 10, Standard 1 |
+| `types` | query | string |  | – | Wie bei geocode |
 
 **Beispiel**
 
@@ -265,13 +265,13 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Batch geocoding (up to 1000 requests)
+## Batch-Geocoding (bis zu 1000 Anfragen) {#batch-geocoding-up-to-1000-requests}
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array of FeatureCollections in input order. Requests run in batches via Meilisearch multi-search (at most 4 in parallel).
+JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array von FeatureCollections in Eingabereihenfolge. Die Anfragen laufen gebündelt über die Multi-Search von Meilisearch (höchstens 4 parallel).
 
-At most 512 KB.
+Höchstens 512 KB.
 
 **Request-Body (JSON)**
 

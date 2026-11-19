@@ -8,27 +8,27 @@ Findet die beste Reihenfolge von Stopps (Handlungsreisender) oder plant Touren f
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
-## Optimized order
+## Optimierte Reihenfolge {#optimized-order}
 
 `GET /v1/optimized-trips/{profile}/{coordinates}`
 
-2 to 25 coordinates. Exact up to 12 points, above that nearest neighbour with 2-opt and Or-opt over the duration matrix. Response like Directions: `trips[]` with one route, `waypoints[]` in input order with `waypoint_index` (position in the trip) and `trips_index`.
+2 bis 25 Koordinaten. Exakt bis 12 Punkte, darüber Nächster-Nachbar-Verfahren mit 2-opt und Or-opt über die Fahrzeitmatrix. Antwort wie bei Directions: `trips[]` mit einer Route, `waypoints[]` in Eingabereihenfolge mit `waypoint_index` (Position in der Tour) und `trips_index`.
 
-Expensive: zone `heavy`.
+Aufwendig:
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `source` | query | string |  | – | any (default) or first (point 0 is the start) |
-| `destination` | query | string |  | – | any (default) or last (last point is the end) |
-| `roundtrip` | query | string |  | – | true (default) returns to the start, or false; true with destination=last needs source=first |
-| `steps` | query | string |  | – | true for turn-by-turn steps |
+| `source` | query | string |  | – | any (Standard) oder first (Punkt 0 ist der Start) |
+| `destination` | query | string |  | – | any (Standard) oder last (letzter Punkt ist das Ende) |
+| `roundtrip` | query | string |  | – | true (Standard) kehrt zum Start zurück, oder false; true mit destination=last braucht source=first |
+| `steps` | query | string |  | – | true für Abbiegehinweise |
 | `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
-| `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de (default) or en |
+| `overview` | query | string |  | – | simplified (Standard) \| full \| false |
+| `language` | query | string |  | – | de (Standard) oder en |
 
 **Beispiel**
 
@@ -75,19 +75,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Tour planning (simplified Optimization v2)
+## Tourenplanung (vereinfachtes Optimization v2) {#tour-planning-simplified-optimization-v2}
 
 `POST /v1/optimization`
 
-Vehicles with start/end/capacity/time window, services (one location) and shipments (pickup before delivery, same vehicle) with duration, time windows and amounts. Heuristic: regret insertion, local search, ruin and recreate until `options.time_limit_ms`. At most 10 vehicles, 50 jobs, 60 distinct locations, 256 KB.
+Fahrzeuge mit Start, Ende, Kapazität und Zeitfenster, Aufträge (services, ein Ort) und Sendungen (shipments, Abholung vor Zustellung, dasselbe Fahrzeug) mit Dauer, Zeitfenstern und Mengen. Heuristik: Regret-Einfügung, lokale Suche, Ruin and Recreate bis `options.time_limit_ms`.
 
-Times in seconds. Expensive: zone `heavy`.
+Höchstens 10 Fahrzeuge, 50 Aufträge, 60 verschiedene Orte, 256 KB. Zeiten in Sekunden. Aufwendig:
 
 **Request-Body (JSON)**
 
 | Name | Typ | Beschreibung |
 |---|---|---|
-| `profile` | string | driving (default), cycling, cycling-mtb or walking |
+| `profile` | string | driving (Standard), cycling, cycling-mtb oder walking |
 
 **Beispiel**
 

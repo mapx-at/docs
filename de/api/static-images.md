@@ -8,21 +8,21 @@ Rendert ein Kartenbild für Ausschnitt und Größe, optional mit Overlays. Das E
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md)
 
-## Map image (Static Images, Mapbox form)
+## Kartenbild (Static Images, Mapbox-Format) {#map-image-static-images-mapbox-form}
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
+`satellite` (BEV-Orthofoto, z5 bis z18) oder `outdoors` (Höhenschichtfarben mit Schummerung aus dem DTM, z5 bis z16). Die `streets*`-Styles werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
 
-`satellite-streets` draws the orthophoto (z5 to z18) with roads, boundaries, contours, names and icons of the vector map on top. Output PNG (default) or WebP, at most 1280x1280 (2560x2560 pixels with @2x). `Cache-Control` and `ETag` (If-None-Match gives 304).
+`satellite-streets` zeichnet das Orthofoto (z5 bis z18) mit Straßen, Grenzen, Höhenlinien, Namen und Icons der Vektorkarte darüber. Ausgabe PNG (Standard) oder WebP, höchstens 1280x1280 (2560x2560 Pixel mit @2x). `Cache-Control` und `ETag` (If-None-Match ergibt 304).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
-| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**
 
@@ -48,7 +48,7 @@ res = requests.get("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/6
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png`, `image/webp` · Image
+**Beispielantwort**: `image/png`, `image/webp` · Bild
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -62,22 +62,22 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Map image with overlays
+## Kartenbild mit Overlays {#map-image-with-overlays}
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lon,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lon,lat)` (Beschriftung wird nicht gezeichnet), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
 
-Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
+Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
-| `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), comma-separated |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
-| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), durch Komma getrennt |
+| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**
 
@@ -103,7 +103,7 @@ res = requests.get("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png`, `image/webp` · Image
+**Beispielantwort**: `image/png`, `image/webp` · Bild
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

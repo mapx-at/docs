@@ -8,17 +8,17 @@ Verkehrsmeldungen (Unfälle, Baustellen, Sperren), Tempolimits auf Autobahn-Anze
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `static` (5/s) · Guide: [Verkehr](https://docs.mapx.at/de/guides/traffic.md)
 
-## Speed limits of variable message signs on motorways (GeoJSON)
+## Tempolimits der Verkehrsbeeinflussungsanlagen auf Autobahnen (GeoJSON) {#speed-limits-of-variable-message-signs-on-motorways-geojson}
 
 `GET /v1/traffic/flow`
 
-Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No area-wide traffic state (the paid source is not used). Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Abschnitte mit einem Tempolimit auf Anzeigen unter der freien Fahrgeschwindigkeit, Stufe 0 bis 3 nach Verhältnis. Keine flächendeckende Verkehrslage (die kostenpflichtige Quelle wird nicht verwendet). Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `bbox` | query | string | ja | – | west,south,east,north in degrees (WGS84) |
+| `bbox` | query | string | ja | – | west,south,east,north in Grad (WGS84) |
 
 **Beispiel**
 
@@ -89,33 +89,33 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Incident reports and traffic regulations (EVIS.AT): accidents, roadworks, closures with time span
+## Verkehrsmeldungen und Verkehrsregelungen (EVIS.AT): Unfälle, Baustellen, Sperren mit Zeitraum {#incident-reports-and-traffic-regulations-evisat-accidents-roadworks-closures-with-time-span}
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next` as relative URL or `null` on the last page; `next_cursor` and `next_offset` only when there is a further page).
+Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Art und Zeitfenster. Sortiert nach Wichtigkeit (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit` und `cursor` (`total`, `next` als relative URL oder `null` auf der letzten Seite; `next_cursor` und `next_offset` nur, wenn es eine weitere Seite gibt).
 
-Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Baustellen auf Autobahnen und Schnellstraßen enthalten Fahrstreifenangaben der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north; optional |
-| `planned` | query | string |  | – | true: planned only, false: unplanned only |
-| `road` | query | string |  | – | Road number, normalized: A1, A 1 and A01 are the same; also S1, B99, L347 |
-| `road_class` | query | string |  | – | Comma-separated: motorway (A), expressway (S), federal (B), state (L) |
-| `active` | query | string |  | `with from/to` | false: also inactive (default with from/to) |
-| `type` | query | string |  | – | Comma-separated: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
-| `from` | query | string |  | – | Window start (UTC, YYYY-MM-DD or YYYY-MM-DDTHH:MM[:SS]Z): incidents still valid afterwards |
-| `to` | query | string |  | – | Window end (UTC): incidents starting before |
-| `route` | query | string |  | – | Route corridor: encoded polyline (like geometries=polyline6 or polyline) or GeoJSON LineString; result sorted by position on the route |
-| `route_precision` | query | string |  | – | 6 (default) or 5 |
-| `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
-| `sort` | query | string |  | `with route` | importance (default): closures and binding reports first, then road class A, S, B, L, then start; route (default with route): position on the route |
-| `limit` | query | string |  | `500` | At most this many features, 0 to 1000, default 500 |
-| `cursor` | query | string |  | – | Page marker: next_cursor of the previous response |
-| `offset` | query | string |  | – | Skip features (alternative to cursor) |
+| `planned` | query | string |  | – | true: nur geplante, false: nur ungeplante |
+| `road` | query | string |  | – | Straßennummer, normalisiert: A1, A 1 und A01 sind gleich; auch S1, B99, L347 |
+| `road_class` | query | string |  | – | Durch Komma getrennt: motorway (A), expressway (S), federal (B), state (L) |
+| `active` | query | string |  | `with from/to` | false: auch inaktive (Standard mit from/to) |
+| `type` | query | string |  | – | Durch Komma getrennt: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
+| `from` | query | string |  | – | Beginn des Zeitfensters (UTC, YYYY-MM-DD oder YYYY-MM-DDTHH:MM[:SS]Z): Meldungen, die danach noch gelten |
+| `to` | query | string |  | – | Ende des Zeitfensters (UTC): Meldungen, die davor beginnen |
+| `route` | query | string |  | – | Routenkorridor: codierte Polyline (wie geometries=polyline6 oder polyline) oder GeoJSON-LineString; Ergebnis nach Position auf der Route sortiert |
+| `route_precision` | query | string |  | – | 6 (Standard) oder 5 |
+| `buffer` | query | string |  | `25` | Halbe Korridorbreite in Metern, 1 bis 1000, Standard 25 |
+| `sort` | query | string |  | `with route` | importance (Standard): Sperren und verbindliche Meldungen zuerst, dann Straßenklasse A, S, B, L, dann Beginn; route (Standard mit route): Position auf der Route |
+| `limit` | query | string |  | `500` | Höchstens so viele Objekte, 0 bis 1000, Standard 500 |
+| `cursor` | query | string |  | – | Seitenmarke: next_cursor der vorigen Antwort |
+| `offset` | query | string |  | – | Objekte überspringen (Alternative zu cursor) |
 
 **Beispiel**
 
@@ -186,11 +186,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Like GET, parameters as JSON object (for long routes)
+## Wie GET, Parameter als JSON-Objekt (für lange Routen) {#like-get-parameters-as-json-object-for-long-routes}
 
 `POST /v1/traffic/incidents`
 
-Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString, numbers (e.g. `route_precision`, `limit`, `buffer`) as JSON number or string. The gateway accepts bodies up to 64 KB (larger: 413); for longer routes simplify the line or split it.
+Body: dieselben Parameter als JSON-Objekt; `route` als Polyline-String oder GeoJSON-LineString, Zahlen (z. B. `route_precision`, `limit`, `buffer`) als JSON-Zahl oder String. Das Gateway nimmt Bodys bis 64 KB an (größer: 413); bei längeren Routen die Linie vereinfachen oder aufteilen.
 
 **Request-Body (JSON)**
 
@@ -323,11 +323,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Variable message signs (ASFINAG) with position
+## Anzeigen der Verkehrsbeeinflussungsanlagen (ASFINAG) mit Position {#variable-message-signs-asfinag-with-position}
 
 `GET /v1/traffic/signs`
 
-Current state: speed limit, pictogram, additional text. Only installations with a position in the source (about 40 of roughly 5300); the fields `total_signs` and `located_signs` give the numbers. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Aktueller Zustand: Tempolimit, Piktogramm, Zusatztext. Nur Anlagen mit Position in der Quelle (etwa 40 von rund 5300); die Felder `total_signs` und `located_signs` nennen die Zahlen. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
@@ -398,11 +398,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## TileJSON of traffic tiles
+## TileJSON der Verkehrskacheln {#tilejson-of-traffic-tiles}
 
 `GET /v1/traffic/tiles.json`
 
-Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incidents` (kind, text, road, planned, closed, mandatory).
+Vektorkacheln mit den Layern `traffic` (Tempolimits: level, speed, free) und `incidents` (kind, text, road, planned, closed, mandatory).
 
 **Beispiel**
 
@@ -449,19 +449,19 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Traffic vector tile (MVT)
+## Verkehrs-Vektorkachel (MVT) {#traffic-vector-tile-mvt}
 
 `GET /v1/traffic/tiles/{z}/{x}/{y}.pbf`
 
-Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Zoom 5 bis 14. `Cache-Control` 60 Sekunden. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `z` | path | integer | ja | – | 5 to 14 |
-| `x` | path | integer | ja | – | Column |
-| `y` | path | string | ja | – | Row, with .pbf |
+| `z` | path | integer | ja | – | 5 bis 14 |
+| `x` | path | integer | ja | – | Spalte |
+| `y` | path | string | ja | – | Zeile, mit .pbf |
 
 **Beispiel**
 
@@ -487,7 +487,7 @@ res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", header
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
+**Beispielantwort**: `application/vnd.mapbox-vector-tile` · MVT, gzip, wenn akzeptiert
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -499,7 +499,7 @@ open("result.pbf", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## State of the traffic data
+## Stand der Verkehrsdaten {#state-of-the-traffic-data}
 
 `GET /v1/traffic/status`
 

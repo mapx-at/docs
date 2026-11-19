@@ -2116,11 +2116,11 @@ Listet die Tilesets, beschreibt jedes als TileJSON und liefert Kacheln als `{z}/
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (100/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## List tilesets
+## Tilesets auflisten {#list-tilesets}
 
 `GET /v1/tiles`
 
-Name, type (vector, raster, dem), format, zoom range, bounds, TileJSON URL, attribution, data date (`reference_date`) and build time (`built`) per tileset. `dtm` is accepted as short name of `terrain-rgb` (not listed separately).
+Je Tileset Name, Typ (vector, raster, dem), Format, Zoombereich, Grenzen, TileJSON-URL, Attribution, Datenstand (`reference_date`) und Erstellungszeit (`built`). `dtm` wird als Kurzname von `terrain-rgb` angenommen (nicht eigens gelistet).
 
 **Beispiel**
 
@@ -2180,17 +2180,17 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## TileJSON 3.0.0
+## TileJSON 3.0.0 {#tilejson-300}
 
 `GET /v1/tiles/{tileset}.json`
 
-TileJSON of a tileset (names from `/v1/tiles`, plus `dtm` and `dsm`). `ETag`/`Last-Modified`, `If-None-Match` gives 304.
+TileJSON eines Tilesets (Namen aus `/v1/tiles`, dazu `dtm` und `dsm`). `ETag`/`Last-Modified`, `If-None-Match` ergibt 304.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tileset` | path | string | ja | – | Tileset name |
+| `tileset` | path | string | ja | – | Tileset-Name |
 
 **Beispiel**
 
@@ -2245,23 +2245,23 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## XYZ tile
+## XYZ-Kachel {#xyz-tile}
 
 `GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
 
-`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
+`ext` muss zum Kacheltyp passen: `pbf` (Alias `mvt`) für Vektor, `webp`, `png` oder `jpg` für Raster. Kachel im Zoombereich, aber ohne Daten (z. B. Rand der Abdeckung innerhalb von `bounds`): 204 ohne Body. Falsche Endung oder Zoom außerhalb von `minzoom`/`maxzoom`: 404 problem+json.
 
-Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
+Vektorkacheln sind gzip-komprimiert (`Content-Encoding: gzip`, entpackt, wenn der Client kein gzip akzeptiert). `ETag` aus dem Datei-Hash, `If-None-Match` ergibt 304, `Cache-Control: public`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tileset` | path | string | ja | – | Tileset name, see `/v1/tiles` |
-| `z` | path | integer | ja | – | Zoom level |
-| `x` | path | integer | ja | – | Tile column |
-| `y` | path | integer | ja | – | Tile row |
-| `ext` | path | string | ja | – | pbf, mvt, webp, png or jpg |
+| `tileset` | path | string | ja | – | Tileset-Name, siehe `/v1/tiles` |
+| `z` | path | integer | ja | – | Zoomstufe |
+| `x` | path | integer | ja | – | Kachelspalte |
+| `y` | path | integer | ja | – | Kachelzeile |
+| `ext` | path | string | ja | – | pbf, mvt, webp, png oder jpg |
 
 **Beispiel**
 
@@ -2287,13 +2287,13 @@ res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", head
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
+**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Kachel
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
 | Status | Bedeutung |
 |---|---|
-| `204` | No data for this tile (empty) |
+| `204` | Keine Daten für diese Kachel (leer) |
 | `304` | Nicht geändert (mit `If-None-Match`) |
 | `400` | Parameter fehlt oder ist ungültig |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
@@ -2315,11 +2315,11 @@ Fertige Styles für MapLibre GL JS und kompatible Clients, dazu Schriften und Sp
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (100/s), `static` (5/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## List styles
+## Styles auflisten {#list-styles}
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors.
+Verfügbare Style-Ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, satellite-current (Sentinel-2 mit Straßen und Namen), outdoors.
 
 **Beispiel**
 
@@ -2364,18 +2364,18 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## MapLibre / Mapbox style
+## MapLibre-/Mapbox-Style {#maplibre--mapbox-style}
 
 `GET /v1/styles/{id}`
 
-Style JSON (version 8), generated from the style generator. Fonts and sprites point to this API, vector sources to PMTiles on tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` gives 304. With `sources=tilejson` the PMTiles vector/raster sources are replaced by https TileJSON URLs (`https://tiles.mapx.at/v1/tiles/<tileset>.json`), for clients without PMTiles support such as the MapLibre Native offline manager.
+Style-JSON (Version 8), erzeugt vom Style-Generator. Schriften und Sprites verweisen auf diese API, Vektorquellen auf PMTiles auf tiles.mapx.at. `ETag`/`Last-Modified`; `If-None-Match` ergibt 304. Mit `sources=tilejson` werden die PMTiles-Vektor- und -Rasterquellen durch https-TileJSON-URLs ersetzt (`https://tiles.mapx.at/v1/tiles/<tileset>.json`), für Clients ohne PMTiles-Unterstützung wie den Offline-Manager von MapLibre Native.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Style id, optionally with `.json` |
-| `sources` | query | `tilejson` |  | – | `tilejson`: replace pmtiles:// sources by https TileJSON URLs |
+| `id` | path | string | ja | – | Style-Id, optional mit `.json` |
+| `sources` | query | `tilejson` |  | – | `tilejson`: pmtiles://-Quellen durch https-TileJSON-URLs ersetzen |
 
 **Beispiel**
 
@@ -2421,17 +2421,17 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Sprite of a style
+## Sprite eines Styles {#sprite-of-a-style}
 
 `GET /v1/styles/{id}/{file}`
 
-`file`: `sprite[@2x].json|png` for standard icons, `sprite-sdf[@2x].json|png` for SDF icons. Styles reference this URL.
+`file`: `sprite[@2x].json|png` für Standard-Icons, `sprite-sdf[@2x].json|png` für SDF-Icons. Styles verweisen auf diese URL.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Style id |
+| `id` | path | string | ja | – | Style-Id |
 | `file` | path | string | ja | – | sprite[-sdf][@2x].json\|png |
 
 **Beispiel**
@@ -2458,7 +2458,7 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2469,11 +2469,11 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Static Tiles: rendered raster tiles of a style
+## Static Tiles: gerenderte Rasterkacheln eines Styles {#static-tiles-rendered-raster-tiles-of-a-style}
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, satellite, satellite-streets, outdoors. `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`. Labels are rendered with a margin and clipped. No data or below minimum zoom: 404.
+Styles streets*, satellite, satellite-streets, outdoors. `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`. Beschriftungen werden mit Rand gerendert und abgeschnitten. Keine Daten oder unter dem Mindestzoom: 404.
 
 Zone `static`. `ETag`, `Cache-Control`.
 
@@ -2481,11 +2481,11 @@ Zone `static`. `ETag`, `Cache-Control`.
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Style id |
-| `tilesize` | path | string | ja | – | 256 or 512 |
+| `id` | path | string | ja | – | Style-Id |
+| `tilesize` | path | string | ja | – | 256 oder 512 |
 | `z` | path | integer | ja | – | Zoom |
-| `x` | path | integer | ja | – | Column |
-| `y` | path | string | ja | – | Row[@2x][.png\|.webp] |
+| `x` | path | integer | ja | – | Spalte |
+| `y` | path | string | ja | – | Zeile[@2x][.png\|.webp] |
 
 **Beispiel**
 
@@ -2511,7 +2511,7 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/tiles/512/12/2234/1420
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png`, `image/webp` · Image
+**Beispielantwort**: `image/png`, `image/webp` · Bild
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2525,11 +2525,11 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## List fonts
+## Schriften auflisten {#list-fonts}
 
 `GET /v1/fonts`
 
-Available font names.
+Verfügbare Schriftnamen.
 
 **Beispiel**
 
@@ -2573,18 +2573,18 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Glyph range
+## Glyph-Bereich {#glyph-range}
 
 `GET /v1/fonts/{fontstack}/{range}.pbf`
 
-`fontstack`: one or more fonts, comma-separated (e.g. `Noto Sans Regular,Open Sans Regular`); the first font containing a character wins. `range`: `{start}-{start+255}`, start divisible by 256 (`0-255`, `256-511`, ...). Response `application/x-protobuf`; `ETag`, `Cache-Control`.
+`fontstack`: eine oder mehrere Schriften, durch Komma getrennt (z. B. `Noto Sans Regular,Open Sans Regular`); die erste Schrift, die ein Zeichen enthält, gewinnt. `range`: `{start}-{start+255}`, start durch 256 teilbar (`0-255`, `256-511`, ...). Antwort `application/x-protobuf`; `ETag`, `Cache-Control`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `fontstack` | path | string | ja | – | Font name(s), comma-separated |
-| `range` | path | string | ja | – | e.g. 0-255 |
+| `fontstack` | path | string | ja | – | Schriftname(n), durch Komma getrennt |
+| `range` | path | string | ja | – | z. B. 0-255 |
 
 **Beispiel**
 
@@ -2610,7 +2610,7 @@ res = requests.get("https://api.mapx.at/v1/fonts/Noto%20Sans%20Regular/0-255.pbf
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/x-protobuf` · Glyph PBF
+**Beispielantwort**: `application/x-protobuf` · Glyph-PBF
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2622,11 +2622,11 @@ open("result.pbf", "wb").write(res.content)
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## List sprites
+## Sprites auflisten {#list-sprites}
 
 `GET /v1/sprites`
 
-`sprite` (standard icons) and `sprite-sdf` (SDF icons, recolorable).
+`sprite` (Standard-Icons) und `sprite-sdf` (SDF-Icons, umfärbbar).
 
 **Beispiel**
 
@@ -2652,7 +2652,7 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite list
+**Beispielantwort**: `application/json` · Sprite-Liste
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2662,7 +2662,7 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Sprite file without style
+## Sprite-Datei ohne Style {#sprite-file-without-style}
 
 `GET /v1/sprites/{file}`
 
@@ -2696,7 +2696,7 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2721,23 +2721,23 @@ Wandelt Adresse oder Ortsname in Koordinaten um und Koordinaten in die nächste 
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (30/min) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Forward geocoding
+## Geocoding {#forward-geocoding}
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and parcels. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Grundstücke. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
-Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`. Always pass `types` for cheap queries.
+Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`, `bbox`. Für günstige Abfragen immer `types` angeben.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Search text (also path form `/v1/geocode/{q}.json`) |
-| `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `q` | query | string | ja | – | Suchtext (auch Pfadform `/v1/geocode/{q}.json`) |
+| `limit` | query | integer (1–10) |  | `5` | 1 bis 10, Standard 5 |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better; exact place names stay on top; ignored when bbox is set |
+| `proximity` | query | string |  | – | lon,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen; exakte Ortsnamen bleiben oben; wird ignoriert, wenn bbox gesetzt ist |
 
 **Beispiel**
 
@@ -2808,19 +2808,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Forward geocoding, Mapbox path form
+## Geocoding, Mapbox-Pfadform {#forward-geocoding-mapbox-path-form}
 
 `GET /v1/geocode/{q}`
 
-Same as `/v1/geocode?q=...`; the search text is the path segment (optionally with `.json`).
+Wie `/v1/geocode?q=...`; der Suchtext ist das Pfadsegment (optional mit `.json`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | path | string | ja | – | Search text, URL-encoded |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `q` | path | string | ja | – | Suchtext, URL-codiert |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 
@@ -2893,21 +2893,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Reverse geocoding (nearest address, street, place)
+## Reverse Geocoding (nächste Adresse, Straße, Ort) {#reverse-geocoding-nearest-address-street-place}
 
 `GET /v1/reverse`
 
-Nearest features around a point, nearest first. Use `types` to restrict (e.g. `address`).
+Nächste Objekte um einen Punkt, das nächste zuerst. Mit `types` einschränken (z. B. `address`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lng` | query | string | ja | – | Longitude (also `lon`, `longitude`) |
-| `lat` | query | string | ja | – | Latitude |
-| `radius` | query | string |  | `500` | Meters, 1 to 5000, default 500 |
-| `limit` | query | string |  | `1` | 1 to 10, default 1 |
-| `types` | query | string |  | – | Like geocode |
+| `lng` | query | string | ja | – | Länge (auch `lon`, `longitude`) |
+| `lat` | query | string | ja | – | Breite |
+| `radius` | query | string |  | `500` | Meter, 1 bis 5000, Standard 500 |
+| `limit` | query | string |  | `1` | 1 bis 10, Standard 1 |
+| `types` | query | string |  | – | Wie bei geocode |
 
 **Beispiel**
 
@@ -2978,13 +2978,13 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Batch geocoding (up to 1000 requests)
+## Batch-Geocoding (bis zu 1000 Anfragen) {#batch-geocoding-up-to-1000-requests}
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array of FeatureCollections in input order. Requests run in batches via Meilisearch multi-search (at most 4 in parallel).
+JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array von FeatureCollections in Eingabereihenfolge. Die Anfragen laufen gebündelt über die Multi-Search von Meilisearch (höchstens 4 parallel).
 
-At most 512 KB.
+Höchstens 512 KB.
 
 **Request-Body (JSON)**
 
@@ -3116,23 +3116,23 @@ Suche mit Vorschlägen für Adressen und Orte. `suggest` beim Tippen aufrufen, d
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Search Box: suggestions
+## Search Box: Vorschläge {#search-box-suggestions}
 
 `GET /v1/searchbox/suggest`
 
-Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs, no OSM data.
+Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retrieve`), mit Kategorie (`poi_category`, `poi_category_ids`, `maki`) und `context`. Amtliche POIs, keine OSM-Daten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Search text |
-| `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
-| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
-| `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
+| `q` | query | string | ja | – | Suchtext |
+| `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
+| `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode, liefert auch die Entfernung |
+| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category haben keine Wirkung) |
+| `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `gas_station`), siehe `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
 
@@ -3187,19 +3187,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Search Box: resolve a suggestion
+## Search Box: Vorschlag auflösen {#search-box-resolve-a-suggestion}
 
 `GET /v1/searchbox/retrieve/{id}`
 
-FeatureCollection with one feature (point, bbox, coordinates, context); 404 for an unknown id.
+FeatureCollection mit einem Objekt (Punkt, bbox, Koordinaten, Kontext); 404 bei unbekannter Id.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | `mapbox_id` from suggest |
-| `session_token` | query | string |  | – | As in suggest |
-| `proximity` | query | string |  | – | lon,lat, only for the distance |
+| `id` | path | string | ja | – | `mapbox_id` aus suggest |
+| `session_token` | query | string |  | – | Wie bei suggest |
+| `proximity` | query | string |  | – | lon,lat, nur für die Entfernung |
 
 **Beispiel**
 
@@ -3258,20 +3258,20 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Search Box: places of a category
+## Search Box: Orte einer Kategorie {#search-box-places-of-a-category}
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`).
+Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten zuerst. Ids wie in `/v1/searchbox/list/category` (z. B. `gas_station`, `train_station`).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `category` | path | string | ja | – | Category id(s) |
+| `category` | path | string | ja | – | Kategorie-Id(s) |
 | `proximity` | query | string |  | – | lon,lat |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `limit` | query | string |  | `10` | 1 to 25, default 10 |
+| `limit` | query | string |  | `10` | 1 bis 25, Standard 10 |
 
 **Beispiel**
 
@@ -3330,17 +3330,17 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Search Box: category list
+## Search Box: Kategorienliste {#search-box-category-list}
 
 `GET /v1/searchbox/list/category`
 
-Stable category ids (`canonical_id`), name and Maki icon.
+Stabile Kategorie-Ids (`canonical_id`), Name und Maki-Icon.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `language` | query | string |  | – | de (default) or en |
+| `language` | query | string |  | – | de (Standard) oder en |
 
 **Beispiel**
 
@@ -3403,20 +3403,20 @@ Autofill vervollständigt eine Postadresse beim Tippen. Die Validierung prüft e
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Address Autofill: suggestions
+## Adress-Autofill: Vorschläge {#address-autofill-suggestions}
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`.
+Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Postleitzahl und Ort; die Felder stehen getrennt in `suggestions[]`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Partial input, e.g. `Hauptpl 3 Mel` |
-| `session_token` | query | string |  | – | Session id (1 to 64 characters), echoed back |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
+| `q` | query | string | ja | – | Unvollständige Eingabe, z. B. `Hauptpl 3 Mel` |
+| `session_token` | query | string |  | – | Sitzungs-Id (1 bis 64 Zeichen), wird zurückgegeben |
+| `proximity` | query | string |  | – | lon,lat, bevorzugt nahe Adressen |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
 
@@ -3475,20 +3475,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Address Autofill: retrieve the chosen address
+## Adress-Autofill: gewählte Adresse abrufen {#address-autofill-retrieve-the-chosen-address}
 
 `GET /v1/autofill/retrieve/{id}`
 
-`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature; `features[].id` is the address id, `properties` carry the same fields as a suggestion (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
+`id` aus `suggestions[].id` (`address-<AdrCD>`). FeatureCollection mit einem Punktobjekt; `features[].id` ist die Adress-Id, `properties` enthalten dieselben Felder wie ein Vorschlag (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
 
-`session_token` echoes the parameter (`null` without it). 404 for an unknown id.
+`session_token` gibt den Parameter zurück (`null` ohne ihn). 404 bei unbekannter Id.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Address id from suggest |
-| `session_token` | query | string |  | – | As in suggest |
+| `id` | path | string | ja | – | Adress-Id aus suggest |
+| `session_token` | query | string |  | – | Wie bei suggest |
 
 **Beispiel**
 
@@ -3551,9 +3551,9 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `session_token` | string,null | The `session_token` parameter, echoed back (`null` without it). |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
-| `features` | array | One point feature; `id` is the address id `address-<AdrCD>`, `properties` hold `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` and `coordinates` [lon, lat]. |
+| `session_token` | string,null | Der Parameter `session_token`, unverändert zurückgegeben (`null` ohne ihn). |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
+| `features` | array | Ein Punktobjekt; `id` ist die Adress-Id `address-<AdrCD>`, `properties` enthalten `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` und `coordinates` [lon, lat]. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -3565,23 +3565,23 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Address Validation (free text or structured)
+## Adressprüfung (Freitext oder strukturiert) {#address-validation-free-text-or-structured}
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `address_code`.
+Prüft eine Adresse gegen das amtliche Register. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1), `deviations[]` je Feld (kind: spelling | wrong | added), `coordinates`, `id` und `address_code`.
 
-Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
+Versteht Str./Straße, Abkürzungen, Umlaute und ß. Bei `ambiguous` sind `address`, `coordinates`, `id` und `address_code` `null`, und `candidates[]` (bis zu 5, jeweils aufgebaut wie `address`) listet die möglichen Adressen, z. B. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. Bei `match` und `corrected` ist `candidates` leer.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string |  | – | Free text, e.g. `Haubtplatz 1, 3390 Melk` (or structured fields) |
-| `street` | query | string |  | – | Street |
-| `housenumber` | query | string |  | – | House number |
-| `postcode` | query | string |  | – | Postcode |
-| `place` | query | string |  | – | Place |
+| `q` | query | string |  | – | Freitext, z. B. `Haubtplatz 1, 3390 Melk` (oder strukturierte Felder) |
+| `street` | query | string |  | – | Straße |
+| `housenumber` | query | string |  | – | Hausnummer |
+| `postcode` | query | string |  | – | Postleitzahl |
+| `place` | query | string |  | – | Ort |
 
 **Beispiel**
 
@@ -3644,16 +3644,16 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
-| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
-| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
-| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
+| `confidence` | number | 0 bis 1. |
+| `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
+| `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
+| `address_code` | string,null | Adresscode des BEV-Adressregisters. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -3665,11 +3665,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Address Validation (JSON body)
+## Adressprüfung (JSON-Body) {#address-validation-json-body}
 
 `POST /v1/address/validate`
 
-Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `postcode`, `place`). At most 16 KB.
+Wie GET, mit den Feldern in einem JSON-Objekt (`q` oder `street`, `housenumber`, `postcode`, `place`). Höchstens 16 KB.
 
 **Request-Body (JSON)**
 
@@ -3760,16 +3760,16 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
-| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
-| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
-| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
+| `confidence` | number | 0 bis 1. |
+| `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
+| `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
+| `address_code` | string,null | Adresscode des BEV-Adressregisters. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -3795,21 +3795,21 @@ Routing auf dem österreichischen Straßengraphen (GIP.at). Profile: `driving`, 
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
-## Speed limits (GIP.at, statutory limits only)
+## Tempolimits (GIP.at, nur gesetzliche) {#speed-limits-gipat-statutory-limits-only}
 
 `GET /v1/speedlimits`
 
-Statutory speed limits of the road network as compact GeoJSON, either inside a box (`bbox`, at most 0.08 square degrees, about 28 x 28 km) or in a corridor around a route (`corridor` as polyline6, e.g. `routes[].geometry` with `geometries=polyline6`, plus `buffer` in meters).
+Gesetzliche Tempolimits des Straßennetzes als kompaktes GeoJSON, entweder in einem Rechteck (`bbox`, höchstens 0,08 Quadratgrad, etwa 28 x 28 km) oder in einem Korridor um eine Route (`corridor` als polyline6, z. B. `routes[].geometry` mit `geometries=polyline6`, dazu `buffer` in Metern).
 
-One LineString feature per road link in digitizing direction with `limit_kmh`, `direction` (`both`, `forward` or `backward` relative to the geometry) and `id` (GIP link id); if the directions differ there is one feature per direction. Only statutory limits (5, 10, 20 ... 130 km/h, including the default limits inside built-up areas and on rural roads) are returned. Links without a value (many motorways) and modeled speeds such as 53 or 84 km/h are left out. At most 60,000 features. Source: GIP.at (CC BY 4.0).
+Ein LineString-Objekt je Straßenabschnitt (Link) in Digitalisierungsrichtung mit `limit_kmh`, `direction` (`both`, `forward` oder `backward` bezogen auf die Geometrie) und `id` (GIP-Link-Id); unterscheiden sich die Richtungen, gibt es ein Objekt je Richtung. Geliefert werden nur gesetzliche Tempolimits (5, 10, 20 ... 130 km/h, einschließlich der allgemeinen Limits im Ortsgebiet und auf Freilandstraßen). Abschnitte ohne Wert (viele Autobahnen) und modellierte Geschwindigkeiten wie 53 oder 84 km/h fehlen. Höchstens 60.000 Objekte. Quelle: GIP.at (CC BY 4.0).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat in degrees, at most 0.08 square degrees; instead of corridor |
-| `corridor` | query | string |  | – | Route as polyline6 (at most 20,000 points); instead of bbox |
-| `buffer` | query | string |  | `30` | With corridor only: meters around the route, 1 to 500, default 30 |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat in Grad, höchstens 0,08 Quadratgrad; statt corridor |
+| `corridor` | query | string |  | – | Route als polyline6 (höchstens 20.000 Punkte); statt bbox |
+| `buffer` | query | string |  | `30` | Nur mit corridor: Meter um die Route, 1 bis 500, Standard 30 |
 
 **Beispiel**
 
@@ -3870,7 +3870,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `legal_only` | boolean | always true: only statutory limits are listed |
+| `legal_only` | boolean | immer true: nur gesetzliche Tempolimits sind enthalten |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -3882,21 +3882,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Corridor graph for offline rerouting
+## Korridorgraph für Neuberechnung offline {#corridor-graph-for-offline-rerouting}
 
 `GET /v1/corridor-graph`
 
-Compact binary subgraph of the road network around a route, for recomputing a route without network (for example in a dead zone after a wrong turn). `polyline` is the route as polyline6 (e.g. `routes[].geometry` with `geometries=polyline6`), `buffer` the radius around it in meters (default 3000, at most 5000).
+Kompakter binärer Teilgraph des Straßennetzes um eine Route, um eine Route ohne Netz neu zu berechnen (etwa in einem Funkloch nach falschem Abbiegen). `polyline` ist die Route als polyline6 (z. B. `routes[].geometry` mit `geometries=polyline6`), `buffer` der Radius darum in Metern (Standard 3000, höchstens 5000).
 
-The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, no `Content-Encoding`) of a `MXCG` v1 file: a version header and the graph id of the server graph, nodes (microdegrees), directed arcs with travel time and weight in ms (the same values the router uses, so offline costs equal server costs), simplified link geometry, road name and reference, road class (FRC/FOW), maximum speed with a statutory flag, link flags (roundabout, ramp, toll, urban, motorway) and the turn restrictions between the arcs including derived U-turn bans. Arcs that cannot be driven are left out. Typically 1 to 3 MB per 100 km of route (compressed). Source: GIP.at (CC BY 4.0).
+Der Antwortkörper ist ein gzip-Strom (`application/vnd.mapx.corridor-graph+gzip`, kein `Content-Encoding`) einer `MXCG`-v1-Datei: Versionskopf und Graph-Id des Servergraphen, Knoten (Mikrograd), gerichtete Kanten mit Fahrzeit und Gewicht in ms (dieselben Werte wie im Router, offline gerechnete Kosten entsprechen also denen am Server), vereinfachte Linkgeometrie, Straßenname und -nummer, Straßenklasse (FRC/FOW), Höchstgeschwindigkeit mit Kennzeichen für gesetzliche Werte, Link-Kennzeichen (Kreisverkehr, Rampe, Maut, Ortsgebiet, Autobahn) und die Abbiegeverbote zwischen den Kanten einschließlich abgeleiteter Wendeverbote. Nicht befahrbare Kanten fehlen. Typisch 1 bis 3 MB pro 100 km Route (komprimiert). Quelle: GIP.at (CC BY 4.0).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `polyline` | query | string | ja | – | Route as polyline6 (at most 20,000 points) |
-| `profile` | query | string |  | – | driving (default), cycling or walking |
-| `buffer` | query | string |  | `3000` | Meters around the route, 100 to 5000, default 3000 |
+| `polyline` | query | string | ja | – | Route als polyline6 (höchstens 20.000 Punkte) |
+| `profile` | query | string |  | – | driving (Standard), cycling oder walking |
+| `buffer` | query | string |  | `3000` | Meter um die Route, 100 bis 5000, Standard 3000 |
 
 **Beispiel**
 
@@ -3922,7 +3922,7 @@ res = requests.get("https://api.mapx.at/v1/corridor-graph?polyline=_wp~zAofsf%5C
 open("result.bin", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapx.corridor-graph+gzip` · Corridor graph (gzip of MXCG v1)
+**Beispielantwort**: `application/vnd.mapx.corridor-graph+gzip` · Korridorgraph (gzip von MXCG v1)
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -3935,39 +3935,39 @@ open("result.bin", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Routing
+## Routing {#routing}
 
 `GET /v1/directions/{profile}/{coordinates}`
 
-Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
+Lkw (`driving-truck`, über 3,5 t): Fahrzeugmaße über `weight`, `height`, `width`, `length`, `truck_type`; Straßen werden je Fahrzeug gesperrt (Gewichtsklassen-, Sattel- und Anhängerverbote, Höhen-, Breiten-, Gewichts- und Längenbeschränkungen). Lkw-Geschwindigkeiten: höchstens 80 km/h auf Autobahnen, 70 auf Freilandstraßen, 50 im Ortsgebiet.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/flow`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_km` (Kilometer mit GO-Maut; je Schritt `truck_go_m`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road`, `toll_road_m` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving` und `driving-traffic` umfahren verbindliche Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG) und listen sie in `routes[].closures_avoided`; `driving` ohne aktive Sperren entlang der Route bleibt unverändert. `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/flow`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
-| `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
-| `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
-| `language` | query | string |  | – | de (default) or en |
-| `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
-| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` |
-| `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
-| `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
-| `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
-| `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
-| `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
-| `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
-| `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
-| `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
-| `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
-| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
+| `steps` | query | string |  | – | true für Abbiegehinweise (mit Manövern und Kreuzungen) |
+| `geometries` | query | string |  | – | geojson (Standard) \| polyline \| polyline6 |
+| `overview` | query | string |  | – | simplified (Standard, vereinfachte Routengeometrie), full (alle Stützpunkte) oder false (keine Geometrie) |
+| `language` | query | string |  | – | de (Standard) oder en |
+| `alternatives` | query | string |  | – | true (bis zu 2), false oder 0 bis 3; nur mit genau 2 Koordinaten. Alternativen entstehen über seitlich versetzte Wegpunkte und erscheinen als zusätzliche `routes[]` |
+| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (durch Komma getrennt; `weather_warnings` ergänzt `routes[].weather_warnings`, die amtlichen Warnungen, deren Gebiet die Route quert, ohne Geometrie): `legs[].annotation` je Geometriesegment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (nur driving; `legal` ist true bei einem gesetzlichen Tempolimit und false bei einer modellierten Geschwindigkeit wie 53 oder 84, die nicht als Tempolimit angezeigt werden darf), elevation = mittlere Segmenthöhe in m |
+| `radiuses` | query | string |  | – | Suchradius je Koordinate in Metern, durch Strichpunkt getrennt, oder `unlimited` |
+| `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
+| `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
+| `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
+| `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
+| `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
+| `weight` | query | string |  | `40` | Nur driving-truck: Gesamtgewicht in t (Standard 40, 0.5 bis 60); meidet Gewichtsklassenverbote und Gewichtsbeschränkungen |
+| `height` | query | string |  | `4` | Nur driving-truck: Fahrzeughöhe in m (Standard 4, 1.5 bis 5); meidet Höhenbeschränkungen |
+| `width` | query | string |  | `2` | Nur driving-truck: Fahrzeugbreite in m (Standard 2.55, 1 bis 3.5) |
+| `length` | query | string |  | – | Nur driving-truck: Fahrzeuglänge in m (2 bis 40); Längenbeschränkungen werden nur geprüft, wenn angegeben |
+| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | Nur driving-truck: semi (Sattelzug, Standard), rigid (Lkw ohne Anhänger) oder trailer (Lkw mit Anhänger) |
 
 **Beispiel**
 
@@ -4040,22 +4040,22 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Directions with query parameters
+## Route mit Query-Parametern {#directions-with-query-parameters}
 
 `GET /v1/directions`
 
-Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query parameters of the path form apply.
+Gleiche Antwort wie `/v1/directions/{profile}/{coordinates}` (bevorzugt); alle Query-Parameter der Pfadform gelten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | query | string |  | `driving` | Default driving |
+| `profile` | query | string |  | `driving` | Standard driving |
 | `coordinates` | query | string | ja | – | lon,lat;lon,lat;... |
-| `steps` | query | string |  | – | true for steps |
+| `steps` | query | string |  | – | true für Schritte |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
-| `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de or en |
+| `overview` | query | string |  | – | simplified (Standard) \| full \| false |
+| `language` | query | string |  | – | de oder en |
 
 **Beispiel**
 
@@ -4128,26 +4128,26 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Isochrones
+## Isochronen {#isochrones}
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
+Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at`, `transit_stops` und `attribution`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400).
+`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`); `mapbox/` prefix allowed |
+| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking oder transit (zu Fuß und mit öffentlichem Verkehr ab `depart_at`); Präfix `mapbox/` erlaubt |
 | `coordinate` | path | string | ja | – | lon,lat |
-| `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
-| `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
-| `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
-| `access` | query | string |  | – | Only `transit`: foot (default) \| bike (Bike & Ride) \| car (Park & Ride) |
-| `park` | query | string |  | `bike every stop` | Only `transit` with bike/car: any (default: bike every stop, car rail stops) \| official (only official P+R/B+R sites) |
-| `sites` | query | string |  | `10` | Only `transit` with bike/car: number of access entries in `metadata.access_sites` (default 10, max 50) |
+| `contours_minutes` | query | string |  | `5` | Bis zu 4 Werte, durch Komma getrennt (Standard 5,10,15) |
+| `contours_meters` | query | string |  | – | Distanzen statt Minuten (nicht für `transit`) |
+| `depart_at` | query | string |  | `now` | Nur `transit`: Abfahrt, ISO 8601 in Ortszeit Europe/Vienna ohne Offset (`2026-11-10T08:00`), mit `Z`/Offset oder als Unix-Sekunden; Standard jetzt |
+| `access` | query | string |  | – | Nur `transit`: foot (Standard) \| bike (Bike & Ride) \| car (Park & Ride) |
+| `park` | query | string |  | `bike every stop` | Nur `transit` mit bike/car: any (Standard: Rad an jeder Haltestelle, Auto an Bahnhaltestellen) \| official (nur amtliche P+R/B+R-Anlagen) |
+| `sites` | query | string |  | `10` | Nur `transit` mit bike/car: Zahl der Zugangseinträge in `metadata.access_sites` (Standard 10, höchstens 50) |
 
 **Beispiel**
 
@@ -4220,21 +4220,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Travel time / distance matrix
+## Fahrzeit- und Distanzmatrix {#travel-time--distance-matrix}
 
 `GET /v1/matrix/{profile}/{coordinates}`
 
-2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`.
+2 bis 25 Koordinaten. `sources`/`destinations` als Indexliste (`0;2`) oder `all`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `sources` | query | string |  | – | Indices, semicolon-separated |
-| `destinations` | query | string |  | – | Indices, semicolon-separated |
-| `annotations` | query | string |  | – | duration (default), distance or both |
+| `sources` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
+| `destinations` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
+| `annotations` | query | string |  | – | duration (Standard), distance oder beides |
 
 **Beispiel**
 
@@ -4297,8 +4297,8 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `durations` | array | seconds |
-| `distances` | array | meters |
+| `durations` | array | Sekunden |
+| `distances` | array | Meter |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -4310,20 +4310,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Map matching
+## Map Matching {#map-matching}
 
 `GET /v1/matching/{profile}/{coordinates}`
 
-2 to 100 GPS points snapped to the road network. Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
+2 bis 100 GPS-Punkte, auf das Straßennetz eingepasst. Längere Spuren: `POST https://routing.mapx.at/match` mit einem geheimen Token (`mx_sk_…`; öffentliche Tokens erlauben nur GET) und dem JSON-Body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (höchstens 512 KB); die Antwort hat ein eigenes Format, nicht das von Mapbox: eine GeoJSON-FeatureCollection mit einem LineString je eingepasstem Abschnitt und `tracepoints` (eingepasster Punkt und Konfidenz je Eingabepunkt, `null`, wenn nicht zugeordnet).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
-| `radiuses` | query | string |  | – | Meters per point (largest value counts, 5 to 500) |
+| `timestamps` | query | string |  | – | Unix-Sekunden, durch Strichpunkt getrennt |
+| `radiuses` | query | string |  | – | Meter je Punkt (der größte Wert zählt, 5 bis 500) |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
 
 **Beispiel**
@@ -4384,27 +4384,27 @@ Findet die beste Reihenfolge von Stopps (Handlungsreisender) oder plant Touren f
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/de/guides/navigation.md)
 
-## Optimized order
+## Optimierte Reihenfolge {#optimized-order}
 
 `GET /v1/optimized-trips/{profile}/{coordinates}`
 
-2 to 25 coordinates. Exact up to 12 points, above that nearest neighbour with 2-opt and Or-opt over the duration matrix. Response like Directions: `trips[]` with one route, `waypoints[]` in input order with `waypoint_index` (position in the trip) and `trips_index`.
+2 bis 25 Koordinaten. Exakt bis 12 Punkte, darüber Nächster-Nachbar-Verfahren mit 2-opt und Or-opt über die Fahrzeitmatrix. Antwort wie bei Directions: `trips[]` mit einer Route, `waypoints[]` in Eingabereihenfolge mit `waypoint_index` (Position in der Tour) und `trips_index`.
 
-Expensive: zone `heavy`.
+Aufwendig:
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
-| `source` | query | string |  | – | any (default) or first (point 0 is the start) |
-| `destination` | query | string |  | – | any (default) or last (last point is the end) |
-| `roundtrip` | query | string |  | – | true (default) returns to the start, or false; true with destination=last needs source=first |
-| `steps` | query | string |  | – | true for turn-by-turn steps |
+| `source` | query | string |  | – | any (Standard) oder first (Punkt 0 ist der Start) |
+| `destination` | query | string |  | – | any (Standard) oder last (letzter Punkt ist das Ende) |
+| `roundtrip` | query | string |  | – | true (Standard) kehrt zum Start zurück, oder false; true mit destination=last braucht source=first |
+| `steps` | query | string |  | – | true für Abbiegehinweise |
 | `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
-| `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de (default) or en |
+| `overview` | query | string |  | – | simplified (Standard) \| full \| false |
+| `language` | query | string |  | – | de (Standard) oder en |
 
 **Beispiel**
 
@@ -4451,19 +4451,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Tour planning (simplified Optimization v2)
+## Tourenplanung (vereinfachtes Optimization v2) {#tour-planning-simplified-optimization-v2}
 
 `POST /v1/optimization`
 
-Vehicles with start/end/capacity/time window, services (one location) and shipments (pickup before delivery, same vehicle) with duration, time windows and amounts. Heuristic: regret insertion, local search, ruin and recreate until `options.time_limit_ms`. At most 10 vehicles, 50 jobs, 60 distinct locations, 256 KB.
+Fahrzeuge mit Start, Ende, Kapazität und Zeitfenster, Aufträge (services, ein Ort) und Sendungen (shipments, Abholung vor Zustellung, dasselbe Fahrzeug) mit Dauer, Zeitfenstern und Mengen. Heuristik: Regret-Einfügung, lokale Suche, Ruin and Recreate bis `options.time_limit_ms`.
 
-Times in seconds. Expensive: zone `heavy`.
+Höchstens 10 Fahrzeuge, 50 Aufträge, 60 verschiedene Orte, 256 KB. Zeiten in Sekunden. Aufwendig:
 
 **Request-Body (JSON)**
 
 | Name | Typ | Beschreibung |
 |---|---|---|
-| `profile` | string | driving (default), cycling, cycling-mtb or walking |
+| `profile` | string | driving (Standard), cycling, cycling-mtb oder walking |
 
 **Beispiel**
 
@@ -4598,20 +4598,20 @@ Verbindungen mit öffentlichem Verkehr (zu Fuß oder mit dem Rad zur Haltestelle
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10/s) · Guide: [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
 
-## Public transit: walking plus transit (GTFS timetable, RAPTOR)
+## Öffentlicher Verkehr: zu Fuß und mit Öffis (GTFS-Fahrplan, RAPTOR) {#public-transit-walking-plus-transit-gtfs-timetable-raptor}
 
 `GET /v1/directions/transit/{coordinates}`
 
-Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten (Linie, Haltestellen, Zeiten). Zeit über `depart_at` (Standard jetzt) oder `arrive_by`, ISO 8601 in Wiener Ortszeit. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat (exactly origin and destination) |
-| `depart_at` | query | string |  | – | Earliest departure, e.g. 2026-11-09T08:00 |
-| `arrive_by` | query | string |  | – | Latest arrival, instead of depart_at |
-| `routes` | query | string |  | `3` | 1 to 5, default 3 |
+| `coordinates` | path | string | ja | – | lon,lat;lon,lat (genau Start und Ziel) |
+| `depart_at` | query | string |  | – | Früheste Abfahrt, z. B. 2026-11-09T08:00 |
+| `arrive_by` | query | string |  | – | Späteste Ankunft, statt depart_at |
+| `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
 
 **Beispiel**
 
@@ -4674,23 +4674,23 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Departure board (scheduled GTFS timetable)
+## Abfahrtstafel (GTFS-Fahrplan) {#departure-board-scheduled-gtfs-timetable}
 
 `GET /v1/departures`
 
-Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included. Per departure: time, line (name, mode, route_type), headsign, destination, platform (null if unknown), operator, stop.
+Nächste Abfahrten an einer Haltestelle (Id aus `/v1/stops`, z. B. `at:43:7226`) oder an allen Haltestellen um eine Koordinate. Die Betriebstage folgen Kalender und Gültigkeitszeitraum des Fahrplans, Fahrten über Mitternacht sind enthalten. Je Abfahrt: Zeit, Linie (Name, Verkehrsmittel, route_type), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle.
 
-No real-time data: `realtime` is always false. Outside the feed period 422, unknown station 404. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Nur Fahrplandaten, keine aktuellen Abweichungen: `realtime` ist immer false. Außerhalb des Gültigkeitszeitraums 422, unbekannte Haltestelle 404. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `stop` | query | string | ja | – | Station id (IFOPT `at:<state>:<nr>`, also platform id `at:43:7226:0:2`) or lon,lat |
-| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local) or Unix seconds, default now |
-| `limit` | query | string |  | `20` | 1 to 100, default 20 |
-| `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
-| `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
+| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`, auch Steig-Id `at:43:7226:0:2`) oder lon,lat |
+| `time` | query | string |  | `now` | Startzeit, ISO 8601 (Ortszeit Wien) oder Unix-Sekunden, Standard jetzt |
+| `limit` | query | string |  | `20` | 1 bis 100, Standard 20 |
+| `radius` | query | string |  | `300` | Nur mit lon,lat: Meter, 1 bis 2000, Standard 300 |
+| `horizon` | query | string |  | `14400` | Zeitfenster in Sekunden, 60 bis 86400, Standard 14400 |
 
 **Beispiel**
 
@@ -4756,20 +4756,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Stops (GTFS stations merged by IFOPT)
+## Haltestellen (GTFS-Stationen, nach IFOPT zusammengeführt) {#stops-gtfs-stations-merged-by-ifopt}
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines`.
+Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) und `lines`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `bbox` | query | string |  | – | west,south,east,north in degrees, at most 1 square degree |
-| `near` | query | string |  | – | lon,lat, instead of bbox |
-| `radius` | query | string |  | `500` | With near only: meters, 1 to 5000, default 500 |
-| `limit` | query | string |  | `50` | 1 to 500, default 50 |
+| `bbox` | query | string |  | – | west,south,east,north in Grad, höchstens 1 Quadratgrad |
+| `near` | query | string |  | – | lon,lat, statt bbox |
+| `radius` | query | string |  | `500` | Nur mit near: Meter, 1 bis 5000, Standard 500 |
+| `limit` | query | string |  | `50` | 1 bis 500, Standard 50 |
 
 **Beispiel**
 
@@ -4844,21 +4844,21 @@ Rendert ein Kartenbild für Ausschnitt und Größe, optional mit Overlays. Das E
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md)
 
-## Map image (Static Images, Mapbox form)
+## Kartenbild (Static Images, Mapbox-Format) {#map-image-static-images-mapbox-form}
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
+`satellite` (BEV-Orthofoto, z5 bis z18) oder `outdoors` (Höhenschichtfarben mit Schummerung aus dem DTM, z5 bis z16). Die `streets*`-Styles werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
 
-`satellite-streets` draws the orthophoto (z5 to z18) with roads, boundaries, contours, names and icons of the vector map on top. Output PNG (default) or WebP, at most 1280x1280 (2560x2560 pixels with @2x). `Cache-Control` and `ETag` (If-None-Match gives 304).
+`satellite-streets` zeichnet das Orthofoto (z5 bis z18) mit Straßen, Grenzen, Höhenlinien, Namen und Icons der Vektorkarte darüber. Ausgabe PNG (Standard) oder WebP, höchstens 1280x1280 (2560x2560 Pixel mit @2x). `Cache-Control` und `ETag` (If-None-Match ergibt 304).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
-| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**
 
@@ -4884,7 +4884,7 @@ res = requests.get("https://api.mapx.at/v1/static/satellite/16.3725,48.2085,15/6
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png`, `image/webp` · Image
+**Beispielantwort**: `image/png`, `image/webp` · Bild
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -4898,22 +4898,22 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Map image with overlays
+## Kartenbild mit Overlays {#map-image-with-overlays}
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lon,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lon,lat)` (Beschriftung wird nicht gezeichnet), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
 
-Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
+Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
-| `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), comma-separated |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
-| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), durch Komma getrennt |
+| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**
 
@@ -4939,7 +4939,7 @@ res = requests.get("https://api.mapx.at/v1/static/streets/pin-s%2Bff0000(16.3725
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png`, `image/webp` · Image
+**Beispielantwort**: `image/png`, `image/webp` · Bild
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -4967,25 +4967,25 @@ Tilequery liefert die Vektorobjekte nahe einer Koordinate. Parcel liefert das Gr
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
 
-## Tilequery: vector features around a point
+## Tilequery: Vektorobjekte um einen Punkt {#tilequery-vector-features-around-a-point}
 
 `GET /v1/tilequery/{tilesets}/{coordinate}.json`
 
-Reads the vector tile at the tileset's highest zoom (and neighbouring tiles for a radius). FeatureCollection, nearest feature first, `properties.tilequery = {distance (m), geometry (point|linestring|polygon), layer}`. Polygons containing the point have distance 0.
+Liest die Vektorkachel in der höchsten Zoomstufe des Tilesets (und für einen Radius die Nachbarkacheln). FeatureCollection, das nächste Objekt zuerst, `properties.tilequery = {distance (m), geometry (point|linestring|polygon), layer}`. Polygone, die den Punkt enthalten, haben die Distanz 0.
 
-Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the height as a point feature. Geometries are clipped to the tile.
+Mehrere Tilesets, durch Komma getrennt, ergänzen `tilequery.tileset`; `dtm`/`dsm` liefern die Höhe als Punktobjekt. Geometrien sind auf die Kachel zugeschnitten.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tilesets` | path | string | ja | – | Tileset names, comma-separated (at most 15), e.g. `streets,cadastre` |
-| `coordinate` | path | string | ja | – | lon,lat (the path ends in `.json`) |
-| `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
-| `limit` | query | string |  | `5` | 1 to 50, default 5 |
-| `layers` | query | string |  | – | Comma-separated layer names |
-| `geometry` | query | string |  | – | point, linestring or polygon |
-| `dedupe` | query | string |  | – | true (default) removes duplicates across tile borders |
+| `tilesets` | path | string | ja | – | Tileset-Namen, durch Komma getrennt (höchstens 15), z. B. `streets,cadastre` |
+| `coordinate` | path | string | ja | – | lon,lat (der Pfad endet auf `.json`) |
+| `radius` | query | string |  | `0` | Meter, 0 bis 2000, Standard 0 |
+| `limit` | query | string |  | `5` | 1 bis 50, Standard 5 |
+| `layers` | query | string |  | – | Layer-Namen, durch Komma getrennt |
+| `geometry` | query | string |  | – | point, linestring oder polygon |
+| `dedupe` | query | string |  | – | true (Standard) entfernt Duplikate über Kachelgrenzen |
 
 **Beispiel**
 
@@ -5050,21 +5050,21 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Parcel at a point (BEV DKM)
+## Grundstück an einem Punkt (BEV DKM) {#parcel-at-a-point-bev-dkm}
 
 `GET /v1/parcel/{coordinate}`
 
-Parcel (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, plus `parcel_id` and `links.dossier`) as polygon, computed from the boundary lines of the cadastre tiles (area deviates by per mille from the register value). Buildings return the building parcel (`parcel_number` starts with a dot).
+Grundstück (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, dazu `parcel_id` und `links.dossier`) als Polygon, berechnet aus den Grenzlinien der Katasterkacheln (die Fläche weicht um Promille vom Wert im Register ab). Auf Gebäuden kommt das Bauflächengrundstück (`parcel_number` beginnt mit einem Punkt).
 
-Parcels extending beyond the tile window (about 2 km) are missing. Empty list outside the cadastre data. With `include=dossier` each feature is the full dossier of `/v1/parcels/{id}` (zone cost 4 plus the dossier).
+Grundstücke, die über den Kachelausschnitt (etwa 2 km) hinausreichen, fehlen. Außerhalb der Katasterdaten eine leere Liste. Mit `include=dossier` ist jedes Objekt das vollständige Dossier von `/v1/parcels/{id}` (Zonenkosten 4 plus Dossier).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
-| `radius` | query | number (0–100) |  | `0` | Meters, 0 to 100, default 0 (other values: 400). Accepted for compatibility; the result is always the parcel containing the point |
-| `include` | query | `dossier` |  | – | `dossier` returns the full dossier per feature |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `radius` | query | number (0–100) |  | `0` | Meter, 0 bis 100, Standard 0 (andere Werte: 400). Nur zur Kompatibilität angenommen; das Ergebnis ist immer das Grundstück, das den Punkt enthält |
+| `include` | query | `dossier` |  | – | `dossier` liefert je Objekt das vollständige Dossier |
 
 **Beispiel**
 
@@ -5135,19 +5135,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Parcel dossier (BEV DKM and further open data)
+## Grundstücksdossier (BEV DKM und weitere offene Daten) {#parcel-dossier-bev-dkm-and-further-open-data}
 
 `GET /v1/parcels/{id}`
 
-Everything the open data say about one parcel in one call: administrative assignment, area (`area_m2` in the plane of the Gauss-Krueger system as the cadastre computes it, `area_ellipsoidal_m2`), land use shares from the DKM, buildings (count, footprint, heights from BEV DLM where available), terrain statistics (min, mean, max elevation and mean/max slope from the terrain model, grid of up to 250 points inside the parcel), addresses assigned to the parcel, nearest public transit stop (`null` if the router is unavailable), year of the orthophoto flight, `climate` (the object of `/v1/climate/{coordinate}` at the inner point of the parcel: solar potential, normals, hot and snow days, drought; taken from a cache, sections are `null` with `status: partial` until the data of a new area are loaded), the geometry as GeoJSON and a ready-made `links.static_image`.
+Alles, was die offenen Daten über ein Grundstück sagen, in einem Aufruf: Verwaltungszuordnung, Fläche (`area_m2` in der Ebene des Gauß-Krüger-Systems, wie der Kataster sie berechnet, `area_ellipsoidal_m2`), Anteile der Nutzungen aus der DKM, Gebäude (Anzahl, Grundfläche, Höhen aus dem BEV-DLM, wo vorhanden), Geländestatistik (minimale, mittlere und maximale Höhe sowie mittlere und maximale Neigung aus dem Geländemodell, Raster von bis zu 250 Punkten im Grundstück), dem Grundstück zugeordnete Adressen, nächste Haltestelle des öffentlichen Verkehrs (`null`, wenn der Router nicht verfügbar ist), Jahr des Orthofoto-Bildflugs, `climate` (das Objekt von `/v1/climate/{coordinate}` am inneren Punkt des Grundstücks: Sonnenpotenzial, Klimanormale, Hitze- und Schneetage, Dürre; aus einem Cache, die Abschnitte sind `null` mit `status: partial`, bis die Daten eines neuen Gebiets geladen sind), die Geometrie als GeoJSON und ein fertiger `links.static_image`.
 
-The ID comes from `properties.parcel_id` of parcel search results and `/v1/parcel/{coordinate}`; the form `14143-288/4` (percent-encoded slash) is accepted as well. 404 for unknown parcels, 503 while the dossier service is unavailable. Cadastre key date: see `properties.reference_date`.
+Die ID kommt aus `properties.parcel_id` von Grundstückstreffern der Suche und aus `/v1/parcel/{coordinate}`; die Form `14143-288/4` (Schrägstrich prozentcodiert) wird ebenfalls angenommen. 404 bei unbekannten Grundstücken, 503, solange der Dossier-Dienst nicht verfügbar ist. Stichtag des Katasters: siehe `properties.reference_date`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Parcel ID `<KG number>-<parcel number>`, `/` written as `_`, building parcels with a leading dot: `14143-288_4`, `14143-.98` |
+| `id` | path | string | ja | – | Grundstücks-ID `<KG-Nummer>-<Grundstücksnummer>`, `/` als `_` geschrieben, Bauflächen mit führendem Punkt: `14143-288_4`, `14143-.98` |
 
 **Beispiel**
 
@@ -5210,7 +5210,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `id` | string | Parcel ID: `<KG number, 5 digits>-<parcel number>` with `/` written as `_`, building parcels start with a dot, e.g. `14143-288_4`, `14143-.98` |
+| `id` | string | Grundstücks-ID: `<KG-Nummer, 5 Ziffern>-<Grundstücksnummer>` mit `/` als `_`, Bauflächen beginnen mit einem Punkt, z. B. `14143-288_4`, `14143-.98` |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -5237,22 +5237,22 @@ Höhe über Meer (m) für Punkte oder entlang einer Linie, aus dem Geländemodel
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `elevation` (10/s), `search` (10/s) · Guide: [Höhe und Gelände](https://docs.mapx.at/de/guides/elevation.md)
 
-## Elevations (bilinear from z16 Terrain-RGB, 0.1 m)
+## Höhen (bilinear aus Terrain-RGB z16, 0,1 m) {#elevations-bilinear-from-z16-terrain-rgb-01-m}
 
 `GET /v1/elevation`
 
-Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414 as HTML), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
+Entweder `points` (bis zu 512 Punkte) oder `path` (Linie auf der Kugel, nach Länge gleichmäßig in `samples` Punkte geteilt). Außerhalb des Gebiets ist `elevation` null. Eine POST-Form gibt es nicht, und das Gateway begrenzt die Anfrage-URL auf etwa 8 KB (längere URLs bekommen 414 als HTML), ein GET trägt daher praktisch etwa 400 Punkte mit 6 Nachkommastellen, mit mehr Stellen weniger.
 
-Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or use `/v1/elevation/profile`.
+Größere Punktmengen auf mehrere Anfragen aufteilen; für Punkte entlang einer Linie nur die Stützpunkte als `path` senden und `samples` (bis 1024) die Abtastung überlassen, oder `/v1/elevation/profile` verwenden.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
-| `path` | query | string |  | – | lon,lat;lon,lat;... (2 to 512 vertices) |
-| `samples` | query | integer (2–1024) |  | `100` | With path only |
-| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain) or dsm (surface) |
+| `points` | query | string |  | – | lon,lat;lon,lat;... (höchstens 512; die URL-Grenze von etwa 8 KB erlaubt meist weniger) |
+| `path` | query | string |  | – | lon,lat;lon,lat;... (2 bis 512 Stützpunkte) |
+| `samples` | query | integer (2–1024) |  | `100` | Nur mit path |
+| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (Gelände) oder dsm (Oberfläche) |
 
 **Beispiel**
 
@@ -5313,17 +5313,17 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Height at a point (DTM and DSM)
+## Höhe an einem Punkt (DTM und DSM) {#height-at-a-point-dtm-and-dsm}
 
 `GET /v1/elevation/{coordinate}`
 
-One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date`.
+Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution_m`, `reference_date`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
 
 **Beispiel**
 
@@ -5379,18 +5379,18 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Elevation profile along a line
+## Höhenprofil entlang einer Linie {#elevation-profile-along-a-line}
 
 `GET /v1/elevation/profile`
 
-One GeoJSON line with z coordinate; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `min_m`, `max_m`.
+Eine GeoJSON-Linie mit z-Koordinate; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `min_m`, `max_m`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... (2 to 512 points) |
-| `samples` | query | string |  | `100` | 2 to 1024, default 100 |
+| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... (2 bis 512 Punkte) |
+| `samples` | query | string |  | `100` | 2 bis 1024, Standard 100 |
 | `model` | query | string |  | – | dtm\|dsm |
 
 **Beispiel**
@@ -5475,20 +5475,20 @@ Messwerte der nächsten Stationen, Stundenvorhersage für einen Punkt und Raster
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## Current observations of the nearest TAWES stations
+## Aktuelle Messwerte der nächsten TAWES-Stationen {#current-observations-of-the-nearest-tawes-stations}
 
 `GET /v1/weather/current`
 
-GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first. Values come from a local cache, never fetched per request. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Messnetz von GeoSphere Austria, 10-Minuten-Werte (Temperatur, Luftfeuchte, Wind, Böe, Niederschlag, Luftdruck). Die nächste Station zuerst. Die Werte kommen aus einem lokalen Cache und werden nie je Anfrage abgerufen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string | ja | – | Longitude (also `lng`), WGS84 |
-| `lat` | query | string | ja | – | Latitude |
-| `limit` | query | string |  | `3` | 1 to 10, default 3 |
-| `radius` | query | string |  | `50` | Search radius in km, default 50 |
+| `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
+| `lat` | query | string | ja | – | Breite |
+| `limit` | query | string |  | `3` | 1 bis 10, Standard 3 |
+| `radius` | query | string |  | `50` | Suchradius in km, Standard 50 |
 
 **Beispiel**
 
@@ -5557,20 +5557,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Hourly point forecast (AROME, 1 km)
+## Stündliche Punktvorhersage (AROME, 1 km) {#hourly-point-forecast-arome-1-km}
 
 `GET /v1/weather/forecast`
 
-GeoSphere Austria model nwp-v2-1h-1km, bilinear to the point, from the current hour. Austria plus margin. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Modell nwp-v2-1h-1km von GeoSphere Austria, bilinear auf den Punkt interpoliert, ab der aktuellen Stunde. Österreich mit Rand. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string | ja | – | Longitude (also `lng`), WGS84 |
-| `lat` | query | string | ja | – | Latitude |
-| `hours` | query | string |  | `24` | 1 to 60, default 24 |
-| `ensemble` | query | string |  | – | true: add `uncertainty` (p10/p50/p90 of the ensemble for temperature, gust, precipitation) to every hour |
+| `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
+| `lat` | query | string | ja | – | Breite |
+| `hours` | query | string |  | `24` | 1 bis 60, Standard 24 |
+| `ensemble` | query | string |  | – | true: `uncertainty` (p10/p50/p90 des Ensembles für Temperatur, Böe, Niederschlag) zu jeder Stunde ergänzen |
 
 **Beispiel**
 
@@ -5642,17 +5642,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Precipitation nowcast for a point (15 min steps, 3 h)
+## Niederschlags-Nowcast für einen Punkt (15-Minuten-Schritte, 3 h) {#precipitation-nowcast-for-a-point-15-min-steps-3-h}
 
 `GET /v1/weather/nowcast/{coordinates}`
 
-GeoSphere INCA nowcast nowcast-v1-15min-1km, bilinear to the point. `precipitation_starts_in_min` / `precipitation_ends_in_min` are derived from the 15-minute steps (wet from 0.1 mm/h); `null` when nothing changes within the horizon. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+INCA-Nowcast nowcast-v1-15min-1km von GeoSphere, bilinear auf den Punkt interpoliert. `precipitation_starts_in_min` / `precipitation_ends_in_min` werden aus den 15-Minuten-Schritten abgeleitet (nass ab 0,1 mm/h); `null`, wenn sich im Vorhersagezeitraum nichts ändert.
+
+Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | ja | – | lon,lat, e.g. 16.3725,48.2085 |
+| `coordinates` | path | string | ja | – | lon,lat, z. B. 16.3725,48.2085 |
 
 **Beispiel**
 
@@ -5720,19 +5722,19 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## TileJSON of weather tiles with time dimension
+## TileJSON der Wetterkacheln mit Zeitdimension {#tilejson-of-weather-tiles-with-time-dimension}
 
 `GET /v1/weather/tiles/{param}.json`
 
-param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (hourly, AROME) or rr_nowcast, pt_nowcast (precipitation radar nowcast, 15 min steps). `mapx:time.times` lists the available hours (UTC), `mapx:time.template` has the placeholder `{time}`; `tiles` uses `now`.
+param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (stündlich, AROME) oder rr_nowcast, pt_nowcast (Niederschlagsradar-Nowcast, 15-Minuten-Schritte). `mapx:time.times` listet die verfügbaren Stunden (UTC), `mapx:time.template` enthält den Platzhalter `{time}`; `tiles` verwendet `now`.
 
-Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast or pt_nowcast, with .json |
+| `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast oder pt_nowcast, mit .json |
 
 **Beispiel**
 
@@ -5781,21 +5783,21 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Weather raster tile (PNG 256, transparent outside the data)
+## Wetter-Rasterkachel (PNG 256, außerhalb der Daten transparent) {#weather-raster-tile-png-256-transparent-outside-the-data}
 
 `GET /v1/weather/tiles/{param}/{time}/{z}/{x}/{y}.png`
 
-Color ramp per parameter (see legend in the TileJSON). time: `now` or a UTC hour such as `2026-11-07T20:00Z`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Farbskala je Parameter (siehe Legende im TileJSON). time: `now` oder eine UTC-Stunde wie `2026-11-07T20:00Z`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast |
-| `time` | path | string | ja | – | now or 2026-11-07T20:00Z (nowcast: 15 min steps such as 2026-11-07T20:15Z) |
-| `z` | path | integer | ja | – | 0 to 14 |
-| `x` | path | integer | ja | – | Column |
-| `y` | path | string | ja | – | Row, with .png |
+| `time` | path | string | ja | – | now oder 2026-11-07T20:00Z (Nowcast: 15-Minuten-Schritte wie 2026-11-07T20:15Z) |
+| `z` | path | integer | ja | – | 0 bis 14 |
+| `x` | path | integer | ja | – | Spalte |
+| `y` | path | string | ja | – | Zeile, mit .png |
 
 **Beispiel**
 
@@ -5821,7 +5823,7 @@ res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png` · PNG; header X-Weather-Reference-Time
+**Beispielantwort**: `image/png` · PNG; Header X-Weather-Reference-Time
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -5834,24 +5836,24 @@ open("result.png", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Official weather warnings (GeoSphere Austria)
+## Amtliche Wetterwarnungen (GeoSphere Austria) {#official-weather-warnings-geosphere-austria}
 
 `GET /v1/weather/warnings`
 
-Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` (each with `de` and `en`) are optional: they are present only when GeoSphere has published a text for the warning and are often missing.
+Aktive und kommende amtliche Wetterwarnungen (bis zu 4 Tage im Voraus) als GeoJSON-MultiPolygone in WGS84, ein Objekt je Warnung (zusammengefasste Gemeinden). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 gelb, 2 orange, 3 rot; `text`, `impact` und `recommendation` (jeweils mit `de` und `en`) sind optional: Sie sind nur vorhanden, wenn GeoSphere zur Warnung einen Text veröffentlicht hat, und fehlen oft.
 
-Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Zentral alle 5 Minuten abgerufen, nie je Anfrage. Ohne `bbox` und `lon`/`lat` kommen alle Warnungen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lon` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
-| `lat` | query | string |  | – | Latitude |
-| `bbox` | query | string |  | – | west,south,east,north in degrees (WGS84): only warnings touching the box |
-| `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat or cold |
-| `min_level` | query | string |  | – | 1 (yellow, default) to 3 (red) |
-| `active` | query | string |  | – | now: only warnings valid right now; all (default): also upcoming |
+| `lon` | query | string |  | – | Länge: nur Warnungen, die den Punkt enthalten (mit lat) |
+| `lat` | query | string |  | – | Breite |
+| `bbox` | query | string |  | – | west,south,east,north in Grad (WGS84): nur Warnungen, die das Rechteck berühren |
+| `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat oder cold |
+| `min_level` | query | string |  | – | 1 (gelb, Standard) bis 3 (rot) |
+| `active` | query | string |  | – | now: nur jetzt gültige Warnungen; all (Standard): auch kommende |
 
 **Beispiel**
 
@@ -5936,20 +5938,20 @@ Täglicher Luftqualitätsindex und stündlich Stickstoffdioxid, Ozon, PM10 und P
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
-## Air quality index and pollutants for a point
+## Luftqualitätsindex und Schadstoffe für einen Punkt {#air-quality-index-and-pollutants-for-a-point}
 
 `GET /v1/air-quality/{coordinate}`
 
-GeoSphere chemical weather model (3 km) bilinear to the point: daily index `aqi` (3 days) and hourly NO2, O3, PM10, PM2.5 near the surface in ug/m3 with an hourly index (worst level by the EEA European Air Quality Index limits; SO2 is not provided by the model) plus the Saharan dust load (mg/m2, 0.2 degree grid).
+Chemisches Wettermodell von GeoSphere (3 km), bilinear auf den Punkt interpoliert: Tagesindex `aqi` (3 Tage) und stündlich NO2, O3, PM10, PM2.5 in Bodennähe in ug/m3 mit Stundenindex (schlechteste Stufe nach den Grenzen des European Air Quality Index der EEA; SO2 liefert das Modell nicht), dazu die Saharastaubbelastung (mg/m2, Raster 0,2 Grad).
 
-Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Österreich und Umgebung. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat, e.g. 16.37,48.21 |
-| `hours` | query | integer |  | `24` | 1 to 72, default 24 |
+| `coordinate` | path | string | ja | – | lon,lat, z. B. 16.37,48.21 |
+| `hours` | query | integer |  | `24` | 1 bis 72, Standard 24 |
 
 **Beispiel**
 
@@ -6035,20 +6037,20 @@ Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Tempe
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
 
-## Climate at a point (solar potential, normals, heat days, snow, drought)
+## Klima an einem Punkt (Sonnenpotenzial, Klimanormale, Hitzetage, Schnee, Dürre) {#climate-at-a-point-solar-potential-normals-heat-days-snow-drought}
 
 `GET /v1/climate/{coordinate}`
 
-Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
+Klima eines Punktes aus offenen Daten von GeoSphere Austria: Sonnenpotenzial (jährliche Globalstrahlung in kWh/m2 und Sonnenstunden, Mittel der letzten 3 vollständigen Jahre, 100 m), Temperatur und Niederschlag (Klimanormale 1991-2020, letzte 10 Jahre, Trend, Monatsnormale, 1 km), Hitze-, Sommer-, Frost- und Eistage sowie Tropennächte pro Jahr, Schneetage pro Winter und die aktuelle Schneehöhe sowie der Dürreindex SPEI (90 und 365 Tage, letzter Wert mit Klasse).
 
-Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. The same object is part of the parcel dossier (`properties.climate`). Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
+Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Rasterzelle abgeleitet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie von der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Dasselbe Objekt ist Teil des Grundstücksdossiers (`properties.climate`). Außerhalb Österreichs 404; 503, solange die Quelle nicht verfügbar ist oder drosselt. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
-| `sections` | query | string |  | `all` | Comma-separated sections to return (default: all) |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `sections` | query | string |  | `all` | Gewünschte Abschnitte, durch Komma getrennt (Standard: alle) |
 
 **Beispiel**
 
@@ -6111,14 +6113,14 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `location` | array | [longitude, latitude] (WGS84), optional height. |
-| `status` | string | `partial`: some sections are still being loaded (parcel dossier: retry after `retry_after_s`) |
-| `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
-| `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
-| `precipitation` | object,null | Precipitation and sunshine (SPARTACUS, 1 km) |
-| `temperature_extremes` | object,null | Hot, summer, frost and ice days per year, tropical nights (SPARTACUS daily data, 1 km); normal period 1991-2020 and last 10 complete years |
-| `snow` | object,null | Snow cover (SNOWGRID-CL model, 1 km) |
-| `drought` | object,null | Drought index SPEI (WINFORE, 1 km), latest value |
+| `location` | array | [Länge, Breite] (WGS84), optional Höhe. |
+| `status` | string | `partial`: einige Abschnitte werden noch geladen (Grundstücksdossier: nach `retry_after_s` erneut anfragen) |
+| `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
+| `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
+| `precipitation` | object,null | Niederschlag und Sonnenschein (SPARTACUS, 1 km) |
+| `temperature_extremes` | object,null | Hitze-, Sommer-, Frost- und Eistage pro Jahr, Tropennächte (SPARTACUS-Tagesdaten, 1 km); Normalperiode 1991-2020 und letzte 10 vollständige Jahre |
+| `snow` | object,null | Schneedecke (Modell SNOWGRID-CL, 1 km) |
+| `drought` | object,null | Dürreindex SPEI (WINFORE, 1 km), letzter Wert |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -6145,17 +6147,17 @@ Verkehrsmeldungen (Unfälle, Baustellen, Sperren), Tempolimits auf Autobahn-Anze
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `static` (5/s) · Guide: [Verkehr](https://docs.mapx.at/de/guides/traffic.md)
 
-## Speed limits of variable message signs on motorways (GeoJSON)
+## Tempolimits der Verkehrsbeeinflussungsanlagen auf Autobahnen (GeoJSON) {#speed-limits-of-variable-message-signs-on-motorways-geojson}
 
 `GET /v1/traffic/flow`
 
-Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No area-wide traffic state (the paid source is not used). Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Abschnitte mit einem Tempolimit auf Anzeigen unter der freien Fahrgeschwindigkeit, Stufe 0 bis 3 nach Verhältnis. Keine flächendeckende Verkehrslage (die kostenpflichtige Quelle wird nicht verwendet). Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `bbox` | query | string | ja | – | west,south,east,north in degrees (WGS84) |
+| `bbox` | query | string | ja | – | west,south,east,north in Grad (WGS84) |
 
 **Beispiel**
 
@@ -6226,33 +6228,33 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Incident reports and traffic regulations (EVIS.AT): accidents, roadworks, closures with time span
+## Verkehrsmeldungen und Verkehrsregelungen (EVIS.AT): Unfälle, Baustellen, Sperren mit Zeitraum {#incident-reports-and-traffic-regulations-evisat-accidents-roadworks-closures-with-time-span}
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next` as relative URL or `null` on the last page; `next_cursor` and `next_offset` only when there is a further page).
+Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Art und Zeitfenster. Sortiert nach Wichtigkeit (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit` und `cursor` (`total`, `next` als relative URL oder `null` auf der letzten Seite; `next_cursor` und `next_offset` nur, wenn es eine weitere Seite gibt).
 
-Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Baustellen auf Autobahnen und Schnellstraßen enthalten Fahrstreifenangaben der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north; optional |
-| `planned` | query | string |  | – | true: planned only, false: unplanned only |
-| `road` | query | string |  | – | Road number, normalized: A1, A 1 and A01 are the same; also S1, B99, L347 |
-| `road_class` | query | string |  | – | Comma-separated: motorway (A), expressway (S), federal (B), state (L) |
-| `active` | query | string |  | `with from/to` | false: also inactive (default with from/to) |
-| `type` | query | string |  | – | Comma-separated: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
-| `from` | query | string |  | – | Window start (UTC, YYYY-MM-DD or YYYY-MM-DDTHH:MM[:SS]Z): incidents still valid afterwards |
-| `to` | query | string |  | – | Window end (UTC): incidents starting before |
-| `route` | query | string |  | – | Route corridor: encoded polyline (like geometries=polyline6 or polyline) or GeoJSON LineString; result sorted by position on the route |
-| `route_precision` | query | string |  | – | 6 (default) or 5 |
-| `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
-| `sort` | query | string |  | `with route` | importance (default): closures and binding reports first, then road class A, S, B, L, then start; route (default with route): position on the route |
-| `limit` | query | string |  | `500` | At most this many features, 0 to 1000, default 500 |
-| `cursor` | query | string |  | – | Page marker: next_cursor of the previous response |
-| `offset` | query | string |  | – | Skip features (alternative to cursor) |
+| `planned` | query | string |  | – | true: nur geplante, false: nur ungeplante |
+| `road` | query | string |  | – | Straßennummer, normalisiert: A1, A 1 und A01 sind gleich; auch S1, B99, L347 |
+| `road_class` | query | string |  | – | Durch Komma getrennt: motorway (A), expressway (S), federal (B), state (L) |
+| `active` | query | string |  | `with from/to` | false: auch inaktive (Standard mit from/to) |
+| `type` | query | string |  | – | Durch Komma getrennt: accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous |
+| `from` | query | string |  | – | Beginn des Zeitfensters (UTC, YYYY-MM-DD oder YYYY-MM-DDTHH:MM[:SS]Z): Meldungen, die danach noch gelten |
+| `to` | query | string |  | – | Ende des Zeitfensters (UTC): Meldungen, die davor beginnen |
+| `route` | query | string |  | – | Routenkorridor: codierte Polyline (wie geometries=polyline6 oder polyline) oder GeoJSON-LineString; Ergebnis nach Position auf der Route sortiert |
+| `route_precision` | query | string |  | – | 6 (Standard) oder 5 |
+| `buffer` | query | string |  | `25` | Halbe Korridorbreite in Metern, 1 bis 1000, Standard 25 |
+| `sort` | query | string |  | `with route` | importance (Standard): Sperren und verbindliche Meldungen zuerst, dann Straßenklasse A, S, B, L, dann Beginn; route (Standard mit route): Position auf der Route |
+| `limit` | query | string |  | `500` | Höchstens so viele Objekte, 0 bis 1000, Standard 500 |
+| `cursor` | query | string |  | – | Seitenmarke: next_cursor der vorigen Antwort |
+| `offset` | query | string |  | – | Objekte überspringen (Alternative zu cursor) |
 
 **Beispiel**
 
@@ -6323,11 +6325,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Like GET, parameters as JSON object (for long routes)
+## Wie GET, Parameter als JSON-Objekt (für lange Routen) {#like-get-parameters-as-json-object-for-long-routes}
 
 `POST /v1/traffic/incidents`
 
-Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString, numbers (e.g. `route_precision`, `limit`, `buffer`) as JSON number or string. The gateway accepts bodies up to 64 KB (larger: 413); for longer routes simplify the line or split it.
+Body: dieselben Parameter als JSON-Objekt; `route` als Polyline-String oder GeoJSON-LineString, Zahlen (z. B. `route_precision`, `limit`, `buffer`) als JSON-Zahl oder String. Das Gateway nimmt Bodys bis 64 KB an (größer: 413); bei längeren Routen die Linie vereinfachen oder aufteilen.
 
 **Request-Body (JSON)**
 
@@ -6460,11 +6462,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Variable message signs (ASFINAG) with position
+## Anzeigen der Verkehrsbeeinflussungsanlagen (ASFINAG) mit Position {#variable-message-signs-asfinag-with-position}
 
 `GET /v1/traffic/signs`
 
-Current state: speed limit, pictogram, additional text. Only installations with a position in the source (about 40 of roughly 5300); the fields `total_signs` and `located_signs` give the numbers. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Aktueller Zustand: Tempolimit, Piktogramm, Zusatztext. Nur Anlagen mit Position in der Quelle (etwa 40 von rund 5300); die Felder `total_signs` und `located_signs` nennen die Zahlen. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
@@ -6535,11 +6537,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## TileJSON of traffic tiles
+## TileJSON der Verkehrskacheln {#tilejson-of-traffic-tiles}
 
 `GET /v1/traffic/tiles.json`
 
-Vector tiles with layers `traffic` (speed limits: level, speed, free) and `incidents` (kind, text, road, planned, closed, mandatory).
+Vektorkacheln mit den Layern `traffic` (Tempolimits: level, speed, free) und `incidents` (kind, text, road, planned, closed, mandatory).
 
 **Beispiel**
 
@@ -6586,19 +6588,19 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Traffic vector tile (MVT)
+## Verkehrs-Vektorkachel (MVT) {#traffic-vector-tile-mvt}
 
 `GET /v1/traffic/tiles/{z}/{x}/{y}.pbf`
 
-Zoom 5 to 14. `Cache-Control` 60 seconds. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Zoom 5 bis 14. `Cache-Control` 60 Sekunden. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `z` | path | integer | ja | – | 5 to 14 |
-| `x` | path | integer | ja | – | Column |
-| `y` | path | string | ja | – | Row, with .pbf |
+| `z` | path | integer | ja | – | 5 bis 14 |
+| `x` | path | integer | ja | – | Spalte |
+| `y` | path | string | ja | – | Zeile, mit .pbf |
 
 **Beispiel**
 
@@ -6624,7 +6626,7 @@ res = requests.get("https://api.mapx.at/v1/traffic/tiles/10/558/355.pbf", header
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapbox-vector-tile` · MVT, gzip if accepted
+**Beispielantwort**: `application/vnd.mapbox-vector-tile` · MVT, gzip, wenn akzeptiert
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -6636,7 +6638,7 @@ open("result.pbf", "wb").write(res.content)
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## State of the traffic data
+## Stand der Verkehrsdaten {#state-of-the-traffic-data}
 
 `GET /v1/traffic/status`
 
@@ -8636,6 +8638,11 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 > Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
+## 2026-11-19
+
+### Geändert
+- Die deutsche [API-Referenz](https://docs.mapx.at/de/api/index.md) ist vollständig übersetzt: Beschreibungen der Endpunkte, Parameter und Antwortfelder sowie die Hinweise im Playground sind jetzt deutsch.
+
 ## 2026-11-18
 
 ### Neu
@@ -8643,6 +8650,7 @@ Source: https://docs.mapx.at/de/reference/changelog/
 - [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/), verlinkt aus Konto, Registrierung und Doku.
 
 ### Geändert
+- `/v1/geocode` und `/v1/geocode/batch` liefern in `properties.category` jetzt die öffentliche Kategorie-Id (z. B. `train_station` statt bisher `bahnhof`).
 - `tiles.mapx.at`: `GET` auf `.pmtiles`-Dateien nur noch mit genau einer geschlossenen `Range` (`bytes=<start>-<ende>`), sonst `403` [`range-required`](https://docs.mapx.at/de/api/errors.md#range-required). MapLibre mit pmtiles.js ist nicht betroffen. Die Hinweise auf direkte PMTiles-URLs in den Tileset-Seiten und unter Zugang und Limits sind entfernt; Karten laden über Style, TileJSON oder `{z}/{x}/{y}`.
 - Suche: `proximity` wirkt jetzt auch bei der Freitextsuche (Umkreis-Abfrage, Wertung aus Treffergüte, Nähe und Bedeutung).
 - Einheitliche Fehlerantworten: Auch Anmeldefehler und alle Fehler des Gateways kommen als `application/problem+json` mit eigenem `title` und `detail` je Code (statt `Unauthorized`/`Forbidden` ohne `detail`); `429` hat immer den Titel `Rate limit exceeded`; `405` kommt mit Header `Allow` auch vom Gateway, und zwar vor der Token-Prüfung. Neue Codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) und `upstream-timeout` (504). Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).

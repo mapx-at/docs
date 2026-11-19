@@ -8,22 +8,22 @@ Höhe über Meer (m) für Punkte oder entlang einer Linie, aus dem Geländemodel
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `elevation` (10/s), `search` (10/s) · Guide: [Höhe und Gelände](https://docs.mapx.at/de/guides/elevation.md)
 
-## Elevations (bilinear from z16 Terrain-RGB, 0.1 m)
+## Höhen (bilinear aus Terrain-RGB z16, 0,1 m) {#elevations-bilinear-from-z16-terrain-rgb-01-m}
 
 `GET /v1/elevation`
 
-Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414 as HTML), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
+Entweder `points` (bis zu 512 Punkte) oder `path` (Linie auf der Kugel, nach Länge gleichmäßig in `samples` Punkte geteilt). Außerhalb des Gebiets ist `elevation` null. Eine POST-Form gibt es nicht, und das Gateway begrenzt die Anfrage-URL auf etwa 8 KB (längere URLs bekommen 414 als HTML), ein GET trägt daher praktisch etwa 400 Punkte mit 6 Nachkommastellen, mit mehr Stellen weniger.
 
-Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or use `/v1/elevation/profile`.
+Größere Punktmengen auf mehrere Anfragen aufteilen; für Punkte entlang einer Linie nur die Stützpunkte als `path` senden und `samples` (bis 1024) die Abtastung überlassen, oder `/v1/elevation/profile` verwenden.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
-| `path` | query | string |  | – | lon,lat;lon,lat;... (2 to 512 vertices) |
-| `samples` | query | integer (2–1024) |  | `100` | With path only |
-| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain) or dsm (surface) |
+| `points` | query | string |  | – | lon,lat;lon,lat;... (höchstens 512; die URL-Grenze von etwa 8 KB erlaubt meist weniger) |
+| `path` | query | string |  | – | lon,lat;lon,lat;... (2 bis 512 Stützpunkte) |
+| `samples` | query | integer (2–1024) |  | `100` | Nur mit path |
+| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (Gelände) oder dsm (Oberfläche) |
 
 **Beispiel**
 
@@ -84,17 +84,17 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Height at a point (DTM and DSM)
+## Höhe an einem Punkt (DTM und DSM) {#height-at-a-point-dtm-and-dsm}
 
 `GET /v1/elevation/{coordinate}`
 
-One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date`.
+Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution_m`, `reference_date`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
 
 **Beispiel**
 
@@ -150,18 +150,18 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Elevation profile along a line
+## Höhenprofil entlang einer Linie {#elevation-profile-along-a-line}
 
 `GET /v1/elevation/profile`
 
-One GeoJSON line with z coordinate; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `min_m`, `max_m`.
+Eine GeoJSON-Linie mit z-Koordinate; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `min_m`, `max_m`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... (2 to 512 points) |
-| `samples` | query | string |  | `100` | 2 to 1024, default 100 |
+| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... (2 bis 512 Punkte) |
+| `samples` | query | string |  | `100` | 2 bis 1024, Standard 100 |
 | `model` | query | string |  | – | dtm\|dsm |
 
 **Beispiel**

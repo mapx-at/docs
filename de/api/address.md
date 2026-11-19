@@ -8,20 +8,20 @@ Autofill vervollständigt eine Postadresse beim Tippen. Die Validierung prüft e
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
-## Address Autofill: suggestions
+## Adress-Autofill: Vorschläge {#address-autofill-suggestions}
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`.
+Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Postleitzahl und Ort; die Felder stehen getrennt in `suggestions[]`.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string | ja | – | Partial input, e.g. `Hauptpl 3 Mel` |
-| `session_token` | query | string |  | – | Session id (1 to 64 characters), echoed back |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses |
-| `limit` | query | string |  | `5` | 1 to 10, default 5 |
+| `q` | query | string | ja | – | Unvollständige Eingabe, z. B. `Hauptpl 3 Mel` |
+| `session_token` | query | string |  | – | Sitzungs-Id (1 bis 64 Zeichen), wird zurückgegeben |
+| `proximity` | query | string |  | – | lon,lat, bevorzugt nahe Adressen |
+| `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
 
@@ -80,20 +80,20 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Address Autofill: retrieve the chosen address
+## Adress-Autofill: gewählte Adresse abrufen {#address-autofill-retrieve-the-chosen-address}
 
 `GET /v1/autofill/retrieve/{id}`
 
-`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature; `features[].id` is the address id, `properties` carry the same fields as a suggestion (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
+`id` aus `suggestions[].id` (`address-<AdrCD>`). FeatureCollection mit einem Punktobjekt; `features[].id` ist die Adress-Id, `properties` enthalten dieselben Felder wie ein Vorschlag (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
 
-`session_token` echoes the parameter (`null` without it). 404 for an unknown id.
+`session_token` gibt den Parameter zurück (`null` ohne ihn). 404 bei unbekannter Id.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | Address id from suggest |
-| `session_token` | query | string |  | – | As in suggest |
+| `id` | path | string | ja | – | Adress-Id aus suggest |
+| `session_token` | query | string |  | – | Wie bei suggest |
 
 **Beispiel**
 
@@ -156,9 +156,9 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `session_token` | string,null | The `session_token` parameter, echoed back (`null` without it). |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
-| `features` | array | One point feature; `id` is the address id `address-<AdrCD>`, `properties` hold `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` and `coordinates` [lon, lat]. |
+| `session_token` | string,null | Der Parameter `session_token`, unverändert zurückgegeben (`null` ohne ihn). |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
+| `features` | array | Ein Punktobjekt; `id` ist die Adress-Id `address-<AdrCD>`, `properties` enthalten `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` und `coordinates` [lon, lat]. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -170,23 +170,23 @@ data = res.json()
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 
-## Address Validation (free text or structured)
+## Adressprüfung (Freitext oder strukturiert) {#address-validation-free-text-or-structured}
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `address_code`.
+Prüft eine Adresse gegen das amtliche Register. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1), `deviations[]` je Feld (kind: spelling | wrong | added), `coordinates`, `id` und `address_code`.
 
-Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
+Versteht Str./Straße, Abkürzungen, Umlaute und ß. Bei `ambiguous` sind `address`, `coordinates`, `id` und `address_code` `null`, und `candidates[]` (bis zu 5, jeweils aufgebaut wie `address`) listet die möglichen Adressen, z. B. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. Bei `match` und `corrected` ist `candidates` leer.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `q` | query | string |  | – | Free text, e.g. `Haubtplatz 1, 3390 Melk` (or structured fields) |
-| `street` | query | string |  | – | Street |
-| `housenumber` | query | string |  | – | House number |
-| `postcode` | query | string |  | – | Postcode |
-| `place` | query | string |  | – | Place |
+| `q` | query | string |  | – | Freitext, z. B. `Haubtplatz 1, 3390 Melk` (oder strukturierte Felder) |
+| `street` | query | string |  | – | Straße |
+| `housenumber` | query | string |  | – | Hausnummer |
+| `postcode` | query | string |  | – | Postleitzahl |
+| `place` | query | string |  | – | Ort |
 
 **Beispiel**
 
@@ -249,16 +249,16 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
-| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
-| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
-| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
+| `confidence` | number | 0 bis 1. |
+| `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
+| `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
+| `address_code` | string,null | Adresscode des BEV-Adressregisters. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -270,11 +270,11 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Address Validation (JSON body)
+## Adressprüfung (JSON-Body) {#address-validation-json-body}
 
 `POST /v1/address/validate`
 
-Same as GET with the fields in a JSON object (`q` or `street`, `housenumber`, `postcode`, `place`). At most 16 KB.
+Wie GET, mit den Feldern in einem JSON-Objekt (`q` oder `street`, `housenumber`, `postcode`, `place`). Höchstens 16 KB.
 
 **Request-Body (JSON)**
 
@@ -365,16 +365,16 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
-| `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
-| `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
-| `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
-| `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
-| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
+| `confidence` | number | 0 bis 1. |
+| `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
+| `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
+| `address_code` | string,null | Adresscode des BEV-Adressregisters. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
