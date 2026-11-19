@@ -73,7 +73,7 @@ Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `
 
 ## Rate limits
 
-Limits apply per token and zone (requests without a valid token count per IP address). Every response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30). Exceeding a limit returns `429` with `Retry-After`. On top of the zones a token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted.
+Limits apply per token and zone (requests without a valid token count per IP address). Every response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30). Exceeding a limit returns `429` with `Retry-After`. On top of the zones a token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
 
 | Zone | Requests | Used by |
 |---|---|---|

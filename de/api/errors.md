@@ -87,6 +87,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`uri-too-long`](#uri-too-long) | 414 | URI too long |
 | [`unprocessable`](#unprocessable) | 422 | Anfrage nicht verarbeitbar |
 | [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded |
+| [`quota-exceeded`](#quota-exceeded) | 429 | Quota exceeded |
 | [`internal-error`](#internal-error) | 500 | Interner Fehler |
 | [`upstream-error`](#upstream-error) | 502 | Fehler im Backend |
 | [`service-unavailable`](#service-unavailable) | 503 | Dienst nicht verfügbar |
@@ -351,6 +352,14 @@ Was tun: Punkte oder Zeit ändern; `detail` lesen.
 Zu viele Anfragen. `429` hat zwei Ursachen: das Limit je IP-Adresse und Zone (Endpunktgruppe) oder das Minutenlimit je Token. Beide antworten mit `title` `Rate limit exceeded`, `detail` und `Retry-After`. Siehe [Limits](https://docs.mapx.at/de/api/errors.md#limits).
 
 Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort nennt die Zone.
+
+### quota-exceeded
+
+**429** · Quota exceeded
+
+Das Tages- oder Monatslimit des Kontos ist ausgeschöpft (alle Tokens des Kontos zusammen, Tage und Monate in UTC). Derzeit sind beide Limits unbegrenzt, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md#rate-limits).
+
+Was tun: `Retry-After` nennt die Sekunden bis zum nächsten Tag bzw. Monat (UTC); bis dahin wiederholen hilft nicht. Den Verbrauch zeigt das Konto unter Nutzung.
 
 ### internal-error
 

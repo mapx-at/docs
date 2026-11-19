@@ -73,7 +73,7 @@ Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-toke
 
 ## Rate Limits
 
-Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro IP-Adresse). Jede Antwort enthält einen `RateLimit-Policy`-Header, zum Beispiel `"search";q=10;w=1;burst=30` (10 Anfragen pro Sekunde plus Burst von 30). Bei Überschreitung folgt `429` mit `Retry-After`. Zusätzlich sind je Token standardmäßig 6000 Anfragen pro Minute erlaubt; abgelehnte Anfragen (`rate-limited`) werden gezählt.
+Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro IP-Adresse). Jede Antwort enthält einen `RateLimit-Policy`-Header, zum Beispiel `"search";q=10;w=1;burst=30` (10 Anfragen pro Sekunde plus Burst von 30). Bei Überschreitung folgt `429` mit `Retry-After`. Zusätzlich sind je Token standardmäßig 6000 Anfragen pro Minute erlaubt; abgelehnte Anfragen (`rate-limited`) werden gezählt. Vorgesehen ist außerdem ein Tages- und ein Monatslimit je Konto (alle Tokens zusammen, UTC, Überschreitung: `429` `quota-exceeded` mit `Retry-After` bis zum nächsten Tag bzw. Monat); derzeit sind beide unbegrenzt. Den Stand siehst du im Konto unter Nutzung.
 
 | Zone | Anfragen | Verwendet von |
 |---|---|---|

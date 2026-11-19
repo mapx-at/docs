@@ -6,6 +6,9 @@ Source: https://docs.mapx.at/reference/changelog/
 
 ## 2026-11-19
 
+### Added
+- Daily and monthly limit per account planned (currently unlimited); your account shows them under Usage together with the usage so far. New error `429` `quota-exceeded`, see [errors](https://docs.mapx.at/api/errors.md#quota-exceeded).
+
 ### Changed
 - The German [API reference](https://docs.mapx.at/de/api/) is fully translated: descriptions of endpoints, parameters and response fields and the hints in the playground are now in German.
 

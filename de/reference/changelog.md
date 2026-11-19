@@ -6,6 +6,9 @@ Source: https://docs.mapx.at/de/reference/changelog/
 
 ## 2026-11-19
 
+### Neu
+- Tages- und Monatslimit je Konto vorgesehen (derzeit unbegrenzt); das Konto zeigt sie unter Nutzung mit dem bisherigen Verbrauch. Neuer Fehler `429` `quota-exceeded`, siehe [Fehler](https://docs.mapx.at/de/api/errors.md#quota-exceeded).
+
 ### Geändert
 - Die deutsche [API-Referenz](https://docs.mapx.at/de/api/index.md) ist vollständig übersetzt: Beschreibungen der Endpunkte, Parameter und Antwortfelder sowie die Hinweise im Playground sind jetzt deutsch.
 

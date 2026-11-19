@@ -146,7 +146,7 @@ Ohne gültigen Token antwortet die API mit `401` (`missing-token`, `invalid-toke
 
 ## Rate Limits
 
-Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro IP-Adresse). Jede Antwort enthält einen `RateLimit-Policy`-Header, zum Beispiel `"search";q=10;w=1;burst=30` (10 Anfragen pro Sekunde plus Burst von 30). Bei Überschreitung folgt `429` mit `Retry-After`. Zusätzlich sind je Token standardmäßig 6000 Anfragen pro Minute erlaubt; abgelehnte Anfragen (`rate-limited`) werden gezählt.
+Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro IP-Adresse). Jede Antwort enthält einen `RateLimit-Policy`-Header, zum Beispiel `"search";q=10;w=1;burst=30` (10 Anfragen pro Sekunde plus Burst von 30). Bei Überschreitung folgt `429` mit `Retry-After`. Zusätzlich sind je Token standardmäßig 6000 Anfragen pro Minute erlaubt; abgelehnte Anfragen (`rate-limited`) werden gezählt. Vorgesehen ist außerdem ein Tages- und ein Monatslimit je Konto (alle Tokens zusammen, UTC, Überschreitung: `429` `quota-exceeded` mit `Retry-After` bis zum nächsten Tag bzw. Monat); derzeit sind beide unbegrenzt. Den Stand siehst du im Konto unter Nutzung.
 
 | Zone | Anfragen | Verwendet von |
 |---|---|---|
@@ -6797,6 +6797,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`uri-too-long`](#uri-too-long) | 414 | URI too long |
 | [`unprocessable`](#unprocessable) | 422 | Anfrage nicht verarbeitbar |
 | [`rate-limited`](#rate-limited) | 429 | Rate limit exceeded |
+| [`quota-exceeded`](#quota-exceeded) | 429 | Quota exceeded |
 | [`internal-error`](#internal-error) | 500 | Interner Fehler |
 | [`upstream-error`](#upstream-error) | 502 | Fehler im Backend |
 | [`service-unavailable`](#service-unavailable) | 503 | Dienst nicht verfügbar |
@@ -7061,6 +7062,14 @@ Was tun: Punkte oder Zeit ändern; `detail` lesen.
 Zu viele Anfragen. `429` hat zwei Ursachen: das Limit je IP-Adresse und Zone (Endpunktgruppe) oder das Minutenlimit je Token. Beide antworten mit `title` `Rate limit exceeded`, `detail` und `Retry-After`. Siehe [Limits](https://docs.mapx.at/de/api/errors.md#limits).
 
 Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort nennt die Zone.
+
+### quota-exceeded
+
+**429** · Quota exceeded
+
+Das Tages- oder Monatslimit des Kontos ist ausgeschöpft (alle Tokens des Kontos zusammen, Tage und Monate in UTC). Derzeit sind beide Limits unbegrenzt, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md#rate-limits).
+
+Was tun: `Retry-After` nennt die Sekunden bis zum nächsten Tag bzw. Monat (UTC); bis dahin wiederholen hilft nicht. Den Verbrauch zeigt das Konto unter Nutzung.
 
 ### internal-error
 
@@ -8681,6 +8690,9 @@ Source: https://docs.mapx.at/de/reference/changelog/
 > Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
 ## 2026-11-19
+
+### Neu
+- Tages- und Monatslimit je Konto vorgesehen (derzeit unbegrenzt); das Konto zeigt sie unter Nutzung mit dem bisherigen Verbrauch. Neuer Fehler `429` `quota-exceeded`, siehe [Fehler](https://docs.mapx.at/de/api/errors.md#quota-exceeded).
 
 ### Geändert
 - Die deutsche [API-Referenz](https://docs.mapx.at/de/api/index.md) ist vollständig übersetzt: Beschreibungen der Endpunkte, Parameter und Antwortfelder sowie die Hinweise im Playground sind jetzt deutsch.
