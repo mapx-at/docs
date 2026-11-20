@@ -2,29 +2,9 @@
 
 Source: https://docs.mapx.at/use-cases/municipalities/
 
-> Parcels, address validation, transit departures and an embedded map for municipal websites and administration tools.
+> Address validation, transit departures and an embedded map for municipal websites and administration tools.
 
-Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
-
-## Parcels
-
-The cadastre is available as a vector tileset for drawing and as an API for the parcel at a point.
-
-```js
-const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const p = r.features[0]?.properties; // parcel at the point: number, cadastral municipality, area
-console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
-```
-
-On the map with a click: example [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
-
-Search for a parcel by its number (the cadastral municipality is part of the identity):
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
-```
-
-The boundaries come from the BEV cadastral map (DKM). The area is computed from the boundary lines and deviates from the register by per mille. State this where the data is shown: for orientation, not legally binding.
+Municipal tools work with addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the address register, the timetable and the map for the web page of a municipality.
 
 ## Check addresses
 
@@ -70,6 +50,6 @@ Show your own data (playgrounds, collection points, closures) as [GeoJSON on the
 
 ## Next steps
 
-- [Parcels](https://docs.mapx.at/guides/parcels.md) and [Search](https://docs.mapx.at/guides/search.md)
+- [Search](https://docs.mapx.at/guides/search.md)
 - [Transit departures](https://docs.mapx.at/guides/transit.md)
 - [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md) in the colours of your municipality

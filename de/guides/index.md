@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/guides/
 
-> Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen und Grundstücke, dazu Techniken.
+> Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen, dazu Techniken.
 
 Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverändert läuft.
 
@@ -15,15 +15,13 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 - [Transit-Abfahrten](https://docs.mapx.at/de/guides/transit.md): Verbindungen, Haltestellen, Abfahrtstafeln.
 - [Static Images](https://docs.mapx.at/de/guides/static-images.md): Kartenbilder für Berichte und Webseiten.
 - [Höhen und Gelände](https://docs.mapx.at/de/guides/elevation.md): Höhen, Profile, 3D-Gelände.
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Katastergrundstücke an einem Punkt.
 - [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): mapx aus KI-Assistenten nutzen.
 
 ## Anwendungsfälle
 
-- [Immobilien](https://docs.mapx.at/de/use-cases/real-estate.md): Grundstücks-Dossier, Exposé-Bild, Erreichbarkeit.
 - [Logistik](https://docs.mapx.at/de/use-cases/logistics.md): Lkw-Routing, Matrix, Tourenplanung, Verkehr.
 - [Tourismus](https://docs.mapx.at/de/use-cases/tourism.md): Rad- und MTB-Routen, Höhenprofil, Wetter.
-- [Gemeinden](https://docs.mapx.at/de/use-cases/municipalities.md): Grundstücke, Adressvalidierung, Abfahrten, Einbettung.
+- [Gemeinden](https://docs.mapx.at/de/use-cases/municipalities.md): Adressvalidierung, Abfahrten, Einbettung.
 
 ## Techniken
 
@@ -32,4 +30,4 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 
 ## Beispiele
 
-26 lauffähige Karten mit vollständigem Code, Vorschaubild und Filter nach Produkt: [Beispiele](https://docs.mapx.at/de/examples/index.md).
+25 lauffähige Karten mit vollständigem Code, Vorschaubild und Filter nach Produkt: [Beispiele](https://docs.mapx.at/de/examples/index.md).

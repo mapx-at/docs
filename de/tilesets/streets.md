@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/tilesets/streets/
 
 > Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
 
-Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Kataster, Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
+Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
 
 **Nutzungen**
 
@@ -12,7 +12,7 @@ Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK
 - **Web-Karten und Apps**: Vektorkarte mit eigener Gestaltung bis z16
 - **Planungs- und Navigationshintergrund**: Straßen, Bahn, Gewässer, Grenzen
 - **Hausnummern und Namen**: Adressen, Orte, Berge und Gewässernamen
-- **Überlagerung**: Kataster, Höhenlinien und Relief darüber (https://docs.mapx.at/de/guides/overlay-contours/)
+- **Überlagerung**: Höhenlinien und Relief darüber (https://docs.mapx.at/de/guides/overlay-contours/)
 
 ## Kennwerte
 

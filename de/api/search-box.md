@@ -21,7 +21,7 @@ Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retr
 | `q` | query | string | ja | – | Suchtext |
 | `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
 | `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode, liefert auch die Entfernung |
-| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category haben keine Wirkung) |
+| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category haben keine Wirkung) |
 | `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `gas_station`), siehe `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |

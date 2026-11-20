@@ -24,7 +24,6 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 | Tileset | Text |
 |---|---|
 | `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0 |
-| `cadastre` | Datenquelle: BEV – DKM, CC BY 4.0 |
 | `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
@@ -42,14 +41,14 @@ JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es is
 
 | API | Quelle |
 |---|---|
-| Geocoding, Search Box, Address | BEV (Adressregister, Geographische Namen, Verwaltungsgrenzen, Kataster), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV (Adressregister, Geographische Namen, Verwaltungsgrenzen), CC BY 4.0 |
 | Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
 | Maut, Verkehr | ASFINAG / EVIS.AT, CC BY 4.0, Straßennetz GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), Datenquelle Mobilitätsverbünde Österreich OG |
 | Wetter | GeoSphere Austria, CC BY 4.0 |
+| Klima | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Luftqualität | GeoSphere Austria (Chemiewettermodell), CC BY 4.0 |
-| Klima, `properties.climate` des Grundstücks-Dossiers | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Parcel, Tilequery (Kataster) | BEV – DKM, CC BY 4.0 |
+| Tilequery | Quelle des abgefragten Tilesets, siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md) |
 | Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 Die Quellenangabe steht auch in den Metadaten von TileJSON und PMTiles.

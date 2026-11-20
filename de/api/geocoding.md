@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/api/geocoding/
 
-> Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten, Postleitzahlen und Grundstücken, mit Beispielen.
+> Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten und Postleitzahlen, mit Beispielen.
 
 Wandelt Adresse oder Ortsname in Koordinaten um und Koordinaten in die nächste Adresse.
 
@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (3
 
 `GET /v1/geocode`
 
-Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Grundstücke. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
+Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Orte von Interesse. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
 Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`, `bbox`. Für günstige Abfragen immer `types` angeben.
 
@@ -22,7 +22,7 @@ Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`,
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Suchtext (auch Pfadform `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 bis 10, Standard 5 |
-| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen; exakte Ortsnamen bleiben oben; wird ignoriert, wenn bbox gesetzt ist |
 
@@ -107,7 +107,7 @@ Wie `/v1/geocode?q=...`; der Suchtext ist das Pfadsegment (optional mit `.json`)
 |---|---|---|---|---|---|
 | `q` | path | string | ja | – | Suchtext, URL-codiert |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
-| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 

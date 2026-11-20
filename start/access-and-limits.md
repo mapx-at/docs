@@ -78,7 +78,7 @@ Limits apply per token and zone (requests without a valid token count per IP add
 | Zone | Requests | Used by |
 |---|---|---|
 | `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs, sprites |
-| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, parcel, departures, weather, traffic |
+| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, departures, weather, traffic |
 | `route` | 5/s, burst 20 | directions, transit journeys |
 | `elevation` | 10/s, burst 20 | elevation and profile |
 | `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
@@ -98,7 +98,7 @@ Show the source of the data wherever the map or result is visible. MapLibre adds
 
 ## No warranty
 
-All mapx data and results are provided without guarantee and used at your own risk. Check results yourself, especially for addresses, routes, departures, weather and cadastre. The [terms of use](https://mapx.at/en/terms/) apply.
+All mapx data and results are provided without guarantee and used at your own risk. Check results yourself, especially for addresses, routes, departures, weather. The [terms of use](https://mapx.at/en/terms/) apply.
 
 ## Next
 

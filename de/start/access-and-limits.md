@@ -78,7 +78,7 @@ Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro 
 | Zone | Anfragen | Verwendet von |
 |---|---|---|
 | `tiles` | 100/s, Burst 200 | Tiles, TileJSON, Glyphs, Sprites |
-| `search` | 10/s, Burst 30 | Geocoding, Search Box, Autofill, Tilequery, Grundstück, Abfahrten, Wetter, Verkehr |
+| `search` | 10/s, Burst 30 | Geocoding, Search Box, Autofill, Tilequery, Abfahrten, Wetter, Verkehr |
 | `route` | 5/s, Burst 20 | Directions, Transit-Verbindungen |
 | `elevation` | 10/s, Burst 20 | Höhe und Profil |
 | `static` | 5/s, Burst 60 | Static Tiles, Verkehrs-Tiles |
@@ -98,7 +98,7 @@ Die Datenquelle überall anzeigen, wo die Karte oder das Ergebnis sichtbar ist. 
 
 ## Ohne Gewähr
 
-Alle Daten und Ergebnisse von mapx sind ohne Gewähr, die Nutzung erfolgt auf eigenes Risiko. Prüfe Ergebnisse selbst, besonders bei Adressen, Routen, Abfahrten, Wetter und Kataster. Es gelten die [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
+Alle Daten und Ergebnisse von mapx sind ohne Gewähr, die Nutzung erfolgt auf eigenes Risiko. Prüfe Ergebnisse selbst, besonders bei Adressen, Routen, Abfahrten, Wetter. Es gelten die [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
 
 ## Nächste Schritte
 

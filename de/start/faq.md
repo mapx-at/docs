@@ -60,10 +60,6 @@ Längen- und Breitengrad sind vertauscht. mapx und GeoJSON verwenden `lon,lat`. 
 
 Raster-Tiles haben 512 px. Im Client `tileSize: 512` setzen. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
 
-## Ist der Kataster rechtsverbindlich?
-
-Nein. Er zeigt Grundstücksgrenzen zur Orientierung und ersetzt weder einen Grundbuchauszug noch eine Vermessung.
-
 ## Wo melde ich ein Problem?
 
 An [support@mapx.at](mailto:support@mapx.at) schreiben (technische Fragen und Fehler) oder an [info@mapx.at](mailto:info@mapx.at) (alles andere).

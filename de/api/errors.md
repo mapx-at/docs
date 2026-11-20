@@ -11,10 +11,10 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
   "title": "Invalid parameter",
   "status": 400,
-  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, parcel, road_ref)",
+  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, road_ref)",
   "code": "invalid-parameter",
   "param": "types",
-  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "parcel", "road_ref"]
+  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "road_ref"]
 }
 ```
 
@@ -419,7 +419,7 @@ Die Limits je IP-Adresse und Zone und das Minutenlimit je Token stehen unter [Zu
 
 | Header | Wert |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe, Grundstück), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
+| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
 | `ETag`, `Last-Modified` | Version; mit `If-None-Match` bzw. `If-Modified-Since` → `304` (Kacheln, Stile, TileJSON, OpenAPI) |
 | `Server-Timing` | `router`, `search`, `render`, `total` in Millisekunden |
 | `RateLimit-Policy` | Zone und Limit des Endpunkts |
@@ -428,4 +428,4 @@ PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen u
 
 ## Attribution
 
-JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` beim Wetter oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).

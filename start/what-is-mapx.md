@@ -15,7 +15,6 @@ mapx is a set of maps and location APIs for Austria. All data comes from officia
 | Transit | Public transport journeys, stops, departures | [Transit](https://docs.mapx.at/guides/transit.md) |
 | Static images | PNG or WebP maps with pins, paths and GeoJSON | [Static images](https://docs.mapx.at/guides/static-images.md) |
 | Elevation and terrain | Heights, elevation profiles, terrain and surface models | [Elevation](https://docs.mapx.at/guides/elevation.md) |
-| Parcels | Cadastral parcel with area and number at any point | [Parcels](https://docs.mapx.at/guides/parcels.md) |
 
 The APIs follow the conventions of well-known web mapping services: the same URL shapes, GeoJSON responses and MapLibre-compatible styles. Existing MapLibre, Leaflet or OpenLayers code needs few changes.
 

@@ -72,4 +72,3 @@ For clients that only read raster tiles (Leaflet, QGIS), Static Tiles render a s
 
 - [Static Images API](https://docs.mapx.at/api/static-images.md)
 - [Maps](https://docs.mapx.at/guides/maps.md): the same styles interactively
-- [Parcels](https://docs.mapx.at/guides/parcels.md): parcel boundary as GeoJSON overlay

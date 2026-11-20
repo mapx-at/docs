@@ -50,7 +50,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 3. Enter **Min. Zoom Level** 0, **Max. Zoom Level** 16, OK.
 4. Drag the connection into the map. QGIS first shows a default style; change the look in the layer style editor or with your own style.
 
-The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) and `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
+The same procedure works for `contours` (max 16, min 10), `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
 
 ## Next steps
 

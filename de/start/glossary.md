@@ -2,11 +2,9 @@
 
 Source: https://docs.mapx.at/de/start/glossary/
 
-> Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Katastralgemeinde (KG), Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
+> Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
 
 **Annotation.** Zusätzliche Werte je Routensegment, zum Beispiel Geschwindigkeit oder Höhe. Angefordert mit `annotations`.
-
-**Katastralgemeinde (KG).** Einheit des österreichischen Grundbuchs. Eine Grundstücksnummer ist nur innerhalb einer KG eindeutig.
 
 **Contours.** Höhenlinien, Linien gleicher Höhe. Tileset `contours`.
 
@@ -34,4 +32,4 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **TileJSON.** Eine kleine JSON-Beschreibung eines Tilesets: URL-Vorlage, Zoombereich, Grenzen, Attribution.
 
-**Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `cadastre`. Siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md).
+**Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `contours`. Siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md).

@@ -59,7 +59,6 @@ mapx is a set of maps and location APIs for Austria. All data comes from officia
 | Transit | Public transport journeys, stops, departures | [Transit](https://docs.mapx.at/guides/transit.md) |
 | Static images | PNG or WebP maps with pins, paths and GeoJSON | [Static images](https://docs.mapx.at/guides/static-images.md) |
 | Elevation and terrain | Heights, elevation profiles, terrain and surface models | [Elevation](https://docs.mapx.at/guides/elevation.md) |
-| Parcels | Cadastral parcel with area and number at any point | [Parcels](https://docs.mapx.at/guides/parcels.md) |
 
 The APIs follow the conventions of well-known web mapping services: the same URL shapes, GeoJSON responses and MapLibre-compatible styles. Existing MapLibre, Leaflet or OpenLayers code needs few changes.
 
@@ -151,7 +150,7 @@ Limits apply per token and zone (requests without a valid token count per IP add
 | Zone | Requests | Used by |
 |---|---|---|
 | `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs, sprites |
-| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, parcel, departures, weather, traffic |
+| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, departures, weather, traffic |
 | `route` | 5/s, burst 20 | directions, transit journeys |
 | `elevation` | 10/s, burst 20 | elevation and profile |
 | `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
@@ -171,7 +170,7 @@ Show the source of the data wherever the map or result is visible. MapLibre adds
 
 ## No warranty
 
-All mapx data and results are provided without guarantee and used at your own risk. Check results yourself, especially for addresses, routes, departures, weather and cadastre. The [terms of use](https://mapx.at/en/terms/) apply.
+All mapx data and results are provided without guarantee and used at your own risk. Check results yourself, especially for addresses, routes, departures, weather. The [terms of use](https://mapx.at/en/terms/) apply.
 
 ## Next
 
@@ -349,11 +348,9 @@ map.on("load", () => {
 
 Source: https://docs.mapx.at/start/glossary/
 
-> Glossary of terms used in the mapx documentation: annotations, cadastral municipality (KG), contours, isochrones, PMTiles, Terrain-RGB and more.
+> Glossary of terms used in the mapx documentation: annotations, contours, isochrones, PMTiles, Terrain-RGB and more.
 
 **Annotation.** Extra values per route segment, for example speed or elevation. Requested with `annotations`.
-
-**Cadastral municipality (KG).** Austrian land registry unit. A parcel number is only unique within one KG.
 
 **Contours.** Lines of equal elevation. Tileset `contours`.
 
@@ -381,7 +378,7 @@ Source: https://docs.mapx.at/start/glossary/
 
 **TileJSON.** A small JSON description of a tileset: URL template, zoom range, bounds, attribution.
 
-**Tileset.** A named collection of tiles, for example `streets` or `cadastre`. See [Tilesets](https://docs.mapx.at/tilesets/index.md).
+**Tileset.** A named collection of tiles, for example `streets` or `contours`. See [Tilesets](https://docs.mapx.at/tilesets/index.md).
 
 ---
 
@@ -447,10 +444,6 @@ Longitude and latitude are swapped. mapx and GeoJSON use `lon,lat`. See [Coordin
 
 Raster tiles are 512 px. Set `tileSize: 512` in your client. See [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
 
-## Is the cadastre legally binding?
-
-No. It shows parcel boundaries for orientation and does not replace a land register extract or a survey.
-
 ## Where do I report a problem?
 
 Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).
@@ -461,7 +454,7 @@ Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs
 
 Source: https://docs.mapx.at/guides/
 
-> Task-oriented guides for every mapx product: maps, search, navigation, traffic, transit, static images, elevation and parcels, plus techniques.
+> Task-oriented guides for every mapx product: maps, search, navigation, traffic, transit, static images, elevation, plus techniques.
 
 Each guide shows the common tasks of one product with code that runs as it is.
 
@@ -474,15 +467,13 @@ Each guide shows the common tasks of one product with code that runs as it is.
 - [Transit departures](https://docs.mapx.at/guides/transit.md): Journeys, stops, departure boards.
 - [Static images](https://docs.mapx.at/guides/static-images.md): Map images for reports and web pages.
 - [Elevation and terrain](https://docs.mapx.at/guides/elevation.md): Heights, profiles, 3D terrain.
-- [Parcels](https://docs.mapx.at/guides/parcels.md): Cadastral parcels at a point.
 - [MCP server](https://docs.mapx.at/guides/mcp.md): Use mapx from AI assistants.
 
 ## Use cases
 
-- [Real estate](https://docs.mapx.at/use-cases/real-estate.md): Parcel dossier, listing image, reachability.
 - [Logistics](https://docs.mapx.at/use-cases/logistics.md): Truck routing, matrix, tour planning, traffic.
 - [Tourism](https://docs.mapx.at/use-cases/tourism.md): Bike and MTB routes, elevation profile, weather.
-- [Municipalities](https://docs.mapx.at/use-cases/municipalities.md): Parcels, address validation, departures, embeds.
+- [Municipalities](https://docs.mapx.at/use-cases/municipalities.md): Address validation, departures, embeds.
 
 ## Techniques
 
@@ -491,7 +482,7 @@ Each guide shows the common tasks of one product with code that runs as it is.
 
 ## Examples
 
-27 runnable maps with the complete code, a preview image and a filter by product: [Examples](https://docs.mapx.at/examples/index.md).
+25 runnable maps with the complete code, a preview image and a filter by product: [Examples](https://docs.mapx.at/examples/index.md).
 
 ---
 
@@ -540,16 +531,15 @@ Every tileset has a TileJSON address `https://tiles.mapx.at/v1/tiles/{tileset}.j
 | Tileset | Type | Content |
 |---|---|---|
 | `streets` | vector | Roads, rail, water, boundaries, places, buildings |
-| `cadastre` | vector | Parcel boundaries (z16) |
 | `contours` | vector | Contour lines |
 | `terrain-rgb`, `dsm` | raster-dem | Terrain and surface height |
 | `orthophoto` | raster | Aerial photo, up to z18 |
 
 ```js
 map.on("load", () => {
-  map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
-  map.addLayer({ id: "parcels", type: "line", source: "cadastre", "source-layer": "parcel_l",
-                 paint: { "line-color": "#e11d48", "line-width": 1 } });
+  map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
+  map.addLayer({ id: "contours", type: "line", source: "contours", "source-layer": "contour_l",
+                 paint: { "line-color": "#92400e", "line-width": 0.6 } });
 });
 ```
 
@@ -605,7 +595,7 @@ Pick the endpoint by what the user does.
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
 | Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
-All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
+All data is official: the address register, place names, administrative boundaries from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Geocode an address
 
@@ -615,7 +605,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].center;
 ```
 
-Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
+Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
 ## Reverse geocode
 
@@ -670,7 +660,6 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/va
 ## Next
 
 - [Geocoding API](https://docs.mapx.at/api/geocoding.md), [Search Box API](https://docs.mapx.at/api/search-box.md), [Address API](https://docs.mapx.at/api/address.md)
-- [Parcels](https://docs.mapx.at/guides/parcels.md): search results of type parcel
 - [Errors and limits](https://docs.mapx.at/api/errors.md)
 
 ---
@@ -1055,7 +1044,6 @@ For clients that only read raster tiles (Leaflet, QGIS), Static Tiles render a s
 
 - [Static Images API](https://docs.mapx.at/api/static-images.md)
 - [Maps](https://docs.mapx.at/guides/maps.md): the same styles interactively
-- [Parcels](https://docs.mapx.at/guides/parcels.md): parcel boundary as GeoJSON overlay
 
 ---
 
@@ -1121,118 +1109,13 @@ The tiles use the Terrain-RGB encoding: `height = -10000 + (R * 65536 + G * 256 
 
 ---
 
-# Parcels guide: cadastre lookup
-
-Source: https://docs.mapx.at/guides/parcels/
-
-> Find the cadastral parcel at a point, draw parcel boundaries on the map and read the parcel attributes with the mapx cadastre for Austria.
-
-The cadastre (BEV, DKM) is available as a vector tileset for drawing and as an API for the parcel at a point. The data is for orientation and not legally binding. Every request needs a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
-
-| Task | Use |
-|---|---|
-| Draw parcel boundaries | tileset `cadastre` (z16) |
-| Parcel number, area and cadastral municipality at a point | [`/v1/parcel/{lon},{lat}`](https://docs.mapx.at/api/tilequery.md) |
-| Query any vector tileset at a point | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](https://docs.mapx.at/api/tilequery.md) |
-| Search for a parcel | [Geocoding](https://docs.mapx.at/guides/search.md): parcels are among the searched objects |
-
-## Parcel at a point
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_number, cadastral_municipality_id, area_m2, is_building_land}'
-```
-
-The result is a `FeatureCollection` with the parcel polygon. The area is computed from the boundary lines and deviates from the register value by per mille. A building returns its building parcel; the number then starts with a dot. Parcels that extend beyond the 2 km tile window around the point are missing, and the list is empty outside the cadastre data.
-
-## Click a parcel on the map
-
-```js
-map.on("load", () => {
-  map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
-  map.addLayer({ id: "parcel-lines", type: "line", source: "cadastre", "source-layer": "parcel_l", paint: { "line-color": "#e11d48" } });
-});
-map.on("click", async (e) => {
-  const { lng, lat } = e.lngLat;
-  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-  const [parcel] = (await res.json()).features;
-  if (!parcel) return;
-  const p = parcel.properties;
-  new maplibregl.Popup().setLngLat(e.lngLat)
-    .setHTML(`Parcel ${p.parcel_number}<br>${Math.round(p.area_m2)} m²`).addTo(map);
-});
-```
-
-Full example: [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md). The cadastral municipality (`cadastral_municipality_id`) is part of the identity of a parcel: the number alone is not unique.
-
-## Tilequery
-
-Tilequery reads the vector tile at the highest zoom and returns the features nearest to the point (`radius` up to 2000 m).
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/15.3294,48.2272.json?radius=30&limit=3" | jq '.features[].properties.tilequery'
-```
-
-Combine tilesets with a comma, for example `streets,cadastre`. Each feature has `tilequery.distance` (m), `geometry` and `layer`.
-
-## Parcel image for a listing
-
-Combine the parcel with a [static image](https://docs.mapx.at/guides/static-images.md) using the polygon as GeoJSON overlay:
-
-```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).features[0];
-const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry }));
-const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp?access_token=YOUR_TOKEN`;
-```
-
-## Parcel dossier
-
-`GET /v1/parcels/{id}` returns everything the open data say about one parcel in one call, for all roughly 10.2 million parcels of Austria (DKM key date in `reference_date`). The ID is `<KG number>-<parcel number>` with `/` written as `_`, building parcels with a leading dot (`14143-473_1`, `14143-.98`); it is `properties.parcel_id` in search results and in the point query.
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14143-473_1" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
-```
-
-| Field | Content |
-|---|---|
-| `cadastral_municipality`, `municipality`, `district`, `state` | `{id, name}` |
-| `area_m2`, `area_ellipsoidal_m2` | area in the Gauss-Krueger plane (as the cadastre computes it) and on the ellipsoid; the register value is not part of the open data |
-| `land_use` | DKM land use classes with `area_m2` and `share` |
-| `buildings` | count, footprint, heights from BEV DLM where available, the 25 largest |
-| `elevation` | min, mean, max and mean/max slope from the terrain model on a point grid inside the parcel |
-| `addresses`, `nearest_transit_stop` | register addresses on the parcel, nearest stop within 2 km |
-| `orthophoto` | flight year and date |
-| `climate` | solar potential, temperature and precipitation normals, hot and snow days, drought index; same object as [`/v1/climate/{lon},{lat}`](https://docs.mapx.at/api/climate.md) at the parcel's inner point. While a new area is being loaded, sections are `null` with `status: "partial"`; ask again after `retry_after_s` seconds |
-| `links.static_image` | ready-made [static image](https://docs.mapx.at/guides/static-images.md) URL with the parcel outlined |
-
-The point query adds `parcel_id` and `links.dossier`; `?include=dossier` returns the full dossier per feature. Reference: [Tilequery and Parcel API](https://docs.mapx.at/api/tilequery.md).
-
-## Parcel search
-
-Geocoding and Search Box know `types=parcel` for all cadastral municipalities:
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exact hit
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # building parcel
-```
-
-`KG 14143 Gst 288/4`, `14143/288/4` and `14143 288/4` are unambiguous (a five-digit number next to a parcel number is the KG number, postcodes have four digits). `Melk 288/4` puts hits with that number first.
-
-## Next
-
-- [Tilequery and Parcel API](https://docs.mapx.at/api/tilequery.md)
-- [Tilesets](https://docs.mapx.at/tilesets/cadastre.md): layers and fields of the cadastre
-- [Elevation](https://docs.mapx.at/guides/elevation.md): height of the parcel
-
----
-
 # MCP server for Austrian geodata
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 23 read-only tools for search, routing, transit, elevation, parcels, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 21 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address search, routes, public transport, heights, cadastral parcels, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
+The mapx MCP server gives an AI assistant 21 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
 
 | | |
 |---|---|
@@ -1385,7 +1268,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 
 | Group | Tool | Purpose | Main inputs |
 |---|---|---|---|
-| Search | `geocode` | Coordinates for an address, street, place, postcode, POI, parcel or road kilometer | `query`, `near`, `types`, `limit` |
+| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `near`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
 | Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
@@ -1399,8 +1282,6 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Public transport | `find_stops` | Stops near a point or in a box, with `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Elevation | `elevation` | Height above sea level (terrain or surface model) | `points`, `model` |
 | Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `path` (2 to 200 points), `samples`, `model` |
-| Parcels | `parcel_at_point` | Cadastral parcel at a coordinate | `lon`, `lat`, `radius_m` |
-| Parcels | `parcel_details` | Parcel dossier: area, land use, buildings, slope, addresses | `parcel_id` |
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `path`, `buffer_m` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lon`, `lat`, `kind`, `hours` |
@@ -1422,7 +1303,6 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"
 - "How high is the Grossglockner area, and what does the profile of my hiking path look like?"
-- "Which parcel is at 16.3725, 48.2085, how large is it, and is it building land?"
 - "Will it rain in Innsbruck in the next three hours?"
 - "Plan the best order for these five delivery addresses and show them on a map."
 
@@ -1959,7 +1839,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=YOUR_TO
 3. Enter **Min. Zoom Level** 0, **Max. Zoom Level** 16, OK.
 4. Drag the connection into the map. QGIS first shows a default style; change the look in the layer style editor or with your own style.
 
-The same procedure works for `contours` (max 16, min 10), `cadastre` (zoom 16) and `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
+The same procedure works for `contours` (max 16, min 10), `orthophoto-flight-blocks` (zoom 6 to 17). All tilesets: [Tiles](https://docs.mapx.at/api/tiles.md).
 
 ## Next steps
 
@@ -2006,7 +1886,7 @@ The data is licensed CC BY 4.0 and users must be able to reach the source on the
 
 ## Your own GeoJSON
 
-API responses (route, isochrone, parcel …) are GeoJSON in WGS84. `ol.format.GeoJSON` reads them into the map projection:
+API responses (route, isochrone …) are GeoJSON in WGS84. `ol.format.GeoJSON` reads them into the map projection:
 
 ```js
 const source = new ol.source.Vector();
@@ -2022,7 +1902,7 @@ source.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjec
 
 ## Examples
 
-Examples with an OpenLayers version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "OpenLayers"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#ol), [Route](https://docs.mapx.at/examples/route.md#ol) and [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md#ol).
+Examples with an OpenLayers version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "OpenLayers"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#ol) and [Route](https://docs.mapx.at/examples/route.md#ol).
 
 ---
 
@@ -2060,7 +1940,7 @@ The data is licensed CC BY 4.0 and users must be able to reach the source on the
 
 ## Your own GeoJSON
 
-API responses (route, isochrone, parcel …) are GeoJSON and go straight into `L.geoJSON`:
+API responses (route, isochrone …) are GeoJSON and go straight into `L.geoJSON`:
 
 ```js
 const layer = L.geoJSON(null, { style: { color: '#2346d8', weight: 4 } }).addTo(map);
@@ -2075,7 +1955,7 @@ layer.addData(geojson);
 
 ## Examples
 
-Examples with a Leaflet version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "Leaflet"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#leaflet), [Route](https://docs.mapx.at/examples/route.md#leaflet) and [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md#leaflet).
+Examples with a Leaflet version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "Leaflet"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#leaflet) and [Route](https://docs.mapx.at/examples/route.md#leaflet).
 
 ---
 
@@ -2106,7 +1986,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - [Optimization](https://docs.mapx.at/api/optimization.md): Optimized trips and tour planning.
 - [Transit](https://docs.mapx.at/api/transit.md): Journeys, stops, departures.
 - [Static Images](https://docs.mapx.at/api/static-images.md): Map images with overlays.
-- [Tilequery and Parcel](https://docs.mapx.at/api/tilequery.md): Features and parcels at a point.
+- [Tilequery](https://docs.mapx.at/api/tilequery.md): Vector tile features at a point.
 - [Elevation](https://docs.mapx.at/api/elevation.md): Heights and profiles.
 - [Weather](https://docs.mapx.at/api/weather.md): Observations, forecast, warnings, tiles.
 - [Air quality](https://docs.mapx.at/api/air-quality.md): Index, pollutants, Saharan dust.
@@ -2731,7 +2611,7 @@ data = res.json()
 
 Source: https://docs.mapx.at/api/geocoding/
 
-> Geocoding API for Austria: forward, reverse and batch geocoding of addresses, streets, places, postcodes and parcels, with parameters and examples.
+> Geocoding API for Austria: forward, reverse and batch geocoding of addresses, streets, places, postcodes, with parameters and examples.
 
 Turns an address or place name into coordinates and coordinates into the nearest address.
 
@@ -2741,7 +2621,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and parcels. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
 Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`. Always pass `types` for cheap queries.
 
@@ -2751,7 +2631,7 @@ Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Search text (also path form `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better; exact place names stay on top; ignored when bbox is set |
 
@@ -2836,7 +2716,7 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 |---|---|---|---|---|---|
 | `q` | path | string | yes | – | Search text, URL-encoded |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
-| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, parcel (parcels only; input such as `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 
@@ -3145,7 +3025,7 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 | `q` | query | string | yes | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
 | `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
-| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category have no effect) |
+| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
@@ -4973,15 +4853,15 @@ open("result.png", "wb").write(res.content)
 
 ---
 
-# Tilequery and Parcel API
+# Tilequery API
 
 Source: https://docs.mapx.at/api/tilequery/
 
-> Tilequery API: features around a point from any vector tileset, plus the cadastral parcel at a point (parcel API), with parameters and examples.
+> Tilequery API: features around a point from any vector tileset, with parameters and examples.
 
-Tilequery returns the vector features near a coordinate. Parcel returns the cadastral parcel (area, number, cadastral municipality) at a point.
+Tilequery returns the vector features near a coordinate.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Parcels](https://docs.mapx.at/guides/parcels.md)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## Tilequery: vector features around a point
 
@@ -4995,7 +4875,7 @@ Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `tilesets` | path | string | yes | – | Tileset names, comma-separated (at most 15), e.g. `streets,cadastre` |
+| `tilesets` | path | string | yes | – | Tileset names, comma-separated (at most 15), e.g. `streets,contours` |
 | `coordinate` | path | string | yes | – | lon,lat (the path ends in `.json`) |
 | `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
 | `limit` | query | string |  | `5` | 1 to 50, default 5 |
@@ -5008,13 +4888,13 @@ Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -5023,7 +4903,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -5043,12 +4923,11 @@ data = res.json()
         ]
       },
       "properties": {
-        "gstnr": "817",
-        "kgnr": 1004,
+        "name": "Herrengasse",
         "tilequery": {
           "distance": 2.9,
           "geometry": "linestring",
-          "layer": "parcel_l"
+          "layer": "road_l"
         }
       }
     }
@@ -5065,179 +4944,6 @@ data = res.json()
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
-
-## Parcel at a point (BEV DKM)
-
-`GET /v1/parcel/{coordinate}`
-
-Parcel (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, plus `parcel_id` and `links.dossier`) as polygon, computed from the boundary lines of the cadastre tiles (area deviates by per mille from the register value). Buildings return the building parcel (`parcel_number` starts with a dot).
-
-Parcels extending beyond the tile window (about 2 km) are missing. Empty list outside the cadastre data. With `include=dossier` each feature is the full dossier of `/v1/parcels/{id}` (zone cost 4 plus the dossier).
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
-| `radius` | query | number (0–100) |  | `0` | Meters, 0 to 100, default 0 (other values: 400). Accepted for compatibility; the result is always the parcel containing the point |
-| `include` | query | `dossier` |  | – | `dossier` returns the full dossier per feature |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/parcel/15.3294,48.2272", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response**
-
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              16.3721,
-              48.2081
-            ],
-            [
-              16.3727,
-              48.2081
-            ],
-            [
-              16.3727,
-              48.2086
-            ],
-            [
-              16.3721,
-              48.2081
-            ]
-          ]
-        ]
-      },
-      "properties": {
-  …
-```
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `503` | Data temporarily unavailable |
-
-## Parcel dossier (BEV DKM and further open data)
-
-`GET /v1/parcels/{id}`
-
-Everything the open data say about one parcel in one call: administrative assignment, area (`area_m2` in the plane of the Gauss-Krueger system as the cadastre computes it, `area_ellipsoidal_m2`), land use shares from the DKM, buildings (count, footprint, heights from BEV DLM where available), terrain statistics (min, mean, max elevation and mean/max slope from the terrain model, grid of up to 250 points inside the parcel), addresses assigned to the parcel, nearest public transit stop (`null` if the router is unavailable), year of the orthophoto flight, `climate` (the object of `/v1/climate/{coordinate}` at the inner point of the parcel: solar potential, normals, hot and snow days, drought; taken from a cache, sections are `null` with `status: partial` until the data of a new area are loaded), the geometry as GeoJSON and a ready-made `links.static_image`.
-
-The ID comes from `properties.parcel_id` of parcel search results and `/v1/parcel/{coordinate}`; the form `14143-288/4` (percent-encoded slash) is accepted as well. 404 for unknown parcels, 503 while the dossier service is unavailable. Cadastre key date: see `properties.reference_date`.
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `id` | path | string | yes | – | Parcel ID `<KG number>-<parcel number>`, `/` written as `_`, building parcels with a leading dot: `14143-288_4`, `14143-.98` |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14143-288_4" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/parcels/14143-288_4", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/parcels/14143-288_4", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response**
-
-```json
-{
-  "type": "Feature",
-  "id": "14143-288_4",
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-      [
-        [
-          15.3414,
-          48.2191
-        ],
-        [
-          15.3447,
-          48.2191
-        ],
-        [
-          15.3447,
-          48.2227
-        ],
-        [
-          15.3414,
-          48.2191
-        ]
-      ]
-    ]
-  },
-  "bbox": [
-    15.3414,
-    48.2191,
-  …
-```
-
-| Field | Type | Description |
-|---|---|---|
-| `id` | string | Parcel ID: `<KG number, 5 digits>-<parcel number>` with `/` written as `_`, building parcels start with a dot, e.g. `14143-288_4`, `14143-.98` |
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `404` | Not found (name, path or position) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `503` | Data temporarily unavailable |
 
 ## Playground
 
@@ -6047,9 +5753,9 @@ Source: https://docs.mapx.at/api/climate/
 
 > Climate API for a point in Austria: solar potential, climate normals, heat days, snow and drought from GeoSphere Austria, with parameters and examples.
 
-Climate of a point: yearly solar radiation and sunshine hours, temperature and precipitation normals with trend, hot and frost days, snow days per winter and the drought index. Source: GeoSphere Austria, CC BY 4.0. The same object is `properties.climate` in the [parcel dossier](https://docs.mapx.at/api/tilequery.md).
+Climate of a point: yearly solar radiation and sunshine hours, temperature and precipitation normals with trend, hot and frost days, snow days per winter and the drought index. Source: GeoSphere Austria, CC BY 4.0.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Parcels](https://docs.mapx.at/guides/parcels.md)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## Climate at a point (solar potential, normals, heat days, snow, drought)
 
@@ -6057,7 +5763,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [P
 
 Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
 
-Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. The same object is part of the parcel dossier (`properties.climate`). Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
+Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
 
 **Parameters**
 
@@ -6128,7 +5834,7 @@ data = res.json()
 | Field | Type | Description |
 |---|---|---|
 | `location` | array | [longitude, latitude] (WGS84), optional height. |
-| `status` | string | `partial`: some sections are still being loaded (parcel dossier: retry after `retry_after_s`) |
+| `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
 | `precipitation` | object,null | Precipitation and sunshine (SPARTACUS, 1 km) |
@@ -6717,10 +6423,10 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
   "title": "Invalid parameter",
   "status": 400,
-  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, parcel, road_ref)",
+  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, road_ref)",
   "code": "invalid-parameter",
   "param": "types",
-  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "parcel", "road_ref"]
+  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "road_ref"]
 }
 ```
 
@@ -7125,7 +6831,7 @@ Limits per IP address and zone and the per-minute limit per token are listed und
 
 | Header | Value |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON, elevation, parcel), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
+| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON, elevation), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
 | `ETag`, `Last-Modified` | version; with `If-None-Match` / `If-Modified-Since` → `304` (tiles, styles, TileJSON, OpenAPI) |
 | `Server-Timing` | `router`, `search`, `render`, `total` in milliseconds |
 | `RateLimit-Policy` | zone and limit of the endpoint |
@@ -7134,7 +6840,7 @@ PMTiles files carry the release date in their name and never change; they may be
 
 ## Attribution
 
-JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: BEV – DKM, CC BY 4.0` for parcels or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ---
 
@@ -7142,14 +6848,13 @@ JSON responses carrying data have a top-level `attribution` field (plain text, n
 
 Source: https://docs.mapx.at/tilesets/
 
-> All mapx tilesets for Austria with type, zoom range and source date: basemap, cadastre, contours, orthophoto, terrain and surface models.
+> All mapx tilesets for Austria with type, zoom range and source date: basemap, contours, orthophoto, terrain and surface models.
 
 Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](https://docs.mapx.at/api/tiles.md) and is part of the [styles](https://docs.mapx.at/api/styles.md). All data is licensed CC BY 4.0, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 | Tileset | Type | Zoom | As of |
 |---|---|---|---|
 | [`streets`](https://docs.mapx.at/tilesets/streets.md) | vector | z0–16 | 2026-04-01 |
-| [`cadastre`](https://docs.mapx.at/tilesets/cadastre.md) | vector | z16–16 | 2026-04-01 |
 | [`contours`](https://docs.mapx.at/tilesets/contours.md) | vector | z10–16 | 20250915 |
 | [`terrain-rgb`](https://docs.mapx.at/tilesets/terrain-rgb.md) | DEM | z5–16 | 20250915 |
 | [`dsm`](https://docs.mapx.at/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
@@ -7166,7 +6871,7 @@ Not in the table because it is replaced daily instead of versioned: [Sentinel-2 
 Use a tileset by name:
 
 ```js
-map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
+map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
 ```
 
 The TileJSON address is `https://tiles.mapx.at/v1/tiles/{tileset}.json`.
@@ -7184,7 +6889,7 @@ Source: https://docs.mapx.at/tilesets/streets/
 
 > Vector base map of Austria from open government data: land use, buildings, roads, rail, water, boundaries, names, house numbers. z0 to z16.
 
-The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Cadastre, contour lines and relief are separate products and can be layered on top.
+The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
 
 **Use cases**
 
@@ -7192,7 +6897,7 @@ The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 la
 - **Web maps and apps**: Vector map with your own design up to z16
 - **Planning and navigation background**: Roads, rail, water, boundaries
 - **House numbers and names**: Addresses, places, peaks and water names
-- **Overlays**: Cadastre, contours and relief on top (https://docs.mapx.at/guides/overlay-contours/)
+- **Overlays**: Contours and relief on top (https://docs.mapx.at/guides/overlay-contours/)
 
 ## Specifications
 
@@ -7279,108 +6984,6 @@ Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON
 
 ```html
 Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0
-```
-
-More: [License](https://docs.mapx.at/reference/attribution.md).
-
----
-
-# Cadastre tileset: parcel boundaries
-
-Source: https://docs.mapx.at/tilesets/cadastre/
-
-> Parcel boundaries from the BEV Digital Cadastral Map as vector tiles, z16, with cadastral municipality and parcel number.
-
-The boundaries of all parcels as lines, with cadastral municipality number and parcel number, from the BEV Digital Cadastral Map. The tileset has z16 only; clients overzoom above it.
-
-**Use cases**
-
-- **Parcel search**: Boundaries and numbers on the map
-- **Planning and preliminary checks**: Parcel boundaries over the orthophoto
-- **Real estate and site maps**: Parcels as a map layer
-- **Overlays**: Cadastre over the basemap or aerial imagery (https://docs.mapx.at/guides/style-the-basemap/)
-- **QGIS**: Vector tiles in desktop GIS (https://docs.mapx.at/guides/qgis/)
-
-## Specifications
-
-**Tileset `cadastre`**
-
-| Property | Value |
-|---|---|
-| Reference date | `2026-04-01` |
-| Format | `mvt` |
-| Zoom levels | `z16–z16` |
-| Bounds (WGS84) | `9.5251 / 46.3697 / 17.1661 / 49.0235 (W/S/O/N)` |
-| License | `CC BY 4.0` |
-
-## Live map
-
-## Add to your map
-
-**MapLibre**
-
-```js
-const map = new maplibregl.Map({
-  attributionControl: false,
-  container: "map",
-  style: {
-    version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" } },
-    layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
-  }
-});
-map.addControl(new maplibregl.AttributionControl({ compact: true }));
-map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
-```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
-
-  
-
-**QGIS**
-
-Vector Tiles → New Connection, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=YOUR_TOKEN`, leave the style URL empty.
-
-  
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" https://tiles.mapx.at/v1/tiles/cadastre.json
-curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/cadastre/14/8860/5730.pbf
-```
-
-Because only z16 exists, set `minzoom: 16` in the style; the source with `maxzoom: 16` overzooms automatically.
-
-## Layer reference
-
-The lines are boundaries, not areas: a click hits the boundary line and returns the parcel it belongs to. Owner and area are not included.
-
-### parcel_l
-
-Geometry: **Line**, Zoom: **z16–16**, Layer: `parcel_l`. Parcel boundaries (lines).
-
-| Field | Type | Description |
-|---|---|---|
-| `gstnr` | `string` | Parcel number. |
-| `kgnr` | `number` | Cadastral community number. |
-
-## Source and currency
-
-- Source: BEV **Digital Cadastral Map (DKM)**, reference date 1 Apr 2026.
-
-## Notes
-
-> **Warning:** The display is not legally binding. For boundary questions the cadastre at the survey office applies.
-
-- The display is not legally binding; the depiction follows the digital cadastral map.
-- There are no tiles below z16.
-
-## Attribution
-
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
-
-```html
-Datenquelle: BEV – DKM, CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).
@@ -7803,7 +7406,6 @@ The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolu
 - **Aerial imagery background**: Satellite-map alternative for web and apps
 - **3D terrain**: Orthophoto on the DTM (https://docs.mapx.at/guides/3d-terrain/)
 - **Planning and documentation**: Situation on site at 20 cm
-- **Checking parcels**: Cadastre over the aerial image
 - **QGIS**: Aerial imagery as XYZ or PMTiles layer (https://docs.mapx.at/guides/qgis/)
 
 ## Specifications
@@ -8552,7 +8154,7 @@ One level deeper halves the pixel size. The elevation models exist up to z16, th
 
 If a level is higher than the stored one, the **client scales up** the tiles of the highest level (overzoom). The image does not get sharper, but the map stays usable. In MapLibre set `maxzoom` of the source to the highest existing level (automatic from TileJSON); the map itself may zoom further. Requests outside the zoom range return `404`, see [Errors and limits](https://docs.mapx.at/api/errors.md).
 
-> Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched. For the cadastre (z16 only) set `minzoom: 16` in the style.
+> Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched.
 
 ## Further reading
 
@@ -8628,7 +8230,6 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 | Tileset | Text |
 |---|---|
 | `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0 |
-| `cadastre` | Datenquelle: BEV – DKM, CC BY 4.0 |
 | `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
@@ -8646,14 +8247,14 @@ JSON responses with data carry a top-level `attribution` field. Show it when you
 
 | API | Source |
 |---|---|
-| Geocoding, Search Box, Address | BEV (address register, geographical names, administrative boundaries, cadastre), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV (address register, geographical names, administrative boundaries), CC BY 4.0 |
 | Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
 | Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
 | Weather | GeoSphere Austria, CC BY 4.0 |
+| Climate | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
-| Climate, `properties.climate` of the parcel dossier | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Parcel, Tilequery (cadastre) | BEV – DKM, CC BY 4.0 |
+| Tilequery | Source of the queried tileset, see [Tilesets](https://docs.mapx.at/tilesets/index.md) |
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 The credit is also stored in the TileJSON and PMTiles metadata.
@@ -8664,7 +8265,7 @@ The credit is also stored in the TileJSON and PMTiles metadata.
 
 Source: https://docs.mapx.at/examples/
 
-> 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+> 25 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, weather.
 
 Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.19.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
 
@@ -8680,7 +8281,6 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 - [Precipitation radar](https://docs.mapx.at/examples/radar-animation.md): Rain and snow of the next three hours in 15-minute steps, played as an animation.
 - [Reachability (isochrones)](https://docs.mapx.at/examples/isochrone.md): Which area can be reached in 5, 10 and 15 minutes?
 - [Travel-time matrix](https://docs.mapx.at/examples/matrix.md): Travel times between several places in one request.
-- [Cadastre: parcel on click](https://docs.mapx.at/examples/parcel-on-click.md): Parcel boundaries over aerial imagery, a click shows the number.
 - [TileJSON sources](https://docs.mapx.at/examples/tilejson-source.md): Add orthophoto and contours without a ready-made style.
 - [3D buildings](https://docs.mapx.at/examples/buildings-3d.md): Extruded buildings with BEV heights, camera tilted.
 - [Search Box with suggestions](https://docs.mapx.at/examples/search-box.md): Suggestions while typing, position after the click, type filter.
@@ -9334,7 +8934,7 @@ The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit h
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -9380,7 +8980,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -9424,7 +9024,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -10183,127 +9783,6 @@ document.getElementById('los').addEventListener('click', async () => {
 ## APIs used
 
 - [Routing](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
-- [Static Tiles](https://docs.mapx.at/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
-
----
-
-# Cadastre example: parcel on click
-
-Source: https://docs.mapx.at/examples/parcel-on-click/
-
-> Show parcel boundaries (Kataster) over aerial imagery; a click names the parcel number. Cadastre tileset and parcel API, runnable code.
-
-The cadastre tileset contains boundary lines from zoom 16 with parcel number and cadastral municipality. `queryRenderedFeatures` reads them at the click point. OpenLayers and Leaflet show the aerial image as raster tiles without boundary lines; there a click asks the Parcel API and draws the outline of the parcel.
-
-## Code
-
-### MapLibre GL JS
-
-````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
-
-// Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
-const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-
-maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
-
-const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/satellite', center: [15.3306, 48.2275], zoom: 18 }); // Melk
-map.addControl(new maplibregl.NavigationControl());
-map.addControl(new maplibregl.AttributionControl({ compact: true }));
-map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
-
-map.on('load', () => {
-  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "cadastre", ab Zoom 16)
-  map.setLayoutProperty('parcel', 'visibility', 'visible');
-});
-map.on('click', (e) => {
-  const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
-  const f = map.queryRenderedFeatures(box, { layers: ['parcel'] })[0];
-  const text = f ? (de ? `Grundstück ${f.properties.gstnr}, Katastralgemeinde ${f.properties.kgnr}` : `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}`) : (de ? 'Keine Grundstücksgrenze getroffen (sichtbar ab Zoom 16).' : 'No parcel boundary hit (visible from zoom 16).');
-  new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
-});
-````
-
-### OpenLayers
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
-<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
-```
-
-````js
-// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
-
-const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
-const parcel = new ol.source.Vector();
-const outline = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#ffd400', width: 3 }), fill: new ol.style.Fill({ color: 'rgba(255, 212, 0, 0.15)' }) });
-const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
-label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
-const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
-const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: parcel, style: outline })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([15.3306, 48.2275]), zoom: 19, maxZoom: 21 }) }); // Melk
-
-map.on('click', async (e) => {
-  const [lon, lat] = ol.proj.toLonLat(e.coordinate);
-  parcel.clear();
-  try {
-    const r = await fetch(`https://api.mapx.at/v1/parcel/${lon.toFixed(6)},${lat.toFixed(6)}`, AUTH);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
-    if (f) parcel.addFeature(new ol.format.GeoJSON().readFeature(f, { featureProjection: 'EPSG:3857' }));
-    const p = f?.properties;
-    label.textContent = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
-  } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
-  popup.setPosition(e.coordinate);
-});
-````
-
-### Leaflet
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-```
-
-````js
-// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
-
-const map = L.map('map').setView([48.2275, 15.3306], 19); // Melk
-L.tileLayer('https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
-const parcel = L.geoJSON(null, { style: { color: '#ffd400', weight: 3, fillOpacity: 0.15 } }).addTo(map);
-
-map.on('click', async (e) => {
-  const { lng, lat } = e.latlng;
-  parcel.clearLayers();
-  let text;
-  try {
-    const r = await fetch(`https://api.mapx.at/v1/parcel/${lng.toFixed(6)},${lat.toFixed(6)}`, AUTH);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
-    if (f) parcel.addData(f);
-    const p = f?.properties;
-    text = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
-  } catch (err) { text = (de ? 'Fehler: ' : 'Error: ') + err.message; }
-  L.popup().setLatLng(e.latlng).setContent(Object.assign(document.createElement('span'), { textContent: text })).openOn(map); // as text, not HTML
-});
-````
-
-## APIs used
-
-- [Cadastre](https://docs.mapx.at/tilesets/cadastre.md) (vector tiles in the `satellite` style)
-- [Parcel](https://docs.mapx.at/api/tilequery.md) `GET api.mapx.at/v1/parcel/{lon},{lat}` (OpenLayers, Leaflet)
 - [Static Tiles](https://docs.mapx.at/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
@@ -12007,115 +11486,11 @@ In Leaflet `L.geoJSON` does this with a `style` function per geometry type, `poi
 
 ---
 
-# Use cases: logistics, tourism, real estate
+# Use cases: logistics, municipalities, tourism
 
 Source: https://docs.mapx.at/use-cases/
 
-> Use cases for the mapx maps and location APIs in Austria: logistics, municipalities, real estate and tourism, each with the matching APIs and code.
-
----
-
-# Real estate: parcel, solar, listing maps
-
-Source: https://docs.mapx.at/use-cases/real-estate/
-
-> Parcel dossier, solar, heat and snow at the site, a static image for the listing and reachability of an address, with code that runs as it is.
-
-For a listing you need three things: facts about the parcel, a picture that shows where it lies, and an answer to "how well can I reach it". All of it comes from official open data (BEV cadastre, orthophoto, GIP, timetables). You need a free API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples show it as `YOUR_TOKEN`. The data is for orientation and not legally binding.
-
-## Find the parcel
-
-Search by parcel number (`KG 14143 Gst 473/1`, `14143/473/1`) or take the parcel at a point, for example from a click or an address:
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=1" | jq '.features[0].center'
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_id, parcel_number, area_m2, is_building_land}'
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
-```
-
-## Read the dossier
-
-`/v1/parcels/{id}` returns everything the open data say about one parcel in a single call: municipality and district, area, land use shares, buildings with heights where the BEV has them, terrain statistics, addresses, the nearest transit stop, the flight year of the orthophoto and a ready-made image link.
-
-```js
-const id = "14143-473_1"; // properties.parcel_id from the search or the point query
-const d = await (await fetch(`https://api.mapx.at/v1/parcels/${id}?access_token=YOUR_TOKEN`)).json();
-const p = d.properties;
-console.log(
-  `${p.parcel_number} in ${p.cadastral_municipality.name}, ${Math.round(p.area_m2)} m²`,
-  `| buildings: ${p.buildings.count}`,
-  `| ${p.elevation?.min_m}-${p.elevation?.max_m} m, slope ${p.elevation?.slope_mean_deg}°`,
-  `| nearest stop: ${p.nearest_transit_stop?.name} (${p.nearest_transit_stop?.distance_m} m)`,
-);
-```
-
-Missing data are `null` or empty lists, never absent. For a point instead of an id, `GET /v1/parcel/{lon},{lat}?include=dossier` returns the same dossier. For a map click see the example [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md).
-
-## A picture for the listing
-
-The dossier carries `links.static_image`: a satellite image with the parcel outline. The link comes without a token; append `?access_token=YOUR_TOKEN` before using it. To build your own, draw the polygon as a GeoJSON overlay and let the image fit it with `auto`:
-
-```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272?access_token=YOUR_TOKEN")).json()).features[0];
-const outline = { type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry };
-const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponent(JSON.stringify(outline))})/auto/800x500.webp?access_token=YOUR_TOKEN`;
-document.querySelector("#expose").src = img; // for e-mails and PDFs render it on your server with a secret token
-```
-
-Use `outdoors` or `streets` instead of `satellite` for a plan view. Add `@2x` to the size for sharp images on high-resolution screens. See [Static images](https://docs.mapx.at/guides/static-images.md). The image URL contains the token, so use a public token (`mx_pk_…`) with your site as allowed origin for images on web pages, and render images for e-mails and PDFs on your server with a secret token (`mx_sk_…`). The image carries the attribution of its data; keep it visible in the layout ([Attribution](https://docs.mapx.at/reference/attribution.md)).
-
-## Sun, heat and snow at the site
-
-Buyers ask for solar yield, summer heat and snow load. `/v1/climate/{lon},{lat}` answers from GeoSphere Austria data; the same object is `properties.climate` in the dossier (taken at the inner point of the parcel). Each section names its dataset, grid cell and last day of data.
-
-```js
-const c = await (await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272?access_token=YOUR_TOKEN")).json();
-console.log(
-  `Global radiation: ${c.solar?.global_radiation_kwh_m2_year} kWh/m² per year, ${c.solar?.sunshine_hours_year} h of sunshine`,
-  `| mean temperature ${c.temperature.mean_annual_c.normal} °C (1991-2020), trend +${c.temperature.trend_c_per_decade} °C per decade`,
-  `| hot days (TX ≥ 30 °C): ${c.temperature_extremes.hot_days_per_year.normal} → ${c.temperature_extremes.hot_days_per_year.recent} per year`,
-  `| snow days: ${c.snow.snow_days_per_winter.normal} per winter, now ${c.snow.current.depth_cm} cm`,
-  `| drought (SPEI 365): ${c.drought.spei365.class}`,
-);
-```
-
-A rough photovoltaic estimate is the radiation on the roof times the module efficiency and a performance ratio (about 0.8); the value is for orientation and replaces no yield study. The first request for an area that nobody has asked for can take up to 20 seconds, later ones answer from a cache. In the dossier the section is `null` with `status: "partial"` until the data are loaded; ask again after `retry_after_s`. Reference: [Climate API](https://docs.mapx.at/api/climate.md). Show the credit: GeoSphere Austria, CC BY 4.0 ([Attribution](https://docs.mapx.at/reference/attribution.md)).
-
-## How well can I reach it
-
-Show the area reachable on foot or by bike, and the distance to places that matter.
-
-```js
-const here = [15.3294, 48.2272];
-const iso = await (await fetch(`https://api.mapx.at/v1/isochrone/walking/${here}?contours_minutes=5,10,15&access_token=YOUR_TOKEN`)).json(); // GeoJSON polygons
-
-const places = [here, [15.3333, 48.2279], [15.3201, 48.2218]]; // address, school, station
-const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map((p) => p.join(",")).join(";")}?sources=0`)).json();
-console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
-```
-
-For public transport use the next stop from the dossier and its [departures](https://docs.mapx.at/guides/transit.md): `GET /v1/departures?stop=<stop id>&limit=5`. The example uses Melk station (`at:43:7226`).
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:43:7226&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
-```
-
-**Python**
-
-```python
-import requests
-r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:43:7226", "limit": 3},
-                 headers={"Authorization": "Bearer YOUR_TOKEN"}).json()
-print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
-```
-
-## Next steps
-
-- [Parcels](https://docs.mapx.at/guides/parcels.md) and the [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md) example
-- [Static images](https://docs.mapx.at/guides/static-images.md) with markers and paths
-- [Navigation](https://docs.mapx.at/guides/navigation.md) for isochrones and matrices
+> Use cases for the mapx maps and location APIs in Austria: logistics, municipalities and tourism, each with the matching APIs and code.
 
 ---
 
@@ -12294,29 +11669,9 @@ console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${
 
 Source: https://docs.mapx.at/use-cases/municipalities/
 
-> Parcels, address validation, transit departures and an embedded map for municipal websites and administration tools.
+> Address validation, transit departures and an embedded map for municipal websites and administration tools.
 
-Municipal tools work with parcels and addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the cadastre, the address register, the timetable and the map for the web page of a municipality.
-
-## Parcels
-
-The cadastre is available as a vector tileset for drawing and as an API for the parcel at a point.
-
-```js
-const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const p = r.features[0]?.properties; // parcel at the point: number, cadastral municipality, area
-console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
-```
-
-On the map with a click: example [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
-
-Search for a parcel by its number (the cadastral municipality is part of the identity):
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
-```
-
-The boundaries come from the BEV cadastral map (DKM). The area is computed from the boundary lines and deviates from the register by per mille. State this where the data is shown: for orientation, not legally binding.
+Municipal tools work with addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the address register, the timetable and the map for the web page of a municipality.
 
 ## Check addresses
 
@@ -12362,6 +11717,6 @@ Show your own data (playgrounds, collection points, closures) as [GeoJSON on the
 
 ## Next steps
 
-- [Parcels](https://docs.mapx.at/guides/parcels.md) and [Search](https://docs.mapx.at/guides/search.md)
+- [Search](https://docs.mapx.at/guides/search.md)
 - [Transit departures](https://docs.mapx.at/guides/transit.md)
 - [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md) in the colours of your municipality

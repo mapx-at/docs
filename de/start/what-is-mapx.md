@@ -15,7 +15,6 @@ mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten
 | Transit | Verbindungen im öffentlichen Verkehr, Haltestellen, Abfahrten | [Transit](https://docs.mapx.at/de/guides/transit.md) |
 | Static Images | PNG- oder WebP-Karten mit Pins, Pfaden und GeoJSON | [Static Images](https://docs.mapx.at/de/guides/static-images.md) |
 | Höhen und Gelände | Höhen, Höhenprofile, Gelände- und Oberflächenmodelle | [Höhen](https://docs.mapx.at/de/guides/elevation.md) |
-| Grundstücke | Katastergrundstück mit Fläche und Nummer an jedem Punkt | [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) |
 
 Die APIs folgen den Konventionen bekannter Web-Mapping-Dienste: gleiche URL-Formen, GeoJSON-Antworten und MapLibre-kompatible Styles. Bestehender Code für MapLibre, Leaflet oder OpenLayers braucht wenige Änderungen.
 

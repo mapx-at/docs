@@ -32,7 +32,7 @@ The data is licensed CC BY 4.0 and users must be able to reach the source on the
 
 ## Your own GeoJSON
 
-API responses (route, isochrone, parcel …) are GeoJSON and go straight into `L.geoJSON`:
+API responses (route, isochrone …) are GeoJSON and go straight into `L.geoJSON`:
 
 ```js
 const layer = L.geoJSON(null, { style: { color: '#2346d8', weight: 4 } }).addTo(map);
@@ -47,4 +47,4 @@ layer.addData(geojson);
 
 ## Examples
 
-Examples with a Leaflet version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "Leaflet"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#leaflet), [Route](https://docs.mapx.at/examples/route.md#leaflet) and [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md#leaflet).
+Examples with a Leaflet version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "Leaflet"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#leaflet) and [Route](https://docs.mapx.at/examples/route.md#leaflet).

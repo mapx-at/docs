@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 21 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Katastergrundstücke, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 21 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
 | | |
 |---|---|
@@ -157,7 +157,7 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 
 | Gruppe | Werkzeug | Zweck | Wichtigste Eingaben |
 |---|---|---|---|
-| Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI, Grundstück oder Straßenkilometer | `query`, `near`, `types`, `limit` |
+| Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI oder Straßenkilometer | `query`, `near`, `types`, `limit` |
 | Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius_m`, `types` |
 | Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
 | Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
@@ -171,8 +171,6 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Höhe | `elevation` | Höhe über dem Meer (Gelände- oder Oberflächenmodell) | `points`, `model` |
 | Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `path` (2 bis 200 Punkte), `samples`, `model` |
-| Grundstück | `parcel_at_point` | Katastergrundstück an einer Koordinate | `lon`, `lat`, `radius_m` |
-| Grundstück | `parcel_details` | Grundstücks-Dossier: Fläche, Nutzung, Gebäude, Neigung, Adressen | `parcel_id` |
 | Verkehr | `traffic_incidents` | Unfälle, Stau, Baustellen und Sperren | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `path`, `buffer_m` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lon`, `lat`, `kind`, `hours` |
@@ -194,7 +192,6 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 - „Was erreiche ich vom Bahnhof Melk in 15 Minuten zu Fuß?“
 - „Was sind die nächsten Abfahrten am Bahnhof Melk?“
 - „Wie hoch liegt die Gegend um den Großglockner, und wie sieht das Profil meines Wanderwegs aus?“
-- „Welches Grundstück liegt bei 16.3725, 48.2085, wie groß ist es, und ist es Bauland?“
 - „Regnet es in Innsbruck in den nächsten drei Stunden?“
 - „Plane die beste Reihenfolge für diese fünf Lieferadressen und zeig sie auf einer Karte.“
 

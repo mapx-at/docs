@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/tilesets/streets/
 
 > Vector base map of Austria from open government data: land use, buildings, roads, rail, water, boundaries, names, house numbers. z0 to z16.
 
-The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Cadastre, contour lines and relief are separate products and can be layered on top.
+The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
 
 **Use cases**
 
@@ -12,7 +12,7 @@ The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 la
 - **Web maps and apps**: Vector map with your own design up to z16
 - **Planning and navigation background**: Roads, rail, water, boundaries
 - **House numbers and names**: Addresses, places, peaks and water names
-- **Overlays**: Cadastre, contours and relief on top (https://docs.mapx.at/guides/overlay-contours/)
+- **Overlays**: Contours and relief on top (https://docs.mapx.at/guides/overlay-contours/)
 
 ## Specifications
 

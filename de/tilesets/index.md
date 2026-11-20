@@ -2,14 +2,13 @@
 
 Source: https://docs.mapx.at/de/tilesets/
 
-> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Kataster, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
+> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
 
 Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Styles](https://docs.mapx.at/de/api/styles.md) enthalten. Alle Daten stehen unter CC BY 4.0, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 | Tileset | Typ | Zoom | Stand |
 |---|---|---|---|
 | [`streets`](https://docs.mapx.at/de/tilesets/streets.md) | Vektor | z0–16 | 2026-04-01 |
-| [`cadastre`](https://docs.mapx.at/de/tilesets/cadastre.md) | Vektor | z16–16 | 2026-04-01 |
 | [`contours`](https://docs.mapx.at/de/tilesets/contours.md) | Vektor | z10–16 | 20250915 |
 | [`terrain-rgb`](https://docs.mapx.at/de/tilesets/terrain-rgb.md) | DEM | z5–16 | 20250915 |
 | [`dsm`](https://docs.mapx.at/de/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
@@ -26,7 +25,7 @@ Nicht in der Tabelle, weil es täglich ersetzt statt versioniert wird: [Sentinel
 Ein Tileset per Namen verwenden:
 
 ```js
-map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
+map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
 ```
 
 Alle Anfragen an `tiles.mapx.at` brauchen einen Token, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bei MapLibre-Quellen hängt `transformRequest` den Token an, bei Kachel-URLs `?access_token=DEIN_TOKEN`.

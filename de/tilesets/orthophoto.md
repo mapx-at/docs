@@ -11,7 +11,6 @@ Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native
 - **Luftbild-Hintergrund**: Satellitenkarten-Ersatz für Web und Apps
 - **3D-Gelände**: Orthophoto auf dem DTM (https://docs.mapx.at/de/guides/3d-terrain/)
 - **Planung und Dokumentation**: Zustand vor Ort in 20 cm
-- **Grundstücke prüfen**: Kataster über dem Luftbild
 - **QGIS**: Luftbild als XYZ- oder PMTiles-Layer (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte

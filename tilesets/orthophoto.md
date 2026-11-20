@@ -11,7 +11,6 @@ The BEV orthophoto, re-tiled in Web Mercator up to z18 (20 cm, the native resolu
 - **Aerial imagery background**: Satellite-map alternative for web and apps
 - **3D terrain**: Orthophoto on the DTM (https://docs.mapx.at/guides/3d-terrain/)
 - **Planning and documentation**: Situation on site at 20 cm
-- **Checking parcels**: Cadastre over the aerial image
 - **QGIS**: Aerial imagery as XYZ or PMTiles layer (https://docs.mapx.at/guides/qgis/)
 
 ## Specifications

@@ -36,7 +36,7 @@ The data is licensed CC BY 4.0 and users must be able to reach the source on the
 
 ## Your own GeoJSON
 
-API responses (route, isochrone, parcel …) are GeoJSON in WGS84. `ol.format.GeoJSON` reads them into the map projection:
+API responses (route, isochrone …) are GeoJSON in WGS84. `ol.format.GeoJSON` reads them into the map projection:
 
 ```js
 const source = new ol.source.Vector();
@@ -52,4 +52,4 @@ source.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjec
 
 ## Examples
 
-Examples with an OpenLayers version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "OpenLayers"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#ol), [Route](https://docs.mapx.at/examples/route.md#ol) and [Parcel on click](https://docs.mapx.at/examples/parcel-on-click.md#ol).
+Examples with an OpenLayers version are listed in the [overview](https://docs.mapx.at/examples/index.md) (filter "OpenLayers"), for instance [Embed a map](https://docs.mapx.at/examples/embed-map.md#ol) and [Route](https://docs.mapx.at/examples/route.md#ol).

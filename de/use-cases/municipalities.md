@@ -2,31 +2,11 @@
 
 Source: https://docs.mapx.at/de/use-cases/municipalities/
 
-> Grundstücke, Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
+> Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
 
-Gemeindewerkzeuge arbeiten mit Grundstücken und Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Kataster, Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
+Gemeindewerkzeuge arbeiten mit Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
-
-## Grundstücke
-
-Der Kataster liegt als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt vor.
-
-```js
-const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const p = r.features[0]?.properties; // Grundstück am Punkt: Nummer, Katastralgemeinde, Fläche
-console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
-```
-
-Auf der Karte per Klick: Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
-
-Ein Grundstück über seine Nummer suchen (die Katastralgemeinde gehört zur Identität):
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
-```
-
-Die Grenzen stammen aus der Katastralmappe des BEV (DKM). Die Fläche wird aus den Grenzlinien berechnet und weicht um Promille vom Register ab. Dort, wo die Daten gezeigt werden, darauf hinweisen: zur Orientierung, nicht rechtsverbindlich.
 
 ## Adressen prüfen
 
@@ -72,6 +52,6 @@ Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](
 
 ## Nächste Schritte
 
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) und [Suche](https://docs.mapx.at/de/guides/search.md)
+- [Suche](https://docs.mapx.at/de/guides/search.md)
 - [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
 - [Basiskarte stylen](https://docs.mapx.at/de/guides/style-the-basemap.md) in den Farben der Gemeinde

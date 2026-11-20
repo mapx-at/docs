@@ -25,7 +25,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 - [Optimization](https://docs.mapx.at/de/api/optimization.md): Optimierte Touren und Tourenplanung.
 - [Transit](https://docs.mapx.at/de/api/transit.md): Verbindungen, Haltestellen, Abfahrten.
 - [Static Images](https://docs.mapx.at/de/api/static-images.md): Kartenbilder mit Overlays.
-- [Tilequery und Parcel](https://docs.mapx.at/de/api/tilequery.md): Features und Grundstücke an einem Punkt.
+- [Tilequery](https://docs.mapx.at/de/api/tilequery.md): Features der Vektorkacheln an einem Punkt.
 - [Elevation](https://docs.mapx.at/de/api/elevation.md): Höhen und Profile.
 - [Weather](https://docs.mapx.at/de/api/weather.md): Beobachtungen, Vorhersage, Warnungen, Tiles.
 - [Air quality](https://docs.mapx.at/de/api/air-quality.md): Index, Schadstoffe, Saharastaub.

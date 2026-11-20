@@ -36,7 +36,7 @@ Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein.
 
 ## Eigenes GeoJSON
 
-Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON in WGS84. `ol.format.GeoJSON` liest sie in die Kartenprojektion:
+Antworten der APIs (Route, Isochrone …) sind GeoJSON in WGS84. `ol.format.GeoJSON` liest sie in die Kartenprojektion:
 
 ```js
 const quelle = new ol.source.Vector();
@@ -52,4 +52,4 @@ quelle.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjec
 
 ## Beispiele
 
-Die Beispiele mit OpenLayers-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „OpenLayers“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#ol), [Route](https://docs.mapx.at/de/examples/route.md#ol) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#ol).
+Die Beispiele mit OpenLayers-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „OpenLayers“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#ol) und [Route](https://docs.mapx.at/de/examples/route.md#ol).

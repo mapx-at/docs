@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/guides/
 
-> Task-oriented guides for every mapx product: maps, search, navigation, traffic, transit, static images, elevation and parcels, plus techniques.
+> Task-oriented guides for every mapx product: maps, search, navigation, traffic, transit, static images, elevation, plus techniques.
 
 Each guide shows the common tasks of one product with code that runs as it is.
 
@@ -15,15 +15,13 @@ Each guide shows the common tasks of one product with code that runs as it is.
 - [Transit departures](https://docs.mapx.at/guides/transit.md): Journeys, stops, departure boards.
 - [Static images](https://docs.mapx.at/guides/static-images.md): Map images for reports and web pages.
 - [Elevation and terrain](https://docs.mapx.at/guides/elevation.md): Heights, profiles, 3D terrain.
-- [Parcels](https://docs.mapx.at/guides/parcels.md): Cadastral parcels at a point.
 - [MCP server](https://docs.mapx.at/guides/mcp.md): Use mapx from AI assistants.
 
 ## Use cases
 
-- [Real estate](https://docs.mapx.at/use-cases/real-estate.md): Parcel dossier, listing image, reachability.
 - [Logistics](https://docs.mapx.at/use-cases/logistics.md): Truck routing, matrix, tour planning, traffic.
 - [Tourism](https://docs.mapx.at/use-cases/tourism.md): Bike and MTB routes, elevation profile, weather.
-- [Municipalities](https://docs.mapx.at/use-cases/municipalities.md): Parcels, address validation, departures, embeds.
+- [Municipalities](https://docs.mapx.at/use-cases/municipalities.md): Address validation, departures, embeds.
 
 ## Techniques
 
@@ -32,4 +30,4 @@ Each guide shows the common tasks of one product with code that runs as it is.
 
 ## Examples
 
-27 runnable maps with the complete code, a preview image and a filter by product: [Examples](https://docs.mapx.at/examples/index.md).
+25 runnable maps with the complete code, a preview image and a filter by product: [Examples](https://docs.mapx.at/examples/index.md).

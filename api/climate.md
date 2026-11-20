@@ -4,9 +4,9 @@ Source: https://docs.mapx.at/api/climate/
 
 > Climate API for a point in Austria: solar potential, climate normals, heat days, snow and drought from GeoSphere Austria, with parameters and examples.
 
-Climate of a point: yearly solar radiation and sunshine hours, temperature and precipitation normals with trend, hot and frost days, snow days per winter and the drought index. Source: GeoSphere Austria, CC BY 4.0. The same object is `properties.climate` in the [parcel dossier](https://docs.mapx.at/api/tilequery.md).
+Climate of a point: yearly solar radiation and sunshine hours, temperature and precipitation normals with trend, hot and frost days, snow days per winter and the drought index. Source: GeoSphere Austria, CC BY 4.0.
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Parcels](https://docs.mapx.at/guides/parcels.md)
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Maps](https://docs.mapx.at/guides/maps.md)
 
 ## Climate at a point (solar potential, normals, heat days, snow, drought)
 
@@ -14,7 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [P
 
 Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
 
-Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. The same object is part of the parcel dossier (`properties.climate`). Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
+Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
 
 **Parameters**
 
@@ -85,7 +85,7 @@ data = res.json()
 | Field | Type | Description |
 |---|---|---|
 | `location` | array | [longitude, latitude] (WGS84), optional height. |
-| `status` | string | `partial`: some sections are still being loaded (parcel dossier: retry after `retry_after_s`) |
+| `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
 | `precipitation` | object,null | Precipitation and sunshine (SPARTACUS, 1 km) |

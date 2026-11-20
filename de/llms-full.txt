@@ -59,7 +59,6 @@ mapx ist eine Sammlung von Karten und Location-APIs für Österreich. Alle Daten
 | Transit | Verbindungen im öffentlichen Verkehr, Haltestellen, Abfahrten | [Transit](https://docs.mapx.at/de/guides/transit.md) |
 | Static Images | PNG- oder WebP-Karten mit Pins, Pfaden und GeoJSON | [Static Images](https://docs.mapx.at/de/guides/static-images.md) |
 | Höhen und Gelände | Höhen, Höhenprofile, Gelände- und Oberflächenmodelle | [Höhen](https://docs.mapx.at/de/guides/elevation.md) |
-| Grundstücke | Katastergrundstück mit Fläche und Nummer an jedem Punkt | [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) |
 
 Die APIs folgen den Konventionen bekannter Web-Mapping-Dienste: gleiche URL-Formen, GeoJSON-Antworten und MapLibre-kompatible Styles. Bestehender Code für MapLibre, Leaflet oder OpenLayers braucht wenige Änderungen.
 
@@ -151,7 +150,7 @@ Die Limits gelten pro Token und Zone (Anfragen ohne gültigen Token zählen pro 
 | Zone | Anfragen | Verwendet von |
 |---|---|---|
 | `tiles` | 100/s, Burst 200 | Tiles, TileJSON, Glyphs, Sprites |
-| `search` | 10/s, Burst 30 | Geocoding, Search Box, Autofill, Tilequery, Grundstück, Abfahrten, Wetter, Verkehr |
+| `search` | 10/s, Burst 30 | Geocoding, Search Box, Autofill, Tilequery, Abfahrten, Wetter, Verkehr |
 | `route` | 5/s, Burst 20 | Directions, Transit-Verbindungen |
 | `elevation` | 10/s, Burst 20 | Höhe und Profil |
 | `static` | 5/s, Burst 60 | Static Tiles, Verkehrs-Tiles |
@@ -171,7 +170,7 @@ Die Datenquelle überall anzeigen, wo die Karte oder das Ergebnis sichtbar ist. 
 
 ## Ohne Gewähr
 
-Alle Daten und Ergebnisse von mapx sind ohne Gewähr, die Nutzung erfolgt auf eigenes Risiko. Prüfe Ergebnisse selbst, besonders bei Adressen, Routen, Abfahrten, Wetter und Kataster. Es gelten die [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
+Alle Daten und Ergebnisse von mapx sind ohne Gewähr, die Nutzung erfolgt auf eigenes Risiko. Prüfe Ergebnisse selbst, besonders bei Adressen, Routen, Abfahrten, Wetter. Es gelten die [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
 
 ## Nächste Schritte
 
@@ -349,11 +348,9 @@ map.on("load", () => {
 
 Source: https://docs.mapx.at/de/start/glossary/
 
-> Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Katastralgemeinde (KG), Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
+> Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
 
 **Annotation.** Zusätzliche Werte je Routensegment, zum Beispiel Geschwindigkeit oder Höhe. Angefordert mit `annotations`.
-
-**Katastralgemeinde (KG).** Einheit des österreichischen Grundbuchs. Eine Grundstücksnummer ist nur innerhalb einer KG eindeutig.
 
 **Contours.** Höhenlinien, Linien gleicher Höhe. Tileset `contours`.
 
@@ -381,7 +378,7 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **TileJSON.** Eine kleine JSON-Beschreibung eines Tilesets: URL-Vorlage, Zoombereich, Grenzen, Attribution.
 
-**Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `cadastre`. Siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md).
+**Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `contours`. Siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md).
 
 ---
 
@@ -447,10 +444,6 @@ Längen- und Breitengrad sind vertauscht. mapx und GeoJSON verwenden `lon,lat`. 
 
 Raster-Tiles haben 512 px. Im Client `tileSize: 512` setzen. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
 
-## Ist der Kataster rechtsverbindlich?
-
-Nein. Er zeigt Grundstücksgrenzen zur Orientierung und ersetzt weder einen Grundbuchauszug noch eine Vermessung.
-
 ## Wo melde ich ein Problem?
 
 An [support@mapx.at](mailto:support@mapx.at) schreiben (technische Fragen und Fehler) oder an [info@mapx.at](mailto:info@mapx.at) (alles andere).
@@ -461,7 +454,7 @@ An [support@mapx.at](mailto:support@mapx.at) schreiben (technische Fragen und Fe
 
 Source: https://docs.mapx.at/de/guides/
 
-> Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen und Grundstücke, dazu Techniken.
+> Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen, dazu Techniken.
 
 Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverändert läuft.
 
@@ -474,15 +467,13 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 - [Transit-Abfahrten](https://docs.mapx.at/de/guides/transit.md): Verbindungen, Haltestellen, Abfahrtstafeln.
 - [Static Images](https://docs.mapx.at/de/guides/static-images.md): Kartenbilder für Berichte und Webseiten.
 - [Höhen und Gelände](https://docs.mapx.at/de/guides/elevation.md): Höhen, Profile, 3D-Gelände.
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Katastergrundstücke an einem Punkt.
 - [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): mapx aus KI-Assistenten nutzen.
 
 ## Anwendungsfälle
 
-- [Immobilien](https://docs.mapx.at/de/use-cases/real-estate.md): Grundstücks-Dossier, Exposé-Bild, Erreichbarkeit.
 - [Logistik](https://docs.mapx.at/de/use-cases/logistics.md): Lkw-Routing, Matrix, Tourenplanung, Verkehr.
 - [Tourismus](https://docs.mapx.at/de/use-cases/tourism.md): Rad- und MTB-Routen, Höhenprofil, Wetter.
-- [Gemeinden](https://docs.mapx.at/de/use-cases/municipalities.md): Grundstücke, Adressvalidierung, Abfahrten, Einbettung.
+- [Gemeinden](https://docs.mapx.at/de/use-cases/municipalities.md): Adressvalidierung, Abfahrten, Einbettung.
 
 ## Techniken
 
@@ -491,7 +482,7 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 
 ## Beispiele
 
-26 lauffähige Karten mit vollständigem Code, Vorschaubild und Filter nach Produkt: [Beispiele](https://docs.mapx.at/de/examples/index.md).
+25 lauffähige Karten mit vollständigem Code, Vorschaubild und Filter nach Produkt: [Beispiele](https://docs.mapx.at/de/examples/index.md).
 
 ---
 
@@ -540,16 +531,15 @@ Jedes Tileset hat eine TileJSON-Adresse `https://tiles.mapx.at/v1/tiles/{tileset
 | Tileset | Typ | Inhalt |
 |---|---|---|
 | `streets` | vector | Straßen, Bahn, Gewässer, Grenzen, Orte, Gebäude |
-| `cadastre` | vector | Grundstücksgrenzen (z16) |
 | `contours` | vector | Höhenlinien |
 | `terrain-rgb`, `dsm` | raster-dem | Gelände- und Oberflächenhöhe |
 | `orthophoto` | raster | Luftbild, bis z18 |
 
 ```js
 map.on("load", () => {
-  map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
-  map.addLayer({ id: "parcels", type: "line", source: "cadastre", "source-layer": "parcel_l",
-                 paint: { "line-color": "#e11d48", "line-width": 1 } });
+  map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
+  map.addLayer({ id: "contours", type: "line", source: "contours", "source-layer": "contour_l",
+                 paint: { "line-color": "#92400e", "line-width": 0.6 } });
 });
 ```
 
@@ -605,7 +595,7 @@ Den Endpunkt nach der Aktion der Nutzer wählen.
 | Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
 | Orte einer Art zeigen (Tankstelle, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
-Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen und Kataster vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 ## Eine Adresse geocodieren
 
@@ -615,7 +605,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].center;
 ```
 
-Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
+Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
 ## Reverse Geocoding
 
@@ -670,7 +660,6 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/va
 ## Nächste Schritte
 
 - [Geocoding API](https://docs.mapx.at/de/api/geocoding.md), [Search Box API](https://docs.mapx.at/de/api/search-box.md), [Address API](https://docs.mapx.at/de/api/address.md)
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Suchergebnisse vom Typ parcel
 - [Fehler und Limits](https://docs.mapx.at/de/api/errors.md)
 
 ---
@@ -1055,7 +1044,6 @@ Für Clients, die nur Raster-Tiles lesen (Leaflet, QGIS), rendern Static Tiles e
 
 - [Static Images API](https://docs.mapx.at/de/api/static-images.md)
 - [Karten](https://docs.mapx.at/de/guides/maps.md): dieselben Styles interaktiv
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Grundstücksgrenze als GeoJSON-Overlay
 
 ---
 
@@ -1121,118 +1109,13 @@ Die Tiles verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G
 
 ---
 
-# Grundstücke und Kataster abfragen
-
-Source: https://docs.mapx.at/de/guides/parcels/
-
-> Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen auf der Karte zeichnen und die Attribute lesen: Kataster-Abfrage mit mapx für Österreich.
-
-Der Kataster (BEV, DKM) steht als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt bereit. Die Daten dienen der Orientierung und sind nicht rechtsverbindlich. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
-
-| Aufgabe | Verwendung |
-|---|---|
-| Grundstücksgrenzen zeichnen | Tileset `cadastre` (z16) |
-| Grundstücksnummer, Fläche und Katastralgemeinde an einem Punkt | [`/v1/parcel/{lon},{lat}`](https://docs.mapx.at/de/api/tilequery.md) |
-| Ein beliebiges Vektor-Tileset an einem Punkt abfragen | [`/v1/tilequery/{tilesets}/{lon},{lat}.json`](https://docs.mapx.at/de/api/tilequery.md) |
-| Ein Grundstück suchen | [Geocoding](https://docs.mapx.at/de/guides/search.md): Grundstücke gehören zu den durchsuchten Objekten |
-
-## Grundstück an einem Punkt
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_number, cadastral_municipality_id, area_m2, is_building_land}'
-```
-
-Das Ergebnis ist eine `FeatureCollection` mit dem Grundstückspolygon. Die Fläche wird aus den Grenzlinien berechnet und weicht um Promille vom Registerwert ab. Ein Gebäude liefert sein Baugrundstück; die Nummer beginnt dann mit einem Punkt. Grundstücke, die über das 2-km-Tilefenster um den Punkt hinausreichen, fehlen, und außerhalb der Katasterdaten ist die Liste leer.
-
-## Auf der Karte ein Grundstück anklicken
-
-```js
-map.on("load", () => {
-  map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
-  map.addLayer({ id: "parcel-lines", type: "line", source: "cadastre", "source-layer": "parcel_l", paint: { "line-color": "#e11d48" } });
-});
-map.on("click", async (e) => {
-  const { lng, lat } = e.lngLat;
-  const res = await fetch(`https://api.mapx.at/v1/parcel/${lng},${lat}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } });
-  const [parcel] = (await res.json()).features;
-  if (!parcel) return;
-  const p = parcel.properties;
-  new maplibregl.Popup().setLngLat(e.lngLat)
-    .setHTML(`Grundstück ${p.parcel_number}<br>${Math.round(p.area_m2)} m²`).addTo(map);
-});
-```
-
-Vollständiges Beispiel: [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md). Die Katastralgemeinde (`cadastral_municipality_id`) gehört zur Identität eines Grundstücks: Die Nummer allein ist nicht eindeutig.
-
-## Tilequery
-
-Tilequery liest das Vektor-Tile im höchsten Zoom und liefert die Features, die dem Punkt am nächsten liegen (`radius` bis 2000 m).
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/15.3294,48.2272.json?radius=30&limit=3" | jq '.features[].properties.tilequery'
-```
-
-Tilesets lassen sich mit Komma kombinieren, zum Beispiel `streets,cadastre`. Jedes Feature hat `tilequery.distance` (m), `geometry` und `layer`.
-
-## Grundstücksbild für ein Inserat
-
-Das Grundstück mit einem [Static Image](https://docs.mapx.at/de/guides/static-images.md) kombinieren und das Polygon als GeoJSON-Overlay verwenden:
-
-```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).features[0];
-const overlay = encodeURIComponent(JSON.stringify({ type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry }));
-const img = `https://api.mapx.at/v1/static/satellite/geojson(${overlay})/auto/800x500.webp?access_token=DEIN_TOKEN`;
-```
-
-## Grundstücks-Dossier
-
-`GET /v1/parcels/{id}` liefert alles, was die offenen Daten zu einem Grundstück sagen, in einem Aufruf, für alle rund 10,2 Mio. Grundstücke Österreichs (DKM-Stichtag in `reference_date`). Die ID ist `<KG-Nummer>-<Grundstücksnummer>` mit `_` statt `/`, Bauparzellen mit Punkt (`14143-288_4`, `14143-.98`); sie steht als `properties.parcel_id` in Suchtreffern und der Punktabfrage.
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcels/14143-288_4" | jq '.properties | {area_m2, land_use, buildings: .buildings.count, elevation, nearest_transit_stop}'
-```
-
-| Feld | Inhalt |
-|---|---|
-| `cadastral_municipality`, `municipality`, `district`, `state` | `{id, name}` |
-| `area_m2`, `area_ellipsoidal_m2` | Fläche in der Gauß-Krüger-Ebene (so rechnet der Kataster) und auf dem Ellipsoid; der Registerwert gehört nicht zu den offenen Daten |
-| `land_use` | DKM-Nutzungen mit `area_m2` und `share` |
-| `buildings` | Anzahl, Grundfläche, Höhen aus BEV DLM wo vorhanden, die 25 größten |
-| `elevation` | Min, Mittel, Max und mittlere/maximale Neigung aus dem Geländemodell an einem Punktraster im Grundstück |
-| `addresses`, `nearest_transit_stop` | Adressen des Registers auf dem Grundstück, nächste Haltestelle im Umkreis von 2 km |
-| `orthophoto` | Flugjahr und -datum |
-| `climate` | Sonnenpotenzial, Temperatur- und Niederschlagsnormale, Hitze- und Schneetage, Dürreindex; dasselbe Objekt wie [`/v1/climate/{lon},{lat}`](https://docs.mapx.at/de/api/climate.md) am inneren Punkt des Grundstücks. Solange ein neues Gebiet geladen wird, sind Abschnitte `null` mit `status: "partial"`; nach `retry_after_s` Sekunden erneut fragen |
-| `links.static_image` | fertige [Static-Images](https://docs.mapx.at/de/guides/static-images.md)-URL mit umrandetem Grundstück |
-
-Die Punktabfrage ergänzt `parcel_id` und `links.dossier`; `?include=dossier` liefert je Feature das volle Dossier. Referenz: [Tilequery und Parcel API](https://docs.mapx.at/de/api/tilequery.md).
-
-## Grundstückssuche
-
-Geocoding und Search Box kennen `types=parcel` für alle Katastralgemeinden:
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG+14143+Gst+288/4&types=parcel"   # exakter Treffer
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=14143/288/4&types=parcel"
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Melk+.98&types=parcel"             # Bauparzelle
-```
-
-`KG 14143 Gst 288/4`, `14143/288/4` und `14143 288/4` sind eindeutig (eine fünfstellige Zahl neben einer Grundstücksnummer ist die KG-Nummer, Postleitzahlen haben vier Stellen). `Melk 288/4` stellt Treffer mit dieser Nummer nach vorn.
-
-## Nächste Schritte
-
-- [Tilequery und Parcel API](https://docs.mapx.at/de/api/tilequery.md)
-- [Tilesets](https://docs.mapx.at/de/tilesets/cadastre.md): Layer und Felder des Katasters
-- [Höhen](https://docs.mapx.at/de/guides/elevation.md): Höhe des Grundstücks
-
----
-
 # MCP-Server für Österreich-Geodaten
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 21 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Katastergrundstücke, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 21 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
 | | |
 |---|---|
@@ -1385,7 +1268,7 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 
 | Gruppe | Werkzeug | Zweck | Wichtigste Eingaben |
 |---|---|---|---|
-| Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI, Grundstück oder Straßenkilometer | `query`, `near`, `types`, `limit` |
+| Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI oder Straßenkilometer | `query`, `near`, `types`, `limit` |
 | Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius_m`, `types` |
 | Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
 | Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
@@ -1399,8 +1282,6 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Höhe | `elevation` | Höhe über dem Meer (Gelände- oder Oberflächenmodell) | `points`, `model` |
 | Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `path` (2 bis 200 Punkte), `samples`, `model` |
-| Grundstück | `parcel_at_point` | Katastergrundstück an einer Koordinate | `lon`, `lat`, `radius_m` |
-| Grundstück | `parcel_details` | Grundstücks-Dossier: Fläche, Nutzung, Gebäude, Neigung, Adressen | `parcel_id` |
 | Verkehr | `traffic_incidents` | Unfälle, Stau, Baustellen und Sperren | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `path`, `buffer_m` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lon`, `lat`, `kind`, `hours` |
@@ -1422,7 +1303,6 @@ Routing-Profile sind `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 - „Was erreiche ich vom Bahnhof Melk in 15 Minuten zu Fuß?“
 - „Was sind die nächsten Abfahrten am Bahnhof Melk?“
 - „Wie hoch liegt die Gegend um den Großglockner, und wie sieht das Profil meines Wanderwegs aus?“
-- „Welches Grundstück liegt bei 16.3725, 48.2085, wie groß ist es, und ist es Bauland?“
 - „Regnet es in Innsbruck in den nächsten drei Stunden?“
 - „Plane die beste Reihenfolge für diese fünf Lieferadressen und zeig sie auf einer Karte.“
 
@@ -1961,7 +1841,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TO
 3. **Min. Zoom** 0, **Max. Zoom** 16 eintragen, OK.
 4. Verbindung in die Karte ziehen. QGIS zeigt zunächst einen Standardstil; das Aussehen lässt sich im Layer-Stileditor oder mit einem eigenen Stil ändern.
 
-Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `cadastre` (Zoom 16) und `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Tilesets: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
+Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Tilesets: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
 
 ## Nächste Schritte
 
@@ -2008,7 +1888,7 @@ Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein.
 
 ## Eigenes GeoJSON
 
-Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON in WGS84. `ol.format.GeoJSON` liest sie in die Kartenprojektion:
+Antworten der APIs (Route, Isochrone …) sind GeoJSON in WGS84. `ol.format.GeoJSON` liest sie in die Kartenprojektion:
 
 ```js
 const quelle = new ol.source.Vector();
@@ -2024,7 +1904,7 @@ quelle.addFeatures(new ol.format.GeoJSON().readFeatures(geojson, { featureProjec
 
 ## Beispiele
 
-Die Beispiele mit OpenLayers-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „OpenLayers“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#ol), [Route](https://docs.mapx.at/de/examples/route.md#ol) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#ol).
+Die Beispiele mit OpenLayers-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „OpenLayers“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#ol) und [Route](https://docs.mapx.at/de/examples/route.md#ol).
 
 ---
 
@@ -2062,7 +1942,7 @@ Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein.
 
 ## Eigenes GeoJSON
 
-Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON und gehen direkt in `L.geoJSON`:
+Antworten der APIs (Route, Isochrone …) sind GeoJSON und gehen direkt in `L.geoJSON`:
 
 ```js
 const ebene = L.geoJSON(null, { style: { color: '#2346d8', weight: 4 } }).addTo(map);
@@ -2077,7 +1957,7 @@ ebene.addData(geojson);
 
 ## Beispiele
 
-Die Beispiele mit Leaflet-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „Leaflet“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#leaflet), [Route](https://docs.mapx.at/de/examples/route.md#leaflet) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#leaflet).
+Die Beispiele mit Leaflet-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „Leaflet“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#leaflet) und [Route](https://docs.mapx.at/de/examples/route.md#leaflet).
 
 ---
 
@@ -2108,7 +1988,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 - [Optimization](https://docs.mapx.at/de/api/optimization.md): Optimierte Touren und Tourenplanung.
 - [Transit](https://docs.mapx.at/de/api/transit.md): Verbindungen, Haltestellen, Abfahrten.
 - [Static Images](https://docs.mapx.at/de/api/static-images.md): Kartenbilder mit Overlays.
-- [Tilequery und Parcel](https://docs.mapx.at/de/api/tilequery.md): Features und Grundstücke an einem Punkt.
+- [Tilequery](https://docs.mapx.at/de/api/tilequery.md): Features der Vektorkacheln an einem Punkt.
 - [Elevation](https://docs.mapx.at/de/api/elevation.md): Höhen und Profile.
 - [Weather](https://docs.mapx.at/de/api/weather.md): Beobachtungen, Vorhersage, Warnungen, Tiles.
 - [Air quality](https://docs.mapx.at/de/api/air-quality.md): Index, Schadstoffe, Saharastaub.
@@ -2733,7 +2613,7 @@ data = res.json()
 
 Source: https://docs.mapx.at/de/api/geocoding/
 
-> Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten, Postleitzahlen und Grundstücken, mit Beispielen.
+> Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten und Postleitzahlen, mit Beispielen.
 
 Wandelt Adresse oder Ortsname in Koordinaten um und Koordinaten in die nächste Adresse.
 
@@ -2743,7 +2623,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (3
 
 `GET /v1/geocode`
 
-Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Grundstücke. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
+Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Orte von Interesse. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
 Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`, `bbox`. Für günstige Abfragen immer `types` angeben.
 
@@ -2753,7 +2633,7 @@ Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`,
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Suchtext (auch Pfadform `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 bis 10, Standard 5 |
-| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen; exakte Ortsnamen bleiben oben; wird ignoriert, wenn bbox gesetzt ist |
 
@@ -2838,7 +2718,7 @@ Wie `/v1/geocode?q=...`; der Suchtext ist das Pfadsegment (optional mit `.json`)
 |---|---|---|---|---|---|
 | `q` | path | string | ja | – | Suchtext, URL-codiert |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
-| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, parcel (nur Grundstücke; Eingaben wie `KG 14143 Gst 473/1`, `14143/473/1`, `Landeck .102`), road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
+| `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `proximity` | query | string |  | – | lon,lat |
 
@@ -3147,7 +3027,7 @@ Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retr
 | `q` | query | string | ja | – | Suchtext |
 | `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
 | `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode, liefert auch die Entfernung |
-| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, parcel, road_ref (country, neighborhood, category haben keine Wirkung) |
+| `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category haben keine Wirkung) |
 | `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `gas_station`), siehe `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
@@ -4975,15 +4855,15 @@ open("result.png", "wb").write(res.content)
 
 ---
 
-# Tilequery und Parcel API
+# Tilequery API
 
 Source: https://docs.mapx.at/de/api/tilequery/
 
-> Tilequery-API: Objekte um einen Punkt aus beliebigen Vektor-Tilesets und das Katastergrundstück an einem Punkt (Parcel-API), mit Parametern und Beispielen.
+> Tilequery-API: Objekte um einen Punkt aus beliebigen Vektor-Tilesets, mit Parametern und Beispielen.
 
-Tilequery liefert die Vektorobjekte nahe einer Koordinate. Parcel liefert das Grundstück (Fläche, Nummer, Katastralgemeinde) an einem Punkt.
+Tilequery liefert die Vektorobjekte nahe einer Koordinate.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
 ## Tilequery: Vektorobjekte um einen Punkt {#tilequery-vector-features-around-a-point}
 
@@ -4997,7 +4877,7 @@ Mehrere Tilesets, durch Komma getrennt, ergänzen `tilequery.tileset`; `dtm`/`ds
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `tilesets` | path | string | ja | – | Tileset-Namen, durch Komma getrennt (höchstens 15), z. B. `streets,cadastre` |
+| `tilesets` | path | string | ja | – | Tileset-Namen, durch Komma getrennt (höchstens 15), z. B. `streets,contours` |
 | `coordinate` | path | string | ja | – | lon,lat (der Pfad endet auf `.json`) |
 | `radius` | query | string |  | `0` | Meter, 0 bis 2000, Standard 0 |
 | `limit` | query | string |  | `5` | 1 bis 50, Standard 5 |
@@ -5010,13 +4890,13 @@ Mehrere Tilesets, durch Komma getrennt, ergänzen `tilequery.tileset`; `dtm`/`ds
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -5025,7 +4905,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/tilequery/cadastre/16.3725,48.2085.json?radius=50&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/tilequery/streets/16.3725,48.2085.json?radius=50&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -5045,12 +4925,11 @@ data = res.json()
         ]
       },
       "properties": {
-        "gstnr": "817",
-        "kgnr": 1004,
+        "name": "Herrengasse",
         "tilequery": {
           "distance": 2.9,
           "geometry": "linestring",
-          "layer": "parcel_l"
+          "layer": "road_l"
         }
       }
     }
@@ -5067,179 +4946,6 @@ data = res.json()
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
-
-## Grundstück an einem Punkt (BEV DKM) {#parcel-at-a-point-bev-dkm}
-
-`GET /v1/parcel/{coordinate}`
-
-Grundstück (`parcel_number`, `cadastral_municipality_id`, `area_m2`, `is_building_land`, `source`, dazu `parcel_id` und `links.dossier`) als Polygon, berechnet aus den Grenzlinien der Katasterkacheln (die Fläche weicht um Promille vom Wert im Register ab). Auf Gebäuden kommt das Bauflächengrundstück (`parcel_number` beginnt mit einem Punkt).
-
-Grundstücke, die über den Kachelausschnitt (etwa 2 km) hinausreichen, fehlen. Außerhalb der Katasterdaten eine leere Liste. Mit `include=dossier` ist jedes Objekt das vollständige Dossier von `/v1/parcels/{id}` (Zonenkosten 4 plus Dossier).
-
-**Parameter**
-
-| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
-|---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
-| `radius` | query | number (0–100) |  | `0` | Meter, 0 bis 100, Standard 0 (andere Werte: 400). Nur zur Kompatibilität angenommen; das Ergebnis ist immer das Grundstück, das den Punkt enthält |
-| `include` | query | `dossier` |  | – | `dossier` liefert je Objekt das vollständige Dossier |
-
-**Beispiel**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/parcel/15.3294,48.2272", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Beispielantwort**
-
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              16.3721,
-              48.2081
-            ],
-            [
-              16.3727,
-              48.2081
-            ],
-            [
-              16.3727,
-              48.2086
-            ],
-            [
-              16.3721,
-              48.2081
-            ]
-          ]
-        ]
-      },
-      "properties": {
-  …
-```
-
-**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
-
-| Status | Bedeutung |
-|---|---|
-| `400` | Parameter fehlt oder ist ungültig |
-| `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `429` | Rate-Limit überschritten, `Retry-After` abwarten |
-| `503` | Daten vorübergehend nicht verfügbar |
-
-## Grundstücksdossier (BEV DKM und weitere offene Daten) {#parcel-dossier-bev-dkm-and-further-open-data}
-
-`GET /v1/parcels/{id}`
-
-Alles, was die offenen Daten über ein Grundstück sagen, in einem Aufruf: Verwaltungszuordnung, Fläche (`area_m2` in der Ebene des Gauß-Krüger-Systems, wie der Kataster sie berechnet, `area_ellipsoidal_m2`), Anteile der Nutzungen aus der DKM, Gebäude (Anzahl, Grundfläche, Höhen aus dem BEV-DLM, wo vorhanden), Geländestatistik (minimale, mittlere und maximale Höhe sowie mittlere und maximale Neigung aus dem Geländemodell, Raster von bis zu 250 Punkten im Grundstück), dem Grundstück zugeordnete Adressen, nächste Haltestelle des öffentlichen Verkehrs (`null`, wenn der Router nicht verfügbar ist), Jahr des Orthofoto-Bildflugs, `climate` (das Objekt von `/v1/climate/{coordinate}` am inneren Punkt des Grundstücks: Sonnenpotenzial, Klimanormale, Hitze- und Schneetage, Dürre; aus einem Cache, die Abschnitte sind `null` mit `status: partial`, bis die Daten eines neuen Gebiets geladen sind), die Geometrie als GeoJSON und ein fertiger `links.static_image`.
-
-Die ID kommt aus `properties.parcel_id` von Grundstückstreffern der Suche und aus `/v1/parcel/{coordinate}`; die Form `14143-288/4` (Schrägstrich prozentcodiert) wird ebenfalls angenommen. 404 bei unbekannten Grundstücken, 503, solange der Dossier-Dienst nicht verfügbar ist. Stichtag des Katasters: siehe `properties.reference_date`.
-
-**Parameter**
-
-| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
-|---|---|---|---|---|---|
-| `id` | path | string | ja | – | Grundstücks-ID `<KG-Nummer>-<Grundstücksnummer>`, `/` als `_` geschrieben, Bauflächen mit führendem Punkt: `14143-288_4`, `14143-.98` |
-
-**Beispiel**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/parcels/14143-288_4" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/parcels/14143-288_4", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/parcels/14143-288_4", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Beispielantwort**
-
-```json
-{
-  "type": "Feature",
-  "id": "14143-288_4",
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [
-      [
-        [
-          15.3414,
-          48.2191
-        ],
-        [
-          15.3447,
-          48.2191
-        ],
-        [
-          15.3447,
-          48.2227
-        ],
-        [
-          15.3414,
-          48.2191
-        ]
-      ]
-    ]
-  },
-  "bbox": [
-    15.3414,
-    48.2191,
-  …
-```
-
-| Feld | Typ | Beschreibung |
-|---|---|---|
-| `id` | string | Grundstücks-ID: `<KG-Nummer, 5 Ziffern>-<Grundstücksnummer>` mit `/` als `_`, Bauflächen beginnen mit einem Punkt, z. B. `14143-288_4`, `14143-.98` |
-
-**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
-
-| Status | Bedeutung |
-|---|---|
-| `400` | Parameter fehlt oder ist ungültig |
-| `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `404` | Nicht gefunden (Name, Pfad oder Position) |
-| `429` | Rate-Limit überschritten, `Retry-After` abwarten |
-| `503` | Daten vorübergehend nicht verfügbar |
 
 ## Playground
 
@@ -6051,9 +5757,9 @@ Source: https://docs.mapx.at/de/api/climate/
 
 > Klima-API für einen Punkt in Österreich: Sonnenpotenzial, Klimanormale, Hitzetage, Schnee und Dürre von GeoSphere Austria, mit Parametern und Beispielen.
 
-Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Temperatur- und Niederschlagsnormale mit Trend, Hitze- und Frosttage, Schneetage je Winter und der Dürreindex. Quelle: GeoSphere Austria, CC BY 4.0. Dasselbe Objekt steht als `properties.climate` im [Grundstücks-Dossier](https://docs.mapx.at/de/api/tilequery.md).
+Klima eines Punktes: Jahressumme der Sonneneinstrahlung und Sonnenstunden, Temperatur- und Niederschlagsnormale mit Trend, Hitze- und Frosttage, Schneetage je Winter und der Dürreindex. Quelle: GeoSphere Austria, CC BY 4.0.
 
-Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Grundstücke](https://docs.mapx.at/de/guides/parcels.md)
+Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Karten](https://docs.mapx.at/de/guides/maps.md)
 
 ## Klima an einem Punkt (Sonnenpotenzial, Klimanormale, Hitzetage, Schnee, Dürre) {#climate-at-a-point-solar-potential-normals-heat-days-snow-drought}
 
@@ -6061,7 +5767,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 Klima eines Punktes aus offenen Daten von GeoSphere Austria: Sonnenpotenzial (jährliche Globalstrahlung in kWh/m2 und Sonnenstunden, Mittel der letzten 3 vollständigen Jahre, 100 m), Temperatur und Niederschlag (Klimanormale 1991-2020, letzte 10 Jahre, Trend, Monatsnormale, 1 km), Hitze-, Sommer-, Frost- und Eistage sowie Tropennächte pro Jahr, Schneetage pro Winter und die aktuelle Schneehöhe sowie der Dürreindex SPEI (90 und 365 Tage, letzter Wert mit Klasse).
 
-Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Rasterzelle abgeleitet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie von der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Dasselbe Objekt ist Teil des Grundstücksdossiers (`properties.climate`). Außerhalb Österreichs 404; 503, solange die Quelle nicht verfügbar ist oder drosselt. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Quellenangabe erforderlich).
+Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Rasterzelle abgeleitet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie von der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Außerhalb Österreichs 404; 503, solange die Quelle nicht verfügbar ist oder drosselt. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Quellenangabe erforderlich).
 
 **Parameter**
 
@@ -6132,7 +5838,7 @@ data = res.json()
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `location` | array | [Länge, Breite] (WGS84), optional Höhe. |
-| `status` | string | `partial`: einige Abschnitte werden noch geladen (Grundstücksdossier: nach `retry_after_s` erneut anfragen) |
+| `status` | string | `partial`: einige Abschnitte werden noch geladen |
 | `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
 | `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
 | `precipitation` | object,null | Niederschlag und Sonnenschein (SPARTACUS, 1 km) |
@@ -6721,10 +6427,10 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
   "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
   "title": "Invalid parameter",
   "status": 400,
-  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, parcel, road_ref)",
+  "detail": "types: unknown value 'foo' (allowed: address, street, locality, place, district, region, postcode, poi, road_ref)",
   "code": "invalid-parameter",
   "param": "types",
-  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "parcel", "road_ref"]
+  "allowed": ["address", "street", "locality", "place", "district", "region", "postcode", "poi", "road_ref"]
 }
 ```
 
@@ -7129,7 +6835,7 @@ Die Limits je IP-Adresse und Zone und das Minutenlimit je Token stehen unter [Zu
 
 | Header | Wert |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe, Grundstück), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
+| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
 | `ETag`, `Last-Modified` | Version; mit `If-None-Match` bzw. `If-Modified-Since` → `304` (Kacheln, Stile, TileJSON, OpenAPI) |
 | `Server-Timing` | `router`, `search`, `render`, `total` in Millisekunden |
 | `RateLimit-Policy` | Zone und Limit des Endpunkts |
@@ -7138,7 +6844,7 @@ PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen u
 
 ## Attribution
 
-JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: BEV – DKM, CC BY 4.0` beim Grundstück oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` beim Wetter oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 ---
 
@@ -7146,14 +6852,13 @@ JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text,
 
 Source: https://docs.mapx.at/de/tilesets/
 
-> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Kataster, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
+> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
 
 Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Styles](https://docs.mapx.at/de/api/styles.md) enthalten. Alle Daten stehen unter CC BY 4.0, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 | Tileset | Typ | Zoom | Stand |
 |---|---|---|---|
 | [`streets`](https://docs.mapx.at/de/tilesets/streets.md) | Vektor | z0–16 | 2026-04-01 |
-| [`cadastre`](https://docs.mapx.at/de/tilesets/cadastre.md) | Vektor | z16–16 | 2026-04-01 |
 | [`contours`](https://docs.mapx.at/de/tilesets/contours.md) | Vektor | z10–16 | 20250915 |
 | [`terrain-rgb`](https://docs.mapx.at/de/tilesets/terrain-rgb.md) | DEM | z5–16 | 20250915 |
 | [`dsm`](https://docs.mapx.at/de/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
@@ -7170,7 +6875,7 @@ Nicht in der Tabelle, weil es täglich ersetzt statt versioniert wird: [Sentinel
 Ein Tileset per Namen verwenden:
 
 ```js
-map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
+map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
 ```
 
 Alle Anfragen an `tiles.mapx.at` brauchen einen Token, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bei MapLibre-Quellen hängt `transformRequest` den Token an, bei Kachel-URLs `?access_token=DEIN_TOKEN`.
@@ -7190,7 +6895,7 @@ Source: https://docs.mapx.at/de/tilesets/streets/
 
 > Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
 
-Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Kataster, Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
+Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
 
 **Nutzungen**
 
@@ -7198,7 +6903,7 @@ Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK
 - **Web-Karten und Apps**: Vektorkarte mit eigener Gestaltung bis z16
 - **Planungs- und Navigationshintergrund**: Straßen, Bahn, Gewässer, Grenzen
 - **Hausnummern und Namen**: Adressen, Orte, Berge und Gewässernamen
-- **Überlagerung**: Kataster, Höhenlinien und Relief darüber (https://docs.mapx.at/de/guides/overlay-contours/)
+- **Überlagerung**: Höhenlinien und Relief darüber (https://docs.mapx.at/de/guides/overlay-contours/)
 
 ## Kennwerte
 
@@ -7285,108 +6990,6 @@ Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON od
 
 ```html
 Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0
-```
-
-Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
-
----
-
-# Kataster-Tileset: Grundstücksgrenzen
-
-Source: https://docs.mapx.at/de/tilesets/cadastre/
-
-> Grundstücksgrenzen aus der Digitalen Katastralmappe des BEV als Vektorkacheln, z16, mit Katastralgemeinde und Grundstücksnummer.
-
-Die Grenzen aller Grundstücke als Linien, mit Katastralgemeinde-Nummer und Grundstücksnummer, aus der Digitalen Katastralmappe des BEV. Das Tileset hat nur z16; Clients zoomen darüber auf.
-
-**Nutzungen**
-
-- **Grundstückssuche**: Grenzen und Nummern auf der Karte
-- **Planung und Vorprüfung**: Grundstücksgrenzen über Orthophoto legen
-- **Immobilien- und Standortkarten**: Parzellen als Kartenebene
-- **Überlagerung**: Kataster über Basiskarte oder Luftbild (https://docs.mapx.at/de/guides/style-the-basemap/)
-- **QGIS**: Vektorkacheln im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
-
-## Kennwerte
-
-**Tileset `cadastre`**
-
-| Kennwert | Wert |
-|---|---|
-| Stichtag | `01.04.2026` |
-| Format | `mvt` |
-| Zoomstufen | `z16–z16` |
-| Gebiet (WGS84) | `9,5251 / 46,3697 / 17,1661 / 49,0235 (W/S/O/N)` |
-| Lizenz | `CC BY 4.0` |
-
-## Live-Karte
-
-## Einbinden
-
-**MapLibre**
-
-```js
-const map = new maplibregl.Map({
-  attributionControl: false,
-  container: "map",
-  style: {
-    version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" } },
-    layers: [{ id: "parcel_l", type: "line", source: "v", "source-layer": "parcel_l", paint: { "line-color": "#b5651d" } }]
-  }
-});
-map.addControl(new maplibregl.AttributionControl({ compact: true }));
-map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
-```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
-
-  
-
-**QGIS**
-
-Vektorkacheln → Neue Verbindung, URL `https://tiles.mapx.at/v1/tiles/cadastre/{z}/{x}/{y}.pbf?access_token=DEIN_TOKEN`, Stil-URL leer lassen.
-
-  
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/cadastre.json
-curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/cadastre/14/8860/5730.pbf
-```
-
-Weil es nur z16 gibt, im Style `minzoom: 16` setzen; die Quelle mit `maxzoom: 16` überzoomt automatisch.
-
-## Layer-Referenz
-
-Die Linien sind Grenzen, keine Flächen: Ein Klick trifft die Grenzlinie und liefert das Grundstück, zu dem sie gehört. Eigentümer und Fläche sind nicht enthalten.
-
-### parcel_l
-
-Geometrie: **Linie**, Zoom: **z16–16**, Layer: `parcel_l`. Grundstücksgrenzen (Linien).
-
-| Feld | Typ | Beschreibung |
-|---|---|---|
-| `gstnr` | `string` | Grundstücksnummer. |
-| `kgnr` | `number` | Nummer der Katastralgemeinde. |
-
-## Quelle und Aktualität
-
-- Quelle: BEV **Digitale Katastralmappe (DKM)**, Stichtag 01.04.2026.
-
-## Hinweise
-
-> **Achtung:** Die Darstellung ist nicht rechtsverbindlich. Für Grenzfragen gilt der Kataster beim Vermessungsamt.
-
-- Die Abbildung der Grenzen ist nicht rechtsverbindlich, maßgeblich ist der Kataster beim Vermessungsamt.
-- Unter z16 gibt es keine Kacheln.
-
-## Attribution
-
-Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
-
-```html
-Datenquelle: BEV – DKM, CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
@@ -7809,7 +7412,6 @@ Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native
 - **Luftbild-Hintergrund**: Satellitenkarten-Ersatz für Web und Apps
 - **3D-Gelände**: Orthophoto auf dem DTM (https://docs.mapx.at/de/guides/3d-terrain/)
 - **Planung und Dokumentation**: Zustand vor Ort in 20 cm
-- **Grundstücke prüfen**: Kataster über dem Luftbild
 - **QGIS**: Luftbild als XYZ- oder PMTiles-Layer (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
@@ -8557,7 +8159,7 @@ Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vo
 
 Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
-> Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt. Für den Kataster (nur z16) im Style `minzoom: 16` setzen.
+> Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt.
 
 ## Weiter
 
@@ -8633,7 +8235,6 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 | Tileset | Text |
 |---|---|
 | `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0 |
-| `cadastre` | Datenquelle: BEV – DKM, CC BY 4.0 |
 | `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
@@ -8651,14 +8252,14 @@ JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es is
 
 | API | Quelle |
 |---|---|
-| Geocoding, Search Box, Address | BEV (Adressregister, Geographische Namen, Verwaltungsgrenzen, Kataster), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV (Adressregister, Geographische Namen, Verwaltungsgrenzen), CC BY 4.0 |
 | Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
 | Maut, Verkehr | ASFINAG / EVIS.AT, CC BY 4.0, Straßennetz GIP.at |
 | Transit | ÖBB-Personenverkehr AG (CC BY 4.0), Datenquelle Mobilitätsverbünde Österreich OG |
 | Wetter | GeoSphere Austria, CC BY 4.0 |
+| Klima | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Luftqualität | GeoSphere Austria (Chemiewettermodell), CC BY 4.0 |
-| Klima, `properties.climate` des Grundstücks-Dossiers | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Parcel, Tilequery (Kataster) | BEV – DKM, CC BY 4.0 |
+| Tilequery | Quelle des abgefragten Tilesets, siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md) |
 | Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 Die Quellenangabe steht auch in den Metadaten von TileJSON und PMTiles.
@@ -8669,7 +8270,7 @@ Die Quellenangabe steht auch in den Metadaten von TileJSON und PMTiles.
 
 Source: https://docs.mapx.at/de/examples/
 
-> 26 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+> 25 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Wetter.
 
 Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.19.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Viele Beispiele gibt es zusätzlich für OpenLayers (10.11.0) und Leaflet (1.9.4); der Umschalter über der Karte wählt die Bibliothek für alle Beispiele. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt oder Kartenbibliothek filtern:
 
@@ -8685,7 +8286,6 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 - [Niederschlagsradar](https://docs.mapx.at/de/examples/radar-animation.md): Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation.
 - [Erreichbarkeit (Isochronen)](https://docs.mapx.at/de/examples/isochrone.md): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 - [Fahrzeitmatrix](https://docs.mapx.at/de/examples/matrix.md): Fahrzeiten zwischen mehreren Orten in einer Anfrage.
-- [Kataster: Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md): Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.
 - [TileJSON-Quellen](https://docs.mapx.at/de/examples/tilejson-source.md): Orthophoto und Höhenlinien ohne fertigen Stil einbinden.
 - [3D-Gebäude](https://docs.mapx.at/de/examples/buildings-3d.md): Gebäude mit BEV-Höhen als 3D-Körper, Kamera geneigt.
 - [Search Box mit Vorschlägen](https://docs.mapx.at/de/examples/search-box.md): Vorschläge beim Tippen, Position nach dem Klick, Typfilter.
@@ -9339,7 +8939,7 @@ Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -9385,7 +8985,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -9429,7 +9029,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -10188,127 +9788,6 @@ document.getElementById('los').addEventListener('click', async () => {
 ## Verwendete APIs
 
 - [Routing](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
-- [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
-
----
-
-# Kataster: Grundstück per Klick
-
-Source: https://docs.mapx.at/de/examples/parcel-on-click/
-
-> Grundstücksgrenzen (Kataster) über dem Luftbild zeigen, ein Klick nennt die Grundstücksnummer: Kataster-Tileset und Parcel-API, lauffähiger Code.
-
-Das Kataster-Tileset enthält die Grenzlinien ab Zoom 16 mit Grundstücksnummer und Katastralgemeinde. `queryRenderedFeatures` liest sie am Klickpunkt. OpenLayers und Leaflet zeigen das Luftbild als Rasterkacheln ohne Grenzlinien; dort fragt ein Klick die Parcel-API und zeichnet den Umriss des Grundstücks.
-
-## Code
-
-### MapLibre GL JS
-
-````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
-
-// Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-// Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
-const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-
-maplibregl.addProtocol('pmtiles', new pmtiles.Protocol().tile);
-
-const map = new maplibregl.Map({ attributionControl: false, transformRequest, container: 'map', style: 'https://api.mapx.at/v1/styles/satellite', center: [15.3306, 48.2275], zoom: 18 }); // Melk
-map.addControl(new maplibregl.NavigationControl());
-map.addControl(new maplibregl.AttributionControl({ compact: true }));
-map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-show')?.classList.remove('maplibregl-compact-show')); // start collapsed (MapLibre keeps it open until the first drag)
-
-map.on('load', () => {
-  // Grenzlinien sichtbar machen (im Stil als Ebene "parcel", Quelle "cadastre", ab Zoom 16)
-  map.setLayoutProperty('parcel', 'visibility', 'visible');
-});
-map.on('click', (e) => {
-  const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
-  const f = map.queryRenderedFeatures(box, { layers: ['parcel'] })[0];
-  const text = f ? (de ? `Grundstück ${f.properties.gstnr}, Katastralgemeinde ${f.properties.kgnr}` : `Parcel ${f.properties.gstnr}, cadastral municipality ${f.properties.kgnr}`) : (de ? 'Keine Grundstücksgrenze getroffen (sichtbar ab Zoom 16).' : 'No parcel boundary hit (visible from zoom 16).');
-  new maplibregl.Popup().setLngLat(e.lngLat).setText(text).addTo(map);
-});
-````
-
-### OpenLayers
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/ol@10.11.0/ol.css">
-<script src="https://unpkg.com/ol@10.11.0/dist/ol.js"></script>
-```
-
-````js
-// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
-
-const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
-const parcel = new ol.source.Vector();
-const outline = new ol.style.Style({ stroke: new ol.style.Stroke({ color: '#ffd400', width: 3 }), fill: new ol.style.Fill({ color: 'rgba(255, 212, 0, 0.15)' }) });
-const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
-label.style.cssText = 'background:#fff;color:#000;padding:4px 8px;border-radius:6px;font:13px system-ui,sans-serif;box-shadow:0 1px 4px #0006';
-const popup = new ol.Overlay({ element: label, positioning: 'bottom-center', offset: [0, -8] });
-const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: parcel, style: outline })], overlays: [popup], view: new ol.View({ center: ol.proj.fromLonLat([15.3306, 48.2275]), zoom: 19, maxZoom: 21 }) }); // Melk
-
-map.on('click', async (e) => {
-  const [lon, lat] = ol.proj.toLonLat(e.coordinate);
-  parcel.clear();
-  try {
-    const r = await fetch(`https://api.mapx.at/v1/parcel/${lon.toFixed(6)},${lat.toFixed(6)}`, AUTH);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
-    if (f) parcel.addFeature(new ol.format.GeoJSON().readFeature(f, { featureProjection: 'EPSG:3857' }));
-    const p = f?.properties;
-    label.textContent = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
-  } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
-  popup.setPosition(e.coordinate);
-});
-````
-
-### Leaflet
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-```
-
-````js
-// Cadastre: a click asks the Parcel API for the parcel at that point, draws its outline and shows parcel number and cadastral municipality.
-const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
-const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
-const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
-// Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = 'Orthophoto: <a href="https://www.bev.gv.at">BEV</a>, <a href="https://basemap.at">basemap.at</a>; BEV – DKM; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
-
-const map = L.map('map').setView([48.2275, 15.3306], 19); // Melk
-L.tileLayer('https://api.mapx.at/v1/styles/satellite/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
-const parcel = L.geoJSON(null, { style: { color: '#ffd400', weight: 3, fillOpacity: 0.15 } }).addTo(map);
-
-map.on('click', async (e) => {
-  const { lng, lat } = e.latlng;
-  parcel.clearLayers();
-  let text;
-  try {
-    const r = await fetch(`https://api.mapx.at/v1/parcel/${lng.toFixed(6)},${lat.toFixed(6)}`, AUTH);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const f = (await r.json()).features[0]; // GeoJSON polygon of the parcel
-    if (f) parcel.addData(f);
-    const p = f?.properties;
-    text = p ? (de ? `Grundstück ${p.parcel_number}, Katastralgemeinde ${p.cadastral_municipality_id}` : `Parcel ${p.parcel_number}, cadastral municipality ${p.cadastral_municipality_id}`) : (de ? 'Kein Grundstück an dieser Stelle.' : 'No parcel at this point.');
-  } catch (err) { text = (de ? 'Fehler: ' : 'Error: ') + err.message; }
-  L.popup().setLatLng(e.latlng).setContent(Object.assign(document.createElement('span'), { textContent: text })).openOn(map); // as text, not HTML
-});
-````
-
-## Verwendete APIs
-
-- [Kataster](https://docs.mapx.at/de/tilesets/cadastre.md) (Vektorkacheln im Stil `satellite`)
-- [Parcel](https://docs.mapx.at/de/api/tilequery.md) `GET api.mapx.at/v1/parcel/{lon},{lat}` (OpenLayers, Leaflet)
 - [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)
 
 ---
@@ -12016,112 +11495,7 @@ In Leaflet übernimmt `L.geoJSON` mit einer `style`-Funktion je Geometrietyp die
 
 Source: https://docs.mapx.at/de/use-cases/
 
-> Anwendungsfälle für die mapx-Karten und Location-APIs in Österreich: Logistik, Gemeinden, Immobilien und Tourismus, jeweils mit passenden APIs und Code.
-
----
-
-# Immobilien: Grundstück, Sonne, Exposé
-
-Source: https://docs.mapx.at/de/use-cases/real-estate/
-
-> Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
-
-Für ein Exposé braucht es drei Dinge: Fakten zum Grundstück, ein Bild, das die Lage zeigt, und eine Antwort auf „Wie gut ist es erreichbar?“. Alles kommt aus amtlichen offenen Daten (BEV-Kataster, Orthophoto, GIP, Fahrpläne), nutzbar mit einem kostenlosen Token. Die Daten dienen der Orientierung und sind rechtlich nicht verbindlich.
-
-Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
-
-## Grundstück finden
-
-Nach der Grundstücksnummer suchen (`KG 14143 Gst 473/1`, `14143/473/1`) oder das Grundstück an einem Punkt nehmen, etwa aus einem Klick oder einer Adresse:
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=1" | jq '.features[0].center'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/parcel/15.3294,48.2272" | jq '.features[0].properties | {parcel_id, parcel_number, area_m2, is_building_land}'
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0].properties.parcel_id'
-```
-
-## Dossier lesen
-
-`/v1/parcels/{id}` liefert alles, was die offenen Daten zu einem Grundstück sagen, in einem Aufruf: Gemeinde und Bezirk, Fläche, Nutzungsanteile, Gebäude mit Höhen (wo das BEV sie hat), Geländestatistik, Adressen, die nächste Haltestelle, das Flugjahr des Orthophotos und einen fertigen Bildlink.
-
-```js
-const id = "14143-473_1"; // properties.parcel_id aus der Suche oder der Punktabfrage
-const d = await (await fetch(`https://api.mapx.at/v1/parcels/${id}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const p = d.properties;
-console.log(
-  `${p.parcel_number} in ${p.cadastral_municipality.name}, ${Math.round(p.area_m2)} m²`,
-  `| Gebäude: ${p.buildings.count}`,
-  `| ${p.elevation?.min_m}-${p.elevation?.max_m} m, Neigung ${p.elevation?.slope_mean_deg}°`,
-  `| nächste Haltestelle: ${p.nearest_transit_stop?.name} (${p.nearest_transit_stop?.distance_m} m)`,
-);
-```
-
-Fehlende Daten sind `null` oder leere Listen, nie abwesend. Für einen Punkt statt einer ID liefert `GET /v1/parcel/{lon},{lat}?include=dossier` dasselbe Dossier. Für einen Kartenklick siehe das Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md).
-
-## Ein Bild fürs Exposé
-
-Das Dossier enthält `links.static_image`: ein Luftbild mit dem Grundstücksumriss. Der Link kommt ohne Token; vor dem Einbinden `?access_token=DEIN_TOKEN` anhängen. Für ein eigenes Bild das Polygon als GeoJSON-Overlay zeichnen und mit `auto` den Ausschnitt anpassen lassen:
-
-```js
-const parcel = (await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).features[0];
-const outline = { type: "Feature", properties: { stroke: "#e11d48", "stroke-width": 3, fill: "#e11d48", "fill-opacity": 0.2 }, geometry: parcel.geometry };
-const img = `https://api.mapx.at/v1/static/satellite/geojson(${encodeURIComponent(JSON.stringify(outline))})/auto/800x500.webp?access_token=DEIN_TOKEN`;
-document.querySelector("#expose").src = img; // für E-Mails und PDFs auf dem Server mit geheimem Token erzeugen
-```
-
-Für eine Planansicht `outdoors` oder `streets` statt `satellite` verwenden. `@2x` an der Größe liefert scharfe Bilder auf hochauflösenden Bildschirmen. Siehe [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md). Die Bild-URL enthält den Token: für Bilder auf Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Website als erlaubter Origin verwenden, Bilder für E-Mails und PDFs auf dem Server mit einem geheimen Token (`mx_sk_…`) erzeugen. Das Bild trägt die Attribution seiner Daten; im Layout sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
-
-## Sonne, Hitze und Schnee am Standort
-
-Käufer fragen nach Solarertrag, Sommerhitze und Schneelast. `/v1/climate/{lon},{lat}` antwortet aus Daten der GeoSphere Austria; dasselbe Objekt steht als `properties.climate` im Dossier (am inneren Punkt des Grundstücks). Jeder Abschnitt nennt Datensatz, Rasterzelle und letzten Datentag.
-
-```js
-const c = await (await fetch("https://api.mapx.at/v1/climate/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-console.log(
-  `Globalstrahlung: ${c.solar?.global_radiation_kwh_m2_year} kWh/m² pro Jahr, ${c.solar?.sunshine_hours_year} h Sonnenschein`,
-  `| Jahresmittel ${c.temperature.mean_annual_c.normal} °C (1991-2020), Trend +${c.temperature.trend_c_per_decade} °C je Jahrzehnt`,
-  `| Hitzetage (TX ≥ 30 °C): ${c.temperature_extremes.hot_days_per_year.normal} → ${c.temperature_extremes.hot_days_per_year.recent} pro Jahr`,
-  `| Schneetage: ${c.snow.snow_days_per_winter.normal} pro Winter, jetzt ${c.snow.current.depth_cm} cm`,
-  `| Dürre (SPEI 365): ${c.drought.spei365.class}`,
-);
-```
-
-Eine grobe Photovoltaik-Abschätzung ist die Strahlung auf dem Dach mal Modulwirkungsgrad und Systemwirkungsgrad (etwa 0,8); der Wert dient der Orientierung und ersetzt keine Ertragsprognose. Die erste Anfrage für ein Gebiet, nach dem noch niemand gefragt hat, kann bis zu 20 Sekunden dauern, spätere kommen aus dem Cache. Im Dossier ist der Abschnitt `null` mit `status: "partial"`, bis die Daten geladen sind; nach `retry_after_s` erneut fragen. Referenz: [Climate API](https://docs.mapx.at/de/api/climate.md). Den Quellenhinweis anzeigen: GeoSphere Austria, CC BY 4.0 ([Quellenangaben](https://docs.mapx.at/de/reference/attribution.md)).
-
-## Wie gut ist es erreichbar
-
-Die Fläche zeigen, die zu Fuß oder mit dem Rad erreichbar ist, und die Entfernung zu wichtigen Orten.
-
-```js
-const here = [15.3294, 48.2272];
-const iso = await (await fetch(`https://api.mapx.at/v1/isochrone/walking/${here}?contours_minutes=5,10,15`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json(); // GeoJSON-Flächen
-
-const places = [here, [15.3333, 48.2279], [15.3201, 48.2218]]; // Adresse, Schule, Bahnhof
-const m = await (await fetch(`https://api.mapx.at/v1/matrix/walking/${places.map((p) => p.join(",")).join(";")}?sources=0`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-console.log(m.durations[0].map((s) => Math.round(s / 60) + " min"));
-```
-
-Für den öffentlichen Verkehr die nächste Haltestelle aus dem Dossier und ihre [Abfahrten](https://docs.mapx.at/de/guides/transit.md) nehmen: `GET /v1/departures?stop=<Haltestellen-ID>&limit=5`. Das Beispiel nimmt Melk Bahnhof (`at:43:7226`).
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:43:7226&limit=3" | jq '.departures[] | {time, line: .line.name, headsign}'
-```
-
-**Python**
-
-```python
-import requests
-r = requests.get("https://api.mapx.at/v1/departures", params={"stop": "at:43:7226", "limit": 3}, headers={"Authorization": "Bearer DEIN_TOKEN"}).json()
-print([(d["time"][11:16], d["line"]["name"]) for d in r["departures"]])
-```
-
-## Nächste Schritte
-
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) und das Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md)
-- [Statische Bilder](https://docs.mapx.at/de/guides/static-images.md) mit Markern und Pfaden
-- [Navigation](https://docs.mapx.at/de/guides/navigation.md) für Isochronen und Matrizen
+> Anwendungsfälle für die mapx-Karten und Location-APIs in Österreich: Logistik, Gemeinden und Tourismus, jeweils mit passenden APIs und Code.
 
 ---
 
@@ -12300,31 +11674,11 @@ console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${
 
 Source: https://docs.mapx.at/de/use-cases/municipalities/
 
-> Grundstücke, Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
+> Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
 
-Gemeindewerkzeuge arbeiten mit Grundstücken und Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Kataster, Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
+Gemeindewerkzeuge arbeiten mit Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
-
-## Grundstücke
-
-Der Kataster liegt als Vektor-Tileset zum Zeichnen und als API für das Grundstück an einem Punkt vor.
-
-```js
-const r = await (await fetch("https://api.mapx.at/v1/parcel/15.3294,48.2272", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const p = r.features[0]?.properties; // Grundstück am Punkt: Nummer, Katastralgemeinde, Fläche
-console.log(p?.parcel_number, p?.cadastral_municipality_id, p?.area_m2);
-```
-
-Auf der Karte per Klick: Beispiel [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md) (MapLibre, OpenLayers, Leaflet).
-
-Ein Grundstück über seine Nummer suchen (die Katastralgemeinde gehört zur Identität):
-
-```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/geocode?q=KG%2014143%20Gst%20473/1&types=parcel&limit=1" | jq '.features[0] | {place_name, center, id: .properties.parcel_id}'
-```
-
-Die Grenzen stammen aus der Katastralmappe des BEV (DKM). Die Fläche wird aus den Grenzlinien berechnet und weicht um Promille vom Register ab. Dort, wo die Daten gezeigt werden, darauf hinweisen: zur Orientierung, nicht rechtsverbindlich.
 
 ## Adressen prüfen
 
@@ -12370,6 +11724,6 @@ Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](
 
 ## Nächste Schritte
 
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md) und [Suche](https://docs.mapx.at/de/guides/search.md)
+- [Suche](https://docs.mapx.at/de/guides/search.md)
 - [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
 - [Basiskarte stylen](https://docs.mapx.at/de/guides/style-the-basemap.md) in den Farben der Gemeinde

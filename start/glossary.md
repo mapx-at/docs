@@ -2,11 +2,9 @@
 
 Source: https://docs.mapx.at/start/glossary/
 
-> Glossary of terms used in the mapx documentation: annotations, cadastral municipality (KG), contours, isochrones, PMTiles, Terrain-RGB and more.
+> Glossary of terms used in the mapx documentation: annotations, contours, isochrones, PMTiles, Terrain-RGB and more.
 
 **Annotation.** Extra values per route segment, for example speed or elevation. Requested with `annotations`.
-
-**Cadastral municipality (KG).** Austrian land registry unit. A parcel number is only unique within one KG.
 
 **Contours.** Lines of equal elevation. Tileset `contours`.
 
@@ -34,4 +32,4 @@ Source: https://docs.mapx.at/start/glossary/
 
 **TileJSON.** A small JSON description of a tileset: URL template, zoom range, bounds, attribution.
 
-**Tileset.** A named collection of tiles, for example `streets` or `cadastre`. See [Tilesets](https://docs.mapx.at/tilesets/index.md).
+**Tileset.** A named collection of tiles, for example `streets` or `contours`. See [Tilesets](https://docs.mapx.at/tilesets/index.md).

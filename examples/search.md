@@ -13,7 +13,7 @@ The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit h
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -59,7 +59,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -103,7 +103,7 @@ eingabe.addEventListener('input', async () => {
 ```
 
 ````js
-// Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
+// Search: places, addresses and peaks via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts

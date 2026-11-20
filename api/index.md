@@ -25,7 +25,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - [Optimization](https://docs.mapx.at/api/optimization.md): Optimized trips and tour planning.
 - [Transit](https://docs.mapx.at/api/transit.md): Journeys, stops, departures.
 - [Static Images](https://docs.mapx.at/api/static-images.md): Map images with overlays.
-- [Tilequery and Parcel](https://docs.mapx.at/api/tilequery.md): Features and parcels at a point.
+- [Tilequery](https://docs.mapx.at/api/tilequery.md): Vector tile features at a point.
 - [Elevation](https://docs.mapx.at/api/elevation.md): Heights and profiles.
 - [Weather](https://docs.mapx.at/api/weather.md): Observations, forecast, warnings, tiles.
 - [Air quality](https://docs.mapx.at/api/air-quality.md): Index, pollutants, Saharan dust.

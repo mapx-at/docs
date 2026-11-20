@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 23 read-only tools for search, routing, transit, elevation, parcels, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 21 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address search, routes, public transport, heights, cadastral parcels, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
+The mapx MCP server gives an AI assistant 21 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
 
 | | |
 |---|---|
@@ -157,7 +157,7 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 
 | Group | Tool | Purpose | Main inputs |
 |---|---|---|---|
-| Search | `geocode` | Coordinates for an address, street, place, postcode, POI, parcel or road kilometer | `query`, `near`, `types`, `limit` |
+| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `near`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
 | Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
@@ -171,8 +171,6 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Public transport | `find_stops` | Stops near a point or in a box, with `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
 | Elevation | `elevation` | Height above sea level (terrain or surface model) | `points`, `model` |
 | Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `path` (2 to 200 points), `samples`, `model` |
-| Parcels | `parcel_at_point` | Cadastral parcel at a coordinate | `lon`, `lat`, `radius_m` |
-| Parcels | `parcel_details` | Parcel dossier: area, land use, buildings, slope, addresses | `parcel_id` |
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `path`, `buffer_m` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lon`, `lat`, `kind`, `hours` |
@@ -194,7 +192,6 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 - "Which parts of Melk can I reach within 15 minutes on foot from the station?"
 - "What are the next departures at Melk Bahnhof?"
 - "How high is the Grossglockner area, and what does the profile of my hiking path look like?"
-- "Which parcel is at 16.3725, 48.2085, how large is it, and is it building land?"
 - "Will it rain in Innsbruck in the next three hours?"
 - "Plan the best order for these five delivery addresses and show them on a map."
 

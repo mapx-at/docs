@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/examples/
 
-> 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
+> 25 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, weather.
 
 Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.19.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
 
@@ -18,7 +18,6 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 - [Precipitation radar](https://docs.mapx.at/examples/radar-animation.md): Rain and snow of the next three hours in 15-minute steps, played as an animation.
 - [Reachability (isochrones)](https://docs.mapx.at/examples/isochrone.md): Which area can be reached in 5, 10 and 15 minutes?
 - [Travel-time matrix](https://docs.mapx.at/examples/matrix.md): Travel times between several places in one request.
-- [Cadastre: parcel on click](https://docs.mapx.at/examples/parcel-on-click.md): Parcel boundaries over aerial imagery, a click shows the number.
 - [TileJSON sources](https://docs.mapx.at/examples/tilejson-source.md): Add orthophoto and contours without a ready-made style.
 - [3D buildings](https://docs.mapx.at/examples/buildings-3d.md): Extruded buildings with BEV heights, camera tilted.
 - [Search Box with suggestions](https://docs.mapx.at/examples/search-box.md): Suggestions while typing, position after the click, type filter.

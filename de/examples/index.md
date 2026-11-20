@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/examples/
 
-> 26 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+> 25 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Wetter.
 
 Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine einzelne HTML-Datei zum Kopieren. Grundlage sind MapLibre GL JS (6.19.0) mit pmtiles (4.5.0), mit kostenlosem Token und ohne Build. Viele Beispiele gibt es zusätzlich für OpenLayers (10.11.0) und Leaflet (1.9.4); der Umschalter über der Karte wählt die Bibliothek für alle Beispiele. Die Live-Karten nutzen den Token der Doku; in der Kopie `YOUR_TOKEN` durch den eigenen öffentlichen Token ersetzen. Nach Produkt oder Kartenbibliothek filtern:
 
@@ -18,7 +18,6 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 - [Niederschlagsradar](https://docs.mapx.at/de/examples/radar-animation.md): Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation.
 - [Erreichbarkeit (Isochronen)](https://docs.mapx.at/de/examples/isochrone.md): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar?
 - [Fahrzeitmatrix](https://docs.mapx.at/de/examples/matrix.md): Fahrzeiten zwischen mehreren Orten in einer Anfrage.
-- [Kataster: Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md): Grundstücksgrenzen über dem Luftbild, ein Klick nennt die Nummer.
 - [TileJSON-Quellen](https://docs.mapx.at/de/examples/tilejson-source.md): Orthophoto und Höhenlinien ohne fertigen Stil einbinden.
 - [3D-Gebäude](https://docs.mapx.at/de/examples/buildings-3d.md): Gebäude mit BEV-Höhen als 3D-Körper, Kamera geneigt.
 - [Search Box mit Vorschlägen](https://docs.mapx.at/de/examples/search-box.md): Vorschläge beim Tippen, Position nach dem Klick, Typfilter.

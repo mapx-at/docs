@@ -32,7 +32,7 @@ Die Daten stehen unter CC BY 4.0, die Quelle muss auf der Karte erreichbar sein.
 
 ## Eigenes GeoJSON
 
-Antworten der APIs (Route, Isochrone, Grundstück …) sind GeoJSON und gehen direkt in `L.geoJSON`:
+Antworten der APIs (Route, Isochrone …) sind GeoJSON und gehen direkt in `L.geoJSON`:
 
 ```js
 const ebene = L.geoJSON(null, { style: { color: '#2346d8', weight: 4 } }).addTo(map);
@@ -47,4 +47,4 @@ ebene.addData(geojson);
 
 ## Beispiele
 
-Die Beispiele mit Leaflet-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „Leaflet“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#leaflet), [Route](https://docs.mapx.at/de/examples/route.md#leaflet) und [Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md#leaflet).
+Die Beispiele mit Leaflet-Fassung stehen in der [Übersicht](https://docs.mapx.at/de/examples/index.md) (Filter „Leaflet“), etwa [Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md#leaflet) und [Route](https://docs.mapx.at/de/examples/route.md#leaflet).

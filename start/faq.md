@@ -60,10 +60,6 @@ Longitude and latitude are swapped. mapx and GeoJSON use `lon,lat`. See [Coordin
 
 Raster tiles are 512 px. Set `tileSize: 512` in your client. See [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
 
-## Is the cadastre legally binding?
-
-No. It shows parcel boundaries for orientation and does not replace a land register extract or a survey.
-
 ## Where do I report a problem?
 
 Write to [support@mapx.at](mailto:support@mapx.at) (technical questions and bugs) or [info@mapx.at](mailto:info@mapx.at) (everything else).

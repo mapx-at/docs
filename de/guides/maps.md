@@ -43,16 +43,15 @@ Jedes Tileset hat eine TileJSON-Adresse `https://tiles.mapx.at/v1/tiles/{tileset
 | Tileset | Typ | Inhalt |
 |---|---|---|
 | `streets` | vector | Straßen, Bahn, Gewässer, Grenzen, Orte, Gebäude |
-| `cadastre` | vector | Grundstücksgrenzen (z16) |
 | `contours` | vector | Höhenlinien |
 | `terrain-rgb`, `dsm` | raster-dem | Gelände- und Oberflächenhöhe |
 | `orthophoto` | raster | Luftbild, bis z18 |
 
 ```js
 map.on("load", () => {
-  map.addSource("cadastre", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/cadastre.json" });
-  map.addLayer({ id: "parcels", type: "line", source: "cadastre", "source-layer": "parcel_l",
-                 paint: { "line-color": "#e11d48", "line-width": 1 } });
+  map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });
+  map.addLayer({ id: "contours", type: "line", source: "contours", "source-layer": "contour_l",
+                 paint: { "line-color": "#92400e", "line-width": 0.6 } });
 });
 ```
 

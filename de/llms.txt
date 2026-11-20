@@ -23,12 +23,12 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Erste Karte mit MapLibre in 5 Minuten](https://docs.mapx.at/de/start/first-map.md): Die erste mapx-Webkarte: eine vollständige HTML-Datei mit MapLibre GL JS und einem öffentlichen Token. Kopieren, speichern, im Browser öffnen.
 - [Erste Suche: Geocoding-Anfrage](https://docs.mapx.at/de/start/first-search.md): Eine Adresse oder einen Ort in Österreich mit einer Geocoding-Anfrage finden (curl, JavaScript, Python) und das Ergebnis als Marker auf einer Karte zeigen.
 - [Erste Route: Routing-Anfrage](https://docs.mapx.at/de/start/first-route.md): Eine Autoroute von Wien nach Melk mit der mapx-Routing-API anfordern (curl, JavaScript, Python) und das Ergebnis als Linie auf einer Karte zeichnen.
-- [Glossar: mapx- und GIS-Begriffe](https://docs.mapx.at/de/start/glossary.md): Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Katastralgemeinde (KG), Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
+- [Glossar: mapx- und GIS-Begriffe](https://docs.mapx.at/de/start/glossary.md): Glossar der Begriffe aus der mapx-Dokumentation: Annotation, Höhenlinien, Isochronen, PMTiles, Terrain-RGB und weitere.
 - [FAQ: Token, Lizenz, Offline-Nutzung](https://docs.mapx.at/de/start/faq.md): Antworten zu mapx: Token nötig, Kosten, kommerzielle Nutzung unter CC BY 4.0, Aktualität der Daten, Offline-Karten, Daten außerhalb Österreichs, Fehler 401 und 403.
 
 ## Guides
 
-- [Guides: Karten, Suche, Routing](https://docs.mapx.at/de/guides/index.md): Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen und Grundstücke, dazu Techniken.
+- [Guides: Karten, Suche, Routing](https://docs.mapx.at/de/guides/index.md): Aufgabenorientierte Guides für jedes mapx-Produkt: Karten, Suche, Navigation, Verkehr, ÖV, Static Images, Höhen, dazu Techniken.
 - [Karten-Guide: Vektorkarte und Styles](https://docs.mapx.at/de/guides/maps.md): Eine mapx-Vektorkarte in MapLibre GL JS anzeigen, Styles wechseln, Tilesets und Overlays hinzufügen, auch Wetter- und Verkehrsebenen.
 - [Adresssuche: Geocoding und Autofill](https://docs.mapx.at/de/guides/search.md): Adress- und Ortssuche für Österreich in die eigene App einbauen: Geocoding, Search Box mit Vorschlägen beim Tippen, Adress-Autofill und Adressvalidierung.
 - [Routing-Guide: Auto, Lkw, Rad, Fuß](https://docs.mapx.at/de/guides/navigation.md): Routen für Auto, Lkw, Rad und zu Fuß in Österreich planen: Maut, Isochronen, Fahrzeitmatrizen, Map Matching und Tourenplanung.
@@ -36,8 +36,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [ÖV-Guide: Abfahrten und Verbindungen](https://docs.mapx.at/de/guides/transit.md): ÖV-Verbindungen, Haltestellen und Abfahrtstafeln in Österreich aus dem Soll-Fahrplan mit der mapx-ÖV-API abfragen und in der Karte anzeigen.
 - [Static-Images-Guide: Karte als Bild](https://docs.mapx.at/de/guides/static-images.md): Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-Static-Images-API.
 - [Höhen-Guide: Höhenprofil und Gelände](https://docs.mapx.at/de/guides/elevation.md): Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Tilesets für Österreich.
-- [Grundstücke und Kataster abfragen](https://docs.mapx.at/de/guides/parcels.md): Das Katastergrundstück an einem Punkt finden, Grundstücksgrenzen auf der Karte zeichnen und die Attribute lesen: Kataster-Abfrage mit mapx für Österreich.
-- [MCP-Server für Österreich-Geodaten](https://docs.mapx.at/de/guides/mcp.md): claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Grundstücke, Verkehr und Wetter in Österreich.
+- [MCP-Server für Österreich-Geodaten](https://docs.mapx.at/de/guides/mcp.md): claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 21 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 - [Eigener Kartenstil aus der Basiskarte](https://docs.mapx.at/de/guides/style-the-basemap.md): Einen eigenen MapLibre-Kartenstil für die mapx-Vektor-Basiskarte von Österreich schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen Layer für Layer.
 - [Höhenlinien über Orthophoto legen](https://docs.mapx.at/de/guides/overlay-contours.md): Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basiskarte in MapLibre GL JS legen, mit den mapx-Höhenlinien als Vektorkacheln.
 - [3D-Gelände-Karte mit Orthophoto](https://docs.mapx.at/de/guides/3d-terrain.md): Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und kostenlosem Token.
@@ -51,14 +50,14 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [API-Referenz: alle Endpunkte](https://docs.mapx.at/de/api/index.md): Referenz aller mapx-APIs für Österreich mit Endpunkten, Parametern, Beispielen und Live-Playground, erzeugt aus der OpenAPI-Beschreibung.
 - [Tiles-API: TileJSON und XYZ-Kacheln](https://docs.mapx.at/de/api/tiles.md): Tiles-API für Österreich: Tileset-Liste, TileJSON und XYZ-Kacheln als Vektor, Raster und Höhe (Terrain-RGB), mit Parametern und Beispielen.
 - [Kartenstile API: MapLibre-Styles](https://docs.mapx.at/de/api/styles.md): Styles-API: fertige MapLibre-Styles, Schriften (Glyphs), Sprites und gerenderte Rasterkacheln (Static Tiles) für Österreich, mit Parametern und Beispielen.
-- [Geocoding API Österreich](https://docs.mapx.at/de/api/geocoding.md): Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten, Postleitzahlen und Grundstücken, mit Beispielen.
+- [Geocoding API Österreich](https://docs.mapx.at/de/api/geocoding.md): Geocoding-API für Österreich: Vorwärts-, Rückwärts- und Batch-Geocoding von Adressen, Straßen, Orten und Postleitzahlen, mit Beispielen.
 - [Search Box API: Suche beim Tippen](https://docs.mapx.at/de/api/search-box.md): Search-Box-API für Autovervollständigung: Vorschläge beim Tippen, Details eines Treffers und Orte nach Kategorie, mit Parametern und Beispielen.
 - [Adress-Autofill und Adressprüfung API](https://docs.mapx.at/de/api/address.md): Adress-Autofill für Formulare und Adressvalidierung gegen das amtliche österreichische Adressregister: Endpunkte, Parameter und Beispiele.
 - [Routing-API: Routen, Isochronen, Matrix](https://docs.mapx.at/de/api/directions.md): Routing-API für Österreich: Routen für Auto, Lkw, Rad und Fuß, Isochronen, Fahrzeitmatrizen und Map Matching, mit Parametern und Beispielen.
 - [Routenoptimierung API](https://docs.mapx.at/de/api/optimization.md): Routenoptimierungs-API: beste Reihenfolge für bis zu 25 Stopps und Tourenplanung für mehrere Fahrzeuge, mit Parametern und Beispielanfragen.
 - [ÖV-API: Verbindungen und Abfahrten](https://docs.mapx.at/de/api/transit.md): ÖV-API für den öffentlichen Verkehr in Österreich: Verbindungen, Haltestellen und Abfahrtstafeln aus den Fahrplandaten, mit Parametern und Beispielen.
 - [Static-Images-API: Karte als Bild](https://docs.mapx.at/de/api/static-images.md): Static-Images-API: Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON-Overlays für Berichte, E-Mails und Exposés, mit Beispielen.
-- [Tilequery und Parcel API](https://docs.mapx.at/de/api/tilequery.md): Tilequery-API: Objekte um einen Punkt aus beliebigen Vektor-Tilesets und das Katastergrundstück an einem Punkt (Parcel-API), mit Parametern und Beispielen.
+- [Tilequery API](https://docs.mapx.at/de/api/tilequery.md): Tilequery-API: Objekte um einen Punkt aus beliebigen Vektor-Tilesets, mit Parametern und Beispielen.
 - [Höhen-API: Höhe und Höhenprofil](https://docs.mapx.at/de/api/elevation.md): Höhen-API für Österreich: Geländehöhe und Oberflächenhöhe für Punkte sowie Höhenprofile entlang einer Linie, mit Parametern und Beispielanfragen.
 - [Wetter-API: Vorhersage und Nowcast](https://docs.mapx.at/de/api/weather.md): Wetter-API für Österreich: aktuelle Messwerte, Stundenvorhersage, Niederschlags-Nowcast, Warnungen und Wetterkacheln von GeoSphere Austria.
 - [Luftqualität API für Österreich](https://docs.mapx.at/de/api/air-quality.md): Luftqualitätsindex, Schadstoffe und Saharastaub für einen Punkt in Österreich von GeoSphere Austria: Endpunkte, Parameter und Beispielanfragen.
@@ -68,9 +67,8 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 
 ## Tilesets
 
-- [Tilesets: Vektor- und Rasterkacheln](https://docs.mapx.at/de/tilesets/index.md): Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Kataster, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
+- [Tilesets: Vektor- und Rasterkacheln](https://docs.mapx.at/de/tilesets/index.md): Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
 - [Vektor-Basiskarte (Tileset streets)](https://docs.mapx.at/de/tilesets/streets.md): Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
-- [Kataster-Tileset: Grundstücksgrenzen](https://docs.mapx.at/de/tilesets/cadastre.md): Grundstücksgrenzen aus der Digitalen Katastralmappe des BEV als Vektorkacheln, z16, mit Katastralgemeinde und Grundstücksnummer.
 - [Höhenlinien-Tileset für Österreich](https://docs.mapx.at/de/tilesets/contours.md): Höhenlinien für Österreich als Vektorkacheln, z10 bis z16, 100 m bis 10 m Abstand, abgeleitet aus dem BEV ALS-DTM 1 m.
 - [DTM-Geländemodell (Terrain-RGB)](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Digitales Geländemodell Österreich als Terrain-RGB-Kacheln (Mapbox-Kodierung, 0,1 m), z5 bis z16, aus dem BEV ALS-DTM 1 m.
 - [DSM-Oberflächenmodell (Tileset)](https://docs.mapx.at/de/tilesets/dsm.md): Digitales Oberflächenmodell Österreich mit Gebäuden und Bewuchs als Terrain-RGB (0,1 m), z5 bis z16, aus dem BEV ALS-DOM 1 m.
@@ -93,7 +91,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 
 ## Optional
 
-- [Beispiele: lauffähiger Karten-Code](https://docs.mapx.at/de/examples/index.md): 26 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Grundstücke, Wetter.
+- [Beispiele: lauffähiger Karten-Code](https://docs.mapx.at/de/examples/index.md): 25 lauffähige Beispiele für MapLibre GL JS, OpenLayers und Leaflet: Karten, Suche, Navigation, Höhe, ÖV, Verkehr, statische Bilder, Wetter.
 - [Karte in eine HTML-Seite einbetten](https://docs.mapx.at/de/examples/embed-map.md): Eine mapx-Karte mit dem fertigen Stil per MapLibre GL JS in eine beliebige HTML-Seite einbetten: minimales, lauffähiges Beispiel mit öffentlichem Token.
 - [Basiskarte wechseln: Beispiel](https://docs.mapx.at/de/examples/switch-basemap.md): Zwischen Karte, Luftbild (Orthophoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Styles: lauffähiges Beispiel für einen Basiskarten-Umschalter.
 - [Tageszeit und Nachtmodus: Beispiel](https://docs.mapx.at/de/examples/time-of-day.md): Den mapx-Standardstil in vier Lichtstimmungen samt Nachtmodus mit MapLibre GL JS zeigen: lauffähiger Beispielcode zum Kopieren.
@@ -106,7 +104,6 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 - [Niederschlagsradar-Animation: Beispiel](https://docs.mapx.at/de/examples/radar-animation.md): Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation auf der Karte: Nowcast von GeoSphere Austria, lauffähiger Code.
 - [Isochronen: Beispiel Erreichbarkeit](https://docs.mapx.at/de/examples/isochrone.md): Welche Fläche ist in 5, 10 und 15 Minuten erreichbar? Isochronen (Erreichbarkeit) mit der mapx-Routing-API zeichnen; lauffähiger Code zum Kopieren.
 - [Fahrzeitmatrix: Beispiel](https://docs.mapx.at/de/examples/matrix.md): Fahrzeiten zwischen mehreren Orten in einer Anfrage mit der mapx-Matrix-API berechnen (Fahrzeitmatrix): lauffähiges Beispiel zum Kopieren.
-- [Kataster: Grundstück per Klick](https://docs.mapx.at/de/examples/parcel-on-click.md): Grundstücksgrenzen (Kataster) über dem Luftbild zeigen, ein Klick nennt die Grundstücksnummer: Kataster-Tileset und Parcel-API, lauffähiger Code.
 - [TileJSON-Quellen: Beispiel](https://docs.mapx.at/de/examples/tilejson-source.md): Orthophoto und Höhenlinien von mapx als TileJSON-Quellen ohne fertigen Stil in MapLibre GL JS einbinden: lauffähiger Beispielcode zum Kopieren.
 - [3D-Gebäude: Beispiel](https://docs.mapx.at/de/examples/buildings-3d.md): Extrudierte 3D-Gebäude mit BEV-Höhen auf der mapx-Vektor-Basiskarte, Kamera geneigt, in MapLibre GL JS. Lauffähiger Code zum Kopieren.
 - [Search Box: Beispiel mit Vorschlägen](https://docs.mapx.at/de/examples/search-box.md): Vorschläge beim Tippen, Position nach dem Klick und Typfilter: Suche mit Autovervollständigung über die mapx-Search-Box-API, lauffähiger Code.
@@ -123,8 +120,7 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 
 
 
-- [Anwendungsfälle für mapx](https://docs.mapx.at/de/use-cases/index.md): Anwendungsfälle für die mapx-Karten und Location-APIs in Österreich: Logistik, Gemeinden, Immobilien und Tourismus, jeweils mit passenden APIs und Code.
-- [Immobilien: Grundstück, Sonne, Exposé](https://docs.mapx.at/de/use-cases/real-estate.md): Grundstücks-Dossier, Sonne, Hitze und Schnee am Standort, statisches Bild fürs Exposé und Erreichbarkeit einer Adresse, mit Code, der unverändert läuft.
+- [Anwendungsfälle für mapx](https://docs.mapx.at/de/use-cases/index.md): Anwendungsfälle für die mapx-Karten und Location-APIs in Österreich: Logistik, Gemeinden und Tourismus, jeweils mit passenden APIs und Code.
 - [Logistik: Lkw-Routing und Matrix](https://docs.mapx.at/de/use-cases/logistics.md): Lkw-Routing mit Fahrzeugmaßen, Fahrzeitmatrizen, Tourenplanung und Verkehr für Zustellung und Flotten, aufgebaut auf den mapx-APIs für Österreich.
 - [Tourismus: Radrouten und Höhenprofil](https://docs.mapx.at/de/use-cases/tourism.md): Rad- und MTB-Routen, Radrouten-Ebene, Höhenprofil und Wetter für Touren und Gästeinformation: Anwendungsfall Tourismus mit den mapx-APIs.
-- [Karten für Gemeinden und Verwaltung](https://docs.mapx.at/de/use-cases/municipalities.md): Grundstücke, Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
+- [Karten für Gemeinden und Verwaltung](https://docs.mapx.at/de/use-cases/municipalities.md): Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.

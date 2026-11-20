@@ -15,7 +15,7 @@ Pick the endpoint by what the user does.
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
 | Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
-All data is official: the address register, place names, administrative boundaries and cadastre from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
+All data is official: the address register, place names, administrative boundaries from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Geocode an address
 
@@ -25,7 +25,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].center;
 ```
 
-Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `parcel`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
+Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
 ## Reverse geocode
 
@@ -80,5 +80,4 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/va
 ## Next
 
 - [Geocoding API](https://docs.mapx.at/api/geocoding.md), [Search Box API](https://docs.mapx.at/api/search-box.md), [Address API](https://docs.mapx.at/api/address.md)
-- [Parcels](https://docs.mapx.at/guides/parcels.md): search results of type parcel
 - [Errors and limits](https://docs.mapx.at/api/errors.md)

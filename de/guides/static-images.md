@@ -72,4 +72,3 @@ Für Clients, die nur Raster-Tiles lesen (Leaflet, QGIS), rendern Static Tiles e
 
 - [Static Images API](https://docs.mapx.at/de/api/static-images.md)
 - [Karten](https://docs.mapx.at/de/guides/maps.md): dieselben Styles interaktiv
-- [Grundstücke](https://docs.mapx.at/de/guides/parcels.md): Grundstücksgrenze als GeoJSON-Overlay
