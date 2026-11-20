@@ -7155,8 +7155,8 @@ Each tileset is available as TileJSON and XYZ tiles through the [Tiles API](http
 | [`dsm`](https://docs.mapx.at/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
 | [`orthophoto`](https://docs.mapx.at/tilesets/orthophoto.md) | raster | z5–18 | 2025-10-03 |
 | [`orthophoto-flight-blocks`](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md) | vector | z6–17 | 2025-10-03 |
-| [`rest-areas`](https://docs.mapx.at/tilesets/rest-areas.md) | vector | z7–14 | 20261107 |
-| [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261107 |
+| [`rest-areas`](https://docs.mapx.at/tilesets/rest-areas.md) | vector | z7–14 | 20261120 |
+| [`sharing`](https://docs.mapx.at/tilesets/sharing.md) | vector | z8–14 | 20261120 |
 | [`bike-routes`](https://docs.mapx.at/tilesets/bike-routes.md) | vector | z5–14 | 20260708 |
 | [`gip-poi`](https://docs.mapx.at/tilesets/gip-poi.md) | vector | z12–15 | 20260708 |
 | [`sentinel2`](https://docs.mapx.at/tilesets/sentinel2.md) | raster | z5–z13 | daily |
@@ -8121,7 +8121,7 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 | | |
 |---|---|
 | Tileset | `rest-areas`, vector, z7 to z14 |
-| Layer | `rastanlagen` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
+| Layer | `rest_area_p` (points) with `id`, `name`, `road`, `car` and `lorry` (spaces), `free`, `usage`, `min_zoom` |
 | Style | group `rest_areas`, off by default: point, name from z12; sites with truck spaces darker |
 | Search | category `rastplatz` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
 | Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `rest-areas` as tileset |
@@ -8145,7 +8145,7 @@ Locations of sharing stations from the data set "Shared-Mobility Standorte 2026"
 | | |
 |---|---|
 | Tileset | `sharing`, vector, z8 to z14 |
-| Layer | `sharing` (points) with `name`, `gemeinde`, `fahrzeug`, `betreiber`, `min_zoom` |
+| Layer | `sharing_p` (points) with `name`, `municipality`, `vehicle` (`cargo_bike`, `bike`), `operator`, `min_zoom` |
 | Style | group `sharing`, off by default: point from z10, name from z14 |
 | Search | category `sharing` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
 | Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `sharing` as tileset |

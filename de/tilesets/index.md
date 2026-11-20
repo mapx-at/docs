@@ -15,8 +15,8 @@ Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.
 | [`dsm`](https://docs.mapx.at/de/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
 | [`orthophoto`](https://docs.mapx.at/de/tilesets/orthophoto.md) | raster | z5–18 | 2025-10-03 |
 | [`orthophoto-flight-blocks`](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md) | Vektor | z6–17 | 2025-10-03 |
-| [`rest-areas`](https://docs.mapx.at/de/tilesets/rest-areas.md) | Vektor | z7–14 | 20261107 |
-| [`sharing`](https://docs.mapx.at/de/tilesets/sharing.md) | Vektor | z8–14 | 20261107 |
+| [`rest-areas`](https://docs.mapx.at/de/tilesets/rest-areas.md) | Vektor | z7–14 | 20261120 |
+| [`sharing`](https://docs.mapx.at/de/tilesets/sharing.md) | Vektor | z8–14 | 20261120 |
 | [`bike-routes`](https://docs.mapx.at/de/tilesets/bike-routes.md) | Vektor | z5–14 | 20260708 |
 | [`gip-poi`](https://docs.mapx.at/de/tilesets/gip-poi.md) | Vektor | z12–15 | 20260708 |
 | [`sentinel2`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |

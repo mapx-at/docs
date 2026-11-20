@@ -13,7 +13,7 @@ Locations of sharing stations from the data set "Shared-Mobility Standorte 2026"
 | | |
 |---|---|
 | Tileset | `sharing`, vector, z8 to z14 |
-| Layer | `sharing` (points) with `name`, `gemeinde`, `fahrzeug`, `betreiber`, `min_zoom` |
+| Layer | `sharing_p` (points) with `name`, `municipality`, `vehicle` (`cargo_bike`, `bike`), `operator`, `min_zoom` |
 | Style | group `sharing`, off by default: point from z10, name from z14 |
 | Search | category `sharing` in [Search Box](https://docs.mapx.at/api/search-box.md) and geocoding |
 | Query | [Tilequery](https://docs.mapx.at/api/tilequery.md) with `sharing` as tileset |

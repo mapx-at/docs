@@ -13,7 +13,7 @@ Standorte von Sharing-Stationen aus dem Datensatz „Shared-Mobility Standorte 2
 | | |
 |---|---|
 | Tileset | `sharing`, Vektor, z8 bis z14 |
-| Layer | `sharing` (Punkte) mit `name`, `gemeinde`, `fahrzeug`, `betreiber`, `min_zoom` |
+| Layer | `sharing_p` (Punkte) mit `name`, `municipality` (Gemeinde), `vehicle` (`cargo_bike` Lastenrad, `bike` Fahrrad), `operator` (Betreiber), `min_zoom` |
 | Stil | Gruppe `sharing`, standardmäßig aus: Punkt ab z10, Name ab z14 |
 | Suche | Kategorie `sharing` in [Search Box](https://docs.mapx.at/de/api/search-box.md) und Geocoding |
 | Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `sharing` als Tileset |

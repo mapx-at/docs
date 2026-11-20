@@ -13,7 +13,7 @@ Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Ve
 | | |
 |---|---|
 | Tileset | `rest-areas`, Vektor, z7 bis z14 |
-| Layer | `rastanlagen` (Punkte) mit `id`, `name`, `road`, `car` und `lorry` (Stellplätze), `free` (kostenfrei), `usage`, `min_zoom` |
+| Layer | `rest_area_p` (Punkte) mit `id`, `name`, `road`, `car` und `lorry` (Stellplätze), `free` (kostenfrei), `usage`, `min_zoom` |
 | Stil | Gruppe `rest_areas`, standardmäßig aus: Punkt, ab z12 Name; Anlagen mit Lkw-Plätzen dunkler |
 | Suche | Kategorie `rastplatz` in [Search Box](https://docs.mapx.at/de/api/search-box.md) und Geocoding |
 | Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `rest-areas` als Tileset |
