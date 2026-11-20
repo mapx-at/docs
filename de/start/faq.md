@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/start/faq/
 
 ## Brauche ich einen Token oder ein Konto?
 
-Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) registrieren, Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
+Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://account.mapx.at/) mit der E-Mail-Adresse anmelden (beim ersten Mal entsteht dabei das Konto), Token anlegen und als `Authorization: Bearer` oder `access_token` mitschicken. CORS ist offen. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
 ## Warum bekomme ich 401 oder 403?
 

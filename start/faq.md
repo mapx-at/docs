@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/start/faq/
 
 ## Do I need a token or an account?
 
-Yes, a free account and API token. Register at [account.mapx.at](https://account.mapx.at/), create a token and send it as `Authorization: Bearer` (servers) or `access_token` (browsers, images). CORS is open. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+Yes, a free account and API token. Sign in at [account.mapx.at](https://account.mapx.at/) with your email address (the first time, this creates the account), create a token and send it as `Authorization: Bearer` (servers) or `access_token` (browsers, images). CORS is open. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
 ## Why do I get 401 or 403?
 
