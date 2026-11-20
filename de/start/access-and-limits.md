@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/start/access-and-limits/
 
 Alle Endpunkte unter `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` und alle Tiles unter `https://tiles.mapx.at/` brauchen einen Token. Er ist kostenlos, es gibt keine nutzungsabhängige Verrechnung.
 
-1. [account.mapx.at](https://account.mapx.at/) öffnen und mit der E-Mail-Adresse anmelden (ein 8-stelliger Code kommt per Mail) oder mit Google bzw. Microsoft anmelden. Gibt es zur Adresse noch kein Konto, wird es beim Einlösen des Codes angelegt; damit stimmst du der Kontaktaufnahme zu Dienst und Konto (Sicherheit, Änderungen, Abschaltung) zu. Den Newsletter kannst du danach im Konto freiwillig einschalten.
+1. [account.mapx.at](https://account.mapx.at/) öffnen und mit der E-Mail-Adresse anmelden (ein 8-stelliger Code kommt per Mail) oder mit Google bzw. Microsoft anmelden. Gibt es zur Adresse noch kein Konto, legst du es nach dem Code mit „Konto anlegen“ an; dazu hakst du die Nutzungsbedingungen, die Datenschutzerklärung und die Kontaktaufnahme zu Dienst und Konto (Sicherheit, Änderungen, Abschaltung) ab. Den Newsletter kannst du dort oder später im Konto freiwillig wählen. Code-Mails sind je Adresse und je Anschluss begrenzt; kommt die Meldung „Zu viele Versuche“, etwas später erneut versuchen.
 2. Unter **Tokens** mit **Neuer Token** einen benannten Token anlegen (bis zu 100 je Konto). Der Token wird nur einmal angezeigt, dann kopieren.
 3. Den Token bei jeder Anfrage mitschicken (siehe unten).
 
