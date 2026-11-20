@@ -84,13 +84,12 @@ mapx provides maps and location APIs for Austria, built only on official open da
 
 ## Reference
 
-- [Reference: tiles, styles, attribution](https://docs.mapx.at/reference/index.md): Reference pages for the mapx APIs: attribution and license, changelog, coordinates, tile scheme, Terrain-RGB encoding and style specification.
+- [Reference: tiles, styles, attribution](https://docs.mapx.at/reference/index.md): Reference pages for the mapx APIs: attribution and license, coordinates, tile scheme, Terrain-RGB encoding and style specification.
 - [Basemap layers and style specification](https://docs.mapx.at/reference/style-spec.md): All layers of the mapx streets vector tileset with fields and values, plus the ready-made style IDs. Reference for custom MapLibre styles.
 - [Terrain-RGB elevation encoding](https://docs.mapx.at/reference/terrain-rgb.md): How mapx encodes elevation as color in Terrain-RGB tiles (Mapbox encoding, 0.1 m): value range, rounding and decoding functions.
 - [Tile scheme: Web Mercator, z/x/y](https://docs.mapx.at/reference/tile-scheme.md): Tile scheme of the mapx tiles: Web Mercator, z/x/y addressing, 512-pixel tiles, resolution per zoom level and overzoom.
 - [Coordinates: lon,lat, WGS84, Web Mercator](https://docs.mapx.at/reference/coordinates.md): Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
 - [Attribution and license (CC BY 4.0)](https://docs.mapx.at/reference/attribution.md): Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
-- [Changelog: API and tileset changes](https://docs.mapx.at/reference/changelog.md): Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
 
 ## Optional
 

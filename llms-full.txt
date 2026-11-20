@@ -2093,7 +2093,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - **Errors** are `application/problem+json` (RFC 9457) with a stable `code`, including `401`/`403` for token problems. See [Errors and limits](https://docs.mapx.at/api/errors.md).
 - **Limits** apply per IP address and zone, plus a per-minute limit per token; `429` carries `Retry-After`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 - **Caching:** tiles, styles and TileJSON carry `ETag`; send `If-None-Match` to get `304`.
-- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added. Changes are listed in the [Changelog](https://docs.mapx.at/reference/changelog.md).
+- **Versioning:** the version is in the path. Fields do not change within a version, new ones are only added.
 
 ## APIs
 
@@ -2117,7 +2117,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 
 - [Tilesets](https://docs.mapx.at/tilesets/index.md): data sheets of every tileset.
 - [Style specification](https://docs.mapx.at/reference/style-spec.md), [Terrain-RGB](https://docs.mapx.at/reference/terrain-rgb.md), [Tile scheme](https://docs.mapx.at/reference/tile-scheme.md).
-- [Errors and limits](https://docs.mapx.at/api/errors.md), [Changelog](https://docs.mapx.at/reference/changelog.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
+- [Errors and limits](https://docs.mapx.at/api/errors.md), [Attribution](https://docs.mapx.at/reference/attribution.md).
 - [Status](https://api.mapx.at/health): health check of the API.
 
 ---
@@ -8201,7 +8201,7 @@ Points from the Austrian road graph platform (GIP.at, GIPOGD): park and ride, bi
 
 Source: https://docs.mapx.at/reference/
 
-> Reference pages for the mapx APIs: attribution and license, changelog, coordinates, tile scheme, Terrain-RGB encoding and style specification.
+> Reference pages for the mapx APIs: attribution and license, coordinates, tile scheme, Terrain-RGB encoding and style specification.
 
 ---
 
@@ -8657,114 +8657,6 @@ JSON responses with data carry a top-level `attribution` field. Show it when you
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
 The credit is also stored in the TileJSON and PMTiles metadata.
-
----
-
-# Changelog: API and tileset changes
-
-Source: https://docs.mapx.at/reference/changelog/
-
-> Changes to the mapx APIs, tilesets and these docs, grouped as Added, Changed, Deprecated and Removed, with release dates.
-
-## 2026-11-19
-
-### Added
-- Daily and monthly limit per account planned (currently unlimited); your account shows them under Usage together with the usage so far. New error `429` `quota-exceeded`, see [errors](https://docs.mapx.at/api/errors.md#quota-exceeded).
-
-### Changed
-- The German [API reference](https://docs.mapx.at/de/api/) is fully translated: descriptions of endpoints, parameters and response fields and the hints in the playground are now in German.
-- Styles (`/v1/styles/*`, `style.json` on mapx.at): source ids match the tileset names (`basis` → `streets`, `kataster` → `cadastre`, `relief` → `terrain-rgb`, `dop` → `orthophoto`, `dop_flugblock` → `orthophoto-flight-blocks`, `rastanlagen` → `rest-areas`, `bike_routes` → `bike-routes`, `gip_poi` → `gip-poi`, `verkehr` → `traffic`), layer ids start in English (`grenzen-*` → `boundary-*`, `oev-*` → `transit-*`, `geonamen-*` → `place-*`, `hoehenlinien*` → `contours*`, `rastanlagen-*` → `rest-areas-*`, `verkehr-*` → `traffic-*`, `dop-flugblock-*` → `orthophoto-flight-blocks-*`), style metadata `mapx:gruppe` → `mapx:group`. Rendering and the layers inside the tiles (`source-layer`) stay the same. PMTiles files are named after the tilesets (e.g. `streets-20260401-611355ce.pmtiles`).
-
-## 2026-11-18
-
-### Added
-- MCP server `https://mcp.mapx.at/mcp` with 23 tools for AI assistants (Claude, ChatGPT, Cursor); its own token type AI assistant (`mx_mcp_`) that only works at the MCP server, or sign-in with the mapx account (OAuth). New errors `403` `mcp-token-only` and `mcp-token-required`. See [MCP server](https://docs.mapx.at/guides/mcp.md).
-- [Terms of use](https://mapx.at/en/terms/), linked from the account, sign-up and docs.
-
-### Changed
-- `/v1/geocode` and `/v1/geocode/batch` now return the public category id in `properties.category` (for example `train_station` instead of `bahnhof`).
-- `tiles.mapx.at`: `GET` on `.pmtiles` files only with exactly one closed `Range` (`bytes=<start>-<end>`), otherwise `403` [`range-required`](https://docs.mapx.at/api/errors.md#range-required). MapLibre with pmtiles.js is not affected. The notes on direct PMTiles URLs on the tileset pages and in access and limits are removed; load maps through the style, TileJSON or `{z}/{x}/{y}`.
-- Search: `proximity` now also applies to free-text search (radius query, ranking by match score, distance and importance).
-- Consistent error responses: authentication errors and all gateway errors are now `application/problem+json` with their own `title` and `detail` per code (instead of `Unauthorized`/`Forbidden` without `detail`); `429` always has the title `Rate limit exceeded`; `405` with an `Allow` header also comes from the gateway, before the token check. New codes `forbidden` (403), `payload-too-large` (413), `uri-too-long` (414) and `upstream-timeout` (504). See [Errors and limits](https://docs.mapx.at/api/errors.md).
-
-### Fixed
-- POST requests with a body over 16 KB returned `500` instead of `413` `payload-too-large`.
-
-### Removed
-- Downloading and self-hosting PMTiles files is no longer offered: the guide “Self-host PMTiles” (its address redirects to [Maps](https://docs.mapx.at/guides/maps.md)), file names in the key figures, notes in FAQ, glossary and access and limits, and the section “PMTiles directly” in the [QGIS guide](https://docs.mapx.at/guides/qgis.md). Maps and tiles are available through style, TileJSON and `{z}/{x}/{y}`; the styles still read their sources from PMTiles under the hood.
-- The `mapx-gl` SDK is removed without replacement, as are the files served under `https://map.mapx.at/sdk/v1/` and the SDK pages of these docs (old addresses redirect to the examples). Instead the [examples](https://docs.mapx.at/examples/index.md) show each use case with MapLibre GL JS, OpenLayers or Leaflet and direct API calls (`fetch`).
-- The former German names and duplicate fields (transition since 2026-11-08) are removed; only the English names apply. Old names return the same error as any unknown name (`404 unknown-style`, `404 unknown-tileset`, `400 invalid-parameter`); the headers `Deprecation`, `Sunset` and `Link: …; rel="successor-version"` are gone. Mapping:
-
-| Area | old → new |
-|---|---|
-| Style IDs | `karte` → `streets`, `karte-morgen` → `streets-dawn`, `karte-abend` → `streets-dusk`, `karte-nacht` → `streets-night`, `karte-verkehr` → `traffic-day`, `luftbild` → `satellite`, `hybrid` → `satellite-streets`, `gelaende` → `outdoors`, `satellit-aktuell` → `satellite-current` |
-| Tilesets | `basis`, `mapx-basis` → `streets`; `kataster`, `mapx-kataster` → `cadastre`; `hoehenlinien` → `contours`; `relief`, `relief-terrainrgb` → `terrain-rgb` (short name `dtm` stays); `relief-dsm-terrainrgb` → `dsm`; `dop`, `dop-ortho` → `orthophoto`; `dop_flugblock`, `dop-flugblock` → `orthophoto-flight-blocks`; `rastanlagen` → `rest-areas`; `bike_routes` → `bike-routes`; `gip_poi` → `gip-poi`; `sentinel2-datum` → `sentinel2-date` |
-| Search categories | `bahnhof` → `train_station`, `haltestelle` → `bus_stop`, `kirche` → `place_of_worship_church`, `religion` → `place_of_worship`, `schule` → `school`, `universitaet` → `university`, `krankenhaus` → `hospital`, `ambulatorium` → `clinic`, `apotheke` → `pharmacy`, `arzt` → `doctor`, `rettung` → `ambulance_station`, `polizei` → `police`, `feuerwehr` → `fire_station`, `gemeindeamt` → `town_hall`, `zoll` → `customs`, `tankstelle` → `gas_station`, `ladestation` → `charging_station`, `parkplatz` → `parking`, `sharing` → `vehicle_sharing`, `rastplatz` → `rest_area`, `faehre` → `ferry_terminal`, `hubschrauberlandeplatz` → `heliport`, `mautstelle` → `toll_booth`, `huette` → `alpine_hut`, `gasthaus` → `restaurant`, `unterkunft` → `lodging`, `campingplatz` → `campground`, `gipfel` → `peak`, `pass` → `mountain_pass`, `hoehle` → `cave`, `schwimmbad` → `swimming_pool`, `sportanlage` → `sports_centre`, `golfplatz` → `golf_course`, `spielplatz` → `playground`, `tiergarten` → `zoo`, `friedhof` → `cemetery`, `bibliothek` → `library`, `theater` → `theatre`, `burg` → `castle`, `denkmal` → `monument`, `sehenswuerdigkeit` → `tourist_attraction`, `markt` → `marketplace`, `forst` → `forest`, `toilette` → `toilets`, `trinkwasser` → `drinking_water` |
-| Fields `/v1/parcel` | `gstnr` → `parcel_number`, `kgnr` → `cadastral_municipality_id`, `bauflaeche` → `is_building_land`, `quelle` → `source` |
-| Fields elevation and tilequery | `stichtag` → `reference_date` |
-| Fields `/v1/tiles` and TileJSON | `stand` → `reference_date`, `aliases` removed; TileJSON `mapx:stand` → `mapx:reference_date` |
-| Field address validation | `adrcd` → `address_code` |
-
-## 2026-11-08
-
-### Added
-- API tokens: `api.mapx.at`, `tiles.mapx.at`, `routing.mapx.at` and `search.mapx.at` need a free token from [account.mapx.at](https://account.mapx.at/): public (`mx_pk_`, bound to origins or an Android app, `GET`/`HEAD` only) or secret (`mx_sk_`). Send it as `Authorization: Bearer` or `?access_token=`. New errors `401` (`missing-token`, `invalid-token`, `token-expired`) and `403` (`token-blocked`, `origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `ip-not-allowed`), reason in the header `X-Mapx-Reason`. Requests without a token get `401`. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md) and [Errors and limits](https://docs.mapx.at/api/errors.md).
-- Corridor graph: `GET /v1/corridor-graph` (`polyline` as polyline6, `buffer` 100 to 5000 m, `profile` driving, cycling or walking): compact gzip subgraph of the road network around a route (nodes, directed arcs with travel time and weight, geometry, names, road class, statutory speed limits, turn restrictions) for recomputing a route offline.
-- Speed limits: `GET /v1/speedlimits` (`bbox` or `corridor` as polyline6 plus `buffer`): statutory GIP limits as compact GeoJSON.
-- Directions: `exclude=ferry` (all profiles except `driving-traffic`) and `exclude=toll`; `voice_instructions` and `banner_instructions` also for `cycling`, `cycling-mtb` and `walking`; `maxspeed` carries `legal` (`false` marks a modeled speed that is not a limit).
-- Climate: `GET /v1/climate/{lon},{lat}` and the section `climate` in the parcel dossier: solar potential (kWh/m² and sunshine hours per year), temperature and precipitation normals with trend, hot, frost and snow days, drought index SPEI (GeoSphere Austria, CC BY 4.0).
-- Directions: `driving` and `driving-traffic` avoid binding closures (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `exclude` also for `driving-truck` and `driving-traffic`; `voice_instructions` and `banner_instructions` (Mapbox form).
-- Headers `Server-Timing`, `ETag`, `Last-Modified` (styles, TileJSON, OpenAPI; conditional requests answer `304`) and `RateLimit-Policy` per endpoint group.
-- Truck profile `driving-truck` with `weight`, `height`, `width`, `length` and `truck_type`.
-- Error catalog with a stable `code` per error: [Errors and limits](https://docs.mapx.at/api/errors.md).
-- Docs: API reference generated from OpenAPI, playground per API, guides per product.
-
-### Changed
-- English identifiers for styles, tilesets, search categories and response fields.
-- Errors are `application/problem+json` with `type` URI, `code`, `param` and `allowed`; text in English, German with `Accept-Language: de`.
-- The OpenAPI description is OpenAPI 3.1 with response schemas and examples.
-- Directions `overview` defaults to `simplified`; `overview=full` returns every vertex.
-
-### Deprecated (removed on 2026-11-18)
-- Style IDs `karte`, `luftbild`, `gelaende`, `hybrid` and the other German IDs.
-- Tileset names `basis`, `kataster`, `hoehenlinien`, `relief`, `dop`, `dop_flugblock`.
-- The 49 German search category IDs (for example `bahnhof`, `apotheke`).
-- Parcel fields `gstnr`, `kgnr`, `bauflaeche`, `quelle` and elevation field `stichtag`.
-
-### Removed
-- The alias paths `/v1/{tileset}.json` and `/v1/{tileset}/{z}/{x}/{y}.{ext}`. Use `/v1/tiles/…`.
-
-## 2026-11-07
-
-### Added
-- Public transport: journeys (`/v1/directions/transit`), departures (`/v1/departures`) and stops (`/v1/stops`).
-- Tolls in Directions: `exclude=toll`, `routes[].toll`, `toll_road`, `toll_road_m`.
-- Traffic: `/v1/traffic/*` (incidents, speed limits, signs, tiles), `incidents` in Directions, profile `driving-traffic`.
-- Tilesets `rastanlagen` (rest areas) and `sharing` (shared mobility), search categories for both.
-- Weather: observations, hourly forecast and weather tiles (GeoSphere Austria, CC BY 4.0).
-- Static Images: aerial images, terrain and map styles as PNG or WebP with overlays.
-- Tilequery, Parcel, Search Box, Address Autofill and Address Validation, batch geocoding.
-- Directions: `alternatives`, `annotations`, `radiuses`; `matrix`, `isochrone`, `matching`, optimized trips and tour planning.
-- SDK mapx-gl.
-
-### Changed
-- Reverse geocoding answers in milliseconds instead of about a second.
-- XYZ tiles moved under `/v1/tiles`.
-- Attribution in responses; `operationId` on every endpoint in the OpenAPI.
-
-## Earlier
-
-### Added
-- Tilesets DTM, DSM, contours, base map, cadastre, orthophoto and flight blocks as PMTiles, TileJSON and XYZ.
-- Elevation and profile API.
-- Documentation in German and English.
-
-## Tileset releases
-
-| Tileset | Source date | File |
-|---|---|---|
-| terrain-rgb | 20250915 | `terrain-rgb-20250915-ed2e4341.pmtiles` |
-| dsm | 20250915 | `dsm-20250915-d19cb434.pmtiles` |
 
 ---
 

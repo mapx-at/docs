@@ -84,13 +84,12 @@ mapx stellt Karten und Location-APIs für Österreich bereit, ausschließlich au
 
 ## Referenz
 
-- [Referenz: Kacheln, Styles, Lizenz](https://docs.mapx.at/de/reference/index.md): Referenzseiten zu den mapx-APIs: Quellenangabe und Lizenz, Changelog, Koordinaten, Kachelschema, Terrain-RGB-Kodierung und Style-Spezifikation.
+- [Referenz: Kacheln, Styles, Lizenz](https://docs.mapx.at/de/reference/index.md): Referenzseiten zu den mapx-APIs: Quellenangabe und Lizenz, Koordinaten, Kachelschema, Terrain-RGB-Kodierung und Style-Spezifikation.
 - [Basiskarte: Layer und Style-Spezifikation](https://docs.mapx.at/de/reference/style-spec.md): Alle Layer des mapx-Vektor-Tilesets streets mit Feldern und Werten sowie die fertigen Style-IDs. Referenz für eigene MapLibre-Styles.
 - [Terrain-RGB: Höhenkodierung](https://docs.mapx.at/de/reference/terrain-rgb.md): Wie mapx Höhen in Terrain-RGB-Kacheln als Farbe kodiert (Mapbox-Kodierung, 0,1 m): Wertebereich, Rundung und Dekodierfunktionen.
 - [Kachelschema: Web-Mercator, z/x/y](https://docs.mapx.at/de/reference/tile-scheme.md): Kachelschema der mapx-Kacheln: Web-Mercator, z/x/y-Adressierung, 512-Pixel-Kacheln, Auflösung je Zoomstufe und Overzoom.
 - [Koordinaten: lon,lat, WGS84, Web-Mercator](https://docs.mapx.at/de/reference/coordinates.md): Koordinatenreihenfolge lon,lat in allen mapx-APIs, WGS84 und Web-Mercator (EPSG:3857) sowie amtliche österreichische Quellen in MGI und ETRS89.
 - [Quellenangabe und Lizenz (CC BY 4.0)](https://docs.mapx.at/de/reference/attribution.md): Welche Quelle bei mapx-Karten und -Daten unter CC BY 4.0 zu nennen ist: fertiger Text je Tileset und API, für MapLibre, Druck und Bilder.
-- [Changelog: Änderungen an API und Tilesets](https://docs.mapx.at/de/reference/changelog.md): Änderungen an den mapx-APIs, Tilesets und dieser Dokumentation, gegliedert in Neu, Geändert, Veraltet und Entfernt.
 
 ## Optional
 
