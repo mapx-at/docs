@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/start/access-and-limits/
 
 All endpoints under `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` and all tiles under `https://tiles.mapx.at/` need a token. It is free and there is no usage-based charge.
 
-1. Open [account.mapx.at](https://account.mapx.at/) and register with your e-mail address (an 8-digit code is sent to you) or sign in with Google or Microsoft. You must agree to be contacted about the service and your account (security, changes, shutdown). Marketing mail is a separate, optional checkbox.
+1. Open [account.mapx.at](https://account.mapx.at/) and sign in with your e-mail address (an 8-digit code is sent to you) or with Google or Microsoft. If there is no account for the address yet, it is created when you enter the code; by doing so you agree to be contacted about the service and your account (security, changes, shutdown). You can opt in to the newsletter later in your account.
 2. Under **Tokens** use **New token** to create a named token (up to 100 per account). The token is shown once; copy it then.
 3. Send the token with every request (see below).
 

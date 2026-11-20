@@ -20,7 +20,7 @@ Es gibt zwei Wege. Die Anmeldung über dein Konto ist der einfachere: Du trägst
 ### Mit Anmeldung über dein Konto
 
 1. Trage `https://mcp.mapx.at/mcp` als MCP-Server in deiner Anwendung ein (siehe unten).
-2. Der Assistent leitet dich zu account.mapx.at. Melde dich an oder registriere dich.
+2. Der Assistent leitet dich zu account.mapx.at. Melde dich mit deiner E-Mail-Adresse an; ohne Konto wird dabei eines angelegt.
 3. Auf der Zustimmungsseite siehst du die Anwendung, das Weiterleitungsziel, dein Konto und was der Zugriff erlaubt: nur lesende Werkzeuge, Aufrufe zählen zu deiner Nutzung, kein Zugriff auf dein Konto oder deine anderen Tokens. Bestätige die Verbindung.
 4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Wie komme ich mit dem Rad vom Bahnhof Melk zum Stift Melk, und wie lange dauert das?“.
 

@@ -20,7 +20,7 @@ There are two ways. Signing in with your account is the simpler one: you only en
 ### Sign in with your account
 
 1. Add `https://mcp.mapx.at/mcp` as an MCP server in your application (see below).
-2. The assistant sends you to account.mapx.at. Sign in or register.
+2. The assistant sends you to account.mapx.at. Sign in with your e-mail address; if you don't have an account yet, one is created.
 3. The consent page shows the application, the redirect target, your account and what the access allows: read-only tools only, calls count towards your usage, no access to your account or your other tokens. Confirm the connection.
 4. Ask a question that needs Austrian data, for example "How do I get by bike from Melk station to Melk Abbey, and how long does it take?".
 
