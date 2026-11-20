@@ -11,7 +11,7 @@ The routing API works on the GIP.at network for walking, cycling, mountain bikin
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Route: click start and destination on the map, the Directions API returns a GeoJSON line.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

@@ -11,7 +11,7 @@ Das Profil `driving-truck` mit Gewicht und Höhe wählen: Straßen mit passenden
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

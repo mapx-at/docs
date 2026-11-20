@@ -15,11 +15,11 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const quelle = { type: "vector", url: "https://tiles.mapx.at/v1/tiles/streets.json" };
    ```

@@ -11,7 +11,7 @@ Reverse geocoding turns a coordinate into the nearest address, street or place. 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Reverse geocoding: click the map, get the nearest address, street or place.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

@@ -11,7 +11,7 @@ Search Box works in two steps: `suggest` returns suggestions while the user type
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

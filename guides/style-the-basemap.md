@@ -15,11 +15,11 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });

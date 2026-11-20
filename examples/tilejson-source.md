@@ -13,7 +13,7 @@ Leaflet shows only the raster part: it has no vector tiles without a plugin, so 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Use TileJSON: orthophoto and contour lines as sources, without file names and without a style.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

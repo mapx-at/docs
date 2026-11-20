@@ -12,14 +12,14 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 <head>
   <meta charset="utf-8">
   <title>First mapx map</title>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
   <script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
   <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
 <body>
   <div id="map"></div>
   <script type="module">
-    import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+    import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
     // the style loads PMTiles files: register the pmtiles:// protocol
     maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
@@ -41,7 +41,7 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 
 The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](https://docs.mapx.at/api/styles.md).
 
-MapLibre GL JS 6.18.0 is the version these examples are tested with.
+MapLibre GL JS 6.19.0 is the version these examples are tested with.
 
 ## Next
 

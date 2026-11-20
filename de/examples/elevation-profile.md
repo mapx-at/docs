@@ -11,7 +11,7 @@ Die Stützpunkte gehen als `coordinates` an `/v1/elevation/profile`, das `sample
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

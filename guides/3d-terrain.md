@@ -15,7 +15,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    ```
@@ -47,7 +47,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
 
    ```html
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const map = new maplibregl.Map({
        attributionControl: false,
        container: "map",

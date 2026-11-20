@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/examples/
 
 > 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 
-Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.18.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
+Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.19.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
 
 - [Embed a map](https://docs.mapx.at/examples/embed-map.md): A map with the ready-made mapx style in an HTML page.
 - [Switch the basemap](https://docs.mapx.at/examples/switch-basemap.md): Switch between map, aerial imagery and terrain.

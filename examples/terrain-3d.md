@@ -11,7 +11,7 @@ The Terrain-RGB tileset via TileJSON as a `raster-dem` source, `map.setTerrain()
 3D terrain is only available in MapLibre; OpenLayers and Leaflet draw flat maps.
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // 3D terrain: mapx Terrain-RGB tiles via TileJSON as elevation source.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

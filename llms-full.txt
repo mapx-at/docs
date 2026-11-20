@@ -194,14 +194,14 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 <head>
   <meta charset="utf-8">
   <title>First mapx map</title>
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
   <script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>
   <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
 <body>
   <div id="map"></div>
   <script type="module">
-    import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+    import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
     const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
     // the style loads PMTiles files: register the pmtiles:// protocol
     maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
@@ -223,7 +223,7 @@ Save the code as `index.html` and open it in a browser. Replace `YOUR_TOKEN` wit
 
 The style `streets` is a normal [MapLibre style](https://maplibre.org/maplibre-style-spec/). Replace it with `satellite` or `outdoors` to change the look. All styles: [Styles API](https://docs.mapx.at/api/styles.md).
 
-MapLibre GL JS 6.18.0 is the version these examples are tested with.
+MapLibre GL JS 6.19.0 is the version these examples are tested with.
 
 ## Next
 
@@ -1481,11 +1481,11 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
@@ -1633,11 +1633,11 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
@@ -1748,7 +1748,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    ```html
    <!doctype html>
    <meta charset="utf-8">
-   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.css">
+   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.css">
    <style>html, body, #map { margin: 0; height: 100%; }</style>
    <div id="map"></div>
    ```
@@ -1780,7 +1780,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
 
    ```html
    <script type="module">
-     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+     import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const map = new maplibregl.Map({
        attributionControl: false,
        container: "map",
@@ -8666,7 +8666,7 @@ Source: https://docs.mapx.at/examples/
 
 > 26 runnable examples for MapLibre GL JS, OpenLayers and Leaflet: maps, search, navigation, elevation, transit, traffic, static images, parcels, weather.
 
-Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.18.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
+Each example runs live on the page, shows the complete code and a single HTML file to copy. The basis is MapLibre GL JS (6.19.0) with pmtiles (4.5.0), a free token and no build. Many examples also come in OpenLayers (10.11.0) and Leaflet (1.9.4) versions; the switch above the map picks the library for all examples. The live maps use the docs token; in your copy replace `YOUR_TOKEN` with your own public token. Filter by product or map library:
 
 - [Embed a map](https://docs.mapx.at/examples/embed-map.md): A map with the ready-made mapx style in an HTML page.
 - [Switch the basemap](https://docs.mapx.at/examples/switch-basemap.md): Switch between map, aerial imagery and terrain.
@@ -8715,7 +8715,7 @@ The shortest way to a map: MapLibre GL JS, the pmtiles protocol and the style UR
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Embed a map: the ready-made mapx style, one call.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -8803,7 +8803,7 @@ Three ready-made styles share position and zoom. `map.setStyle()` swaps the base
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Switch the basemap: map, aerial imagery and terrain are three ready-made styles.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -8910,7 +8910,7 @@ Morning, day, evening and night are separate palettes of the same style. For a d
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Time of day and night mode: the standard styles come in four lighting moods.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9007,7 +9007,7 @@ The Terrain-RGB tileset via TileJSON as a `raster-dem` source, `map.setTerrain()
 3D terrain is only available in MapLibre; OpenLayers and Leaflet draw flat maps.
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // 3D terrain: mapx Terrain-RGB tiles via TileJSON as elevation source.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9058,7 +9058,7 @@ The elevation API returns GeoJSON with `elevation` in metres. The DTM shows the 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Query elevation: a click asks /v1/elevation (DTM or DSM) for the point.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9174,7 +9174,7 @@ The vertices go to `/v1/elevation/profile` as `coordinates`; it returns `samples
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Elevation profile: click a line on the map, /v1/elevation/profile returns the heights, a canvas draws the profile.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9332,7 +9332,7 @@ The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit h
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Search: places, addresses, peaks and parcels via /v1/geocode (GeoJSON in the Mapbox shape).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9478,7 +9478,7 @@ The routing API works on the GIP.at network for walking, cycling, mountain bikin
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Route: click start and destination on the map, the Directions API returns a GeoJSON line.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9619,7 +9619,7 @@ The TileJSON `/v1/weather/tiles/{parameter}.json` lists the available hours unde
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Weather overlay: temperature (or precipitation, wind ...) as raster tiles over the map, hour selectable.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9775,7 +9775,7 @@ The TileJSON `/v1/weather/tiles/rr_nowcast.json` lists the 15-minute steps under
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Precipitation radar: nowcast tiles (15-minute steps, 3 hours) as an animation over the map.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -9950,7 +9950,7 @@ A click sets the start point. The isochrone API returns one MultiPolygon per ste
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Isochrones: areas reachable in 5, 10 and 15 minutes.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10072,7 +10072,7 @@ The matrix API takes sources (and optionally destinations) and returns duration 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Matrix: Fahrzeiten zwischen mehreren Orten in einer Anfrage.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10200,7 +10200,7 @@ The cadastre tileset contains boundary lines from zoom 16 with parcel number and
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Cadastre: a click on a parcel boundary shows the parcel number and cadastral municipality.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10323,7 +10323,7 @@ Leaflet shows only the raster part: it has no vector tiles without a plugin, so 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Use TileJSON: orthophoto and contour lines as sources, without file names and without a style.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10424,7 +10424,7 @@ The `streets` style contains an extruded building layer that is switched off by 
 3D buildings are only available in MapLibre; OpenLayers and Leaflet draw flat maps.
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // 3D buildings: switch on the extruded building layer of the streets style and tilt the camera.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10463,7 +10463,7 @@ Search Box works in two steps: `suggest` returns suggestions while the user type
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Search Box: suggestions while typing (suggest), position and details after the click (retrieve). One session token per search.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10634,7 +10634,7 @@ Autofill is made for checkout and registration forms: one text field, one sugges
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Address autofill: type a street and number, pick a suggestion, the form fields fill themselves.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10783,7 +10783,7 @@ Validation compares the four address parts with the BEV address register. The re
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Address validation: check a typed address against the official register (BEV) and show the corrected result.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -10910,7 +10910,7 @@ Reverse geocoding turns a coordinate into the nearest address, street or place. 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Reverse geocoding: click the map, get the nearest address, street or place.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11021,7 +11021,7 @@ Choose the profile `driving-truck` and give weight and height: roads with matchi
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Truck route: start and destination by click, vehicle size, avoid tolls and motorways, alternatives in grey.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11186,7 +11186,7 @@ The optimization API orders stops for one or more vehicles, with service times, 
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Tour planning: click stops (up to 9), the optimization API finds the shortest order from the depot and back.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11370,7 +11370,7 @@ The transit API combines walks on the road network with rides from the timetable
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Public transit: click start and destination, get walking and riding legs for the next departure.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11508,7 +11508,7 @@ A click finds the nearest stop within 150 m via `/v1/stops` and lists, via `/v1/
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Departures: click near a stop to see the next departures (/v1/stops finds the stop, /v1/departures lists the departures).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11693,7 +11693,7 @@ The style `traffic-day` shows the current reports and colours the motorway secti
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Traffic: the traffic-day style (reports, sign speed limits on motorways) plus the current incident list for the visible area.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11839,7 +11839,7 @@ A static image is a plain URL that returns a PNG or WebP: for listings, e-mails,
 ## Code
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Static image: click the map, get a ready-made PNG of that place for a listing, e-mail or PDF. No JavaScript map needed on the target page.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
@@ -11884,7 +11884,7 @@ Your own data goes on top of the mapx style as a GeoJSON source. Filter by geome
 ### MapLibre GL JS
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // Own data: add a GeoJSON layer (points, line, area) on top of the mapx style and show a popup on click.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at

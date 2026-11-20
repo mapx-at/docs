@@ -11,7 +11,7 @@ The `streets` style contains an extruded building layer that is switched off by 
 3D buildings are only available in MapLibre; OpenLayers and Leaflet draw flat maps.
 
 ````js
-import * as maplibregl from "https://unpkg.com/maplibre-gl@6.18.0/dist/maplibre-gl.mjs";
+import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
 // 3D buildings: switch on the extruded building layer of the streets style and tilt the camera.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
