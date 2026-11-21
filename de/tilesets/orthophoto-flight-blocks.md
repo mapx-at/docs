@@ -38,7 +38,7 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
-    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
+    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "flight_block_a", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -65,21 +65,21 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ### orthophoto-flight-blocks
 
-Geometrie: **Fläche**, Zoom: **z6–17**, Layer: `dop_flugblock`. Befliegungsblöcke der Orthofotos mit Aufnahmedatum.
+Geometrie: **Fläche**, Zoom: **z6–17**, Layer: `flight_block_a`. Befliegungsblöcke der Orthofotos mit Aufnahmedatum.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `archivnr` | `number` | Archivnummer der Befliegung. |
+| `archive_number` | `number` | Archivnummer der Befliegung. |
+| `block_id` | `string` | Kennung des Flugblocks. |
 | `fid` | `number` | Laufende Nummer des Flugblocks. |
-| `flug_bis` | `string` | Ende der Befliegung. |
-| `flug_von` | `string` | Beginn der Befliegung. |
-| `flugblock_id` | `string` | Kennung des Flugblocks. |
-| `flugdatum` | `string` | Flugtag (JJJJ-MM-TT). |
-| `flugjahr` | `number` | Jahr der Befliegung. |
-| `mosaik_url` | `string` | Adresse des zugehörigen Orthofoto-Mosaiks. |
+| `flight_date` | `string` | Ende des Befliegungszeitraums (JJJJ-MM-TT), bestimmt den Vorrang. |
+| `flight_from` | `string` | Beginn der Befliegung. |
+| `flight_to` | `string` | Ende der Befliegung. |
+| `flight_year` | `number` | Jahr der Befliegung. |
+| `mosaic_url` | `string` | Adresse des zugehörigen Orthofoto-Mosaiks. |
 | `operat` | `string` | Bezeichnung des Operats (Auftrags). |
-| `rang` | `number` | Vorrang des Flugblocks bei Überlappung (0 = höchster Vorrang). |
-| `stichtag` | `string` | Datenstand. |
+| `rank` | `number` | Vorrang des Flugblocks bei Überlappung (0 = höchster Vorrang). |
+| `reference_date` | `string` | Datenstand. |
 
 ## Quelle und Aktualität
 

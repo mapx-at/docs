@@ -7645,7 +7645,7 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
-    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "dop_flugblock", paint: { "line-color": "#b5651d" } }]
+    layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "flight_block_a", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -7672,21 +7672,21 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ### orthophoto-flight-blocks
 
-Geometry: **Polygon**, Zoom: **z6–17**, Layer: `dop_flugblock`. Orthophoto flight blocks with acquisition date.
+Geometry: **Polygon**, Zoom: **z6–17**, Layer: `flight_block_a`. Orthophoto flight blocks with acquisition date.
 
 | Field | Type | Description |
 |---|---|---|
-| `archivnr` | `number` | Archive number of the flight. |
+| `archive_number` | `number` | Archive number of the flight. |
+| `block_id` | `string` | Flight block identifier. |
 | `fid` | `number` | Sequence number of the flight block. |
-| `flug_bis` | `string` | End of the flight campaign. |
-| `flug_von` | `string` | Start of the flight campaign. |
-| `flugblock_id` | `string` | Flight block identifier. |
-| `flugdatum` | `string` | Flight date (YYYY-MM-DD). |
-| `flugjahr` | `number` | Year of the flight. |
-| `mosaik_url` | `string` | Address of the corresponding orthophoto mosaic. |
+| `flight_date` | `string` | End of the flight period (YYYY-MM-DD), decides the priority. |
+| `flight_from` | `string` | Start of the flight campaign. |
+| `flight_to` | `string` | End of the flight campaign. |
+| `flight_year` | `number` | Year of the flight. |
+| `mosaic_url` | `string` | Address of the corresponding orthophoto mosaic. |
 | `operat` | `string` | Name of the survey project. |
-| `rang` | `number` | Priority of the flight block where blocks overlap (0 = highest priority). |
-| `stichtag` | `string` | Data cut-off date. |
+| `rank` | `number` | Priority of the flight block where blocks overlap (0 = highest priority). |
+| `reference_date` | `string` | Data cut-off date. |
 
 ## Source and currency
 
