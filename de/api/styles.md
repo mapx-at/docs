@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (1
 
 `GET /v1/styles`
 
-Verfügbare Style-Ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 mit Straßen und Namen), outdoors, outdoors-winter, relief, relief-contours, relief-light, relief-dark (nur Gelände: Höhenstufen und Schummerung, gerendert im Browser mit MapLibre GL JS ab 5.6).
+Verfügbare Style-Ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 mit Straßen und Namen), outdoors, outdoors-winter, relief, relief-contours, relief-light, relief-dark (nur Gelände: Höhenstufen und Schummerung, gerendert im Browser mit MapLibre GL JS ab 5.6) sowie die 3D-Fassungen outdoors-3d, outdoors-winter-3d, relief-3d, satellite-3d, satellite-streets-3d, streets-3d, streets-night-3d, light-3d, dark-3d (Gelände, Himmel und geneigte Startansicht, die Stadt-Styles mit Gebäudekörpern statt Gelände; nur im Browser).
 
 **Beispiel**
 
@@ -166,7 +166,7 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (nicht die Relief-Styles, sie werden nur im Browser gerendert). `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (nicht die Relief- und 3D-Styles, sie werden nur im Browser gerendert). `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`.
 
 Beschriftungen werden mit Rand gerendert und abgeschnitten. Keine Daten oder unter dem Mindestzoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 

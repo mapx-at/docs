@@ -56,7 +56,7 @@ data = res.json()
         17.2,
         49.1
       ],
-      "attribution": "...",
+      "attribution": "mapx.at; ...",
       "reference_date": "2026-10-01",
       "built": "2026-11-15 10:26:41"
     }

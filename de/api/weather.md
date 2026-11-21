@@ -418,7 +418,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "updated": "2026-11-08T08:00Z",
-  "attribution": "Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
+  "attribution": "mapx.at; Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
   "features": [
     {
       "type": "Feature",

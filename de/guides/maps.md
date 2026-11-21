@@ -25,6 +25,17 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 
 Die Relief-Styles brauchen MapLibre GL JS ab 5.6 (Layertyp `color-relief`) und gibt es nur für die Karte im Browser, nicht als Static Images oder Static Tiles. Sie zeigen nur Österreich (Geländemodell BEV ALS-DTM 1 m, z5 bis z16), außerhalb bleibt die Fläche einfarbig.
 
+### 3D-Styles
+
+| Style | Inhalt |
+|---|---|
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d` | `outdoors`, `outdoors-winter` bzw. `relief` über dem echten Geländemodell, mit Himmel und Horizont |
+| `satellite-3d`, `satellite-streets-3d` | Luftbild über dem Gelände, pur bzw. mit Straßen und Namen |
+| `streets-3d`, `streets-night-3d` | Stadtkarte mit Gebäuden als Körper (Höhen aus dem BEV-Gebäudemodell) und Szenenlicht, bei Tag bzw. bei Nacht |
+| `light-3d`, `dark-3d` | Ruhige Grundkarte hell bzw. dunkel mit grauen bzw. anthrazitfarbenen Gebäudekörpern, für eigene Daten |
+
+Die 3D-Styles schalten den Himmel (`sky`) und, außer den Stadt-Styles, das Gelände (`terrain` auf dem Geländemodell `terrain-rgb`) im Style ein und bringen eine geneigte Startansicht mit (`pitch` 60, `bearing`). MapLibre übernimmt Neigung und Richtung aus dem Style nur, wenn beim Erzeugen der Karte keine Kameraposition gesetzt ist; mit `center` und `zoom` daher `pitch` und `bearing` mitgeben, zum Beispiel `pitch: 60, bearing: -20`. Gebäudekörper erscheinen ab etwa Zoom 15 (die Höhen stehen in den Kacheln ab z15, bei geneigter Karte im Hintergrund noch flach). Gelände gibt es nur für Österreich. Die 3D-Styles gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Static Images oder Static Tiles; dort den gleichnamigen Style ohne `-3d` verwenden.
+
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
 const map = new maplibregl.Map({

@@ -54,7 +54,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "legal_only": true,
-  "attribution": "Datenquelle: GIP.at - Graphenintegrations-Plattform, CC BY 4.0",
+  "attribution": "mapx.at; Datenquelle: GIP.at - Graphenintegrations-Plattform, CC BY 4.0",
   "features": [
     {
       "type": "Feature",

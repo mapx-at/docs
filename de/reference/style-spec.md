@@ -15,6 +15,8 @@ Source: https://docs.mapx.at/de/reference/style-spec/
 | `outdoors-winter` | Gelände in Schneefarben, Skigebiete und Lifte hervorgehoben |
 | `relief`, `relief-contours` | Reine Reliefkarte: Höhenstufen (Täler grün bis Gipfel weiß) mit Schummerung, Gewässer und wenige Namen; `relief-contours` zusätzlich mit Höhenlinien |
 | `relief-light`, `relief-dark` | Nur graue Schummerung auf hellem bzw. dunklem Grund, Hintergrund für eigene Daten |
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D-Fassungen: der Style über dem Geländemodell (`terrain`), mit Himmel (`sky`) und geneigter Startansicht (`pitch`, `bearing`) |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D-Stadt: Gebäudekörper (`fill-extrusion` aus `building_a.height`) mit Szenenlicht (`light`) und Himmel, ohne Gelände |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
 | `traffic-night` | Nachtkarte (`streets-night`) mit Verkehrsebene, Farben für dunklen Grund |
 

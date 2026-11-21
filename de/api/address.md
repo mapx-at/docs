@@ -125,7 +125,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "session_token": null,
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
@@ -224,7 +224,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -340,7 +340,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",

@@ -25,7 +25,7 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Die Relief-Styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) gibt es nur für die Karte im Browser; als Kartenbild antwortet die API mit `404`.
+Die Relief-Styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) gibt es nur für die Karte im Browser; als Kartenbild antwortet die API mit `404`. Dasselbe gilt für die 3D-Styles (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); für das Bild den Style ohne `-3d` nehmen.
 
 Details zum Token: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 

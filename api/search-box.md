@@ -65,7 +65,7 @@ data = res.json()
       ]
     }
   ],
-  "attribution": "..."
+  "attribution": "mapx.at; ..."
 }
 ```
 

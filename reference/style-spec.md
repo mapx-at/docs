@@ -15,6 +15,8 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `relief`, `relief-contours` | Pure relief map: elevation tints (green valleys to white peaks) with hillshade, water and a few names; `relief-contours` adds contour lines |
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D variants: the style over the terrain model (`terrain`), with sky (`sky`) and a tilted start view (`pitch`, `bearing`) |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`) with scene lighting (`light`) and sky, without terrain |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 

@@ -52,7 +52,7 @@ mapx is a set of maps and location APIs for Austria. All data comes from officia
 
 | Product | What you get | Start |
 |---|---|---|
-| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`, `light`, `dark`, `traffic-day`, `traffic-night`, the relief maps `relief`, `relief-contours`, `relief-light`, `relief-dark`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
+| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`, `light`, `dark`, `traffic-day`, `traffic-night`, the relief maps `relief`, `relief-contours`, `relief-light`, `relief-dark`, plus 3D variants such as `outdoors-3d`, `satellite-3d` and `streets-3d`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
 | Search | Geocoding, type-ahead Search Box, address autofill and validation | [Search](https://docs.mapx.at/guides/search.md) |
 | Navigation | Routes for car, truck, bike and foot, isochrones, matrices, map matching, tolls | [Navigation](https://docs.mapx.at/guides/navigation.md) |
 | Traffic | Incident reports, motorway speed limits, a traffic layer | [Traffic](https://docs.mapx.at/guides/traffic.md) |
@@ -512,6 +512,17 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, very restrained, a backdrop for your own data |
 
 The relief styles need MapLibre GL JS 5.6 or later (layer type `color-relief`) and exist only for maps in the browser, not as static images or static tiles. They show Austria only (terrain model BEV ALS-DTM 1 m, z5 to z16); the area outside stays plain.
+
+### 3D styles
+
+| Style | Content |
+|---|---|
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d` | `outdoors`, `outdoors-winter` or `relief` draped over the real terrain model, with sky and horizon |
+| `satellite-3d`, `satellite-streets-3d` | Aerial imagery over the terrain, plain or with roads and names |
+| `streets-3d`, `streets-night-3d` | City map with extruded buildings (heights from the BEV building model) and scene lighting, by day or by night |
+| `light-3d`, `dark-3d` | Quiet light or dark base map with grey or anthracite buildings, for your own data |
+
+The 3D styles turn on the sky (`sky`) and, except for the city styles, the terrain (`terrain` on the terrain model `terrain-rgb`) in the style and come with a tilted start view (`pitch` 60, `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`, for example `pitch: 60, bearing: -20`. Buildings appear as bodies from about zoom 15 (heights are in the tiles from z15; with a tilted map the background still shows them flat). Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
@@ -1004,7 +1015,7 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
 
-The relief styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) exist only for maps in the browser; as a static image the API answers `404`.
+The relief styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) exist only for maps in the browser; as a static image the API answers `404`. The same holds for the 3D styles (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); for an image use the style without `-3d`.
 
 Images are in the `heavy` zone (30 per minute). They are cacheable: send `If-None-Match` and the API answers `304`. Cache images on your side and do not request them per page view.
 
@@ -2069,7 +2080,7 @@ data = res.json()
         17.2,
         49.1
       ],
-      "attribution": "...",
+      "attribution": "mapx.at; ...",
       "reference_date": "2026-10-01",
       "built": "2026-11-15 10:26:41"
     }
@@ -2224,7 +2235,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter, relief, relief-contours, relief-light, relief-dark (terrain only: elevation tints and hillshade, rendered in the browser with MapLibre GL JS 5.6 or later).
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter, relief, relief-contours, relief-light, relief-dark (terrain only: elevation tints and hillshade, rendered in the browser with MapLibre GL JS 5.6 or later), and the 3D variants outdoors-3d, outdoors-winter-3d, relief-3d, satellite-3d, satellite-streets-3d, streets-3d, streets-night-3d, light-3d, dark-3d (terrain, sky and a tilted start view, the city styles with extruded buildings instead of terrain; browser only).
 
 **Example**
 
@@ -2378,7 +2389,7 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (not the relief styles, they are rendered in the browser only). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (not the relief and 3D styles, they are rendered in the browser only). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`.
 
 Labels are rendered with a margin and clipped. No data or below minimum zoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 
@@ -3078,7 +3089,7 @@ data = res.json()
       ]
     }
   ],
-  "attribution": "..."
+  "attribution": "mapx.at; ..."
 }
 ```
 
@@ -3425,7 +3436,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "session_token": null,
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
@@ -3524,7 +3535,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -3640,7 +3651,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -3746,7 +3757,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "legal_only": true,
-  "attribution": "Datenquelle: GIP.at - Graphenintegrations-Plattform, CC BY 4.0",
+  "attribution": "mapx.at; Datenquelle: GIP.at - Graphenintegrations-Plattform, CC BY 4.0",
   "features": [
     {
       "type": "Feature",
@@ -5614,7 +5625,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "updated": "2026-11-08T08:00Z",
-  "attribution": "Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
+  "attribution": "mapx.at; Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
   "features": [
     {
       "type": "Feature",
@@ -7833,6 +7844,8 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `relief`, `relief-contours` | Pure relief map: elevation tints (green valleys to white peaks) with hillshade, water and a few names; `relief-contours` adds contour lines |
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D variants: the style over the terrain model (`terrain`), with sky (`sky`) and a tilted start view (`pitch`, `bearing`) |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`) with scene lighting (`light`) and sky, without terrain |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 

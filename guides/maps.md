@@ -25,6 +25,17 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 
 The relief styles need MapLibre GL JS 5.6 or later (layer type `color-relief`) and exist only for maps in the browser, not as static images or static tiles. They show Austria only (terrain model BEV ALS-DTM 1 m, z5 to z16); the area outside stays plain.
 
+### 3D styles
+
+| Style | Content |
+|---|---|
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d` | `outdoors`, `outdoors-winter` or `relief` draped over the real terrain model, with sky and horizon |
+| `satellite-3d`, `satellite-streets-3d` | Aerial imagery over the terrain, plain or with roads and names |
+| `streets-3d`, `streets-night-3d` | City map with extruded buildings (heights from the BEV building model) and scene lighting, by day or by night |
+| `light-3d`, `dark-3d` | Quiet light or dark base map with grey or anthracite buildings, for your own data |
+
+The 3D styles turn on the sky (`sky`) and, except for the city styles, the terrain (`terrain` on the terrain model `terrain-rgb`) in the style and come with a tilted start view (`pitch` 60, `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`, for example `pitch: 60, bearing: -20`. Buildings appear as bodies from about zoom 15 (heights are in the tiles from z15; with a tilted map the background still shows them flat). Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
+
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
 const map = new maplibregl.Map({
