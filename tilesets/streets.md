@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/tilesets/streets/
 
 > Vector base map of Austria from open government data: land use, buildings, roads, rail, water, boundaries, names, house numbers. z0 to z16.
 
-The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
+The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 19 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
 
 **Use cases**
 
@@ -78,6 +78,8 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 | Topic | Source | As of |
 |---|---|---|
 | Land use, buildings | BEV Digital Cadastral Map (DKM), heights from the DLM | 1 Apr 2026 |
+| Building heights without DLM value, tower parts | BEV ALS surface and terrain model 1 m | 15 Sep 2025 |
+| Building parts Vienna | Stadt Wien – data.wien.gv.at, building block model (CC BY 4.0) | 21 Nov 2026 |
 | Roads, rail | GIP-OGD (Graph Integration Platform) | 30 Apr 2026 |
 | Lifts, stations, POI | BEV DLM, Wien-OGD (Vienna only) | |
 | Boundaries | BEV administrative boundaries (VGD) | 1 Oct 2026 |
@@ -98,7 +100,7 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
 
 ```html
-Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0
+Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

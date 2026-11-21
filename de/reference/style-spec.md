@@ -16,7 +16,7 @@ Source: https://docs.mapx.at/de/reference/style-spec/
 | `relief`, `relief-contours` | Reine Reliefkarte: Höhenstufen (Täler grün bis Gipfel weiß) mit Schummerung, Gewässer und wenige Namen; `relief-contours` zusätzlich mit Höhenlinien |
 | `relief-light`, `relief-dark` | Nur graue Schummerung auf hellem bzw. dunklem Grund, Hintergrund für eigene Daten |
 | `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D-Fassungen: der Style über dem Geländemodell (`terrain`), mit Himmel (`sky`) und geneigter Startansicht (`pitch`, `bearing`) |
-| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D-Stadt: Gebäudekörper (`fill-extrusion` aus `building_a.height`) mit Szenenlicht (`light`) und Himmel, ohne Gelände |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D-Stadt: Gebäudekörper (`fill-extrusion` aus `building_a.height`, Turmteile aus `building_part_a`) mit Szenenlicht (`light`), Himmel und Gelände |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
 | `traffic-night` | Nachtkarte (`streets-night`) mit Verkehrsebene, Farben für dunklen Grund |
 
@@ -47,9 +47,10 @@ Geometrie: **Fläche**, Zoom: **z12–16**, Layer: `building_a`. Gebäudegrundri
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `height` | `number` | Gebäudehöhe in Metern. |
+| `has_parts` | `boolean` | true, wenn der Körper des Gebäudes in building_part_a steht (Wien, ab z15); 3D-Darstellungen extrudieren dann nur die Teile. |
+| `height` | `number` | Gebäudehöhe in Metern über Grund. Aus dem BEV-Gebäudemodell (DLM Bauwerke); fehlt sie dort, aus den Höhenmodellen (Oberflächenmodell minus Geländemodell, Median im Grundriss). In z12 bis z14 (zusammengefasste Gebäude) flächengewichteter Mittelwert der Gebäude der Fläche, auf ganze Meter. |
 | `kind` | `string` | Gebäudeart; Standard ist ein gewöhnliches Gebäude, markante Gebäude sind gesondert gekennzeichnet. Werte: `building` = Gebäude (allgemein); `church` = Kirche; `chapel` = Kapelle; `castle` = Burg, Schloss; `fire_station` = Feuerwehr; `hospital` = Krankenhaus; `pharmacy` = Apotheke; `police` = Polizei; `power` = Kraftwerk, Umspannwerk; `school` = Schule; `station` = Bahnhofsgebäude; `townhall` = Gemeinde- oder Bezirksamt; `hut` = Schutzhütte |
-| `max_height` | `number` | Größte Höhe des Gebäudes in Metern. |
+| `max_height` | `number` | Größte Höhe des Gebäudes in Metern (Türme, Kirchen), nur wenn deutlich über der Gebäudehöhe; ab z15. |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 
 ### ski_a

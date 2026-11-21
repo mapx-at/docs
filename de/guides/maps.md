@@ -34,7 +34,18 @@ Die Relief-Styles brauchen MapLibre GL JS ab 5.6 (Layertyp `color-relief`) und g
 | `streets-3d`, `streets-night-3d` | Stadtkarte mit Gebäuden als Körper (Höhen aus dem BEV-Gebäudemodell) und Szenenlicht, bei Tag bzw. bei Nacht |
 | `light-3d`, `dark-3d` | Ruhige Grundkarte hell bzw. dunkel mit grauen bzw. anthrazitfarbenen Gebäudekörpern, für eigene Daten |
 
-Die 3D-Styles schalten den Himmel (`sky`) und, außer den Stadt-Styles, das Gelände (`terrain` auf dem Geländemodell `terrain-rgb`) im Style ein und bringen eine geneigte Startansicht mit (`pitch` 60, `bearing`). MapLibre übernimmt Neigung und Richtung aus dem Style nur, wenn beim Erzeugen der Karte keine Kameraposition gesetzt ist; mit `center` und `zoom` daher `pitch` und `bearing` mitgeben, zum Beispiel `pitch: 60, bearing: -20`. Gebäudekörper erscheinen ab etwa Zoom 15 (die Höhen stehen in den Kacheln ab z15, bei geneigter Karte im Hintergrund noch flach). Gelände gibt es nur für Österreich. Die 3D-Styles gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Static Images oder Static Tiles; dort den gleichnamigen Style ohne `-3d` verwenden.
+Die 3D-Styles schalten den Himmel (`sky`) und das Gelände (`terrain` auf dem Geländemodell `terrain-rgb`, in den Stadt-Styles ohne Überhöhung) im Style ein und bringen eine geneigte Startansicht mit (`pitch` 72, Stadt 68, dazu `bearing`). MapLibre übernimmt Neigung und Richtung aus dem Style nur, wenn beim Erzeugen der Karte keine Kameraposition gesetzt ist; mit `center` und `zoom` daher `pitch` und `bearing` mitgeben. MapLibre erlaubt standardmäßig höchstens 60 Grad Neigung, dabei liegt der Horizont meist außerhalb des Bildes. Wer den Himmel sehen will, setzt `maxPitch` und `pitch` selbst:
+
+```js
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://api.mapx.at/v1/styles/streets-3d",
+  center: [16.3731, 48.2085], zoom: 15,
+  maxPitch: 80, pitch: 68, bearing: -20, // Himmel im Bild
+});
+```
+
+Gebäudekörper erscheinen ab etwa Zoom 13 (zusammengefasste Gebäude mit mittlerer Höhe, ab Zoom 15 jedes Gebäude mit eigener Höhe). Die Höhen stammen aus dem BEV-Gebäudemodell, fehlende aus den Höhenmodellen (Oberfläche minus Gelände); hohe Türme stehen als eigene Teile (`building_part_a`) auf den Gebäuden. Gelände gibt es nur für Österreich. Die 3D-Styles gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Static Images oder Static Tiles; dort den gleichnamigen Style ohne `-3d` verwenden.
 
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…

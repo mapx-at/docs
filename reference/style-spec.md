@@ -16,7 +16,7 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `relief`, `relief-contours` | Pure relief map: elevation tints (green valleys to white peaks) with hillshade, water and a few names; `relief-contours` adds contour lines |
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
 | `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D variants: the style over the terrain model (`terrain`), with sky (`sky`) and a tilted start view (`pitch`, `bearing`) |
-| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`) with scene lighting (`light`) and sky, without terrain |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`, tower parts from `building_part_a`) with scene lighting (`light`), sky and terrain |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 
@@ -47,9 +47,10 @@ Geometry: **Polygon**, Zoom: **z12–16**, Layer: `building_a`. Building footpri
 
 | Field | Type | Description |
 |---|---|---|
-| `height` | `number` | Building height in metres. |
+| `has_parts` | `boolean` | true when the building's body is in building_part_a (Vienna, from z15); 3D displays then extrude only the parts. |
+| `height` | `number` | Building height in metres above ground. From the BEV building model (DLM structures); where it has none, from the elevation models (surface model minus terrain model, median within the footprint). At z12 to z14 (merged buildings) the area-weighted mean of the buildings in the area, in whole metres. |
 | `kind` | `string` | Building type; ordinary buildings are plain, notable buildings are marked separately. Values: `building` = Building (general); `church` = Church; `chapel` = Chapel; `castle` = Castle, palace; `fire_station` = Fire station; `hospital` = Hospital; `pharmacy` = Pharmacy; `police` = Police; `power` = Power plant, substation; `school` = School; `station` = Station building; `townhall` = Town hall or district office; `hut` = Mountain hut |
-| `max_height` | `number` | Maximum height of the building in metres. |
+| `max_height` | `number` | Maximum height of the building in metres (towers, churches), only when clearly above the building height; from z15. |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 
 ### ski_a

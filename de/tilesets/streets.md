@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/tilesets/streets/
 
 > Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
 
-Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 18 Layern. Sie enthält keine OpenStreetMap-Daten. Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
+Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 19 Layern. Sie enthält keine OpenStreetMap-Daten. Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
 
 **Nutzungen**
 
@@ -78,6 +78,8 @@ Alle Felder und Werte jedes Layers: [Basiskarte: Layer-Referenz](https://docs.ma
 | Thema | Quelle | Stand |
 |---|---|---|
 | Nutzung, Gebäude | BEV Digitale Katastralmappe (DKM), Höhen aus dem DLM | 01.04.2026 |
+| Gebäudehöhen ohne DLM-Wert, Turmteile | BEV ALS-Oberflächen- und Geländemodell 1 m | 15.09.2025 |
+| Gebäudeteile Wien | Stadt Wien – data.wien.gv.at, Baukörpermodell (CC BY 4.0) | 21.11.2026 |
 | Straßen, Bahn | GIP-OGD (Graphenintegrationsplattform) | 30.04.2026 |
 | Lifte, Stationen, POI | BEV DLM, Wien-OGD (nur Wien) | |
 | Grenzen | BEV Verwaltungsgrenzen (VGD) | 01.10.2026 |
@@ -98,7 +100,7 @@ Alle Felder und Werte jedes Layers: [Basiskarte: Layer-Referenz](https://docs.ma
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
 
 ```html
-Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0
+Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

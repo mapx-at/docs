@@ -34,7 +34,18 @@ The relief styles need MapLibre GL JS 5.6 or later (layer type `color-relief`) a
 | `streets-3d`, `streets-night-3d` | City map with extruded buildings (heights from the BEV building model) and scene lighting, by day or by night |
 | `light-3d`, `dark-3d` | Quiet light or dark base map with grey or anthracite buildings, for your own data |
 
-The 3D styles turn on the sky (`sky`) and, except for the city styles, the terrain (`terrain` on the terrain model `terrain-rgb`) in the style and come with a tilted start view (`pitch` 60, `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`, for example `pitch: 60, bearing: -20`. Buildings appear as bodies from about zoom 15 (heights are in the tiles from z15; with a tilted map the background still shows them flat). Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
+The 3D styles turn on the sky (`sky`) and the terrain (`terrain` on the terrain model `terrain-rgb`, without exaggeration in the city styles) in the style and come with a tilted start view (`pitch` 72, city 68, plus `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`. By default MapLibre allows at most 60 degrees of pitch, which usually keeps the horizon out of view. To see the sky, set `maxPitch` and `pitch` yourself:
+
+```js
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://api.mapx.at/v1/styles/streets-3d",
+  center: [16.3731, 48.2085], zoom: 15,
+  maxPitch: 80, pitch: 68, bearing: -20, // sky in view
+});
+```
+
+Buildings appear as bodies from about zoom 13 (merged buildings with an average height, from zoom 15 every building with its own height). Heights come from the BEV building model, missing ones from the elevation models (surface minus terrain); tall towers are separate parts (`building_part_a`) on top of the buildings. Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…

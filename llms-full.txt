@@ -522,7 +522,18 @@ The relief styles need MapLibre GL JS 5.6 or later (layer type `color-relief`) a
 | `streets-3d`, `streets-night-3d` | City map with extruded buildings (heights from the BEV building model) and scene lighting, by day or by night |
 | `light-3d`, `dark-3d` | Quiet light or dark base map with grey or anthracite buildings, for your own data |
 
-The 3D styles turn on the sky (`sky`) and, except for the city styles, the terrain (`terrain` on the terrain model `terrain-rgb`) in the style and come with a tilted start view (`pitch` 60, `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`, for example `pitch: 60, bearing: -20`. Buildings appear as bodies from about zoom 15 (heights are in the tiles from z15; with a tilted map the background still shows them flat). Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
+The 3D styles turn on the sky (`sky`) and the terrain (`terrain` on the terrain model `terrain-rgb`, without exaggeration in the city styles) in the style and come with a tilted start view (`pitch` 72, city 68, plus `bearing`). MapLibre takes pitch and bearing from the style only when the map is created without a camera position; when you pass `center` and `zoom`, also pass `pitch` and `bearing`. By default MapLibre allows at most 60 degrees of pitch, which usually keeps the horizon out of view. To see the sky, set `maxPitch` and `pitch` yourself:
+
+```js
+const map = new maplibregl.Map({
+  container: "map",
+  style: "https://api.mapx.at/v1/styles/streets-3d",
+  center: [16.3731, 48.2085], zoom: 15,
+  maxPitch: 80, pitch: 68, bearing: -20, // sky in view
+});
+```
+
+Buildings appear as bodies from about zoom 13 (merged buildings with an average height, from zoom 15 every building with its own height). Heights come from the BEV building model, missing ones from the elevation models (surface minus terrain); tall towers are separate parts (`building_part_a`) on top of the buildings. Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
@@ -6909,7 +6920,7 @@ Source: https://docs.mapx.at/tilesets/streets/
 
 > Vector base map of Austria from open government data: land use, buildings, roads, rail, water, boundaries, names, house numbers. z0 to z16.
 
-The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 18 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
+The basemap combines open data from BEV, GIP, Umweltbundesamt and BMLUK in 19 layers. It contains no OpenStreetMap data. Contour lines and relief are separate products and can be layered on top.
 
 **Use cases**
 
@@ -6983,6 +6994,8 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 | Topic | Source | As of |
 |---|---|---|
 | Land use, buildings | BEV Digital Cadastral Map (DKM), heights from the DLM | 1 Apr 2026 |
+| Building heights without DLM value, tower parts | BEV ALS surface and terrain model 1 m | 15 Sep 2025 |
+| Building parts Vienna | Stadt Wien – data.wien.gv.at, building block model (CC BY 4.0) | 21 Nov 2026 |
 | Roads, rail | GIP-OGD (Graph Integration Platform) | 30 Apr 2026 |
 | Lifts, stations, POI | BEV DLM, Wien-OGD (Vienna only) | |
 | Boundaries | BEV administrative boundaries (VGD) | 1 Oct 2026 |
@@ -7003,7 +7016,7 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
 
 ```html
-Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0
+Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).
@@ -7845,7 +7858,7 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `relief`, `relief-contours` | Pure relief map: elevation tints (green valleys to white peaks) with hillshade, water and a few names; `relief-contours` adds contour lines |
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
 | `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D variants: the style over the terrain model (`terrain`), with sky (`sky`) and a tilted start view (`pitch`, `bearing`) |
-| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`) with scene lighting (`light`) and sky, without terrain |
+| `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`, tower parts from `building_part_a`) with scene lighting (`light`), sky and terrain |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 
@@ -7876,9 +7889,10 @@ Geometry: **Polygon**, Zoom: **z12–16**, Layer: `building_a`. Building footpri
 
 | Field | Type | Description |
 |---|---|---|
-| `height` | `number` | Building height in metres. |
+| `has_parts` | `boolean` | true when the building's body is in building_part_a (Vienna, from z15); 3D displays then extrude only the parts. |
+| `height` | `number` | Building height in metres above ground. From the BEV building model (DLM structures); where it has none, from the elevation models (surface model minus terrain model, median within the footprint). At z12 to z14 (merged buildings) the area-weighted mean of the buildings in the area, in whole metres. |
 | `kind` | `string` | Building type; ordinary buildings are plain, notable buildings are marked separately. Values: `building` = Building (general); `church` = Church; `chapel` = Chapel; `castle` = Castle, palace; `fire_station` = Fire station; `hospital` = Hospital; `pharmacy` = Pharmacy; `police` = Police; `power` = Power plant, substation; `school` = School; `station` = Station building; `townhall` = Town hall or district office; `hut` = Mountain hut |
-| `max_height` | `number` | Maximum height of the building in metres. |
+| `max_height` | `number` | Maximum height of the building in metres (towers, churches), only when clearly above the building height; from z15. |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 
 ### ski_a
@@ -8260,7 +8274,7 @@ Put a visible line next to the image, in readable size, for example `Source: map
 
 | Tileset | Text |
 |---|---|
-| `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt; CC BY 4.0 |
+| `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0 |
 | `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
 | `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
