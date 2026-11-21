@@ -43,7 +43,11 @@ const map = new maplibregl.Map({
   center: [16.3731, 48.2085], zoom: 15,
   maxPitch: 80, pitch: 68, bearing: -20, // sky in view
 });
+// City styles: buildings up to the horizon (set again after every style load)
+map.on("style.load", () => map.setSourceTileLodParams(3, 6));
 ```
+
+At a steep pitch MapLibre loads tiles of lower zoom levels for the distance. Below zoom 12 they contain no buildings, so the building bodies stop in the background. `setSourceTileLodParams(3, 6)` limits the number of zoom levels in view to three, so the bodies reach the horizon; the map loads a few more tiles in return. The terrain and aerial styles do not need this.
 
 Buildings appear as bodies from about zoom 13 (merged buildings with an average height, from zoom 15 every building with its own height). Heights come from the BEV building model, missing ones from the elevation models (surface minus terrain); tall towers are separate parts (`building_part_a`) on top of the buildings. Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style of the same name without `-3d` there.
 
