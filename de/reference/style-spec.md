@@ -10,7 +10,9 @@ Source: https://docs.mapx.at/de/reference/style-spec/
 |---|---|
 | `streets`, `streets-dawn`, `streets-dusk`, `streets-night` | Basiskarte in vier Lichtstimmungen |
 | `satellite`, `satellite-streets` | Orthophoto, wahlweise mit Straßen und Beschriftung |
+| `light`, `dark` | Ruhige Grundkarte für eigene Daten, hell bzw. dunkel |
 | `outdoors` | Höhenlinien, Schummerung, Wege |
+| `outdoors-winter` | Gelände in Schneefarben, Skigebiete und Lifte hervorgehoben |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
 
 Styles sind MapLibre-Style-Dokumente (Version 8) unter `https://api.mapx.at/v1/styles/{id}`. Die Metadaten heißen `mapx:style` und `mapx:api_style`. Siehe [Styles API](https://docs.mapx.at/de/api/styles.md).

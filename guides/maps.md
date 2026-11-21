@@ -16,7 +16,9 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `streets-dawn`, `streets-dusk`, `streets-night` | The same map in other light |
 | `satellite` | Orthophoto |
 | `satellite-streets` | Orthophoto with roads and labels |
+| `light`, `dark` | Calm, almost monochrome base map (light or dark) for your own data |
 | `outdoors` | Contours, hillshade, trails |
+| `outdoors-winter` | Like `outdoors` in snow colours, ski areas and cable cars/lifts highlighted |
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…

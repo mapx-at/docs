@@ -16,7 +16,9 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 | `streets-dawn`, `streets-dusk`, `streets-night` | Dieselbe Karte bei anderem Licht |
 | `satellite` | Orthophoto |
 | `satellite-streets` | Orthophoto mit Straßen und Beschriftung |
+| `light`, `dark` | Ruhige, fast einfarbige Grundkarte (hell bzw. dunkel) für eigene Daten |
 | `outdoors` | Höhenlinien, Schummerung, Wege |
+| `outdoors-winter` | Wie `outdoors` in Schneefarben, Skigebiete und Seilbahnen/Lifte hervorgehoben |
 
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…

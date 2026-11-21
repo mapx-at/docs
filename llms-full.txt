@@ -52,7 +52,7 @@ mapx is a set of maps and location APIs for Austria. All data comes from officia
 
 | Product | What you get | Start |
 |---|---|---|
-| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `traffic-day`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
+| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`, `light`, `dark`, `traffic-day`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
 | Search | Geocoding, type-ahead Search Box, address autofill and validation | [Search](https://docs.mapx.at/guides/search.md) |
 | Navigation | Routes for car, truck, bike and foot, isochrones, matrices, map matching, tolls | [Navigation](https://docs.mapx.at/guides/navigation.md) |
 | Traffic | Incident reports, motorway speed limits, a traffic layer | [Traffic](https://docs.mapx.at/guides/traffic.md) |
@@ -504,7 +504,9 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `streets-dawn`, `streets-dusk`, `streets-night` | The same map in other light |
 | `satellite` | Orthophoto |
 | `satellite-streets` | Orthophoto with roads and labels |
+| `light`, `dark` | Calm, almost monochrome base map (light or dark) for your own data |
 | `outdoors` | Contours, hillshade, trails |
+| `outdoors-winter` | Like `outdoors` in snow colours, ski areas and cable cars/lifts highlighted |
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
@@ -992,7 +994,7 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 
 | Part | Values |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `light`, `dark`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter` |
 | `view` | `lon,lat,zoom[,bearing]` or `auto` (fits the overlays) |
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
@@ -2215,7 +2217,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors.
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
 
 **Example**
 
@@ -2369,7 +2371,7 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, satellite, satellite-streets, outdoors. `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`. Labels are rendered with a margin and clipped. No data or below minimum zoom: 404.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter. `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`. Labels are rendered with a margin and clipped. No data or below minimum zoom: 404.
 
 Zone `static`. `ETag`, `Cache-Control`.
 
@@ -4744,7 +4746,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
+`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles, `light`, `dark` and `outdoors-winter` are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
 
 `satellite-streets` draws the orthophoto (z5 to z18) with roads, boundaries, contours, names and icons of the vector map on top. Output PNG (default) or WebP, at most 1280x1280 (2560x2560 pixels with @2x). `Cache-Control` and `ETag` (If-None-Match gives 304).
 
@@ -4752,7 +4754,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
@@ -4806,7 +4808,7 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `overlay` | path | string | yes | – | pin-..., path-..., geojson(...), comma-separated |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
@@ -7819,7 +7821,9 @@ Source: https://docs.mapx.at/reference/style-spec/
 |---|---|
 | `streets`, `streets-dawn`, `streets-dusk`, `streets-night` | Base map in four light moods |
 | `satellite`, `satellite-streets` | Orthophoto, optionally with roads and labels |
+| `light`, `dark` | Calm base map for your own data, light or dark |
 | `outdoors` | Contours, hillshade, trails |
+| `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `traffic-day` | Base map with the traffic layer |
 
 Styles are MapLibre style documents (version 8) at `https://api.mapx.at/v1/styles/{id}`. Their metadata keys are `mapx:style` and `mapx:api_style`. See the [Styles API](https://docs.mapx.at/api/styles.md).

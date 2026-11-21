@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `tiles` (1
 
 `GET /v1/styles`
 
-Verfügbare Style-Ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, satellite, satellite-streets, satellite-current (Sentinel-2 mit Straßen und Namen), outdoors.
+Verfügbare Style-Ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 mit Straßen und Namen), outdoors, outdoors-winter.
 
 **Beispiel**
 
@@ -166,9 +166,9 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, satellite, satellite-streets, outdoors. `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`. Beschriftungen werden mit Rand gerendert und abgeschnitten. Keine Daten oder unter dem Mindestzoom: 404.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter. `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`. Beschriftungen werden mit Rand gerendert und abgeschnitten.
 
-Zone `static`. `ETag`, `Cache-Control`.
+Keine Daten oder unter dem Mindestzoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 
 **Parameter**
 

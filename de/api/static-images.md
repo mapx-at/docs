@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV-Orthofoto, z5 bis z18) oder `outdoors` (Höhenschichtfarben mit Schummerung aus dem DTM, z5 bis z16). Die `streets*`-Styles werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
+`satellite` (BEV-Orthofoto, z5 bis z18) oder `outdoors` (Höhenschichtfarben mit Schummerung aus dem DTM, z5 bis z16). Die `streets*`-Styles, `light`, `dark` und `outdoors-winter` werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
 
 `satellite-streets` zeichnet das Orthofoto (z5 bis z18) mit Straßen, Grenzen, Höhenlinien, Namen und Icons der Vektorkarte darüber. Ausgabe PNG (Standard) oder WebP, höchstens 1280x1280 (2560x2560 Pixel mit @2x). `Cache-Control` und `ETag` (If-None-Match ergibt 304).
 
@@ -20,7 +20,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors oder outdoors-winter |
 | `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
 | `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
@@ -74,7 +74,7 @@ Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets oder outdoors |
+| `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors oder outdoors-winter |
 | `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), durch Komma getrennt |
 | `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
 | `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |

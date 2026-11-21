@@ -20,7 +20,7 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 
 | Teil | Werte |
 |---|---|
-| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors` |
+| `style` | `streets`, `streets-dawn`, `streets-dusk`, `streets-night`, `light`, `dark`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter` |
 | `view` | `lon,lat,zoom[,bearing]` oder `auto` (passt auf die Overlays) |
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |

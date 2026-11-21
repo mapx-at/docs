@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
+`satellite` (BEV orthophoto, z5 to z18) or `outdoors` (hypsometric tints with hillshade from the DTM, z5 to z16). The `streets*` styles, `light`, `dark` and `outdoors-winter` are rendered server-side from the style and the vector tiles (fills, lines, relief shading, place, road and water names; icons from the sprite, house numbers from z16; z0 to z22), usually under 0.2 s per 600x400.
 
 `satellite-streets` draws the orthophoto (z5 to z18) with roads, boundaries, contours, names and icons of the vector map on top. Output PNG (default) or WebP, at most 1280x1280 (2560x2560 pixels with @2x). `Cache-Control` and `ETag` (If-None-Match gives 304).
 
@@ -20,7 +20,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
@@ -74,7 +74,7 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, satellite, satellite-streets or outdoors |
+| `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `overlay` | path | string | yes | – | pin-..., path-..., geojson(...), comma-separated |
 | `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |

@@ -10,7 +10,9 @@ Source: https://docs.mapx.at/reference/style-spec/
 |---|---|
 | `streets`, `streets-dawn`, `streets-dusk`, `streets-night` | Base map in four light moods |
 | `satellite`, `satellite-streets` | Orthophoto, optionally with roads and labels |
+| `light`, `dark` | Calm base map for your own data, light or dark |
 | `outdoors` | Contours, hillshade, trails |
+| `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `traffic-day` | Base map with the traffic layer |
 
 Styles are MapLibre style documents (version 8) at `https://api.mapx.at/v1/styles/{id}`. Their metadata keys are `mapx:style` and `mapx:api_style`. See the [Styles API](https://docs.mapx.at/api/styles.md).
