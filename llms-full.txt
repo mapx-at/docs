@@ -52,7 +52,7 @@ mapx is a set of maps and location APIs for Austria. All data comes from officia
 
 | Product | What you get | Start |
 |---|---|---|
-| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`, `light`, `dark`, `traffic-day`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
+| Maps | Vector and raster tiles, ready-made styles (`streets` with the time-of-day variants `streets-dawn`, `streets-dusk`, `streets-night`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`, `light`, `dark`, `traffic-day`, `traffic-night`; list under [Styles](https://docs.mapx.at/api/styles.md)), TileJSON | [Maps](https://docs.mapx.at/guides/maps.md) |
 | Search | Geocoding, type-ahead Search Box, address autofill and validation | [Search](https://docs.mapx.at/guides/search.md) |
 | Navigation | Routes for car, truck, bike and foot, isochrones, matrices, map matching, tolls | [Navigation](https://docs.mapx.at/guides/navigation.md) |
 | Traffic | Incident reports, motorway speed limits, a traffic layer | [Traffic](https://docs.mapx.at/guides/traffic.md) |
@@ -872,7 +872,7 @@ map.on("load", () => {
 });
 ```
 
-The style `traffic-day` already contains the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
+The styles `traffic-day` and `traffic-night` (night map with colours brightened for a dark background) already contain the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
 
 ## Route around closures
 
@@ -2217,7 +2217,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
 
 **Example**
 
@@ -7825,6 +7825,7 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `outdoors` | Contours, hillshade, trails |
 | `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `traffic-day` | Base map with the traffic layer |
+| `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 
 Styles are MapLibre style documents (version 8) at `https://api.mapx.at/v1/styles/{id}`. Their metadata keys are `mapx:style` and `mapx:api_style`. See the [Styles API](https://docs.mapx.at/api/styles.md).
 

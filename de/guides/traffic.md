@@ -64,7 +64,7 @@ map.on("load", () => {
 });
 ```
 
-Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Der Style `traffic-day` enthält den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
+Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Die Styles `traffic-day` und `traffic-night` (Nachtkarte mit für dunklen Grund aufgehellten Farben) enthalten den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
 ## Route um Sperren
 

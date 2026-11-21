@@ -14,6 +14,7 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `outdoors` | Contours, hillshade, trails |
 | `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
 | `traffic-day` | Base map with the traffic layer |
+| `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 
 Styles are MapLibre style documents (version 8) at `https://api.mapx.at/v1/styles/{id}`. Their metadata keys are `mapx:style` and `mapx:api_style`. See the [Styles API](https://docs.mapx.at/api/styles.md).
 

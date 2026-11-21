@@ -64,7 +64,7 @@ map.on("load", () => {
 });
 ```
 
-The style `traffic-day` already contains the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
+The styles `traffic-day` and `traffic-night` (night map with colours brightened for a dark background) already contain the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
 
 ## Route around closures
 

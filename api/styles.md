@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
 
 **Example**
 

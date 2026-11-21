@@ -14,6 +14,7 @@ Source: https://docs.mapx.at/de/reference/style-spec/
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 | `outdoors-winter` | Gelände in Schneefarben, Skigebiete und Lifte hervorgehoben |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
+| `traffic-night` | Nachtkarte (`streets-night`) mit Verkehrsebene, Farben für dunklen Grund |
 
 Styles sind MapLibre-Style-Dokumente (Version 8) unter `https://api.mapx.at/v1/styles/{id}`. Die Metadaten heißen `mapx:style` und `mapx:api_style`. Siehe [Styles API](https://docs.mapx.at/de/api/styles.md).
 
