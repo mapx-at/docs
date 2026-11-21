@@ -41,13 +41,15 @@ const map = new maplibregl.Map({
   container: "map",
   style: "https://api.mapx.at/v1/styles/streets-3d",
   center: [16.3731, 48.2085], zoom: 15,
-  maxPitch: 80, pitch: 68, bearing: -20, // Himmel im Bild
+  maxPitch: 78, pitch: 68, bearing: -20, // Himmel im Bild
 });
 // Stadt-Styles: Gebäude bis zum Horizont (nach jedem Laden eines Styles neu setzen)
 map.on("style.load", () => map.setSourceTileLodParams(3, 6));
 ```
 
 Bei starker Neigung lädt MapLibre für die Ferne Kacheln kleinerer Zoomstufen. Unterhalb von Zoom 12 enthalten sie keine Gebäude, die Gebäudekörper hören dann im Hintergrund auf. `setSourceTileLodParams(3, 6)` begrenzt die Zahl der Zoomstufen im Bild auf drei, sodass die Körper bis zum Horizont reichen; dafür lädt die Karte etwas mehr Kacheln. Für die Gelände- und Luftbild-Styles ist das nicht nötig.
+
+In den Stadt-Styles `maxPitch` nicht über 78 setzen: Bei stärkerer Neigung schneidet MapLibre das Gelände am Horizont ab, die Gebäude auf Hügeln dahinter zeichnet es aber weiter, sie scheinen dann zu schweben.
 
 Gebäudekörper erscheinen ab etwa Zoom 13 (zusammengefasste Gebäude mit mittlerer Höhe, ab Zoom 15 jedes Gebäude mit eigener Höhe). Die Höhen stammen aus dem BEV-Gebäudemodell, fehlende aus den Höhenmodellen (Oberfläche minus Gelände); hohe Türme stehen als eigene Teile (`building_part_a`) auf den Gebäuden. Gelände gibt es nur für Österreich. Die 3D-Styles gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Static Images oder Static Tiles; dort den gleichnamigen Style ohne `-3d` verwenden.
 
