@@ -87,7 +87,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TO
 
 Kacheln und Tilesets gibt es nur über die API: Style, TileJSON oder `{z}/{x}/{y}`. Ganze Dateien zum Herunterladen bietet mapx nicht an. Für viele Anfragen die Kacheln im Client cachen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
-> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird; der Code oben klappt sie hinter den Knopf „i“ ein, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+> Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Style oder TileJSON geladen wird, mit `mapx.at` (Link) als erstem Eintrag; bitte nicht entfernen; der Code oben klappt sie hinter den Knopf „i“ ein, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Nächste Schritte
 

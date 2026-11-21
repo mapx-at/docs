@@ -19,7 +19,7 @@ const TOKEN = 'DEIN_TOKEN';
 const map = L.map('map').setView([48.21, 16.37], 13);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, {
   tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21,
-  attribution: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  attribution: '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
 }).addTo(map);
 </script>
 ```

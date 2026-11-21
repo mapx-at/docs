@@ -21,7 +21,7 @@ const map = new ol.Map({
   layers: [new ol.layer.Tile({ source: new ol.source.XYZ({
     url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN,
     tileSize: 512, maxZoom: 20, attributionsCollapsible: false,
-    attributions: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+    attributions: '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
   }) })],
   view: new ol.View({ center: ol.proj.fromLonLat([16.37, 48.21]), zoom: 13 }),
 });

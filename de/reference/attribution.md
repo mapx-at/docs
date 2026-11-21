@@ -6,6 +6,10 @@ Source: https://docs.mapx.at/de/reference/attribution/
 
 Die amtlichen Daten in mapx stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Ausnahme sind die Sentinel-2-Kacheln: Sie enthalten veränderte Copernicus-Sentinel-Daten und folgen den Copernicus-Bedingungen, die Quellenangabe steht im TileJSON. Die kommerzielle Nutzung ist erlaubt. Die Quelle und die Lizenz müssen genannt werden, Änderungen dürfen nicht als amtlich dargestellt werden. Die Quellenangabe muss für die Nutzer auf der Karte selbst erreichbar sein, zum Beispiel als Text in der Ecke oder hinter einem Info-Knopf „i“ auf der Karte, nicht nur im Impressum.
 
+## mapx.at an erster Stelle
+
+Jede Quellenangabe von mapx beginnt mit `mapx.at`, danach folgen die Datenquellen. Die Stile unter `/v1/styles` bringen `mapx.at` mit Link auf https://mapx.at als ersten Eintrag mit (eigene Quelle `mapx` mit der Ebene `mapx-attribution`); bitte nicht entfernen. Wer Kachelsätze direkt einbindet, bekommt den Link über das TileJSON (`attribution` beginnt mit `<a href="https://mapx.at" …>mapx.at</a>`), die JSON-Antworten der API über ihr Feld `attribution` (`mapx.at; …`). MapLibre ordnet die Einträge nach Länge, den kürzesten zuerst: eigene Quellen mit sehr kurzer Attribution (unter 68 Zeichen) stehen davor. Bei Leaflet, OpenLayers und Static Images `mapx.at` selbst voranstellen, wie in den Beispielen.
+
 ## In einer MapLibre-Karte
 
 MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON geladen wird (unten rechts). Die Beispiele dieser Doku klappen sie ein, damit sie die Karte nicht verdeckt: `attributionControl: false` in den Optionen der Karte und `map.addControl(new maplibregl.AttributionControl({ compact: true }))` zeigen den Knopf „i“, ein Klick darauf zeigt die Quellen. MapLibre lässt die eingeklappte Form zunächst offen und klappt sie erst bei der ersten Kartenbewegung zu; die Zeile `map.once("load", …)` aus den Beispielen klappt sie gleich nach dem Laden zu. `attributionControl: false` ohne eigene `AttributionControl` blendet die Quellen ganz aus, das ist nicht zulässig. Bei `tiles: [...]` ohne TileJSON den Text in der Quelle selbst ergänzen:
@@ -17,7 +21,7 @@ MapLibre zeigt die Attribution automatisch an, wenn ein Style oder ein TileJSON 
 
 ## In Druck, Berichten und Static Images
 
-Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Quelle: BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. Bei mehreren Quellen alle nennen, getrennt durch Strichpunkte.
+Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Quelle: mapx.at; BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. Bei mehreren Quellen alle nennen, getrennt durch Strichpunkte.
 
 ## Text je Tileset
 
@@ -37,7 +41,7 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 
 ## Text je API
 
-JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene. Es ist anzuzeigen, wenn die Daten dargestellt oder weitergegeben werden.
+JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene, es beginnt immer mit `mapx.at; ` vor der Quelle aus der Tabelle. Es ist anzuzeigen, wenn die Daten dargestellt oder weitergegeben werden.
 
 | API | Quelle |
 |---|---|

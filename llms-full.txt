@@ -575,7 +575,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 Tiles and tilesets are available only through the API: style, TileJSON or `{z}/{x}/{y}`. mapx does not offer whole files for download. For many requests, cache tiles in the client, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
-> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, with `mapx.at` (link) as the first entry; please do not remove it; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 
@@ -1880,7 +1880,7 @@ const map = new ol.Map({
   layers: [new ol.layer.Tile({ source: new ol.source.XYZ({
     url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN,
     tileSize: 512, maxZoom: 20, attributionsCollapsible: false,
-    attributions: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+    attributions: '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
   }) })],
   view: new ol.View({ center: ol.proj.fromLonLat([16.37, 48.21]), zoom: 13 }),
 });
@@ -1936,7 +1936,7 @@ const TOKEN = 'YOUR_TOKEN';
 const map = L.map('map').setView([48.21, 16.37], 13);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, {
   tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21,
-  attribution: '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
+  attribution: '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>',
 }).addTo(map);
 </script>
 ```
@@ -6849,7 +6849,7 @@ PMTiles files carry the release date in their name and never change; they may be
 
 ## Attribution
 
-JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data. It always starts with `mapx.at; `, e.g. `mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `mapx.at; Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`, `mapx.at` as the first source `mapx`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ---
 
@@ -8226,6 +8226,10 @@ Source: https://docs.mapx.at/reference/attribution/
 
 The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
 
+## mapx.at first
+
+Every mapx attribution starts with `mapx.at`, followed by the data sources. The styles under `/v1/styles` carry `mapx.at` with a link to https://mapx.at as their first entry (own source `mapx` with the layer `mapx-attribution`); please do not remove it. If you add tilesets directly you get the link through the TileJSON (`attribution` starts with `<a href="https://mapx.at" …>mapx.at</a>`), the JSON responses of the API through their `attribution` field (`mapx.at; …`). MapLibre orders the entries by length, shortest first: your own sources with a very short attribution (under 68 characters) appear before it. With Leaflet, OpenLayers and static images put `mapx.at` in front yourself, as in the examples.
+
 ## In a MapLibre map
 
 MapLibre shows the attribution automatically when you load a style or a TileJSON (bottom right). The examples in these docs collapse it so it does not cover the map: `attributionControl: false` in the map options and `map.addControl(new maplibregl.AttributionControl({ compact: true }))` show an "i" button, a click shows the sources. MapLibre first shows the compact form open and collapses it on the first map drag; the `map.once("load", …)` line from the examples collapses it right after loading. `attributionControl: false` without your own `AttributionControl` hides the sources completely, which is not allowed. If you use `tiles: [...]` without TileJSON, add the text to the source yourself:
@@ -8237,7 +8241,7 @@ MapLibre shows the attribution automatically when you load a style or a TileJSON
 
 ## In print, reports and static images
 
-Put a visible line next to the image, in readable size, for example `Source: BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. With several sources list them all, separated by semicolons.
+Put a visible line next to the image, in readable size, for example `Source: mapx.at; BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. With several sources list them all, separated by semicolons.
 
 ## Text per tileset
 
@@ -8257,7 +8261,7 @@ Put a visible line next to the image, in readable size, for example `Source: BEV
 
 ## Text per API
 
-JSON responses with data carry a top-level `attribution` field. Show it when you display or pass on the data.
+JSON responses with data carry a top-level `attribution` field; it always starts with `mapx.at; ` before the source from the table. Show it when you display or pass on the data.
 
 | API | Source |
 |---|---|
@@ -8363,7 +8367,7 @@ map.addControl(new maplibregl.ScaleControl());
 // Embed a map: the mapx style as rendered raster tiles (Static Tiles) in OpenLayers.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = new ol.Map({
   target: 'map',
@@ -8387,7 +8391,7 @@ map.addControl(new ol.control.ScaleLine());
 // Embed a map: the mapx style as rendered raster tiles (Static Tiles) in Leaflet.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.80, 13.04], 13); // Salzburg
 // 512 px tiles: zoomOffset -1 keeps the map scale of standard 256 px tiles
@@ -8559,7 +8563,7 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 // Time of day and night mode: the standard style comes in four lighting moods, here as raster tiles.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
 const tiles = (style) => new ol.source.XYZ({ url: `https://api.mapx.at/v1/styles/${style}/tiles/512/{z}/{x}/{y}?access_token=` + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false });
@@ -8585,7 +8589,7 @@ for (const knopf of document.querySelectorAll('[data-licht]')) {
 // Time of day and night mode: the standard styles come in four lighting moods, here as raster tiles (Static Tiles).
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 const STIL = { morgen: 'streets-dawn', tag: 'streets', abend: 'streets-dusk', nacht: 'streets-night' };
 const url = (licht) => `https://api.mapx.at/v1/styles/${STIL[licht]}/tiles/512/{z}/{x}/{y}?access_token=${TOKEN}`;
 
@@ -8715,7 +8719,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
@@ -8750,7 +8754,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the elevation model (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.074, 12.694], 13); // Großglockner
 L.tileLayer('https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -8846,7 +8850,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a> (ALS-DTM / ALS-DOM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const linie = new ol.Feature(new ol.geom.LineString([]));
@@ -8894,7 +8898,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the elevation model (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a> (ALS-DTM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a> (ALS-DTM 1 m), <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.08, 12.70], 13);
 L.tileLayer('https://api.mapx.at/v1/styles/outdoors/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -8999,7 +9003,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const hit = new ol.source.Vector(); // the chosen result
@@ -9043,7 +9047,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the search (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.6, 14.3], 8);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -9144,7 +9148,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const route = new ol.source.Vector(); // start, destination and the route line
@@ -9186,7 +9190,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([48.23, 15.33], 14); // Melk
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -9290,7 +9294,7 @@ document.getElementById('stunde').addEventListener('input', (e) => zeigen(docume
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const API = 'https://api.mapx.at/v1';
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
@@ -9336,7 +9340,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style (CC BY 4.0), must stay visible on the map; the weather layer adds its own; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 const API = 'https://api.mapx.at/v1';
 
 const map = L.map('map').setView([47.6, 13.3], 7);
@@ -9454,7 +9458,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const API = 'https://api.mapx.at/v1';
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
@@ -9505,7 +9509,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style (CC BY 4.0), must stay visible on the map; the radar layers add their own; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 const API = 'https://api.mapx.at/v1';
 
 const map = L.map('map').setView([47.6, 13.3], 7);
@@ -9612,7 +9616,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const iso = new ol.source.Vector();
@@ -9648,7 +9652,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([48.23, 15.33], 14); // Melk
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -9730,7 +9734,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
@@ -9775,7 +9779,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const ORTE = { Melk: [15.33, 48.228], 'St. Pölten': [15.626, 48.204], Krems: [15.6, 48.41], Amstetten: [14.87, 48.123] };
 const map = L.map('map').setView([48.25, 15.3], 9);
@@ -10015,7 +10019,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const hit = new ol.source.Vector(); // the chosen result
@@ -10069,7 +10073,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the search (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.6, 14.3], 8);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -10181,7 +10185,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const hit = new ol.source.Vector(); // the chosen address
@@ -10226,7 +10230,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.7, 13.8], 7);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -10322,7 +10326,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const hit = new ol.source.Vector(); // the validated address or first candidate
@@ -10358,7 +10362,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([47.7, 13.8], 7);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -10444,7 +10448,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const label = document.createElement('div'); // OpenLayers has no popup of its own: an overlay with a plain element
@@ -10477,7 +10481,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the addresses (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([48.2085, 16.3725], 16);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -10573,7 +10577,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const routes = new ol.source.Vector(), points = new ol.source.Vector();
@@ -10624,7 +10628,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style, the routing and the toll data (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Maut: ASFINAG, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([48.2, 15.4], 9);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -10747,7 +10751,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const depot = [15.3294, 48.2272]; // Melk
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
@@ -10804,7 +10808,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the routing (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const depot = [15.3294, 48.2272]; // Melk (lng, lat)
 const map = L.map('map').setView([48.12, 15.33], 10); // depot in the upper half, room for stops to the south
@@ -10915,7 +10919,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const legs = new ol.source.Vector(), points = new ol.source.Vector();
@@ -10957,7 +10961,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the timetables, must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
 
 const map = L.map('map').setView([48.2085, 16.3725], 13);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -11068,7 +11072,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Fahrplan/timetable: ÖBB-Personenverkehr AG, Mobilitätsverbünde Österreich OG; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const stops = new ol.source.Vector();
@@ -11123,7 +11127,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the timetables, must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; Fahrplan: ÖBB-Personenverkehr AG (CC BY 4.0), Mobilitätsverbünde Österreich OG';
 const api = async (path) => { const r = await fetch('https://api.mapx.at/v1' + path, AUTH); if (!r.ok) throw new Error((await r.json()).title || r.statusText); return r.json(); };
 const text = (s) => Object.assign(document.createElement('span'), { textContent: s }); // popup content as text, not HTML
 
@@ -11235,7 +11239,7 @@ map.on('load', () => {
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Verkehr/traffic: ASFINAG, EVIS.AT; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>; Verkehr/traffic: ASFINAG, EVIS.AT; <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const base = new ol.layer.Tile({ source: new ol.source.XYZ({ url: 'https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, tileSize: 512, maxZoom: 20, attributions: ATTRIBUTION, attributionsCollapsible: false }) });
 const incidents = new ol.source.Vector();
@@ -11283,7 +11287,7 @@ const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://accoun
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style and the traffic data (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Verkehr: ASFINAG / EVIS.AT, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, Verkehr: ASFINAG / EVIS.AT, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const map = L.map('map').setView([48.1, 16.2], 10);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
@@ -11425,7 +11429,7 @@ map.on('load', () => {
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const data = {
   type: 'FeatureCollection',
@@ -11470,7 +11474,7 @@ map.on('pointermove', (e) => (map.getTargetElement().style.cursor = pointAt(e.pi
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
 // Data sources of the style (CC BY 4.0), must stay visible on the map; full text per source: https://docs.mapx.at/reference/attribution/
-const ATTRIBUTION = '<a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
+const ATTRIBUTION = '<a href="https://mapx.at">mapx.at</a>, <a href="https://www.bev.gv.at">BEV</a>, <a href="https://www.gip.gv.at">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>';
 
 const data = {
   type: 'FeatureCollection',

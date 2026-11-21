@@ -428,4 +428,4 @@ PMTiles-Dateien tragen den Stichtag im Namen und ändern sich nie; sie dürfen u
 
 ## Attribution
 
-JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist, etwa `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` beim Wetter oder `Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+JSON-Antworten mit Daten tragen ein Feld `attribution` auf oberster Ebene (Text, ohne HTML) mit der Quelle, die bei Anzeige oder Weitergabe zu nennen ist. Sie beginnt immer mit `mapx.at; `, etwa `mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` beim Wetter oder `mapx.at; Datenquelle: GIP.at …` bei Routing, Matrix und Isochrone. Ausnahmen: die Listen `/v1/styles`, `/v1/fonts`, `/v1/sprites` (Arrays); Stile nennen die Quellen in ihren `sources`, `mapx.at` als erste Quelle `mapx`. Siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).

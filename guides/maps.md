@@ -87,7 +87,7 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=YOUR_TO
 
 Tiles and tilesets are available only through the API: style, TileJSON or `{z}/{x}/{y}`. mapx does not offer whole files for download. For many requests, cache tiles in the client, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
-> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+> Show the data source on the map. MapLibre does this automatically when you load a style or TileJSON, with `mapx.at` (link) as the first entry; please do not remove it; the code above collapses it behind the "i" button, see [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ## Next
 

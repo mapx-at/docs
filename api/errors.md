@@ -428,4 +428,4 @@ PMTiles files carry the release date in their name and never change; they may be
 
 ## Attribution
 
-JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data, e.g. `Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data. It always starts with `mapx.at; `, e.g. `mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `mapx.at; Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`, `mapx.at` as the first source `mapx`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
