@@ -9,7 +9,7 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 | Aufgabe | Endpunkt |
 |---|---|
 | Störungen, Baustellen und Sperren auflisten | [`/v1/traffic/incidents`](https://docs.mapx.at/de/api/traffic.md) |
-| Tempolimits auf Wechselverkehrszeichen | [`/v1/traffic/flow`](https://docs.mapx.at/de/api/traffic.md) |
+| Tempolimits auf Wechselverkehrszeichen (`bbox` ist Pflicht) | [`/v1/traffic/flow`](https://docs.mapx.at/de/api/traffic.md) |
 | Positionen der Zeichen | [`/v1/traffic/signs`](https://docs.mapx.at/de/api/traffic.md) |
 | Verkehr auf einer Karte zeichnen | `/v1/traffic/tiles.json` |
 | Prüfen, ob die Daten aktuell sind | `/v1/traffic/status` |
@@ -58,13 +58,21 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" -H "Content-Type: applicat
 
 ```js
 map.on("load", () => {
-  map.addSource("traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
-  map.addLayer({ id: "traffic", type: "line", source: "traffic", "source-layer": "traffic",
+  map.addSource("mx-traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
+  // Ebene "traffic": Tempolimits der Wechselverkehrszeichen auf Autobahnabschnitten
+  map.addLayer({ id: "mx-traffic", type: "line", source: "mx-traffic", "source-layer": "traffic",
                  paint: { "line-width": 4, "line-color": "#e11d48" } });
+  // Ebene "incidents": Meldungen und Sperren (Strecken und Punkte)
+  map.addLayer({ id: "mx-incidents-lines", type: "line", source: "mx-traffic", "source-layer": "incidents",
+                 filter: ["!=", ["geometry-type"], "Point"],
+                 paint: { "line-width": 5, "line-color": "#b91c1c", "line-dasharray": [2, 1] } });
+  map.addLayer({ id: "mx-incidents-points", type: "circle", source: "mx-traffic", "source-layer": "incidents",
+                 filter: ["==", ["geometry-type"], "Point"],
+                 paint: { "circle-radius": 6, "circle-color": "#b91c1c", "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } });
 });
 ```
 
-Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Die Styles `traffic-day` und `traffic-night` (Nachtkarte mit für dunklen Grund aufgehellten Farben) enthalten den Layer bereits. Die Tiles liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
+Die Vektorquelle hat zwei Ebenen: `traffic` (Tempolimits der Wechselverkehrszeichen) und `incidents` (Meldungen und Sperren). Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Die mapx-Stile (zum Beispiel `streets`) belegen den Quellennamen `traffic` schon, deshalb heißt die Quelle hier `mx-traffic`. Die Stile `traffic-day` und `traffic-night` (Nachtkarte mit für dunklen Grund aufgehellten Farben) zeichnen beide Ebenen fertig. Die Kacheln liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
 ## Route um Sperren
 
@@ -78,4 +86,4 @@ Die Route meidet die aktuellen verbindlichen Sperren aus den Meldungen von ASFIN
 
 - [Traffic API](https://docs.mapx.at/de/api/traffic.md)
 - [Navigation](https://docs.mapx.at/de/guides/navigation.md): Maut, Lkw, Alternativen
-- [Attribution](https://docs.mapx.at/de/reference/attribution.md): ASFINAG und GIP.at nennen
+- [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md): ASFINAG und GIP.at nennen

@@ -60,7 +60,7 @@ One level deeper halves the pixel size. The elevation models exist up to z16, th
 
 ## Overzoom
 
-If a level is higher than the stored one, the **client scales up** the tiles of the highest level (overzoom). The image does not get sharper, but the map stays usable. In MapLibre set `maxzoom` of the source to the highest existing level (automatic from TileJSON); the map itself may zoom further. Requests outside the zoom range return `404`, see [Errors and limits](https://docs.mapx.at/api/errors.md).
+If a level is higher than the stored one, the **client scales up** the tiles of the highest level (overzoom). The image does not get sharper, but the map stays usable. In MapLibre set `maxzoom` of the source to the highest existing level (automatic from TileJSON); the map itself may zoom further. Requests outside the zoom range return `404`, tiles inside the zoom range but outside Austria return `204` with no content, see [Errors and limits](https://docs.mapx.at/api/errors.md). Requests outside the zoom range return `404`; tiles inside the zoom range but outside Austria return `204` with no content, see [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 > Vector tiles are not redrawn on overzoom; the geometry of the highest level is stretched.
 

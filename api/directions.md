@@ -101,6 +101,8 @@ data = res.json()
 
 Compact binary subgraph of the road network around a route, for recomputing a route without network (for example in a dead zone after a wrong turn). `polyline` is the route as polyline6 (e.g. `routes[].geometry` with `geometries=polyline6`), `buffer` the radius around it in meters (default 3000, at most 5000).
 
+Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
+
 The response body is a gzip stream (`application/vnd.mapx.corridor-graph+gzip`, no `Content-Encoding`) of a `MXCG` v1 file: a version header and the graph id of the server graph, nodes (microdegrees), directed arcs with travel time and weight in ms (the same values the router uses, so offline costs equal server costs), simplified link geometry, road name and reference, road class (FRC/FOW), maximum speed with a statutory flag, link flags (roundabout, ramp, toll, urban, motorway) and the turn restrictions between the arcs including derived U-turn bans. Arcs that cannot be driven are left out. Typically 1 to 3 MB per 100 km of route (compressed). Source: GIP.at (CC BY 4.0).
 
 **Parameters**
@@ -160,7 +162,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
@@ -238,7 +240,28 @@ data = res.json()
           "summary": ""
         }
       ]
-  …
+    }
+  ],
+  "waypoints": [
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ],
+      "distance": 4.2
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ],
+      "distance": 6.1
+    }
+  ],
+  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
@@ -326,7 +349,28 @@ data = res.json()
           "summary": ""
         }
       ]
-  …
+    }
+  ],
+  "waypoints": [
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ],
+      "distance": 4.2
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ],
+      "distance": 6.1
+    }
+  ],
+  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
@@ -353,7 +397,7 @@ Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`); `mapbox/` prefix allowed |
+| `profile` | path | string | yes | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`) |
 | `coordinate` | path | string | yes | – | lon,lat |
 | `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
 | `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
@@ -386,7 +430,7 @@ res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?con
 data = res.json()
 ```
 
-**Example response**
+**Example response** (shortened: lists show only their first entries)
 
 ```json
 {
@@ -412,13 +456,14 @@ data = res.json()
               [
                 16.4,
                 48.2
-              ],
-              [
-                16.4,
-                48.25
-              ],
-              [
-  …
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
@@ -443,7 +488,7 @@ data = res.json()
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `sources` | query | string |  | – | Indices, semicolon-separated |
 | `destinations` | query | string |  | – | Indices, semicolon-separated |
@@ -505,7 +550,22 @@ data = res.json()
     }
   ],
   "destinations": [
-  …
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ]
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ]
+    }
+  ]
+}
 ```
 
 | Field | Type | Description |
@@ -533,7 +593,7 @@ data = res.json()
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking (`mapbox/` prefix allowed) |
+| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
 | `radiuses` | query | string |  | – | Meters per point (largest value counts, 5 to 500) |

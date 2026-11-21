@@ -101,6 +101,8 @@ data = res.json()
 
 Kompakter binärer Teilgraph des Straßennetzes um eine Route, um eine Route ohne Netz neu zu berechnen (etwa in einem Funkloch nach falschem Abbiegen). `polyline` ist die Route als polyline6 (z. B. `routes[].geometry` mit `geometries=polyline6`), `buffer` der Radius darum in Metern (Standard 3000, höchstens 5000).
 
+Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
+
 Der Antwortkörper ist ein gzip-Strom (`application/vnd.mapx.corridor-graph+gzip`, kein `Content-Encoding`) einer `MXCG`-v1-Datei: Versionskopf und Graph-Id des Servergraphen, Knoten (Mikrograd), gerichtete Kanten mit Fahrzeit und Gewicht in ms (dieselben Werte wie im Router, offline gerechnete Kosten entsprechen also denen am Server), vereinfachte Linkgeometrie, Straßenname und -nummer, Straßenklasse (FRC/FOW), Höchstgeschwindigkeit mit Kennzeichen für gesetzliche Werte, Link-Kennzeichen (Kreisverkehr, Rampe, Maut, Ortsgebiet, Autobahn) und die Abbiegeverbote zwischen den Kanten einschließlich abgeleiteter Wendeverbote. Nicht befahrbare Kanten fehlen. Typisch 1 bis 3 MB pro 100 km Route (komprimiert). Quelle: GIP.at (CC BY 4.0).
 
 **Parameter**
@@ -160,7 +162,7 @@ Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betro
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
 | `steps` | query | string |  | – | true für Abbiegehinweise (mit Manövern und Kreuzungen) |
 | `geometries` | query | string |  | – | geojson (Standard) \| polyline \| polyline6 |
@@ -238,7 +240,28 @@ data = res.json()
           "summary": ""
         }
       ]
-  …
+    }
+  ],
+  "waypoints": [
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ],
+      "distance": 4.2
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ],
+      "distance": 6.1
+    }
+  ],
+  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -326,7 +349,28 @@ data = res.json()
           "summary": ""
         }
       ]
-  …
+    }
+  ],
+  "waypoints": [
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ],
+      "distance": 4.2
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ],
+      "distance": 6.1
+    }
+  ],
+  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -353,7 +397,7 @@ Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone 
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking oder transit (zu Fuß und mit öffentlichem Verkehr ab `depart_at`); Präfix `mapbox/` erlaubt |
+| `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking oder transit (zu Fuß und mit öffentlichem Verkehr ab `depart_at`) |
 | `coordinate` | path | string | ja | – | lon,lat |
 | `contours_minutes` | query | string |  | `5` | Bis zu 4 Werte, durch Komma getrennt (Standard 5,10,15) |
 | `contours_meters` | query | string |  | – | Distanzen statt Minuten (nicht für `transit`) |
@@ -386,7 +430,7 @@ res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?con
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
@@ -412,13 +456,14 @@ data = res.json()
               [
                 16.4,
                 48.2
-              ],
-              [
-                16.4,
-                48.25
-              ],
-              [
-  …
+              ]
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -443,7 +488,7 @@ data = res.json()
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
 | `sources` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
 | `destinations` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
@@ -505,7 +550,22 @@ data = res.json()
     }
   ],
   "destinations": [
-  …
+    {
+      "name": "",
+      "location": [
+        16.3725,
+        48.2083
+      ]
+    },
+    {
+      "name": "",
+      "location": [
+        15.6256,
+        48.2049
+      ]
+    }
+  ]
+}
 ```
 
 | Feld | Typ | Beschreibung |
@@ -533,7 +593,7 @@ data = res.json()
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
 | `timestamps` | query | string |  | – | Unix-Sekunden, durch Strichpunkt getrennt |
 | `radiuses` | query | string |  | – | Meter je Punkt (der größte Wert zählt, 5 bis 500) |

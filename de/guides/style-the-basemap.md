@@ -2,15 +2,15 @@
 
 Source: https://docs.mapx.at/de/guides/style-the-basemap/
 
-> Einen eigenen MapLibre-Kartenstil für die mapx-Vektor-Basiskarte von Österreich schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen Layer für Layer.
+> Einen eigenen MapLibre-Kartenstil für die mapx-Vektor-Basiskarte von Österreich schreiben: Nutzung, Gewässer, Straßen, Gebäude und Grenzen Ebene für Ebene.
 
-**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md) bauen. mapx liefert die Daten, das Aussehen legt der eigene Style fest.
+**Ziel:** Eine eigene, farblich abgestimmte Karte aus den Vektorkacheln der [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md) bauen. mapx liefert die Daten, das Aussehen legt der eigene Stil fest.
 
-**Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Grundkenntnisse in MapLibre-Styles (Quellen und Ebenen).
+**Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Grundkenntnisse in MapLibre-Stilen (Quellen und Ebenen).
 
-Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](https://docs.mapx.at/de/tilesets/streets.md).
+Die Basiskarte hat 19 Ebenen. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung), `water_a` (Seen), `road_l` (Straßen), `building_a` (Gebäude) und `boundary_l` (Grenzen). Alle Layer und Felder stehen in der [Layertabelle](https://docs.mapx.at/de/tilesets/streets.md).
 
-1. **Seite und Quelle.** Die Quelle ist der TileJSON-Link, Zoombereich und Attribution kommen automatisch mit:
+1. **Seite und Quelle.** Die Quelle ist der TileJSON-Link, Zoombereich und Quellenangabe kommen automatisch mit:
 
    ```html
    <!doctype html>
@@ -21,6 +21,8 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
    <script type="module">
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
+     // Token an alle Anfragen an mapx.at hängen (TileJSON, Kacheln, Schriften)
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const quelle = { type: "vector", url: "https://tiles.mapx.at/v1/tiles/streets.json" };
    ```
 
@@ -99,11 +101,8 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
      const map = new maplibregl.Map({
        attributionControl: false,
        container: "map",
+       transformRequest: withToken,
        center: [15.334, 48.227], zoom: 14,
-       // Token an alle Anfragen an mapx.at hängen
-       transformRequest: (url) => ({
-         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
-       }),
        style: {
          version: 8,
          sources: { streets: quelle },
@@ -120,11 +119,11 @@ Die Basiskarte hat 18 Layer. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung),
 
 ## Ergebnis
 
-Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Tileset.
+Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Kachelsatz.
 
 ## Beschriftung und Schriften
 
-Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Style ein `glyphs`-Feld. mapx liefert Schriften unter `/v1/fonts/{fontstack}/{range}.pbf` (Liste: `GET /v1/fonts`, zum Beispiel `Open Sans Semibold`, `Noto Sans Regular`). Das `transformRequest` aus Schritt 7 hängt den Token auch an diese Anfragen:
+Für Beschriftungen (`place_p`, `water_label_p`, `housenumber_p`, Straßennamen aus `road_l` über das Feld `name`) braucht der Stil ein `glyphs`-Feld. mapx liefert Schriften unter `/v1/fonts/{fontstack}/{range}.pbf` (Liste: `GET /v1/fonts`, zum Beispiel `Open Sans Semibold`, `Noto Sans Regular`). Das `transformRequest: withToken` aus Schritt 7 hängt den Token auch an diese Anfragen:
 
 ```js
 style: {
@@ -145,6 +144,6 @@ style: {
 
 ## Nächste Schritte
 
-- Alle Layer, Felder und Werte: [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md).
+- Alle Ebenen, Felder und Werte: [Basiskarte](https://docs.mapx.at/de/tilesets/streets.md).
 - Höhenlinien und Beschriftung darüberlegen: [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md).
-- Karte als Bild für den Druck: [Static Images](https://docs.mapx.at/de/api/static-images.md).
+- Karte als Bild für den Druck: [Statische Kartenbilder](https://docs.mapx.at/de/api/static-images.md).

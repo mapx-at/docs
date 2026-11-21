@@ -47,18 +47,18 @@ data = res.json()
       "name": "streets",
       "type": "vector",
       "format": "pbf",
-      "tilejson": "https://api.mapx.at/v1/tiles/streets.json",
+      "tilejson": "https://tiles.mapx.at/v1/tiles/streets.json",
       "minzoom": 0,
-      "maxzoom": 14,
+      "maxzoom": 16,
       "bounds": [
         9.5,
-        46.3,
-        17.2,
-        49.1
+        46.37,
+        17.17,
+        49.02
       ],
-      "attribution": "mapx.at; ...",
-      "reference_date": "2026-10-01",
-      "built": "2026-11-15 10:26:41"
+      "attribution": "mapx.at; Datenquellen: BEV, GIP.at, ...",
+      "reference_date": "2026-04-01",
+      "built": "2026-11-21 11:22:18"
     }
   ]
 }
@@ -141,7 +141,7 @@ data = res.json()
 
 `GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
 
-`ext` muss zum Kacheltyp passen: `pbf` (Alias `mvt`) für Vektor, `webp`, `png` oder `jpg` für Raster. Kachel im Zoombereich, aber ohne Daten (z. B. Rand der Abdeckung innerhalb von `bounds`): 204 ohne Body. Falsche Endung oder Zoom außerhalb von `minzoom`/`maxzoom`: 404 problem+json.
+`ext` muss zum Kacheltyp passen: `pbf` (Alias `mvt`) für Vektor, `webp` für Raster und Terrain-RGB. Kachel im Zoombereich, aber ohne Daten (z. B. Rand der Abdeckung innerhalb von `bounds`): 204 ohne Body. Falsche Endung oder Zoom außerhalb von `minzoom`/`maxzoom`: 404 problem+json.
 
 Vektorkacheln sind gzip-komprimiert (`Content-Encoding: gzip`, entpackt, wenn der Client kein gzip akzeptiert). `ETag` aus dem Datei-Hash, `If-None-Match` ergibt 304, `Cache-Control: public`.
 
@@ -153,7 +153,7 @@ Vektorkacheln sind gzip-komprimiert (`Content-Encoding: gzip`, entpackt, wenn de
 | `z` | path | integer | ja | – | Zoomstufe |
 | `x` | path | integer | ja | – | Kachelspalte |
 | `y` | path | integer | ja | – | Kachelzeile |
-| `ext` | path | string | ja | – | pbf, mvt, webp, png oder jpg |
+| `ext` | path | string | ja | – | pbf oder mvt (Vektor), webp (Raster) |
 
 **Beispiel**
 
@@ -179,7 +179,7 @@ res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", head
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Kachel
+**Beispielantwort**: `application/vnd.mapbox-vector-tile`, `image/webp` · Kachel
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

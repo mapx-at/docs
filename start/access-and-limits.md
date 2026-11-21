@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/start/access-and-limits/
 
 ## Get a token
 
-All endpoints under `https://api.mapx.at/v1/`, `https://routing.mapx.at/`, `https://search.mapx.at/` and all tiles under `https://tiles.mapx.at/` need a token. It is free and there is no usage-based charge.
+All endpoints under `https://api.mapx.at/v1/` and all tiles under `https://tiles.mapx.at/` need a token. It is free.
 
 1. Open [account.mapx.at](https://account.mapx.at/) and sign in with your e-mail address (an 8-digit code is sent to you) or with Google or Microsoft. If there is no account for the address yet, you create it after entering the code with “Create account”; you tick the box for the terms of use, the privacy policy and contact about the service and your account (security, changes, shutdown). The newsletter is optional, there or later in your account. Code emails are limited per address and per connection; if you see “Too many attempts”, try again a little later.
 2. Under **Tokens** use **New token** to create a named token (up to 100 per account). The token is shown once; copy it then.
@@ -29,9 +29,9 @@ The OpenAPI description `https://api.mapx.at/v1/openapi.json` and CORS preflight
 |---|---|---|---|
 | Public | `mx_pk_…` | Websites and apps. The token is visible in the page source or in the APK, so it only works where you allow it. | Read-only products, `GET`/`HEAD` only. Not for `POST /v1/optimization`, `POST /v1/geocode/batch` and `/v1/corridor-graph` (otherwise `403 pk-not-allowed`). Bound to **allowed origins** (for example `https://example.com`, `*.example.com`) or to an **Android app** (package name plus SHA-256 of the signing certificate). |
 | Secret | `mx_sk_…` | Servers, scripts and CI. Never put it into a web page or an app. | No origin binding; optionally bound to IP ranges (CIDR). |
-| AI assistant (MCP) | `mx_mcp_…` | AI assistants and agents that use the [mapx MCP server](https://docs.mapx.at/guides/mcp.md). | Created by hand or by signing in with your account (then shown as "connected via <host>"). Works only at `https://mcp.mapx.at/mcp`, no origin or IP binding, optional expiry date. Direct API calls with it answer `403` `mcp-token-only`. |
+| AI assistant (MCP) | `mx_mcp_…` | AI assistants and agents that use the [mapx MCP server](https://docs.mapx.at/guides/mcp.md). | Created by hand or by signing in with your account (then shown as "connected via &lt;host&gt;"). Works only at `https://mcp.mapx.at/mcp`, no origin or IP binding, optional expiry date. Direct API calls with it answer `403` `mcp-token-only`. |
 
-A public token is checked against the `Origin` header (for tiles and images without one, against the `Referer` host). Requests from other sites get `403` with the reason `origin-not-allowed`. Add `localhost` to the origins only while you develop.
+A public token is checked against the `Origin` header (for tiles and images without one, against the `Referer` host). Requests from other sites get `403` with the reason `origin-not-allowed`. An origin is scheme, host and port, for example `http://localhost:3000` while you develop; add `localhost` only during development. A page opened as a file (`file://`) has no origin: use a local web server (`npx serve`).
 
 ## Send the token
 
@@ -53,19 +53,24 @@ const res = await fetch("https://api.mapx.at/v1/geocode?q=Melk&access_token=YOUR
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
+// the mapx styles load their tiles from PMTiles files: register the protocol once
+maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
 const map = new maplibregl.Map({
   attributionControl: false,
   container: "map",
   style: "https://api.mapx.at/v1/styles/streets",
+  center: [16.3725, 48.2085], zoom: 13, // Vienna, lon,lat
   transformRequest: (url) => ({
-    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
+    url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
   }),
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
 
-When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites). Clients that cannot set `transformRequest` then work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"`. Such a response is `private` and must not be shared.
+**PMTiles prerequisite.** The mapx styles load their tiles from PMTiles files. The page must therefore include `pmtiles.js` (`<script src="https://unpkg.com/pmtiles@4.5.0/dist/pmtiles.js"></script>`) and call `maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile)` once; otherwise the map stays empty (console: `URL scheme "pmtiles" is not supported`). Your own styles that only use TileJSON sources (`https://tiles.mapx.at/v1/tiles/{tileset}.json`) do not need it.
+
+When you request a style with `?access_token=…`, the API writes the token into all `mapx.at` URLs of the style (tiles, glyphs, sprites, PMTiles files). That is why the `transformRequest` above adds the token only when `access_token` is not in the URL yet. Clients that cannot set `transformRequest` work with `style: "https://api.mapx.at/v1/styles/streets?access_token=YOUR_TOKEN"` (they still need the PMTiles protocol). Such a response is `private` and must not be shared.
 
 **Android.** Send `Authorization: Bearer <public token>` plus `X-Mapx-Android-Package` (package name) and `X-Mapx-Android-Cert` (SHA-256 of the signing certificate, read at run time with `PackageManager`).
 
@@ -73,15 +78,15 @@ Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `
 
 ## Rate limits
 
-Limits apply per token and zone (requests without a valid token count per IP address). Every response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30). Exceeding a limit returns `429` with `Retry-After`. On top of the zones a token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
+The zones below apply per IP address (per token over MCP). On top of that, each token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted too. Every API response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30). The PMTiles requests of the styles (`https://tiles.mapx.at/…pmtiles`) do not carry it; they count in the `tiles` zone. Exceeding a limit returns `429` with `Retry-After`. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
 
 | Zone | Requests | Used by |
 |---|---|---|
-| `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs, sprites |
-| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, departures, weather, traffic |
+| `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs, sprites, PMTiles requests of the styles (burst 500 on `tiles.mapx.at`) |
+| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, departures, weather values, traffic reports |
 | `route` | 5/s, burst 20 | directions, transit journeys |
 | `elevation` | 10/s, burst 20 | elevation and profile |
-| `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
+| `static` | 5/s, burst 60 | Static Tiles, traffic and weather tiles |
 | `heavy` | 30/min, burst 5 | static images, isochrone, matrix, matching, optimization, batch geocoding |
 
 **Over MCP.** Every tool call of the [MCP server](https://docs.mapx.at/guides/mcp.md) counts like an API call (some tools make several) and shows up as MCP in the usage view. The per-minute limit of the token and the zone limits above apply, per token instead of per IP address. The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB.
@@ -90,7 +95,7 @@ For many tiles: cache responses in the client (tiles change only with a new rele
 
 ## CORS and caching
 
-CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. Responses without a token in the URL are cacheable by shared caches; responses that contain your token (styles requested with `access_token`) are `private`.
+CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. Responses without a token in the URL may be stored by shared caches; styles requested with `access_token` are `private`.
 
 ## Attribution
 

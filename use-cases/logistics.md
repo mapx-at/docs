@@ -34,7 +34,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];
 const q = depots.map((p) => p.join(",")).join(";");
-const m = await (await fetch(`https://api.mapx.at/v1/matrix/driving/${q}?annotations=duration,distance&access_token=YOUR_TOKEN`)).json();
+const m = await (await fetch(`https://api.mapx.at/v1/matrix/driving/${q}?annotations=duration,distance`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(m.durations[0][1] / 60, "min", m.distances[0][1] / 1000, "km"); // Vienna to Melk
 ```
 
@@ -51,7 +51,7 @@ const body = {
     { id: 2, location: [14.2858, 48.3069], service: 600 },
   ],
 };
-const res = await fetch("https://api.mapx.at/v1/optimization?access_token=YOUR_TOKEN", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+const res = await fetch("https://api.mapx.at/v1/optimization", { method: "POST", headers: { "content-type": "application/json", Authorization: "Bearer YOUR_TOKEN" }, body: JSON.stringify(body) });
 const tour = await res.json();
 console.log(tour.routes[0].steps.map((s) => s.id ?? s.type), tour.unassigned); // unassigned: jobs that did not fit
 ```
@@ -64,7 +64,7 @@ Draw the result with one `directions` request through `tour.routes[0].steps` loc
 
 ```js
 const bbox = [14.5, 47.8, 16.9, 48.6]; // Lower Austria
-const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${bbox}&active=true&type=construction&limit=50&access_token=YOUR_TOKEN`)).json();
+const { features } = await (await fetch(`https://api.mapx.at/v1/traffic/incidents?bbox=${bbox}&active=true&type=construction&limit=50`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(features.length, features[0]?.properties.road, features[0]?.properties.text);
 ```
 

@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/guides/mcp/
 
 The mapx MCP server gives an AI assistant 21 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
 
-| | |
+| Property | Value |
 |---|---|
 | Endpoint | `https://mcp.mapx.at/mcp` |
 | Transport | Streamable HTTP, `POST` only, stateless |
@@ -24,7 +24,7 @@ There are two ways. Signing in with your account is the simpler one: you only en
 3. The consent page shows the application, the redirect target, your account and what the access allows: read-only tools only, calls count towards your usage, no access to your account or your other tokens. Confirm the connection.
 4. Ask a question that needs Austrian data, for example "How do I get by bike from Melk station to Melk Abbey, and how long does it take?".
 
-The connection then appears at [account.mapx.at](https://account.mapx.at/) → **Tokens** as "connected via <host>". Each application can hold up to five connections at the same time, for example browser, desktop and phone. The connection does not expire on its own.
+The connection then appears at [account.mapx.at](https://account.mapx.at/) → **Tokens** as "connected via &lt;host&gt;". Each application can hold up to five connections at the same time, for example browser, desktop and phone. The connection does not expire on its own.
 
 These applications are approved for signing in with your account:
 
@@ -138,7 +138,7 @@ curl https://api.openai.com/v1/responses \
 
 ## Disconnect
 
-At [account.mapx.at](https://account.mapx.at/) → **Tokens** every connection made through your account is listed as "connected via <host>". **Disconnect** ends it; **Block** rejects it immediately and can be undone. The assistant then gets `401` and asks you to sign in again when needed.
+At [account.mapx.at](https://account.mapx.at/) → **Tokens** every connection made through your account is listed as "connected via &lt;host&gt;". **Disconnect** ends it; **Block** rejects it immediately and can be undone. The assistant then gets `401` and asks you to sign in again when needed.
 
 ## For developers
 
@@ -207,7 +207,7 @@ The assistant receives the error as text and can react to it. Error codes and ca
 
 - Austria only; data comes from official open data, and each answer names the source.
 - All tools only read; nothing is changed or stored.
-- Public transport answers come from the scheduled timetable, without real-time data.
+- Public transport answers come from the scheduled timetable, from the scheduled timetable.
 - Climate, weather, warnings and air quality come from GeoSphere Austria, traffic reports from ASFINAG and EVIS.AT.
 - Long results are shortened.
 

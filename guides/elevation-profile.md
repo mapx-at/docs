@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/guides/elevation-profile/
 
 **Prerequisites:** a browser. A free token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)), no framework, no library.
 
-With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevation.md) endpoint returns elevation values spaced evenly by length along the line.
+With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevation.md) endpoint returns elevation values spaced evenly by length along the line. If you only need the finished totals (ascent, descent, lowest and highest point), use [`/v1/elevation/profile`](https://docs.mapx.at/guides/elevation.md#elevation-profile); here the profile is computed and drawn by hand.
 
 1. **Test the request.** The line is made of `lon,lat` pairs separated by semicolons (longitude first). 50 sample points along a route at the Großglockner:
 

@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/buildings-3d/
 
 > Extrudierte 3D-Gebäude mit BEV-Höhen auf der mapx-Vektor-Basiskarte, Kamera geneigt, in MapLibre GL JS. Lauffähiger Code zum Kopieren.
 
-Der Stil `streets` enthält eine extrudierte Gebäudeebene, die standardmäßig aus ist. Die Ebenen-IDs stehen in den Style-Metadaten (`mapx:groups`), damit lässt sich eine ganze Gruppe einschalten, ohne die Namen zu kennen. Auf Zoom 15 oder höher gehen und die Karte kippen (rechte Maustaste oder zwei Finger).
+Der Stil `streets` enthält eine extrudierte Gebäudeebene, die standardmäßig aus ist. Die Ebenen-IDs stehen in den Stil-Metadaten (`mapx:groups`), damit lässt sich eine ganze Gruppe einschalten, ohne die Namen zu kennen. Auf Zoom 15 oder höher gehen und die Karte kippen (rechte Maustaste oder zwei Finger).
 
 ## Code
 

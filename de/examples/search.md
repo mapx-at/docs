@@ -29,14 +29,18 @@ map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-sho
 let marker;
 
 const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
+let ctrl; // AbortController of the running request
 eingabe.addEventListener('input', async () => {
+  ctrl?.abort(); // a newer input cancels the older request
   const q = eingabe.value.trim();
-  liste.replaceChildren();
-  if (q.length < 2) return;
+  if (q.length < 2) { liste.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, { ...AUTH, signal: ctrl.signal });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    for (const f of (await r.json()).features) {
+    const items = (await r.json()).features;
+    liste.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = f.place_name;
       b.addEventListener('click', () => {
@@ -47,7 +51,10 @@ eingabe.addEventListener('input', async () => {
       });
       li.append(b); liste.append(li);
     }
-  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 
@@ -72,26 +79,33 @@ const pin = (color) => new ol.style.Style({ zIndex: 1, image: new ol.style.Circl
 const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ source: hit, style: pin('#3fb1ce') })], view: new ol.View({ center: ol.proj.fromLonLat([14.3, 47.6]), zoom: 8 }) });
 
 const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
+let ctrl; // AbortController of the running request
 eingabe.addEventListener('input', async () => {
+  ctrl?.abort(); // a newer input cancels the older request
   const q = eingabe.value.trim();
-  liste.replaceChildren();
-  if (q.length < 2) return;
+  if (q.length < 2) { liste.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, { ...AUTH, signal: ctrl.signal });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    for (const f of (await r.json()).features) {
+    const items = (await r.json()).features;
+    liste.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = f.place_name;
       b.addEventListener('click', () => {
         hit.clear();
         hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.center))));
         const view = map.getView();
-        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 600 }) : view.animate({ center: ol.proj.fromLonLat(f.center), zoom: (f.properties.zoom ?? 14) + 1 });
+        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 0 }) : (view.setCenter(ol.proj.fromLonLat(f.center)), view.setZoom((f.properties.zoom ?? 14) + 1));
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
     }
-  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 
@@ -114,26 +128,33 @@ const map = L.map('map').setView([47.6, 14.3], 8);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
 let marker;
 const eingabe = document.getElementById('q'), liste = document.getElementById('treffer');
+let ctrl; // AbortController of the running request
 eingabe.addEventListener('input', async () => {
+  ctrl?.abort(); // a newer input cancels the older request
   const q = eingabe.value.trim();
-  liste.replaceChildren();
-  if (q.length < 2) return;
+  if (q.length < 2) { liste.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, AUTH);
+    const r = await fetch(`https://api.mapx.at/v1/geocode?q=${encodeURIComponent(q)}&limit=6`, { ...AUTH, signal: ctrl.signal });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    for (const f of (await r.json()).features) {
+    const items = (await r.json()).features;
+    liste.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = f.place_name;
       b.addEventListener('click', () => {
         const [lng, lat] = f.center;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
-        f.bbox ? map.fitBounds([[f.bbox[1], f.bbox[0]], [f.bbox[3], f.bbox[2]]], { padding: [60, 60], maxZoom: 18 }) : map.flyTo([lat, lng], (f.properties.zoom ?? 14) + 1);
+        f.bbox ? map.fitBounds([[f.bbox[1], f.bbox[0]], [f.bbox[3], f.bbox[2]]], { padding: [60, 60], maxZoom: 18, animate: false }) : map.setView([lat, lng], (f.properties.zoom ?? 14) + 1, { animate: false });
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
     }
-  } catch (e) { liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    liste.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 

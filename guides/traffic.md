@@ -9,7 +9,7 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 | Task | Endpoint |
 |---|---|
 | List incidents, roadworks and closures | [`/v1/traffic/incidents`](https://docs.mapx.at/api/traffic.md) |
-| Speed limits on variable message signs | [`/v1/traffic/flow`](https://docs.mapx.at/api/traffic.md) |
+| Speed limits on variable message signs (`bbox` is required) | [`/v1/traffic/flow`](https://docs.mapx.at/api/traffic.md) |
 | Positions of the signs | [`/v1/traffic/signs`](https://docs.mapx.at/api/traffic.md) |
 | Draw traffic on a map | `/v1/traffic/tiles.json` |
 | Check whether the data is fresh | `/v1/traffic/status` |
@@ -58,13 +58,21 @@ curl -s -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: applicat
 
 ```js
 map.on("load", () => {
-  map.addSource("traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
-  map.addLayer({ id: "traffic", type: "line", source: "traffic", "source-layer": "traffic",
+  map.addSource("mx-traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
+  // layer "traffic": speed limits of the variable message signs on motorway sections
+  map.addLayer({ id: "mx-traffic", type: "line", source: "mx-traffic", "source-layer": "traffic",
                  paint: { "line-width": 4, "line-color": "#e11d48" } });
+  // layer "incidents": reports and closures (lines and points)
+  map.addLayer({ id: "mx-incidents-lines", type: "line", source: "mx-traffic", "source-layer": "incidents",
+                 filter: ["!=", ["geometry-type"], "Point"],
+                 paint: { "line-width": 5, "line-color": "#b91c1c", "line-dasharray": [2, 1] } });
+  map.addLayer({ id: "mx-incidents-points", type: "circle", source: "mx-traffic", "source-layer": "incidents",
+                 filter: ["==", ["geometry-type"], "Point"],
+                 paint: { "circle-radius": 6, "circle-color": "#b91c1c", "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } });
 });
 ```
 
-The styles `traffic-day` and `traffic-night` (night map with colours brightened for a dark background) already contain the layer. Tiles are in the `static` zone (5 per second); let the client cache them.
+The vector source has two layers: `traffic` (speed limits of the variable message signs) and `incidents` (reports and closures). The token is passed with `transformRequest` like on every map, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). The mapx styles (for example `streets`) already use the source name `traffic`, so the source is called `mx-traffic` here. The styles `traffic-day` and `traffic-night` (night map with colors brightened for a dark background) draw both layers ready-made. Tiles are in the `static` zone (5 per second); let the client cache them.
 
 ## Route around closures
 

@@ -25,7 +25,7 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
 
-The relief styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) exist only for maps in the browser; as a static image the API answers `404`. The same holds for the 3D styles (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); for an image use the style without `-3d`.
+The relief styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) exist only for maps in the browser; as a static image the API answers `404`. The same holds for the 3D styles (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); for an image use the style without `-3d`. `traffic-day` and `traffic-night` show current traffic reports, which only the browser loads; as a static image they answer `404` with a hint to use `streets` or `streets-night` instead. `satellite-current` (Sentinel-2) is not available as an image either; use `satellite`. `outdoors` renders the full vector map as an image; buildings are drawn.
 
 Images are in the `heavy` zone (30 per minute). They are cacheable: send `If-None-Match` and the API answers `304`. Cache images on your side and do not request them per page view.
 

@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `static` (
 
 `GET /v1/traffic/flow`
 
-Abschnitte mit einem Tempolimit auf Anzeigen unter der freien Fahrgeschwindigkeit, Stufe 0 bis 3 nach Verhältnis. Keine flächendeckende Verkehrslage (die kostenpflichtige Quelle wird nicht verwendet). Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
+Abschnitte mit einem Tempolimit auf Anzeigen unter der freien Fahrgeschwindigkeit, Stufe 0 bis 3 nach Verhältnis. Keine flächendeckende Verkehrslage. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
@@ -173,7 +173,32 @@ data = res.json()
         "planned": true,
         "closed": true,
         "mandatory": true,
-  …
+        "source": "evis-planned+asfinag",
+        "sources": [
+          "evis",
+          "asfinag"
+        ],
+        "lanes": [
+          {
+            "direction": "aligned",
+            "carriageway": "main",
+            "closed": [
+              "left"
+            ],
+            "restricted": 1,
+            "open": 1,
+            "original": 2,
+            "contraflow": false,
+            "road_closed": false,
+            "speed_limit_kmh": 60
+          }
+        ],
+        "start": "2026-11-08T20:00:00Z",
+        "end": "2026-11-09T05:00:00Z"
+      }
+    }
+  ]
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -191,6 +216,8 @@ data = res.json()
 `POST /v1/traffic/incidents`
 
 Body: dieselben Parameter als JSON-Objekt; `route` als Polyline-String oder GeoJSON-LineString, Zahlen (z. B. `route_precision`, `limit`, `buffer`) als JSON-Zahl oder String. Das Gateway nimmt Bodys bis 64 KB an (größer: 413); bei längeren Routen die Linie vereinfachen oder aufteilen.
+
+Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
 **Request-Body (JSON)**
 
@@ -309,7 +336,32 @@ data = res.json()
         "planned": true,
         "closed": true,
         "mandatory": true,
-  …
+        "source": "evis-planned+asfinag",
+        "sources": [
+          "evis",
+          "asfinag"
+        ],
+        "lanes": [
+          {
+            "direction": "aligned",
+            "carriageway": "main",
+            "closed": [
+              "left"
+            ],
+            "restricted": 1,
+            "open": 1,
+            "original": 2,
+            "contraflow": false,
+            "road_closed": false,
+            "speed_limit_kmh": 60
+          }
+        ],
+        "start": "2026-11-08T20:00:00Z",
+        "end": "2026-11-09T05:00:00Z"
+      }
+    }
+  ]
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))

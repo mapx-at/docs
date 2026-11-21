@@ -27,7 +27,7 @@ Eine Kachel liefert der Endpunkt `https://tiles.mapx.at/v1/tiles/{tileset}/{z}/{
 
 ## 512-Pixel-Kacheln
 
-Raster-Kacheln von mapx (Höhenmodelle, Orthophoto) haben **512 × 512 Pixel**, nicht 256. Dadurch deckt eine 512er-Kachel dasselbe Gebiet ab wie vier 256er-Kacheln eine Stufe tiefer. Clients brauchen dafür die richtige Einstellung:
+Raster-Kacheln von mapx (Höhenmodelle, Orthofoto) haben **512 × 512 Pixel**, nicht 256. Dadurch deckt eine 512er-Kachel dasselbe Gebiet ab wie vier 256er-Kacheln eine Stufe tiefer. Clients brauchen dafür die richtige Einstellung:
 
 - MapLibre: `tileSize: 512` (bei TileJSON automatisch).
 - Leaflet: `tileSize: 512, zoomOffset: -1`.
@@ -56,11 +56,11 @@ Die Auflösung hängt von der Breite ab. Die Tabelle gilt für 47,5° N, die Mit
 | z16 | 0,81 | 0,41 | höchste gespeicherte Stufe (≈ 1-m-Ursprung) |
 | z17 | 0,40 | 0,21 | Overzoom (Client) |
 
-Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vor, das Orthophoto bis z18.
+Eine Stufe tiefer halbiert die Pixelgröße. Die Höhenmodelle liegen bis z16 vor, das Orthofoto bis z18.
 
 ## Overzoom
 
-Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
+Ist eine Stufe höher als die gespeicherte, **vergrößert der Client** die Kacheln der höchsten Stufe (Overzoom). Das Bild wird dabei nicht schärfer, die Karte bleibt aber bedienbar. In MapLibre dazu `maxzoom` an der Quelle setzen auf die höchste vorhandene Stufe (aus TileJSON automatisch), die Karte selbst darf weiter zoomen. Abfragen außerhalb des Zoombereichs liefern `404`, Kacheln innerhalb des Zoombereichs, aber außerhalb Österreichs `204` ohne Inhalt, siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 > Vektorkacheln werden beim Overzoom nicht neu gezeichnet, sondern die Geometrie der höchsten Stufe wird gestreckt.
 

@@ -4,14 +4,14 @@ Source: https://docs.mapx.at/de/api/
 
 > Referenz aller mapx-APIs für Österreich mit Endpunkten, Parametern, Beispielen und Live-Playground, erzeugt aus der OpenAPI-Beschreibung.
 
-Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert (Stand des letzten Doku-Baus). Jede Seite hat einen Playground, der die Live-API aufruft.
+Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen API-Token von [account.mapx.at](https://account.mapx.at/). Er geht als `Authorization: Bearer DEIN_TOKEN` oder `?access_token=DEIN_TOKEN` mit, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). `mx_pk_`-Tokens (öffentlich) funktionieren von erlaubten Websites und Android-Apps mit `GET`/`HEAD`, `mx_sk_`-Tokens (geheim) von Servern. Die folgenden Seiten sind aus der [OpenAPI-Beschreibung](https://api.mapx.at/v1/openapi.json) generiert (Stand des letzten Doku-Baus). Jede Seite hat einen Playground, der die Live-API aufruft.
 
 ## Konventionen
 
 - **Koordinaten** sind `lon,lat` (WGS84), mehrere getrennt durch `;`. Siehe [Koordinaten](https://docs.mapx.at/de/reference/coordinates.md).
-- **Fehler** sind `application/problem+json` (RFC 9457) mit stabilem `code`. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
+- **Fehler** sind `application/problem+json` (RFC 9457) mit stabilem `code`, auch `401`/`403` bei Token-Problemen. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 - **Limits** gelten pro IP-Adresse und Zone, dazu ein Minutenlimit je Token; `429` trägt `Retry-After`. Siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
-- **Caching:** Tiles, Styles und TileJSON tragen `ETag`; mit `If-None-Match` kommt `304`.
+- **Caching:** Kacheln, Stile und TileJSON tragen `ETag`; mit `If-None-Match` kommt `304`.
 - **Versionierung:** Die Version steht im Pfad. Felder ändern sich innerhalb einer Version nicht, neue kommen nur hinzu.
 
 ## APIs

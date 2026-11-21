@@ -30,9 +30,9 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 - [Departures at a stop](https://docs.mapx.at/examples/departures.md): Click near a stop, see the next departures.
 - [Traffic flow and incidents](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible area.
 - [Static image for a listing](https://docs.mapx.at/examples/static-image.md): Click a place, get a ready-made image URL with a pin.
-- [Your own GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md): Points, line and area over the mapx style, popup on click.
+- [Your own GeoJSON on the map](https://docs.mapx.at/examples/geojson-overlay.md): Points, line and area over the mapx style; click a point to see its name in a popup.
 
 ## Notes
 
-- All data comes from official sources, no OSM data. Attribution: [License](https://docs.mapx.at/reference/attribution.md).
-- All examples call the endpoints under `https://api.mapx.at/v1/`, without an access token.
+- All data comes from official sources, no OpenStreetMap. Attribution: [License](https://docs.mapx.at/reference/attribution.md).
+- All examples call the endpoints under `https://api.mapx.at/v1/` with a public token (see [Access and limits](https://docs.mapx.at/start/access-and-limits.md)).

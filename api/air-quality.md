@@ -79,7 +79,13 @@ data = res.json()
       "category": "fair",
       "no2_ugm3": 18.2,
       "o3_ugm3": 45.1,
-  …
+      "pm10_ugm3": 21,
+      "pm25_ugm3": 9.4,
+      "saharan_dust_load_mgm2": 0
+    }
+  ],
+  "attribution": "mapx.at; Luftqualität: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))

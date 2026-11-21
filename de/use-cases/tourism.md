@@ -24,7 +24,7 @@ console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, Anstieg $
 
 ## Radrouten anzeigen
 
-Der Stil `streets` enthält die beschilderten Rad- und MTB-Routen als Ebenengruppe `bike_routes`. Sie lässt sich über die Style-Metadaten einschalten oder vom Nutzer umschalten:
+Der Stil `streets` enthält die beschilderten Rad- und MTB-Routen als Ebenengruppe `bike_routes`. Sie lässt sich über die Stil-Metadaten einschalten oder vom Nutzer umschalten:
 
 ```js
 const TOKEN = "DEIN_TOKEN";
@@ -33,7 +33,7 @@ maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
 const map = new maplibregl.Map({
   attributionControl: false,
   container: "map", style: "https://api.mapx.at/v1/styles/streets", center: [15.45, 48.3], zoom: 10,
-  transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
+  transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
@@ -58,7 +58,7 @@ console.log(`Anstieg ${Math.round(p.ascent_m)} m, Abstieg ${Math.round(p.descent
 // p.distances[i] (m ab Start) und p.elevations[i] (m) ergeben das Diagramm
 ```
 
-Das Höhenmodell ist das amtliche DGM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md), dazu das [Live-Beispiel](https://docs.mapx.at/de/examples/elevation-profile.md).
+Das Höhenmodell ist das amtliche DTM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md), dazu das [Live-Beispiel](https://docs.mapx.at/de/examples/elevation-profile.md).
 
 ## Erreichbarkeit für die Region
 
@@ -76,7 +76,7 @@ Für den öffentlichen Verkehr zum Ausgangspunkt der Tour das Profil `bike_trans
 
 ```js
 const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json(); // Großglockner
-console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
+console.log(f.hours.map((h) => `${new Date(h.time).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" })} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
 `GET /v1/weather/current?lon=…&lat=…` liefert die Messwerte der nächsten Stationen. Als Kartenebene siehe das [Wetter-Overlay](https://docs.mapx.at/de/examples/weather-overlay.md). Wetterdaten: GeoSphere Austria (CC BY 4.0).

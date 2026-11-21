@@ -75,7 +75,7 @@ document.getElementById('pruefen').addEventListener('click', async () => {
     const top = r.address ? { text: r.address.full_address, at: r.coordinates } : r.candidates?.[0] && { text: r.candidates[0].full_address, at: r.candidates[0].coordinates };
     out.textContent = `Status: ${r.status}` + (r.deviations?.length ? `, ${de ? 'Abweichungen' : 'deviations'}: ${r.deviations.map((d) => `${d.field} ${d.input} > ${d.expected}`).join('; ')}` : '') + (top ? `, ${r.address ? (de ? 'Adresse' : 'address') : (de ? 'erster Kandidat' : 'first candidate')}: ${top.text}` : '');
     hit.clear();
-    if (top) { hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(top.at)))); map.getView().animate({ center: ol.proj.fromLonLat(top.at), zoom: 17 }); }
+    if (top) { hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(top.at)))); map.getView().setCenter(ol.proj.fromLonLat(top.at)), map.getView().setZoom(17); }
   } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });
 ````
@@ -112,7 +112,7 @@ document.getElementById('pruefen').addEventListener('click', async () => {
     if (hit) {
       const latlng = [hit.at[1], hit.at[0]];
       marker = L.circleMarker(latlng, { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
-      map.flyTo(latlng, 17);
+      map.setView(latlng, 17, { animate: false });
     }
   } catch (e) { out.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
 });

@@ -166,7 +166,7 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (nicht die Relief- und 3D-Styles, sie werden nur im Browser gerendert). `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (nicht die Relief-, Verkehrs- und 3D-Styles, sie werden nur im Browser gerendert). `tilesize` 256 (Standard-XYZ, Kartenzoom z-1) oder 512 (Kartenzoom z). `y` mit optionalem `@2x` und `.png` (Standard) oder `.webp`.
 
 Beschriftungen werden mit Rand gerendert und abgeschnitten. Keine Daten oder unter dem Mindestzoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 

@@ -39,16 +39,13 @@ formula under “Encoding” and shows elevation and RGB value. With 3D enabled,
 **MapLibre**
 
 ```js
-import * as maplibregl from "maplibre-gl";
-
-maplibregl.addProtocol("pmtiles", new Protocol().tile);
 const map = new maplibregl.Map({
   attributionControl: false,
   container: "map",
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:terrain-rgb@@?access_token=YOUR_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512, encoding: "mapbox" } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
@@ -57,6 +54,7 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 ```
+Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
   
 
@@ -163,13 +161,13 @@ The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain on
 Required under CC BY 4.0. Text:
 
 ```
-Relief: BEV – ALS-DTM 1 m (reference date 15 Sep 2025), CC BY 4.0
+mapx.at; Relief: BEV – ALS-DTM 1 m (reference date 15 Sep 2025), CC BY 4.0
 ```
 
-HTML (as in the PMTiles metadata; MapLibre picks it up automatically from the tileset):
+HTML (as in the TileJSON; MapLibre picks it up automatically from the TileJSON):
 
 ```html
-Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

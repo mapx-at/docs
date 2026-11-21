@@ -49,7 +49,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 
 ## Language
 
-`title` and `detail` are English by default. Send `Accept-Language: de` to get German texts, except for authentication errors and the other gateway errors (`405`, `413`, `414`, `429`, `5xx`), which are always English (`unknown-path` is available in German); `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
+`title` and `detail` are English by default; a few `detail` texts from routing and public transport are currently German. Send `Accept-Language: de` to get German texts, except for authentication errors and the other gateway errors (`405`, `413`, `414`, `429`, `5xx`), which are always English (`unknown-path` is available in German); `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
 
 ## Catalog
 
@@ -189,7 +189,7 @@ What to do: Call from a browser page, or use a secret token on a server.
 
 **403** · Public token not allowed here
 
-A public token only allows read access (`GET`, `HEAD`) to the public products. Batch geocoding (`POST /v1/geocode/batch`), optimization (`POST /v1/optimization`) and `corridor-graph` need a secret token.
+A public token only allows read access (`GET`, `HEAD`) to the public products. Batch geocoding (`POST /v1/geocode/batch`), optimization (`POST /v1/optimization`), address validation via `POST /v1/address/validate`, traffic incidents via `POST /v1/traffic/incidents` and `GET /v1/corridor-graph` need a secret token.
 
 What to do: Use a secret token (`mx_sk_`) from a server for this request.
 
@@ -295,7 +295,7 @@ What to do: List fonts with `/v1/fonts`.
 
 A weather parameter name is not known.
 
-What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure.
+What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast (list: `/v1/weather/tiles/<param>.json`).
 
 ### unknown-id
 
@@ -419,7 +419,7 @@ Limits per IP address and zone and the per-minute limit per token are listed und
 
 | Header | Value |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (tiles, TileJSON, elevation), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
+| `Cache-Control` | `public, max-age=3600` (tiles.mapx.at, TileJSON, elevation), `max-age=86400` (tiles via api.mapx.at), `max-age=60` (Search Box suggestions), `max-age=30` (departures), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
 | `ETag`, `Last-Modified` | version; with `If-None-Match` / `If-Modified-Since` → `304` (tiles, styles, TileJSON, OpenAPI) |
 | `Server-Timing` | `router`, `search`, `render`, `total` in milliseconds |
 | `RateLimit-Policy` | zone and limit of the endpoint |

@@ -37,14 +37,14 @@ const map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
+    sources: { v: { type: "vector", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf"], minzoom: 6, maxzoom: 17, attribution: "mapx.at; BEV, CC BY 4.0" } },
     layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "flight_block_a", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
 ```
-TileJSON provides zoom range, bounds and attribution. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
+The source sets the tile address, zoom range and credit itself; the TileJSON at `https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json` provides zoom range and bounds, but only `mapx.at` as credit. Send the token with every request: add the `transformRequest` from [First map](https://docs.mapx.at/start/first-map.md) to the map options.
 
   
 
@@ -63,7 +63,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ## Layer reference
 
-### orthophoto-flight-blocks
+### flight_block_a
 
 Geometry: **Polygon**, Zoom: **z6–17**, Layer: `flight_block_a`. Orthophoto flight blocks with acquisition date.
 
@@ -93,10 +93,10 @@ Geometry: **Polygon**, Zoom: **z6–17**, Layer: `flight_block_a`. Orthophoto fl
 
 ## Attribution
 
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
+Required under CC BY 4.0. The TileJSON only names `mapx.at`; add the source yourself (as in the MapLibre example above):
 
 ```html
-BEV, CC BY 4.0
+mapx.at; BEV, CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

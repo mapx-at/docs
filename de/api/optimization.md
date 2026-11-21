@@ -20,7 +20,7 @@ Aufwendig:
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking (Präfix `mapbox/` erlaubt) |
+| `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
 | `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
 | `source` | query | string |  | – | any (Standard) oder first (Punkt 0 ist der Start) |
 | `destination` | query | string |  | – | any (Standard) oder last (letzter Punkt ist das Ende) |
@@ -80,6 +80,8 @@ data = res.json()
 `POST /v1/optimization`
 
 Fahrzeuge mit Start, Ende, Kapazität und Zeitfenster, Aufträge (services, ein Ort) und Sendungen (shipments, Abholung vor Zustellung, dasselbe Fahrzeug) mit Dauer, Zeitfenstern und Mengen. Heuristik: Regret-Einfügung, lokale Suche, Ruin and Recreate bis `options.time_limit_ms`.
+
+Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
 Höchstens 10 Fahrzeuge, 50 Aufträge, 60 verschiedene Orte, 256 KB. Zeiten in Sekunden. Aufwendig:
 

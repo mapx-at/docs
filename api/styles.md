@@ -166,7 +166,7 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (not the relief and 3D styles, they are rendered in the browser only). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (not the relief, traffic and 3D styles, they are rendered in the browser only). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`.
 
 Labels are rendered with a margin and clipped. No data or below minimum zoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 

@@ -71,8 +71,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 | 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
 | 16 | from 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
 
-There are no lines below z10. Filter by `lvl` in the style, otherwise several levels overlap at z12 and above
-if the client overzooms.
+There are no lines below z10. Each tile contains exactly one level (`lvl`), so filtering by `lvl` is not needed.
 
 ```js
 { id: "hl", type: "line", source: "v", "source-layer": "contour_l",
@@ -105,10 +104,10 @@ Geometry: **Line**, Zoom: **z10–16**, Layer: `contour_l`. Elevation contours i
 
 ## Attribution
 
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
+Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

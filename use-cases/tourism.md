@@ -33,7 +33,7 @@ maplibregl.addProtocol("pmtiles", new pmtiles.Protocol().tile);
 const map = new maplibregl.Map({
   attributionControl: false,
   container: "map", style: "https://api.mapx.at/v1/styles/streets", center: [15.45, 48.3], zoom: 10,
-  transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
+  transformRequest: (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url }),
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // start collapsed (MapLibre keeps it open until the first drag)
@@ -50,10 +50,10 @@ The example [Route](https://docs.mapx.at/examples/route.md) calculates and draws
 Every tour page benefits from a profile. Feed the route geometry (2 to 512 points; the default simplified route geometry fits) into the elevation API:
 
 ```js
-const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?access_token=YOUR_TOKEN")).json()).routes[0];
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).routes[0];
 // the default overview=simplified keeps the line below the 512-point limit
 const line = route.geometry.coordinates.map((c) => c.join(",")).join(";");
-const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120&access_token=YOUR_TOKEN`)).json()).properties;
+const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).properties;
 console.log(`up ${Math.round(p.ascent_m)} m, down ${Math.round(p.descent_m)} m, ${Math.round(p.min_m)}-${Math.round(p.max_m)} m`);
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
@@ -76,7 +76,7 @@ For public transport to the trailhead use the profile `bike_transit` (`GET /v1/d
 
 ```js
 const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
-console.log(f.hours.map((h) => `${h.time.slice(11, 16)} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
+console.log(f.hours.map((h) => `${new Date(h.time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" })} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
 `GET /v1/weather/current?lon=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).

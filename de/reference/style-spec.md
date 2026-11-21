@@ -1,38 +1,39 @@
-# Basiskarte: Layer und Style-Spezifikation
+# Basiskarte: Ebenen und Stilspezifikation
 
 Source: https://docs.mapx.at/de/reference/style-spec/
 
-> Alle Layer des mapx-Vektor-Tilesets streets mit Feldern und Werten sowie die fertigen Style-IDs. Referenz für eigene MapLibre-Styles.
+> Alle Ebenen des mapx-Vektor-Kachelsatzes streets mit Feldern und Werten sowie die fertigen Stil-IDs. Referenz für eigene MapLibre-Stile.
 
-## Style-IDs
+## Stil-IDs
 
 | ID | Aussehen |
 |---|---|
 | `streets`, `streets-dawn`, `streets-dusk`, `streets-night` | Basiskarte in vier Lichtstimmungen |
-| `satellite`, `satellite-streets` | Orthophoto, wahlweise mit Straßen und Beschriftung |
+| `satellite`, `satellite-streets` | Orthofoto, wahlweise mit Straßen und Beschriftung |
 | `light`, `dark` | Ruhige Grundkarte für eigene Daten, hell bzw. dunkel |
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 | `outdoors-winter` | Gelände in Schneefarben, Skigebiete und Lifte hervorgehoben |
 | `relief`, `relief-contours` | Reine Reliefkarte: Höhenstufen (Täler grün bis Gipfel weiß) mit Schummerung, Gewässer und wenige Namen; `relief-contours` zusätzlich mit Höhenlinien |
 | `relief-light`, `relief-dark` | Nur graue Schummerung auf hellem bzw. dunklem Grund, Hintergrund für eigene Daten |
-| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D-Fassungen: der Style über dem Geländemodell (`terrain`), mit Himmel (`sky`) und geneigter Startansicht (`pitch`, `bearing`) |
+| `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D-Fassungen: der Stil über dem Geländemodell (`terrain`), mit Himmel (`sky`) und geneigter Startansicht (`pitch`, `bearing`) |
 | `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D-Stadt: Gebäudekörper (`fill-extrusion` aus `building_a.height`, Turmteile aus `building_part_a`) mit Szenenlicht (`light`), Himmel und Gelände |
+| `satellite-current` | Sentinel-2-Satellitenbild mit Straßen und Namen, täglich aktualisiert |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
 | `traffic-night` | Nachtkarte (`streets-night`) mit Verkehrsebene, Farben für dunklen Grund |
 
-Styles sind MapLibre-Style-Dokumente (Version 8) unter `https://api.mapx.at/v1/styles/{id}`. Die Metadaten heißen `mapx:style` und `mapx:api_style`. Siehe [Styles API](https://docs.mapx.at/de/api/styles.md).
+Stile sind MapLibre-Stildokumente (Version 8) unter `https://api.mapx.at/v1/styles/{id}`. Die Metadaten heißen `mapx:style` und `mapx:api_style`. Siehe [Styles API](https://docs.mapx.at/de/api/styles.md).
 
-## Layer von `streets`
+## Ebenen von `streets`
 
-Jeder Layer der [`streets`](https://docs.mapx.at/de/tilesets/streets.md) mit seinen Feldern. Bei Feldern mit geschlossener Liste stehen alle möglichen Werte dabei. Layernamen enden auf `_a` (Fläche), `_l` (Linie) oder `_p` (Punkt).
+Jede Ebene der [`streets`](https://docs.mapx.at/de/tilesets/streets.md) mit seinen Feldern. Bei Feldern mit geschlossener Liste stehen alle möglichen Werte dabei. Ebenennamen enden auf `_a` (Fläche), `_l` (Linie) oder `_p` (Punkt).
 
-Gemeinsame Felder: `min_zoom` ist die erste Zoomstufe, ab der ein Objekt gezeigt werden soll (für Filter mit gleichmäßiger Dichte); `sort_rank` ordnet Objekte innerhalb eines Layers (kleiner = wichtiger bzw. zuerst gezeichnet).
+Gemeinsame Felder: `min_zoom` ist die erste Zoomstufe, ab der ein Objekt gezeigt werden soll (für Filter mit gleichmäßiger Dichte); `sort_rank` ordnet Objekte innerhalb einer Ebene (kleiner = wichtiger bzw. zuerst gezeichnet).
 
 ## Fläche und Nutzung
 
 ### landuse_a
 
-Geometrie: **Fläche**, Zoom: **z2–16**, Layer: `landuse_a`. Flächennutzung und Bodenbedeckung (Flächen).
+Geometrie: **Fläche**, Zoom: **z2–16**, Ebene: `landuse_a`. Flächennutzung und Bodenbedeckung (Flächen).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -43,7 +44,7 @@ Geometrie: **Fläche**, Zoom: **z2–16**, Layer: `landuse_a`. Flächennutzung u
 
 ### building_a
 
-Geometrie: **Fläche**, Zoom: **z12–16**, Layer: `building_a`. Gebäudegrundrisse.
+Geometrie: **Fläche**, Zoom: **z12–16**, Ebene: `building_a`. Gebäudegrundrisse.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -53,9 +54,19 @@ Geometrie: **Fläche**, Zoom: **z12–16**, Layer: `building_a`. Gebäudegrundri
 | `max_height` | `number` | Größte Höhe des Gebäudes in Metern (Türme, Kirchen), nur wenn deutlich über der Gebäudehöhe; ab z15. |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 
+### building_part_a
+
+Geometrie: **Fläche**, Zoom: **z13–16**, Ebene: `building_part_a`. Gebäudeteile mit Unter- und Oberkante für 3D-Darstellungen (extrudieren von min_height bis height): aus dem Oberflächenmodell abgeleitete Turmteile hoher Gebäude (ab z13), in Wien die Baukörper des Baukörpermodells der Stadt Wien (ab z15, ersetzen dort den ganzen Körper, siehe building_a.has_parts).
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `height` | `number` | Oberkante des Teils in Metern über Grund. |
+| `min_height` | `number` | Unterkante des Teils in Metern über Grund (Turmteil: Gebäudehöhe bzw. Oberkante des Teils darunter; Wien: 0 oder Unterkante bei Durchfahrten und Flugdächern). |
+| `source` | `string` | Herkunft des Teils. Werte: `dsm` = aus dem Oberflächenmodell abgeleitet (BEV ALS); `wien` = Baukörpermodell der Stadt Wien |
+
 ### ski_a
 
-Geometrie: **Fläche**, Zoom: **z10–16**, Layer: `ski_a`. Skigebiete (Flächen).
+Geometrie: **Fläche**, Zoom: **z10–16**, Ebene: `ski_a`. Skigebiete (Flächen).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -66,7 +77,7 @@ Geometrie: **Fläche**, Zoom: **z10–16**, Layer: `ski_a`. Skigebiete (Flächen
 
 ### road_l
 
-Geometrie: **Linie**, Zoom: **z6–16**, Layer: `road_l`. Straßen und Wege (Linien).
+Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `road_l`. Straßen und Wege (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -79,9 +90,11 @@ Geometrie: **Linie**, Zoom: **z6–16**, Layer: `road_l`. Straßen und Wege (Lin
 | `sort_rank` | `number` | Darstellungsrang; kleinere Zahl = wichtiger bzw. weiter unten gezeichnet. |
 | `structure` | `string` | Bauwerksart: Brücke oder Tunnel. Fehlt bei Strecken am Boden. Werte: `bridge` = Brücke; `tunnel` = Tunnel |
 
+Die mapx-Stile zeigen `ref` als Straßennummer in fetter Schrift mit schmalem Saum, nicht in einem Kästchen: Autobahnen und Schnellstraßen (A, S) in Blau, Bundes- und Landesstraßen (B, L) in Dunkelrot.
+
 ### rail_l
 
-Geometrie: **Linie**, Zoom: **z6–16**, Layer: `rail_l`. Bahnstrecken und Schifffahrtslinien (Linien).
+Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `rail_l`. Bahnstrecken und Schifffahrtslinien (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -93,7 +106,7 @@ Geometrie: **Linie**, Zoom: **z6–16**, Layer: `rail_l`. Bahnstrecken und Schif
 
 ### aerialway_l
 
-Geometrie: **Linie**, Zoom: **z12–16**, Layer: `aerialway_l`. Seilbahnen und Lifte (Linien).
+Geometrie: **Linie**, Zoom: **z12–16**, Ebene: `aerialway_l`. Seilbahnen und Lifte (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -103,7 +116,7 @@ Geometrie: **Linie**, Zoom: **z12–16**, Layer: `aerialway_l`. Seilbahnen und L
 
 ### transit_p
 
-Geometrie: **Punkt**, Zoom: **z10–16**, Layer: `transit_p`. Bahnhöfe, Haltestellen und Seilbahnstationen.
+Geometrie: **Punkt**, Zoom: **z10–16**, Ebene: `transit_p`. Bahnhöfe, Haltestellen und Seilbahnstationen.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -113,11 +126,10 @@ Geometrie: **Punkt**, Zoom: **z10–16**, Layer: `transit_p`. Bahnhöfe, Haltest
 
 ### airport_p
 
-Geometrie: **Punkt**, Zoom: **z8–16**, Layer: `airport_p`. Flughäfen, Flugplätze und Hubschrauberlandeplätze.
+Geometrie: **Punkt**, Zoom: **z8–16**, Ebene: `airport_p`. Flughäfen, Flugplätze und Hubschrauberlandeplätze.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `iata` | `string` | IATA-Code (3 Buchstaben), falls vorhanden. |
 | `icao` | `string` | ICAO-Code (4 Buchstaben), falls vorhanden. |
 | `kind` | `string` | Art des Flugplatzes. Werte: `airport` = Verkehrsflughafen; `airfield` = Flugplatz; `heliport` = Hubschrauberlandeplatz; `military` = Militärflugplatz |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
@@ -127,7 +139,7 @@ Geometrie: **Punkt**, Zoom: **z8–16**, Layer: `airport_p`. Flughäfen, Flugpl�
 
 ### water_a
 
-Geometrie: **Fläche**, Zoom: **z6–16**, Layer: `water_a`. Stehende Gewässer (Flächen).
+Geometrie: **Fläche**, Zoom: **z6–16**, Ebene: `water_a`. Stehende Gewässer (Flächen).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -139,7 +151,7 @@ Geometrie: **Fläche**, Zoom: **z6–16**, Layer: `water_a`. Stehende Gewässer 
 
 ### water_l
 
-Geometrie: **Linie**, Zoom: **z6–16**, Layer: `water_l`. Fließgewässer (Linien).
+Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `water_l`. Fließgewässer (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -152,7 +164,7 @@ Geometrie: **Linie**, Zoom: **z6–16**, Layer: `water_l`. Fließgewässer (Lini
 
 ### water_label_p
 
-Geometrie: **Punkt**, Zoom: **z6–16**, Layer: `water_label_p`. Beschriftungspunkte für Seen und Teiche.
+Geometrie: **Punkt**, Zoom: **z6–16**, Ebene: `water_label_p`. Beschriftungspunkte für Seen und Teiche.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -163,7 +175,7 @@ Geometrie: **Punkt**, Zoom: **z6–16**, Layer: `water_label_p`. Beschriftungspu
 
 ### water_label_l
 
-Geometrie: **Linie**, Zoom: **z10–16**, Layer: `water_label_l`. Beschriftungslinien für Flüsse und Kanäle.
+Geometrie: **Linie**, Zoom: **z10–16**, Ebene: `water_label_l`. Beschriftungslinien für Flüsse und Kanäle.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -176,7 +188,7 @@ Geometrie: **Linie**, Zoom: **z10–16**, Layer: `water_label_l`. Beschriftungsl
 
 ### boundary_l
 
-Geometrie: **Linie**, Zoom: **z0–16**, Layer: `boundary_l`. Verwaltungsgrenzen (Linien).
+Geometrie: **Linie**, Zoom: **z0–16**, Ebene: `boundary_l`. Verwaltungsgrenzen (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -188,7 +200,7 @@ Geometrie: **Linie**, Zoom: **z0–16**, Layer: `boundary_l`. Verwaltungsgrenzen
 
 ### boundary_label_p
 
-Geometrie: **Punkt**, Zoom: **z4–16**, Layer: `boundary_label_p`. Beschriftungspunkte für Bundesländer, Bezirke und Gemeinden.
+Geometrie: **Punkt**, Zoom: **z4–16**, Ebene: `boundary_label_p`. Beschriftungspunkte für Bundesländer, Bezirke und Gemeinden.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -202,7 +214,7 @@ Geometrie: **Punkt**, Zoom: **z4–16**, Layer: `boundary_label_p`. Beschriftung
 
 ### place_p
 
-Geometrie: **Punkt**, Zoom: **z0–16**, Layer: `place_p`. Orte und Siedlungen.
+Geometrie: **Punkt**, Zoom: **z0–16**, Ebene: `place_p`. Orte und Siedlungen.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -215,7 +227,7 @@ Geometrie: **Punkt**, Zoom: **z0–16**, Layer: `place_p`. Orte und Siedlungen.
 
 ### natural_p
 
-Geometrie: **Punkt**, Zoom: **z8–16**, Layer: `natural_p`. Geländenamen, Gipfel, Pässe, Gletscher sowie benannte Burgen, Schlösser und Kleindenkmäler.
+Geometrie: **Punkt**, Zoom: **z8–16**, Ebene: `natural_p`. Geländenamen, Gipfel, Pässe, Gletscher sowie benannte Burgen, Schlösser und Kleindenkmäler.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -228,7 +240,7 @@ Geometrie: **Punkt**, Zoom: **z8–16**, Layer: `natural_p`. Geländenamen, Gipf
 
 ### poi_p
 
-Geometrie: **Punkt**, Zoom: **z13–16**, Layer: `poi_p`. Einrichtungen und Orte von Interesse (Punkte).
+Geometrie: **Punkt**, Zoom: **z13–16**, Ebene: `poi_p`. Einrichtungen und Orte von Interesse (Punkte).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -241,7 +253,7 @@ Geometrie: **Punkt**, Zoom: **z13–16**, Layer: `poi_p`. Einrichtungen und Orte
 
 ### housenumber_p
 
-Geometrie: **Punkt**, Zoom: **z16–16**, Layer: `housenumber_p`. Hausnummern.
+Geometrie: **Punkt**, Zoom: **z16–16**, Ebene: `housenumber_p`. Hausnummern.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|

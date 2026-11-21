@@ -100,13 +100,16 @@ data = res.json()
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/address-7065749" | jq
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1" | jq -r '.suggestions[0].id')
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/$ID" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/address-7065749", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const headers = { Authorization: "Bearer YOUR_TOKEN" };
+const s = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", { headers })).json();
+const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/" + encodeURIComponent(s.suggestions[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -115,7 +118,9 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/autofill/retrieve/address-7065749", headers={"Authorization": "Bearer YOUR_TOKEN"})
+h = {"Authorization": "Bearer YOUR_TOKEN"}
+s = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", headers=h).json()
+res = requests.get("https://api.mapx.at/v1/autofill/retrieve/" + s["suggestions"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -151,7 +156,10 @@ data = res.json()
           16.242382,
           47.813929
         ]
-  …
+      }
+    }
+  ]
+}
 ```
 
 | Feld | Typ | Beschreibung |
@@ -244,7 +252,18 @@ data = res.json()
     "state": "Niederösterreich",
     "full_address": "Hauptplatz 1, 3390 Melk",
     "coordinates": [
-  …
+      15.329515,
+      48.227317
+    ]
+  },
+  "coordinates": [
+    15.329515,
+    48.227317
+  ],
+  "id": "address-6444187",
+  "address_code": "6444187",
+  "candidates": []
+}
 ```
 
 | Feld | Typ | Beschreibung |
@@ -275,6 +294,8 @@ data = res.json()
 `POST /v1/address/validate`
 
 Wie GET, mit den Feldern in einem JSON-Objekt (`q` oder `street`, `housenumber`, `postcode`, `place`). Höchstens 16 KB.
+
+Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
 **Request-Body (JSON)**
 
@@ -360,7 +381,18 @@ data = res.json()
     "state": "Niederösterreich",
     "full_address": "Hauptplatz 1, 3390 Melk",
     "coordinates": [
-  …
+      15.329515,
+      48.227317
+    ]
+  },
+  "coordinates": [
+    15.329515,
+    48.227317
+  ],
+  "id": "address-6444187",
+  "address_code": "6444187",
+  "candidates": []
+}
 ```
 
 | Feld | Typ | Beschreibung |

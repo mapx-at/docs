@@ -47,18 +47,18 @@ data = res.json()
       "name": "streets",
       "type": "vector",
       "format": "pbf",
-      "tilejson": "https://api.mapx.at/v1/tiles/streets.json",
+      "tilejson": "https://tiles.mapx.at/v1/tiles/streets.json",
       "minzoom": 0,
-      "maxzoom": 14,
+      "maxzoom": 16,
       "bounds": [
         9.5,
-        46.3,
-        17.2,
-        49.1
+        46.37,
+        17.17,
+        49.02
       ],
-      "attribution": "mapx.at; ...",
-      "reference_date": "2026-10-01",
-      "built": "2026-11-15 10:26:41"
+      "attribution": "mapx.at; Datenquellen: BEV, GIP.at, ...",
+      "reference_date": "2026-04-01",
+      "built": "2026-11-21 11:22:18"
     }
   ]
 }
@@ -141,7 +141,7 @@ data = res.json()
 
 `GET /v1/tiles/{tileset}/{z}/{x}/{y}.{ext}`
 
-`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp`, `png` or `jpg` for raster. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
+`ext` must match the tile type: `pbf` (alias `mvt`) for vector, `webp` for raster and Terrain-RGB. Tile inside the zoom range but without data (e.g. edge of the coverage inside `bounds`): 204 without body. Wrong extension or zoom outside `minzoom`/`maxzoom`: 404 problem+json.
 
 Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the client does not accept gzip). `ETag` from the file hash, `If-None-Match` gives 304, `Cache-Control: public`.
 
@@ -153,7 +153,7 @@ Vector tiles are gzip-compressed (`Content-Encoding: gzip`, decompressed if the 
 | `z` | path | integer | yes | – | Zoom level |
 | `x` | path | integer | yes | – | Tile column |
 | `y` | path | integer | yes | – | Tile row |
-| `ext` | path | string | yes | – | pbf, mvt, webp, png or jpg |
+| `ext` | path | string | yes | – | pbf or mvt (vector), webp (raster) |
 
 **Example**
 
@@ -179,7 +179,7 @@ res = requests.get("https://api.mapx.at/v1/tiles/streets/14/8937/5681.pbf", head
 open("result.pbf", "wb").write(res.content)
 ```
 
-**Example response**: `application/vnd.mapbox-vector-tile`, `image/webp`, `image/png`, `image/jpeg` · Tile
+**Example response**: `application/vnd.mapbox-vector-tile`, `image/webp` · Tile
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

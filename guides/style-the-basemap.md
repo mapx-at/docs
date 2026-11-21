@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/guides/style-the-basemap/
 
 **Prerequisites:** a browser, a static web server and a free public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Basic knowledge of MapLibre styles (sources and layers).
 
-The basemap has 18 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](https://docs.mapx.at/tilesets/streets.md).
+The basemap has 19 layers. This example uses five: `landuse_a` (land use), `water_a` (lakes), `road_l` (roads), `building_a` (buildings) and `boundary_l` (boundaries). All layers and fields are in the [layer table](https://docs.mapx.at/tilesets/streets.md).
 
 1. **Page and source.** The source is the TileJSON link; zoom range and attribution come with it:
 
@@ -22,7 +22,7 @@ The basemap has 18 layers. This example uses five: `landuse_a` (land use), `wate
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
-     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const source = { type: "vector", url: "https://tiles.mapx.at/v1/tiles/streets.json" };
    ```
 

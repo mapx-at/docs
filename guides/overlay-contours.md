@@ -22,14 +22,14 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
-     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const sources = {
        ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        contours: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
      };
    ```
 
-2. **Pick the level.** The tiles contain several levels with their own line interval. To show only the matching level per zoom, filter by `lvl`:
+2. **Draw the lines.** Depending on the zoom the tileset delivers one level (`lvl`) with its own line interval:
 
    | Zoom | `lvl` | Interval | Index line |
    |---|---|---|---|
@@ -38,25 +38,17 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
    | 14–15 | 14 | 20 m | 100 m |
    | from 16 | 16 | 10 m | 50 m |
 
-   One layer per level, limited with `minzoom` and `maxzoom`:
+   Each tile holds only the level that matches its zoom, so the interval changes by itself and no filter on `lvl` is needed. Two layers are enough, lines and index lines:
 
    ```js
-   const levels = [
-     { lvl: 10, min: 10, max: 12 },
-     { lvl: 12, min: 12, max: 14 },
-     { lvl: 14, min: 14, max: 16 },
-     { lvl: 16, min: 16, max: 24 }
-   ];
-   const lineLayers = levels.flatMap(({ lvl, min, max }) => [
-     { id: `line-${lvl}`, type: "line", source: "contours", "source-layer": "contour_l",
-       minzoom: min, maxzoom: max,
-       filter: ["all", ["==", ["get", "lvl"], lvl], ["!=", ["get", "index"], 1]],
+   const lineLayers = [
+     { id: "line", type: "line", source: "contours", "source-layer": "contour_l",
+       filter: ["!=", ["get", "index"], 1],
        paint: { "line-color": "#ffd9a0", "line-width": 0.6, "line-opacity": 0.8 } },
-     { id: `index-${lvl}`, type: "line", source: "contours", "source-layer": "contour_l",
-       minzoom: min, maxzoom: max,
-       filter: ["all", ["==", ["get", "lvl"], lvl], ["==", ["get", "index"], 1]],
+     { id: "index", type: "line", source: "contours", "source-layer": "contour_l",
+       filter: ["==", ["get", "index"], 1],
        paint: { "line-color": "#ffb347", "line-width": 1.4 } }
-   ]);
+   ];
    ```
 
 3. **Elevation labels.** Only index lines carry a number. `symbol-placement: "line"` runs the text along the line:
@@ -103,7 +95,7 @@ Fine contour lines lie over the aerial imagery, their interval follows the zoom 
 
 For a map instead of imagery, replace the orthophoto layer with the layers from [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md); put the contours on top.
 
-> Without a filter on `lvl`, several levels overlap when the map overzooms. Lines end below z10; for smaller scales the relief stays visible through [hillshading](https://docs.mapx.at/guides/3d-terrain.md).
+> Lines end below z10; for smaller scales the relief stays visible through [hillshading](https://docs.mapx.at/guides/3d-terrain.md).
 
 ## Next steps
 

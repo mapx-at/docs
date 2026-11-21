@@ -6,13 +6,13 @@ mapx provides maps and location APIs for Austria, built only on official open da
 
 ## Facts for using the API
 
-- **Base URLs:** API `https://api.mapx.at/v1/`, routing `https://routing.mapx.at/`, search `https://search.mapx.at/`, tiles `https://tiles.mapx.at/`. Data covers Austria only.
-- **Authentication:** free account at https://account.mapx.at, create a token under "Tokens" (no usage-based charge). Servers and scripts send `Authorization: Bearer YOUR_TOKEN`; browsers, images and MapLibre tile URLs use the query parameter `access_token=YOUR_TOKEN`.
+- **Base URLs:** API `https://api.mapx.at/v1/`, tiles `https://tiles.mapx.at/`. Data covers Austria only.
+- **Authentication:** free account at https://account.mapx.at, create a token under "Tokens". Servers and scripts send `Authorization: Bearer YOUR_TOKEN`; browsers, images and MapLibre tile URLs use the query parameter `access_token=YOUR_TOKEN`.
 - **Token kinds:** public `mx_pk_…` for websites and apps (`GET`/`HEAD` only, read-only products, bound to allowed origins or an Android app); secret `mx_sk_…` for servers, scripts and CI (never in a web page or app, optionally bound to IP ranges); `mx_mcp_…` (AI assistant) only for the MCP server.
 - **MCP server:** `https://mcp.mapx.at/mcp` (Streamable HTTP, read-only tools for Austria), token of type "AI assistant (MCP)" (`mx_mcp_…`) in the header `Authorization: Bearer …`; alternatively sign in with the mapx account (OAuth 2.1 with PKCE) in claude.ai, ChatGPT and Claude Code: just enter the address and sign in; setup in the guide "MCP server for Austrian geodata".
 - **Coordinates:** always `lon,lat` (WGS84), several points separated by `;`, so longitude comes first.
 - **OpenAPI:** https://api.mapx.at/v1/openapi.json (works without a token). CORS is open.
-- **Limits:** per token and zone (`tiles`, `search`, `route`, `elevation`, `static`, `heavy`); exceeding one returns `429` with `Retry-After`; numbers in [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Errors are `application/problem+json` with a stable `code`.
+- **Limits:** per IP address and zone (`tiles`, `search`, `route`, `elevation`, `static`, `heavy`), plus a per-minute limit per token; exceeding one returns `429` with `Retry-After`; numbers in [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Errors are `application/problem+json` with a stable `code`.
 - **Attribution is required:** CC BY 4.0, name the source and license wherever the map or result is visible; JSON responses carry an `attribution` field. Text per tileset: [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Get started
@@ -24,7 +24,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [First search: geocoding request](https://docs.mapx.at/start/first-search.md): Find an address or place in Austria with one geocoding request (curl, JavaScript, Python), then show the result as a marker on a map.
 - [First route: routing request](https://docs.mapx.at/start/first-route.md): Request a driving route from Vienna to Melk with the mapx routing API (curl, JavaScript, Python) and draw the result as a line on a map.
 - [Glossary of mapx and GIS terms](https://docs.mapx.at/start/glossary.md): Glossary of terms used in the mapx documentation: annotations, contours, isochrones, PMTiles, Terrain-RGB and more.
-- [FAQ: token, licence, offline use](https://docs.mapx.at/start/faq.md): Answers on mapx: do I need a token, what does it cost, commercial use under CC BY 4.0, data freshness, offline maps, data outside Austria, errors 401 and 403.
+- [FAQ: token, license, data freshness](https://docs.mapx.at/start/faq.md): Answers on mapx: free with an account and token, commercial use under CC BY 4.0, data freshness, tiles, data outside Austria, errors 401 and 403.
 
 ## Guides
 
@@ -75,8 +75,8 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Orthophoto tileset: aerial imagery](https://docs.mapx.at/tilesets/orthophoto.md): Aerial imagery of Austria from the BEV as WebP tiles, z5 to z18, 20 cm, with an unambiguous flight-block choice per pixel.
 - [Sentinel-2 satellite imagery tileset](https://docs.mapx.at/tilesets/sentinel2.md): Always up-to-date, cloud-free satellite image of Austria from Copernicus Sentinel-2 as WebP tiles, z5 to z13, 10 m, updated daily at 02:00.
 - [Orthophoto flight blocks tileset](https://docs.mapx.at/tilesets/orthophoto-flight-blocks.md): Which flight supplies which orthophoto pixel: winning areas of the BEV surveys with flight period, as vector tiles z6 to z17.
-- [Rest areas tileset (ASFINAG)](https://docs.mapx.at/tilesets/rest-areas.md): Rest areas and truck parking of ASFINAG as vector tiles (tileset rest-areas) and as the search category rastplatz in the mapx search.
-- [Sharing stations tileset (ÖBB)](https://docs.mapx.at/tilesets/sharing.md): Sharing stations (cargo bikes, bikes) of ÖBB as vector tiles (tileset sharing) and as the search category sharing in the mapx search API.
+- [Rest areas tileset (ASFINAG)](https://docs.mapx.at/tilesets/rest-areas.md): Rest areas and truck parking of ASFINAG as vector tiles (tileset rest-areas) and as the search category rest_area in the mapx search.
+- [Sharing locations tileset (ÖBB)](https://docs.mapx.at/tilesets/sharing.md): Sharing locations (cargo bikes, bikes) of ÖBB as vector tiles (tileset sharing) and as the search category vehicle_sharing in the mapx search API.
 - [Cycle routes tileset (GIP.at)](https://docs.mapx.at/tilesets/bike-routes.md): Signed cycle routes and mountain bike trails in Austria from GIP.at, EuroVelo included, as vector tiles (tileset bike-routes) for MapLibre.
 - [GIP points tileset (park and ride, level crossings)](https://docs.mapx.at/tilesets/gip-poi.md): Park and ride, bike and ride, level crossings, bollards, barriers, gates and pedestrian crossings in Austria from GIP.at as vector tiles (tileset gip-poi).
 
@@ -116,9 +116,9 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Departures at a stop example](https://docs.mapx.at/examples/departures.md): Click near a public transport stop in Austria and see the next departures: transit departures API with a live map and runnable code.
 - [Traffic incidents and closures example](https://docs.mapx.at/examples/traffic.md): Traffic style plus the active incidents of the visible map area: show road incidents and closures in Austria with the mapx traffic API.
 - [Static image example for a listing](https://docs.mapx.at/examples/static-image.md): Click a place and get a ready-made static map image URL with a pin, for example for a real estate listing: static images API, runnable code.
-- [GeoJSON overlay on the map example](https://docs.mapx.at/examples/geojson-overlay.md): Show your own GeoJSON points, line and polygon over the mapx style, with a popup on click, in MapLibre GL JS. Runnable code to copy.
+- [GeoJSON overlay on the map example](https://docs.mapx.at/examples/geojson-overlay.md): Show your own GeoJSON points, line and polygon over the mapx style, with a popup when you click a point, in MapLibre GL JS. Runnable code to copy.
 
-
+## Use cases
 
 - [Use cases: logistics, municipalities, tourism](https://docs.mapx.at/use-cases/index.md): Use cases for the mapx maps and location APIs in Austria: logistics, municipalities and tourism, each with the matching APIs and code.
 - [Logistics: truck routing and matrix](https://docs.mapx.at/use-cases/logistics.md): Truck routing with vehicle size, travel-time matrices, tour planning and traffic for deliveries and fleets, built on the mapx APIs for Austria.

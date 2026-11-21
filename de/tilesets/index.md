@@ -1,28 +1,32 @@
-# Tilesets: Vektor- und Rasterkacheln
+# Kachelsätze: Vektor- und Rasterkacheln
 
 Source: https://docs.mapx.at/de/tilesets/
 
-> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthophoto, Gelände- und Oberflächenmodell.
+> Alle mapx-Kachelsätze für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthofoto, Gelände- und Oberflächenmodell.
 
-Jedes Tileset ist als TileJSON und XYZ-Tiles über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Styles](https://docs.mapx.at/de/api/styles.md) enthalten. Alle Daten stehen unter CC BY 4.0, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+Jeder Kachelsatz ist als TileJSON und XYZ-Kacheln über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Stilen](https://docs.mapx.at/de/api/styles.md) enthalten. Die Daten stehen unter CC BY 4.0 (Ausnahme: Sentinel-2), siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
-| Tileset | Typ | Zoom | Stand |
+| Kachelsatz | Typ | Zoom | Stand |
 |---|---|---|---|
-| [`streets`](https://docs.mapx.at/de/tilesets/streets.md) | Vektor | z0–16 | 2026-04-01 |
-| [`contours`](https://docs.mapx.at/de/tilesets/contours.md) | Vektor | z10–16 | 20250915 |
-| [`terrain-rgb`](https://docs.mapx.at/de/tilesets/terrain-rgb.md) | DEM | z5–16 | 20250915 |
-| [`dsm`](https://docs.mapx.at/de/tilesets/dsm.md) | DEM | z5–16 | 20250915 |
-| [`orthophoto`](https://docs.mapx.at/de/tilesets/orthophoto.md) | raster | z5–18 | 2025-10-03 |
-| [`orthophoto-flight-blocks`](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md) | Vektor | z6–17 | 2025-10-03 |
-| [`rest-areas`](https://docs.mapx.at/de/tilesets/rest-areas.md) | Vektor | z7–14 | 20261120 |
-| [`sharing`](https://docs.mapx.at/de/tilesets/sharing.md) | Vektor | z8–14 | 20261120 |
-| [`bike-routes`](https://docs.mapx.at/de/tilesets/bike-routes.md) | Vektor | z5–14 | 20260708 |
-| [`gip-poi`](https://docs.mapx.at/de/tilesets/gip-poi.md) | Vektor | z12–15 | 20260708 |
+| [`streets`](https://docs.mapx.at/de/tilesets/streets.md) | Vektor | z0–16 | 01.04.2026 |
+| [`contours`](https://docs.mapx.at/de/tilesets/contours.md) | Vektor | z10–16 | 15.09.2025 |
+| [`terrain-rgb`](https://docs.mapx.at/de/tilesets/terrain-rgb.md) | DEM | z5–16 | 15.09.2025 |
+| [`dsm`](https://docs.mapx.at/de/tilesets/dsm.md) | DEM | z5–16 | 15.09.2025 |
+| [`orthophoto`](https://docs.mapx.at/de/tilesets/orthophoto.md) | raster | z5–18 | 03.10.2025 |
+| [`orthophoto-flight-blocks`](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md) | Vektor | z6–17 | 03.10.2025 |
+| [`rest-areas`](https://docs.mapx.at/de/tilesets/rest-areas.md) | Vektor | z7–14 | 20.11.2026 |
+| [`sharing`](https://docs.mapx.at/de/tilesets/sharing.md) | Vektor | z8–14 | 20.11.2026 |
+| [`bike-routes`](https://docs.mapx.at/de/tilesets/bike-routes.md) | Vektor | z5–14 | 08.07.2026 |
+| [`gip-poi`](https://docs.mapx.at/de/tilesets/gip-poi.md) | Vektor | z12–15 | 08.07.2026 |
 | [`sentinel2`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
+| [`sentinel2-date`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
+| [`sentinel2-ndvi`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
+| [`sentinel2-ndwi`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
+| [`sentinel2-ndsi`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
 
-Nicht in der Tabelle, weil es täglich ersetzt statt versioniert wird: [Sentinel-2 aktuell](https://docs.mapx.at/de/tilesets/sentinel2.md) (`sentinel2`, Raster, z5 bis z13).
+Die Sentinel-2-Kachelsätze ([Sentinel-2 aktuell](https://docs.mapx.at/de/tilesets/sentinel2.md) und vier Auswertungen) werden täglich ersetzt statt versioniert, daher steht bei ihnen „täglich“ statt eines Stichtags.
 
-Ein Tileset per Namen verwenden:
+Ein Kachelsatz per Namen verwenden:
 
 ```js
 map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });

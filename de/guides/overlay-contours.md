@@ -1,16 +1,16 @@
-# Höhenlinien über Orthophoto legen
+# Höhenlinien über Orthofoto legen
 
 Source: https://docs.mapx.at/de/guides/overlay-contours/
 
-> Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthophoto oder Basiskarte in MapLibre GL JS legen, mit den mapx-Höhenlinien als Vektorkacheln.
+> Höhenlinien mit Indexlinien und Höhenbeschriftung über Orthofoto oder Basiskarte in MapLibre GL JS legen, mit den mapx-Höhenlinien als Vektorkacheln.
 
 **Ziel:** Höhenlinien in passender Dichte über ein Luftbild legen, Indexlinien kräftiger zeichnen und mit der Höhe beschriften.
 
 **Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die Beschriftung nutzt die Schriften von mapx, siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-und-schriften).
 
-Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat einen Layer `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
+Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat eine Ebene `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `lvl` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
-1. **Seite mit Hintergrund.** Das Orthophoto als Basis, die Höhenlinien als Vektorquelle:
+1. **Seite mit Hintergrund.** Das Orthofoto als Basis, die Höhenlinien als Vektorquelle:
 
    ```html
    <!doctype html>
@@ -21,13 +21,15 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
    <script type="module">
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
      const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
+     // Token an alle Anfragen an mapx.at hängen (TileJSON, Kacheln, Schriften)
+     const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const quellen = {
        ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        linien: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
      };
    ```
 
-2. **Stufe wählen.** Die Kacheln enthalten mehrere Stufen mit eigenem Linienabstand. Damit je Zoom nur die passende Stufe sichtbar ist, nach `lvl` filtern:
+2. **Linien zeichnen.** Je nach Zoom liefert der Kachelsatz eine Stufe (`lvl`) mit eigenem Linienabstand:
 
    | Zoom | `lvl` | Abstand | Indexlinie |
    |---|---|---|---|
@@ -36,25 +38,17 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
    | 14–15 | 14 | 20 m | 100 m |
    | ab 16 | 16 | 10 m | 50 m |
 
-   Eine Ebene je Stufe, mit `minzoom` und `maxzoom` begrenzt:
+   Jede Kachel enthält nur die Stufe, die zu ihrem Zoom passt; der Abstand ändert sich daher von selbst, es braucht keinen Filter nach `lvl`. Zwei Ebenen genügen, Linien und Indexlinien:
 
    ```js
-   const stufen = [
-     { lvl: 10, min: 10, max: 12 },
-     { lvl: 12, min: 12, max: 14 },
-     { lvl: 14, min: 14, max: 16 },
-     { lvl: 16, min: 16, max: 24 }
-   ];
-   const linienEbenen = stufen.flatMap(({ lvl, min, max }) => [
-     { id: `linie-${lvl}`, type: "line", source: "linien", "source-layer": "contour_l",
-       minzoom: min, maxzoom: max,
-       filter: ["all", ["==", ["get", "lvl"], lvl], ["!=", ["get", "index"], 1]],
+   const linienEbenen = [
+     { id: "linie", type: "line", source: "linien", "source-layer": "contour_l",
+       filter: ["!=", ["get", "index"], 1],
        paint: { "line-color": "#ffd9a0", "line-width": 0.6, "line-opacity": 0.8 } },
-     { id: `index-${lvl}`, type: "line", source: "linien", "source-layer": "contour_l",
-       minzoom: min, maxzoom: max,
-       filter: ["all", ["==", ["get", "lvl"], lvl], ["==", ["get", "index"], 1]],
+     { id: "index", type: "line", source: "linien", "source-layer": "contour_l",
+       filter: ["==", ["get", "index"], 1],
        paint: { "line-color": "#ffb347", "line-width": 1.4 } }
-   ]);
+   ];
    ```
 
 3. **Höhenbeschriftung.** Nur Indexlinien tragen eine Zahl. `symbol-placement: "line"` setzt den Text entlang der Linie:
@@ -81,11 +75,8 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
      const map = new maplibregl.Map({
        attributionControl: false,
        container: "map",
+       transformRequest: withToken,
        center: [12.694, 47.074], zoom: 14,
-       // Token an alle Anfragen an mapx.at hängen
-       transformRequest: (url) => ({
-         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
-       }),
        style: {
          version: 8,
          glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
@@ -102,12 +93,12 @@ Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat ein
 
 Über dem Luftbild liegen feine Höhenlinien, deren Abstand sich mit dem Zoom anpasst (100 m bis 10 m). Indexlinien sind kräftig und tragen die Höhe in Metern.
 
-Für eine Karte statt Luftbild die Orthophoto-Ebene durch die Ebenen aus [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md) ersetzen; die Höhenlinien kommen danach darüber.
+Für eine Karte statt Luftbild die Orthofoto-Ebene durch die Ebenen aus [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md) ersetzen; die Höhenlinien kommen danach darüber.
 
-> Ohne Filter nach `lvl` liegen beim Überzoomen mehrere Stufen übereinander. Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](https://docs.mapx.at/de/guides/3d-terrain.md).
+> Die Linien enden unterhalb von z10; für kleinere Maßstäbe bleibt das Relief über [Schummerung](https://docs.mapx.at/de/guides/3d-terrain.md).
 
 ## Nächste Schritte
 
 - Felder und Stufen im Detail: [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md).
 - Gelände dreidimensional: [3D-Gelände](https://docs.mapx.at/de/guides/3d-terrain.md).
-- Quellenangabe: [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+- Quellenangabe: [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).

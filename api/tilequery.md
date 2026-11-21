@@ -61,16 +61,26 @@ data = res.json()
     {
       "type": "Feature",
       "geometry": {
-        "type": "Point",
+        "type": "LineString",
         "coordinates": [
-          16.37253,
-          48.20852
+          [
+            16.3721649,
+            48.2086397
+          ],
+          [
+            16.3722213,
+            48.208612
+          ]
         ]
       },
       "properties": {
-        "name": "Herrengasse",
+        "kind": "path",
+        "kind_detail": "path",
+        "min_zoom": 14,
+        "sort_rank": 11,
+        "structure": "tunnel",
         "tilequery": {
-          "distance": 2.9,
+          "distance": 24.2,
           "geometry": "linestring",
           "layer": "road_l"
         }

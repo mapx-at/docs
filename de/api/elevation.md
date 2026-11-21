@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `elevation` (10/s), `search
 
 `GET /v1/elevation`
 
-Entweder `points` (bis zu 512 Punkte) oder `path` (Linie auf der Kugel, nach Länge gleichmäßig in `samples` Punkte geteilt). Außerhalb des Gebiets ist `elevation` null. Eine POST-Form gibt es nicht, und das Gateway begrenzt die Anfrage-URL auf etwa 8 KB (längere URLs bekommen 414 als HTML), ein GET trägt daher praktisch etwa 400 Punkte mit 6 Nachkommastellen, mit mehr Stellen weniger.
+Entweder `points` (bis zu 512 Punkte) oder `path` (Linie auf der Kugel, nach Länge gleichmäßig in `samples` Punkte geteilt). Außerhalb des Gebiets ist `elevation` null. Eine POST-Form gibt es nicht, und das Gateway begrenzt die Anfrage-URL auf etwa 8 KB (längere URLs bekommen 414), ein GET trägt daher praktisch etwa 400 Punkte mit 6 Nachkommastellen, mit mehr Stellen weniger.
 
 Größere Punktmengen auf mehrere Anfragen aufteilen; für Punkte entlang einer Linie nur die Stützpunkte als `path` senden und `samples` (bis 1024) die Abtastung überlassen, oder `/v1/elevation/profile` verwenden.
 
@@ -220,7 +220,9 @@ data = res.json()
     "ascent_m": 9.5,
     "descent_m": 0,
     "min_m": 171,
-  …
+    "max_m": 180.5
+  }
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))

@@ -16,7 +16,7 @@ MapLibre shows the attribution automatically when you load a style or a TileJSON
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
-  maxzoom: 18, attribution: "Orthophoto: BEV (CC BY 4.0)" }
+  maxzoom: 18, attribution: "mapx.at; Orthophoto: BEV, CC BY 4.0" }
 ```
 
 ## In print, reports and static images
@@ -27,17 +27,17 @@ Put a visible line next to the image, in readable size, for example `Source: map
 
 | Tileset | Text |
 |---|---|
-| `streets` | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0 |
-| `contours` | Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `terrain-rgb` | Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `dsm` | Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `orthophoto` | Orthophoto: BEV (CC BY 4.0) |
-| `orthophoto-flight-blocks` | The TileJSON currently carries no attribution text. The flight blocks are metadata of the BEV orthophoto, so credit `BEV, CC BY 4.0`. |
-| `bike-routes` | Datenquelle: GIP.at, CC BY 4.0 |
-| `gip-poi` | Datenquelle: GIP.at, CC BY 4.0 |
-| `rest-areas` | ASFINAG, CC BY 4.0 |
-| `sharing` | ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
-| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
+| `streets` | mapx.at; Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0 |
+| `contours` | mapx.at; Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `terrain-rgb` | mapx.at; Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `dsm` | mapx.at; Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `orthophoto` | mapx.at; Orthophoto: BEV (CC BY 4.0) |
+| `orthophoto-flight-blocks` | The TileJSON only names `mapx.at`; credit `mapx.at; BEV, CC BY 4.0`, since the flight blocks are metadata of the BEV orthophoto. |
+| `bike-routes` | mapx.at; Datenquelle: GIP.at, CC BY 4.0 |
+| `gip-poi` | mapx.at; Datenquelle: GIP.at, CC BY 4.0 |
+| `rest-areas` | mapx.at; ASFINAG, CC BY 4.0 |
+| `sharing` | mapx.at; ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
+| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | mapx.at; Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
 
 ## Text per API
 
@@ -48,11 +48,11 @@ JSON responses with data carry a top-level `attribution` field; it always starts
 | Geocoding, Search Box, Address | BEV (address register, geographical names, administrative boundaries), CC BY 4.0 |
 | Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
 | Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
-| Transit | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
+| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
 | Weather | GeoSphere Austria, CC BY 4.0 |
 | Climate | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
 | Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
 | Tilequery | Source of the queried tileset, see [Tilesets](https://docs.mapx.at/tilesets/index.md) |
 | Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
 
-The credit is also stored in the TileJSON and PMTiles metadata.
+The credit is also stored in the TileJSON.

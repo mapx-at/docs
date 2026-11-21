@@ -35,13 +35,18 @@ map.on('load', () => {
 });
 map.on('click', (e) => abfragen([e.lngLat.lng, e.lngLat.lat]));
 
+let start; // last start point [lng, lat]
+document.getElementById('profil').addEventListener('change', () => start && abfragen(start)); // recalculate for the new profile
+
 async function abfragen(ort) {
+  start = ort;
   const profil = document.getElementById('profil').value; // walking, cycling or driving
   const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
     const r = await fetch(url, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     map.getSource('iso').setData(await r.json()); // one MultiPolygon per step, largest first
+    document.getElementById('info').textContent = `${de ? 'Startpunkt' : 'Start point'} ${ort[1].toFixed(4)}, ${ort[0].toFixed(4)}: ${de ? 'erreichbar in 5, 10 und 15 Minuten. Karte klicken für einen neuen Startpunkt.' : 'reachable in 5, 10 and 15 minutes. Click the map for a new start point.'}`;
   } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -68,9 +73,13 @@ const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ sou
 const geojson = new ol.format.GeoJSON({ featureProjection: 'EPSG:3857' }); // reads lon/lat GeoJSON into map coordinates
 
 map.on('click', (e) => abfragen(ol.proj.toLonLat(e.coordinate)));
+let start; // last start point [lng, lat]
 abfragen([15.33, 48.23]);
 
+document.getElementById('profil').addEventListener('change', () => start && abfragen(start)); // recalculate for the new profile
+
 async function abfragen(ort) {
+  start = ort;
   const profil = document.getElementById('profil').value; // walking, cycling or driving
   const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
@@ -78,6 +87,7 @@ async function abfragen(ort) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     iso.clear();
     iso.addFeatures(geojson.readFeatures(await r.json())); // one MultiPolygon per step, largest first
+    document.getElementById('info').textContent = `${de ? 'Startpunkt' : 'Start point'} ${ort[1].toFixed(4)}, ${ort[0].toFixed(4)}: ${de ? 'erreichbar in 5, 10 und 15 Minuten. Karte klicken für einen neuen Startpunkt.' : 'reachable in 5, 10 and 15 minutes. Click the map for a new start point.'}`;
   } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -101,14 +111,19 @@ const map = L.map('map').setView([48.23, 15.33], 14); // Melk
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
 const iso = L.geoJSON(null, { style: { color: '#2346d8', weight: 2, opacity: 1, fillColor: '#2346d8', fillOpacity: 0.12 } }).addTo(map);
 map.on('click', (e) => abfragen([e.latlng.lng, e.latlng.lat]));
+let start; // last start point [lng, lat]
 abfragen([15.33, 48.23]);
+document.getElementById('profil').addEventListener('change', () => start && abfragen(start)); // recalculate for the new profile
+
 async function abfragen(ort) {
+  start = ort;
   const profil = document.getElementById('profil').value; // walking, cycling or driving
   const url = `https://api.mapx.at/v1/isochrone/${profil}/${ort.join(',')}?contours_minutes=5,10,15`;
   try {
     const r = await fetch(url, AUTH);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     iso.clearLayers().addData(await r.json()); // one MultiPolygon per step, largest first
+    document.getElementById('info').textContent = `${de ? 'Startpunkt' : 'Start point'} ${ort[1].toFixed(4)}, ${ort[0].toFixed(4)}: ${de ? 'erreichbar in 5, 10 und 15 Minuten. Karte klicken für einen neuen Startpunkt.' : 'reachable in 5, 10 and 15 minutes. Click the map for a new start point.'}`;
   } catch (err) { document.getElementById('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````

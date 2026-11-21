@@ -8,6 +8,8 @@ Source: https://docs.mapx.at/guides/qgis/
 
 **Prerequisites:** QGIS 3.x.
 
+In QGIS you can load the tilesets (orthophoto, elevation models, vector tiles), but not the ready-made mapx styles: they read PMTiles files (`pmtiles://`). QGIS does not show the credit by itself; add it by hand in the print layout and in reports, see [Attribution](https://docs.mapx.at/reference/attribution.md).
+
 ## Orthophoto as an XYZ layer
 
 1. In the Browser panel, right-click **XYZ Tiles**, **New Connection**.

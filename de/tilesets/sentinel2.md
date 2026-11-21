@@ -1,4 +1,4 @@
-# Sentinel-2-Satellitenbild-Tileset
+# Sentinel-2-Satellitenbild-Kachelsatz
 
 Source: https://docs.mapx.at/de/tilesets/sentinel2/
 
@@ -30,7 +30,7 @@ const map = new maplibregl.Map({
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
-TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `satellite-current` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellite-current` (alte ID `satellit-aktuell` bis 31.05.2027 abgekündigt).
+TileJSON liefert Zoombereich, Grenzen und die Quellenangabe. Der fertige Stil `satellite-current` (Sentinel-2 mit Straßen und Namen) steht unter `/v1/styles/satellite-current`; als statisches Kartenbild oder Static Tile gibt es ihn nicht.
 
   
 
@@ -39,7 +39,7 @@ TileJSON liefert Zoombereich, Grenzen und die Attribution. Der fertige Stil `sat
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-  attribution: "Contains modified Copernicus Sentinel data 2026"
+  attribution: "mapx.at; Contains modified Copernicus Sentinel data 2026"
 }).addTo(map);
 ```
 
@@ -52,7 +52,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:reference_date` (jüngste eingepflegte Szene) (Cache 5 Minuten).
+> Der Kachelsatz wird täglich ersetzt (fester Kachelsatz `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:reference_date` (jüngste eingepflegte Szene) (Cache 5 Minuten).
 
 ## TileJSON, Zoom und Aktualisierung
 
@@ -75,9 +75,9 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.
 
 ## Index- und Datumsebenen
 
-Aus demselben Composite entstehen vier weitere feste Tilesets. Wo kein Wert vorliegt, sind sie durchsichtig und eignen sich als Überlagerung auf `sentinel2`, einem Luftbild oder einer Karte. Alle: WebP, 512 px, z5 bis z13, gleiche Attribution, täglich gemeinsam mit `sentinel2` ersetzt. In `/v1/tiles` erscheinen sie erst, wenn die Datei existiert. Das TileJSON enthält Wertebereich und Farbrampe in `mapx:legend`.
+Aus demselben Composite entstehen vier weitere feste Kachelsätze. Wo kein Wert vorliegt, sind sie durchsichtig und eignen sich als Überlagerung auf `sentinel2`, einem Luftbild oder einer Karte. Alle: WebP, 512 px, z5 bis z13, gleiche Quellenangabe, täglich gemeinsam mit `sentinel2` ersetzt. In `/v1/tiles` erscheinen sie erst, wenn die Datei existiert. Das TileJSON enthält Wertebereich und Farbrampe in `mapx:legend`.
 
-| Tileset | Zeigt | Wert und Farbe |
+| Kachelsatz | Zeigt | Wert und Farbe |
 |---|---|---|
 | `sentinel2-date` | Aufnahmedatum je Pixel | Alter in Tagen vor `mapx:reference_date`: 0 grün, 20 gelb, 45 orange, 90 rot, 180 dunkelrot |
 | `sentinel2-ndvi` | Vegetation, (NIR - Rot) / (NIR + Rot) | -0,1 grau, 0,05 kahl, 0,2 sandfarben, 0,4 hellgrün, 0,85 dunkelgrün |
@@ -96,12 +96,12 @@ Im mapx-Viewer sind sie die Überlagerungen „Aufnahmedatum“, „Vegetation (
 - Das Bild ist eine Mischung verschiedener Tage (Datum je Pixel im Bestand); dichter Bodennebel über Wochen kann trotz Filter stehen bleiben.
 - 10 m Quellauflösung: z13 ist die letzte Stufe mit echtem Detailgewinn.
 
-## Attribution
+## Quellenangabe
 
 Pflicht nach den Copernicus-Nutzungsbedingungen (frei, vollständig und offen) für bearbeitete Daten:
 
 ```html
-Contains modified Copernicus Sentinel data 2026
+mapx.at; Contains modified Copernicus Sentinel data 2026
 ```
 
 Die Jahreszahl nennt das Jahr der Aufnahmen; MapLibre übernimmt den Text aus TileJSON oder PMTiles. Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

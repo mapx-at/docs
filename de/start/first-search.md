@@ -30,11 +30,11 @@ feature = res.json()["features"][0]
 print(feature["place_name"], feature["center"])
 ```
 
-Die Antwort ist eine GeoJSON-`FeatureCollection`. Jedes Feature hat `place_name`, `center` (`lon,lat`) und `geometry`. `types=address` beschränkt die Ergebnisse auf Adressen; ohne den Parameter kann bei einer Hausnummer auch eine Straße oder ein Ort vorne liegen.
+Die Antwort ist eine GeoJSON-`FeatureCollection`; das `curl`-Beispiel liefert zum Beispiel `{"place_name":"Stephansplatz 1, Innere Stadt, 1010 Wien, W","center":[16.372605,48.208728]}`. Bei `401` oder `403` siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Jedes Feature hat `place_name`, `center` (`lon,lat`) und `geometry`. `types=address` beschränkt die Ergebnisse auf Adressen; ohne den Parameter kann bei einer Hausnummer auch eine Straße oder ein Ort vorne liegen.
 
 ## Ergebnis auf der Karte zeigen
 
-Diesen Code auf der Seite aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) nach `new maplibregl.Map(...)` einfügen (die Karte in `const map` speichern):
+Diesen Code auf der Seite aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) nach `new maplibregl.Map(...)` einfügen (die Karte in `const map` speichern). Er steht im `<script type="module">`, nur dort funktioniert Top-Level-`await`:
 
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1", { headers: { Authorization: "Bearer DEIN_TOKEN" } });
@@ -42,8 +42,6 @@ const [hit] = (await res.json()).features;
 new maplibregl.Marker().setLngLat(hit.center).addTo(map);
 map.flyTo({ center: hit.center, zoom: 16 });
 ```
-
-Den Code in ein `<script type="module">` setzen, damit Top-Level-`await` funktioniert.
 
 ## Nächste Schritte
 

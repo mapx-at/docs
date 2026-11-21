@@ -59,14 +59,14 @@ const ortho = new ol.layer.Tile(), linien = new ol.layer.VectorTile({ style: lin
 const map = new ol.Map({ target: 'map', layers: [ortho, linien], view: new ol.View({ center: ol.proj.fromLonLat([11.4, 47.27]), zoom: 13.5 }) }); // Innsbruck
 
 const plain = (html) => new DOMParser().parseFromString(html, 'text/html').body.textContent; // attribution as text, not as HTML
-async function tilejson(name) {
+async function tilejson(name, sep = '') {
   const r = await fetch(`https://api.mapx.at/v1/tiles/${name}.json`, AUTH);
   if (!r.ok) throw new Error('HTTP ' + r.status);
   const tj = await r.json(); // tile URL, zoom range and attribution
-  return { url: tj.tiles[0] + '?access_token=' + TOKEN, minZoom: tj.minzoom, maxZoom: tj.maxzoom, attributions: plain(tj.attribution ?? ''), attributionsCollapsible: false };
+  return { url: tj.tiles[0] + '?access_token=' + TOKEN, minZoom: tj.minzoom, maxZoom: tj.maxzoom, attributions: plain(tj.attribution ?? '') + sep, attributionsCollapsible: false };
 }
 (async () => {
-  ortho.setSource(new ol.source.XYZ({ ...(await tilejson('orthophoto')), tileSize: 512 }));
+  ortho.setSource(new ol.source.XYZ({ ...(await tilejson('orthophoto', '; ')), tileSize: 512 }));
   linien.setSource(new ol.source.VectorTile({ ...(await tilejson('contours')), format: new ol.format.MVT({ layers: ['contour_l'] }) }));
 })();
 ````
@@ -87,8 +87,9 @@ const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const map = L.map('map').setView([47.27, 11.4], 14); // Innsbruck
 (async () => {
   const tj = await (await fetch('https://api.mapx.at/v1/tiles/orthophoto.json', AUTH)).json();
-  // the attribution text of the TileJSON (CC BY 4.0) must stay visible on the map; escaped, as it is API text, not HTML
-  L.tileLayer(tj.tiles[0] + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: tj.minzoom + 1, maxNativeZoom: tj.maxzoom + 1, maxZoom: 21, attribution: Object.assign(document.createElement('span'), { textContent: tj.attribution }).innerHTML }).addTo(map);
+  // the attribution text of the TileJSON (CC BY 4.0) must stay visible on the map; it contains HTML, so reduce it to plain text and escape it
+  const plain = new DOMParser().parseFromString(tj.attribution ?? '', 'text/html').body.textContent;
+  L.tileLayer(tj.tiles[0] + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: tj.minzoom + 1, maxNativeZoom: tj.maxzoom + 1, maxZoom: 21, attribution: Object.assign(document.createElement('span'), { textContent: plain }).innerHTML }).addTo(map);
 })();
 ````
 

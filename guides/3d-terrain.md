@@ -20,15 +20,16 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    <div id="map"></div>
    ```
 
-2. **Declare the sources.** The elevation model as `raster-dem`, the orthophoto as `raster`:
+2. **Declare the sources.** The elevation model as `raster-dem` (twice: one source for the terrain, one for the hillshade, which renders better), the orthophoto as `raster`. Plus the token, which is added to every request to `mapx.at`:
 
    ```js
    const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
    // adds the token to every request to mapx.at (TileJSON and tiles)
-   const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
+   const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
 
    const sources = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
+     "dem-hillshade": { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
      ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
    };
    ```
@@ -38,7 +39,7 @@ This guide uses the [DTM](https://docs.mapx.at/tilesets/terrain-rgb.md) (elevati
    ```js
    const layers = [
      { id: "ortho", type: "raster", source: "ortho" },
-     { id: "hillshade", type: "hillshade", source: "dem",
+     { id: "hillshade", type: "hillshade", source: "dem-hillshade",
        paint: { "hillshade-exaggeration": 0.4, "hillshade-shadow-color": "#000000" } }
    ];
    ```

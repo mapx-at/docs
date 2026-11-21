@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/use-cases/municipalities/
 
 > Adressvalidierung, ÖV-Abfahrten und eine eingebettete Karte für Gemeinde-Websites und Verwaltungswerkzeuge.
 
-Gemeindewerkzeuge arbeiten mit Adressen, müssen für Bürgerinnen und Bürger verständlich sein und sollen keine Lizenz brauchen. Die Bausteine unten verbinden Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
+Gemeindewerkzeuge arbeiten mit Adressen, müssen für Bürgerinnen und Bürger verständlich sein, und die Daten sollen frei nutzbar sein: Sie stehen unter CC BY 4.0. Die Bausteine unten verbinden Adressregister, Fahrplan und Karte für die Website einer Gemeinde.
 
 Alle Aufrufe brauchen einen Token; `DEIN_TOKEN` durch den eigenen ersetzen ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
@@ -22,7 +22,7 @@ Während der Eingabe das [Adress-Autofill](https://docs.mapx.at/de/examples/auto
 
 ## Abfahrten am Gemeindeamt
 
-Bürgerinnen und Bürger fragen „Wann fährt der nächste Bus?“. Der Fahrplan (Soll, keine Echtzeitdaten) ist eine Anfrage entfernt:
+Bürgerinnen und Bürger fragen „Wann fährt der nächste Bus?“. Der Soll-Fahrplan ist eine Anfrage entfernt:
 
 ```js
 const H = { headers: { Authorization: "Bearer DEIN_TOKEN" } };
@@ -35,7 +35,7 @@ Auf einer Karte per Klick zeigt das [Beispiel](https://docs.mapx.at/de/examples/
 
 ## Karte in die Gemeinde-Website einbetten
 
-Eine Karte braucht eine HTML-Datei, MapLibre und die Style-URL, einen kostenlosen Token und keinen Build ([Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md)). Die Seite im Content-Management-System ablegen oder die Datei als `<iframe>` einbinden:
+Eine Karte braucht eine HTML-Datei, MapLibre und die Stil-URL, einen kostenlosen Token und keinen Build ([Karte einbetten](https://docs.mapx.at/de/examples/embed-map.md)). Die Seite im Content-Management-System ablegen oder die Datei als `<iframe>` einbinden:
 
 ```html
 <iframe src="/karte.html" title="Karte unserer Gemeinde" style="width:100%;height:480px;border:0" loading="lazy"></iframe>
@@ -48,10 +48,10 @@ Für ein einfaches Bild ohne JavaScript (Druck, Newsletter, Seite ohne Skripte) 
      src="https://api.mapx.at/v1/static/streets/pin-l%2Be11d48(15.3294,48.2272)/15.3294,48.2272,16/600x400.png?access_token=DEIN_TOKEN">
 ```
 
-Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md) zeigen. Die `<img>`-URL enthält den Token: einen öffentlichen Token (`mx_pk_…`) mit der eigenen Website als erlaubter Origin verwenden; Bilder für E-Mail oder PDF auf dem Server mit einem geheimen Token (`mx_sk_…`) erzeugen. Die Attribution der Daten sichtbar lassen ([Attribution](https://docs.mapx.at/de/reference/attribution.md)).
+Eigene Daten (Spielplätze, Sammelstellen, Sperren) als [GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md) zeigen. Die `<img>`-URL enthält den Token: einen öffentlichen Token (`mx_pk_…`) mit der eigenen Website als erlaubter Origin verwenden; Bilder für E-Mail oder PDF auf dem Server mit einem geheimen Token (`mx_sk_…`) erzeugen. Die Quellenangabe der Daten sichtbar lassen ([Quellenangabe](https://docs.mapx.at/de/reference/attribution.md)).
 
 ## Nächste Schritte
 
 - [Suche](https://docs.mapx.at/de/guides/search.md)
 - [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
-- [Basiskarte stylen](https://docs.mapx.at/de/guides/style-the-basemap.md) in den Farben der Gemeinde
+- [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md) in den Farben der Gemeinde

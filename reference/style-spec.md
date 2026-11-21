@@ -17,6 +17,7 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
 | `outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d` | 3D variants: the style over the terrain model (`terrain`), with sky (`sky`) and a tilted start view (`pitch`, `bearing`) |
 | `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d` | 3D city: extruded buildings (`fill-extrusion` from `building_a.height`, tower parts from `building_part_a`) with scene lighting (`light`), sky and terrain |
+| `satellite-current` | Sentinel-2 satellite image with roads and names, updated daily |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 
@@ -53,6 +54,16 @@ Geometry: **Polygon**, Zoom: **z12–16**, Layer: `building_a`. Building footpri
 | `max_height` | `number` | Maximum height of the building in metres (towers, churches), only when clearly above the building height; from z15. |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 
+### building_part_a
+
+Geometry: **Polygon**, Zoom: **z13–16**, Layer: `building_part_a`. Building parts with bottom and top for 3D display (extrude from min_height to height): tower parts of tall buildings derived from the surface model (from z13), in Vienna the blocks of the City of Vienna building block model (from z15, replacing the whole body there, see building_a.has_parts).
+
+| Field | Type | Description |
+|---|---|---|
+| `height` | `number` | Top of the part in metres above ground. |
+| `min_height` | `number` | Bottom of the part in metres above ground (tower part: building height or top of the part below; Vienna: 0, or the underside for passages and canopies). |
+| `source` | `string` | Origin of the part. Values: `dsm` = derived from the surface model (BEV ALS); `wien` = City of Vienna building block model |
+
 ### ski_a
 
 Geometry: **Polygon**, Zoom: **z10–16**, Layer: `ski_a`. Ski areas (polygons).
@@ -78,6 +89,8 @@ Geometry: **Line**, Zoom: **z6–16**, Layer: `road_l`. Roads and paths (lines).
 | `ref` | `string` | Road number, e.g. A1 or B3. |
 | `sort_rank` | `number` | Display rank; lower number = more important or drawn further below. |
 | `structure` | `string` | Structure type: bridge or tunnel. Absent for at-grade segments. Values: `bridge` = Bridge; `tunnel` = Tunnel |
+
+The mapx styles show `ref` as the road number in bold type with a narrow outline, not in a box: motorways and expressways (A, S) in blue, federal and state roads (B, L) in dark red.
 
 ### rail_l
 
@@ -117,7 +130,6 @@ Geometry: **Point**, Zoom: **z8–16**, Layer: `airport_p`. Airports, airfields 
 
 | Field | Type | Description |
 |---|---|---|
-| `iata` | `string` | IATA code (3 letters), if available. |
 | `icao` | `string` | ICAO code (4 letters), if available. |
 | `kind` | `string` | Type of aerodrome. Values: `airport` = Commercial airport; `airfield` = Airfield; `heliport` = Heliport; `military` = Military airfield |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |

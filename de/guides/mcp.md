@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/guides/mcp/
 
 Der mapx-MCP-Server gibt einem KI-Assistenten 21 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
-| | |
+| Eigenschaft | Wert |
 |---|---|
 | Endpunkt | `https://mcp.mapx.at/mcp` |
 | Transport | Streamable HTTP, nur `POST`, zustandslos |
@@ -24,13 +24,13 @@ Es gibt zwei Wege. Die Anmeldung über dein Konto ist der einfachere: Du trägst
 3. Auf der Zustimmungsseite siehst du die Anwendung, das Weiterleitungsziel, dein Konto und was der Zugriff erlaubt: nur lesende Werkzeuge, Aufrufe zählen zu deiner Nutzung, kein Zugriff auf dein Konto oder deine anderen Tokens. Bestätige die Verbindung.
 4. Stelle eine Frage, die österreichische Daten braucht, zum Beispiel „Wie komme ich mit dem Rad vom Bahnhof Melk zum Stift Melk, und wie lange dauert das?“.
 
-Die Verbindung erscheint danach unter [account.mapx.at](https://account.mapx.at/) → **Tokens** als „verbunden über <Host>“. Je Anwendung sind bis zu fünf Verbindungen gleichzeitig möglich, zum Beispiel Browser, Desktop und Handy. Die Verbindung läuft nicht von selbst ab.
+Die Verbindung erscheint danach unter [account.mapx.at](https://account.mapx.at/) → **Tokens** als „verbunden über &lt;Host&gt;“. Je Anwendung sind bis zu fünf Verbindungen gleichzeitig möglich, zum Beispiel Browser, Desktop und Handy. Die Verbindung läuft nicht von selbst ab.
 
 Diese Anwendungen sind für die Anmeldung über das Konto freigegeben:
 
-- **claude.ai** (Web, Desktop, Mobil): in den Einstellungen unter **Connectors** einen eigenen Connector hinzufügen und die Adresse eintragen. Die genaue Menüführung hängt vom Tarif ab und ändert sich; sie steht in der [Hilfe von Anthropic](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp). In Team- und Enterprise-Tarifen legt zuerst ein Owner den Connector an.
+- **claude.ai** (Web, Desktop, Mobil): in den Einstellungen unter **Connectors** einen eigenen Connector hinzufügen und die Adresse eintragen. Die genaue Menüführung hängt vom Abo ab und ändert sich; sie steht in der [Hilfe von Anthropic](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp). In Team- und Enterprise-Abos legt zuerst ein Owner den Connector an.
 - **Claude Code:** `claude mcp add --transport http mapx https://mcp.mapx.at/mcp`, dann in Claude Code `/mcp` eingeben und die Anmeldung für mapx starten.
-- **ChatGPT:** Connectoren bzw. Apps mit eigener MCP-Adresse, je nach Tarif und Einstellung verfügbar (teils nur im Entwicklermodus). Schritte und Verfügbarkeit stehen in der [Hilfe von OpenAI](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
+- **ChatGPT:** Connectoren bzw. Apps mit eigener MCP-Adresse, je nach Abo und Einstellung verfügbar (teils nur im Entwicklermodus). Schritte und Verfügbarkeit stehen in der [Hilfe von OpenAI](https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt).
 
 Die Anmeldung über das Konto ist auf bekannte Anwendungen beschränkt. Für alle anderen Clients nimm den Weg mit Token; weitere Anwendungen schaltet der Support auf Anfrage frei (support@mapx.at).
 
@@ -138,7 +138,7 @@ curl https://api.openai.com/v1/responses \
 
 ## Verbindung trennen
 
-Unter [account.mapx.at](https://account.mapx.at/) → **Tokens** findest du jede Verbindung über das Konto als „verbunden über <Host>“. Mit **Verbindung trennen** beendest du sie, mit **Sperren** wird sie sofort abgelehnt und lässt sich wieder entsperren. Der Assistent bekommt danach `401` und fragt bei Bedarf neu nach der Anmeldung.
+Unter [account.mapx.at](https://account.mapx.at/) → **Tokens** findest du jede Verbindung über das Konto als „verbunden über &lt;Host&gt;“. Mit **Verbindung trennen** beendest du sie, mit **Sperren** wird sie sofort abgelehnt und lässt sich wieder entsperren. Der Assistent bekommt danach `401` und fragt bei Bedarf neu nach der Anmeldung.
 
 ## Für Entwickler
 
@@ -207,7 +207,7 @@ Der Assistent erhält den Fehler als Text und kann darauf reagieren. Fehlercodes
 
 - Nur Österreich; die Daten stammen aus amtlichen offenen Daten, jede Antwort nennt die Quelle.
 - Alle Werkzeuge lesen nur; nichts wird geändert oder gespeichert.
-- ÖV-Antworten stammen aus dem Fahrplan, ohne Echtzeitdaten.
+- ÖV-Antworten stammen aus dem Soll-Fahrplan.
 - Klima, Wetter, Warnungen und Luftqualität stammen von der GeoSphere Austria, Verkehrsmeldungen von ASFINAG und EVIS.AT.
 - Lange Ergebnisse werden gekürzt.
 
@@ -226,7 +226,7 @@ Deine Fragen und die Ergebnisse laufen über den Anbieter deines Assistenten. ma
 | `429` | Ein Limit wurde überschritten. Warte die in der Meldung genannte Zeit und rufe weniger parallel auf. |
 | `403` bei einem Browser-Client | Der `Origin` ist nicht erlaubt. Browser-Clients müssen von einer erlaubten Seite kommen; nimm einen Desktop-Client oder die API. |
 
-## Weiter
+## Nächste Schritte
 
 - [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)
 - [Fehler und Limits](https://docs.mapx.at/de/api/errors.md)

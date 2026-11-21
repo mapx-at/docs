@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/weather-overlay/
 
 > Temperatur, Niederschlag oder Wind als Overlay über der Karte, Stunde per Regler: Wetterkacheln von GeoSphere Austria, lauffähiger Code.
 
-Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Raster-Layer. In OpenLayers ist jede Stunde eine eigene `ol.source.XYZ`.
+Das TileJSON `/v1/weather/tiles/{parameter}.json` nennt die verfügbaren Stunden unter `mapx:time.times`. Jede Stunde ist eine eigene Kachelquelle, die Karte lädt sie als Rasterebene. In OpenLayers ist jede Stunde eine eigene `ol.source.XYZ`.
 
 ## Code
 
@@ -145,7 +145,7 @@ document.getElementById('stunde').addEventListener('input', (e) => zeigen(docume
 
 > Datenquelle: GeoSphere Austria, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Die Namensnennung ist Pflicht.
 
-In Leaflet bleibt es eine `L.tileLayer`, `setUrl()` wechselt Größe und Stunde.
+In Leaflet bleibt es eine `L.tileLayer`, `setUrl()` wechselt Parameter und Stunde.
 
 ## Verwendete APIs
 

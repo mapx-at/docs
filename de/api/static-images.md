@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 
 `GET /v1/static/{style}/{view}/{size}`
 
-`satellite` (BEV-Orthofoto, z5 bis z18) oder `outdoors` (Höhenschichtfarben mit Schummerung aus dem DTM, z5 bis z16). Die `streets*`-Styles, `light`, `dark` und `outdoors-winter` werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
+`satellite` (BEV-Orthofoto, z5 bis z18). Die `streets*`-Styles, `light`, `dark`, `outdoors` und `outdoors-winter` werden am Server aus Style und Vektorkacheln gerendert (Flächen, Linien, Reliefschattierung, Orts-, Straßen- und Gewässernamen; Icons aus dem Sprite, Hausnummern ab z16; z0 bis z22), meist unter 0,2 s pro 600x400.
 
 `satellite-streets` zeichnet das Orthofoto (z5 bis z18) mit Straßen, Grenzen, Höhenlinien, Namen und Icons der Vektorkarte darüber. Ausgabe PNG (Standard) oder WebP, höchstens 1280x1280 (2560x2560 Pixel mit @2x). `Cache-Control` und `ETag` (If-None-Match ergibt 304).
 

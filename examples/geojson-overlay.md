@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/examples/geojson-overlay/
 
-> Show your own GeoJSON points, line and polygon over the mapx style, with a popup on click, in MapLibre GL JS. Runnable code to copy.
+> Show your own GeoJSON points, line and polygon over the mapx style, with a popup when you click a point, in MapLibre GL JS. Runnable code to copy.
 
 Your own data goes on top of the mapx style as a GeoJSON source. Filter by geometry type to style points, lines and areas separately. Larger datasets work the same way as PMTiles. In OpenLayers, a style function picks the style per geometry type.
 

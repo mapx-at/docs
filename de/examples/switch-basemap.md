@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/examples/switch-basemap/
 
-> Zwischen Karte, Luftbild (Orthophoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Styles: lauffähiges Beispiel für einen Basiskarten-Umschalter.
+> Zwischen Karte, Luftbild (Orthofoto) und Gelände umschalten, mit MapLibre GL JS und mapx-Stilen: lauffähiges Beispiel für einen Basiskarten-Umschalter.
 
 Drei fertige Stile teilen sich Position und Zoom. `map.setStyle()` tauscht die Basis, die Ansicht bleibt. In OpenLayers tauscht `setSource()` die Rasterkacheln des Stils, die Ansicht bleibt ebenso.
 

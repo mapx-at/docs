@@ -1,12 +1,12 @@
-# FAQ: token, licence, offline use
+# FAQ: token, license, data freshness
 
 Source: https://docs.mapx.at/start/faq/
 
-> Answers on mapx: do I need a token, what does it cost, commercial use under CC BY 4.0, data freshness, offline maps, data outside Austria, errors 401 and 403.
+> Answers on mapx: free with an account and token, commercial use under CC BY 4.0, data freshness, tiles, data outside Austria, errors 401 and 403.
 
 ## Do I need a token or an account?
 
-Yes, a free account and API token. Sign in at [account.mapx.at](https://account.mapx.at/) with your email address (the first time, this creates the account), create a token and send it as `Authorization: Bearer` (servers) or `access_token` (browsers, images). CORS is open. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
+Yes, a free account and API token. Sign in at [account.mapx.at](https://account.mapx.at/) with your email address (the first time, this creates the account), create a token and send it as `Authorization: Bearer` or `access_token`. CORS is open. See [Access and limits](https://docs.mapx.at/start/access-and-limits.md).
 
 ## Why do I get 401 or 403?
 
@@ -14,15 +14,15 @@ Yes, a free account and API token. Sign in at [account.mapx.at](https://account.
 
 ## Can I use mapx with Claude, ChatGPT or Cursor?
 
-Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 23 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
+Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 21 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
 
-## What does it cost?
+## Is mapx free?
 
-Nothing. Rate limits apply per token and zone.
+Yes, with an account and a token. The rate limits apply per IP address and zone, plus a per-minute limit per token, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md#rate-limits).
 
 ## May I use it commercially?
 
-Yes. The data is licensed [CC BY 4.0](https://docs.mapx.at/reference/attribution.md): name the source, everything else is free.
+Yes. The official data is licensed [CC BY 4.0](https://docs.mapx.at/reference/attribution.md): name the source. The Sentinel-2 tiles follow the Copernicus terms; details are under [Sources and licenses](https://docs.mapx.at/reference/attribution.md) and in the [terms of use](https://mapx.at/en/terms/).
 
 ## How current is the data?
 
@@ -46,7 +46,7 @@ The DTM is bare ground, the DSM includes trees and buildings. Use the DTM for gr
 
 ## Why do I get 404 for a tile?
 
-The tile lies outside the data area or zoom range, the extension does not match the type (`pbf` vector, `webp` raster) or the tileset name is wrong. Treat 404 as an empty tile.
+The zoom is outside the range of the tileset, the extension does not match the type (`pbf` vector, `webp` raster), or the tileset name is wrong. Tiles inside the zoom range but outside Austria return `204` with no content.
 
 ## Why do I get 429?
 

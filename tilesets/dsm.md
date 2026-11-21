@@ -58,7 +58,7 @@ TileJSON provides zoom range, bounds and attribution. Send the token with every 
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
-  attribution: "BEV, CC BY 4.0"
+  attribution: "mapx.at; BEV, CC BY 4.0"
 }).addTo(map);
 ```
 
@@ -96,10 +96,10 @@ The DSM is derived from the BEV ALS-DOM 1 m (airborne laser scanning, surface). 
 
 ## Attribution
 
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
+Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/cced2282-cfc5-42eb-9acb-b1c799522fcd">BEV – ALS-DOM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/cced2282-cfc5-42eb-9acb-b1c799522fcd">BEV – ALS-DOM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

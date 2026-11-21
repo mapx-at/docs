@@ -55,7 +55,7 @@ TileJSON provides zoom range, bounds and attribution. Send the token with every 
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
-  attribution: "BEV, CC BY 4.0"
+  attribution: "mapx.at; BEV, CC BY 4.0"
 }).addTo(map);
 ```
 
@@ -88,10 +88,10 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.webp https://tiles.mapx.
 
 ## Attribution
 
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
+Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-Orthophoto: BEV (CC BY 4.0)
+mapx.at; Orthophoto: BEV (CC BY 4.0)
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

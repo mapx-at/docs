@@ -28,13 +28,13 @@ Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -43,33 +43,173 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
   "code": "Ok",
   "routes": [
     {
-      "duration": 2400,
+      "arrival": "2026-11-23T08:12:51+01:00",
+      "departure": "2026-11-23T08:00:26+01:00",
+      "distance": 4801,
+      "duration": 745,
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            16.3725,
+            48.2085
+          ]
+        ]
+      },
       "legs": [
         {
+          "arrival": "2026-11-23T08:02:00+01:00",
+          "departure": "2026-11-23T08:00:26+01:00",
+          "distance": 117,
+          "duration": 94,
+          "from": {
+            "location": [
+              16.3725,
+              48.2085
+            ],
+            "name": null
+          },
           "mode": "walking",
-          "duration": 300
-        },
-        {
-          "mode": "transit",
-          "line": "S1",
-          "from": "Wien Hbf",
-          "to": "Wien Floridsdorf"
+          "summary": "walking",
+          "to": {
+            "location": [
+              16.371607,
+              48.208086
+            ],
+            "name": "Wien Stephansplatz"
+          }
         }
-      ]
+      ],
+      "summary": "U3",
+      "transfers": 0,
+      "weight": 745,
+      "weight_name": "duration"
     }
   ],
-  "waypoints": []
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+}
+```
+
+**Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
+
+| Status | Bedeutung |
+|---|---|
+| `400` | Parameter fehlt oder ist ungültig |
+| `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `422` | Anfrage gültig, aber nicht beantwortbar (z. B. keine Route) |
+| `429` | Rate-Limit überschritten, `Retry-After` abwarten |
+| `502` | Vorgelagerter Dienst nicht erreichbar |
+
+## Mit dem Rad zur Haltestelle, dann Öffentlicher Verkehr {#bike-to-the-stop-plus-transit}
+
+`GET /v1/directions/bike_transit/{coordinates}`
+
+Wie transit, aber der erste und letzte Abschnitt mit dem Rad (Modus `cycling`, je bis 15 min); das Rad wird nicht mitgenommen.
+
+**Parameter**
+
+| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|---|
+| `coordinates` | path | string | ja | – | lon,lat;lon,lat (genau Start und Ziel) |
+| `depart_at` | query | string |  | – | Früheste Abfahrt |
+| `arrive_by` | query | string |  | – | Späteste Ankunft |
+| `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
+
+**Beispiel**
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/bike_transit/16.3725,48.2085;16.4202,48.1855" | jq
+```
+
+**JavaScript**
+
+```js
+const res = await fetch("https://api.mapx.at/v1/directions/bike_transit/16.3725,48.2085;16.4202,48.1855", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+res = requests.get("https://api.mapx.at/v1/directions/bike_transit/16.3725,48.2085;16.4202,48.1855", headers={"Authorization": "Bearer YOUR_TOKEN"})
+data = res.json()
+```
+
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
+
+```json
+{
+  "code": "Ok",
+  "routes": [
+    {
+      "arrival": "2026-11-23T08:12:51+01:00",
+      "departure": "2026-11-23T08:00:26+01:00",
+      "distance": 4801,
+      "duration": 745,
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            16.3725,
+            48.2085
+          ]
+        ]
+      },
+      "legs": [
+        {
+          "arrival": "2026-11-23T08:02:00+01:00",
+          "departure": "2026-11-23T08:00:26+01:00",
+          "distance": 117,
+          "duration": 94,
+          "from": {
+            "location": [
+              16.3725,
+              48.2085
+            ],
+            "name": null
+          },
+          "mode": "walking",
+          "summary": "walking",
+          "to": {
+            "location": [
+              16.371607,
+              48.208086
+            ],
+            "name": "Wien Stephansplatz"
+          }
+        }
+      ],
+      "summary": "U3",
+      "transfers": 0,
+      "weight": 745,
+      "weight_name": "duration"
+    }
+  ],
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -90,13 +230,13 @@ data = res.json()
 
 Nächste Abfahrten an einer Haltestelle (Id aus `/v1/stops`, z. B. `at:43:7226`) oder an allen Haltestellen um eine Koordinate. Die Betriebstage folgen Kalender und Gültigkeitszeitraum des Fahrplans, Fahrten über Mitternacht sind enthalten. Je Abfahrt: Zeit, Linie (Name, Verkehrsmittel, route_type), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle.
 
-Nur Fahrplandaten, keine aktuellen Abweichungen: `realtime` ist immer false. Außerhalb des Gültigkeitszeitraums 422, unbekannte Haltestelle 404. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+Die Zeiten stammen aus dem Soll-Fahrplan: `realtime` ist immer false. Außerhalb des Gültigkeitszeitraums 422, unbekannte Haltestelle 404. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`, auch Steig-Id `at:43:7226:0:2`) oder lon,lat |
+| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`; eine Steig-Id wie `at:43:7226:0:2` wird zur Station zusammengefasst) oder lon,lat |
 | `time` | query | string |  | `now` | Startzeit, ISO 8601 (Ortszeit Wien) oder Unix-Sekunden, Standard jetzt |
 | `limit` | query | string |  | `20` | 1 bis 100, Standard 20 |
 | `radius` | query | string |  | `300` | Nur mit lon,lat: Meter, 1 bis 2000, Standard 300 |
@@ -126,31 +266,58 @@ res = requests.get("https://api.mapx.at/v1/departures?stop=16.3725,48.2085&limit
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
-  "time": "2026-11-09T08:00:00+01:00",
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "departures": [
+    {
+      "destination": {
+        "id": "at:43:7227",
+        "name": "Pöchlarn Bahnhof"
+      },
+      "headsign": "Pöchlarn Bahnhof",
+      "line": {
+        "long_name": "Wien - Salzburg - Kufstein - Innsbruck - Bludenz - Bregenz",
+        "mode": "rail",
+        "name": "R52",
+        "route_type": 2,
+        "short_name": "R52",
+        "trip_short_name": "R 2004"
+      },
+      "operator": "OEBB Personenverkehr AG Kundenservice",
+      "platform": "2",
+      "realtime": false,
+      "scheduled": "2026-11-23T08:00:00+01:00",
+      "stop": {
+        "id": "at:43:7226",
+        "name": "Melk Bahnhof"
+      },
+      "time": "2026-11-23T08:00:00+01:00",
+      "trip_id": "oebb:28.TA.3-R52-A-j26-1.9.H"
+    }
+  ],
   "realtime": false,
   "stops": [
     {
       "id": "at:43:7226",
+      "lines": [
+        "671",
+        "683"
+      ],
+      "location": [
+        15.331017,
+        48.224588
+      ],
+      "modes": [
+        "bus",
+        "rail"
+      ],
       "name": "Melk Bahnhof"
     }
   ],
-  "departures": [
-    {
-      "time": "2026-11-09T08:04:00+01:00",
-      "line": {
-        "name": "REX 1",
-        "mode": "rail",
-        "route_type": 2
-      },
-      "headsign": "Wien Westbahnhof",
-      "platform": "2",
-      "stop": "at:43:7226"
-    }
-  ]
+  "time": "2026-11-23T08:00:00+01:00"
 }
 ```
 
@@ -205,26 +372,28 @@ res = requests.get("https://api.mapx.at/v1/stops?near=16.3725,48.2085&radius=300
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "stops": [
     {
+      "distance": 219,
       "id": "at:43:7226",
-      "name": "Melk Bahnhof",
+      "lines": [
+        "671",
+        "683"
+      ],
       "location": [
-        15.3338,
-        48.2279
+        15.331017,
+        48.224588
       ],
       "modes": [
-        "rail",
-        "bus"
+        "bus",
+        "rail"
       ],
-      "lines": [
-        "REX 1",
-        "S50"
-      ]
+      "name": "Melk Bahnhof"
     }
   ]
 }

@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/searchbox/suggest`
 
-Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs, no OSM data.
+Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs.
 
 **Parameters**
 
@@ -98,13 +98,16 @@ FeatureCollection with one feature (point, bbox, coordinates, context); 404 for 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/place-6456531" | jq
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.suggestions[0].mapbox_id')
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/$ID" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const headers = { Authorization: "Bearer YOUR_TOKEN" };
+const s = await (await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", { headers })).json();
+const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.suggestions[0].mapbox_id), { headers });
 const data = await res.json();
 ```
 
@@ -113,7 +116,9 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/place-6456531", headers={"Authorization": "Bearer YOUR_TOKEN"})
+h = {"Authorization": "Bearer YOUR_TOKEN"}
+s = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", headers=h).json()
+res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["suggestions"][0]["mapbox_id"], headers=h)
 data = res.json()
 ```
 

@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `static` (5
 
 `GET /v1/traffic/flow`
 
-Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No area-wide traffic state (the paid source is not used). Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Edges with a sign speed limit below free-flow speed, level 0 to 3 by ratio. No area-wide traffic state. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
 **Parameters**
 
@@ -173,7 +173,32 @@ data = res.json()
         "planned": true,
         "closed": true,
         "mandatory": true,
-  …
+        "source": "evis-planned+asfinag",
+        "sources": [
+          "evis",
+          "asfinag"
+        ],
+        "lanes": [
+          {
+            "direction": "aligned",
+            "carriageway": "main",
+            "closed": [
+              "left"
+            ],
+            "restricted": 1,
+            "open": 1,
+            "original": 2,
+            "contraflow": false,
+            "road_closed": false,
+            "speed_limit_kmh": 60
+          }
+        ],
+        "start": "2026-11-08T20:00:00Z",
+        "end": "2026-11-09T05:00:00Z"
+      }
+    }
+  ]
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
@@ -191,6 +216,8 @@ data = res.json()
 `POST /v1/traffic/incidents`
 
 Body: the same parameters as a JSON object; `route` as polyline string or GeoJSON LineString, numbers (e.g. `route_precision`, `limit`, `buffer`) as JSON number or string. The gateway accepts bodies up to 64 KB (larger: 413); for longer routes simplify the line or split it.
+
+Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
 **Request body (JSON)**
 
@@ -309,7 +336,32 @@ data = res.json()
         "planned": true,
         "closed": true,
         "mandatory": true,
-  …
+        "source": "evis-planned+asfinag",
+        "sources": [
+          "evis",
+          "asfinag"
+        ],
+        "lanes": [
+          {
+            "direction": "aligned",
+            "carriageway": "main",
+            "closed": [
+              "left"
+            ],
+            "restricted": 1,
+            "open": 1,
+            "original": 2,
+            "contraflow": false,
+            "road_closed": false,
+            "speed_limit_kmh": 60
+          }
+        ],
+        "start": "2026-11-08T20:00:00Z",
+        "end": "2026-11-09T05:00:00Z"
+      }
+    }
+  ]
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))

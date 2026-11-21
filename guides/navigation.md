@@ -44,8 +44,9 @@ console.log(r.distance, "m", r.duration, "s");
 `GET /v1/speedlimits` returns the statutory limits of the road network as compact GeoJSON, either in a box (`bbox`, at most 0.08 square degrees, about 28 by 28 km) or in a corridor around a route (`corridor` as polyline6 plus `buffer` in meters, default 30). Each road link is a `LineString` (digitizing direction) with `limit_kmh`, `direction` (`both`, `forward`, `backward`) and `id`. Links without a statutory limit are left out, so the sign display never shows a modeled speed.
 
 ```bash
-# route as polyline6, then the limits in a 30 m corridor
+# limits in a box
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq '.features | length'
+# route as polyline6, then the limits in a 30 m corridor
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -j '.routes[0].geometry' > route.txt
 curl -s -H "Authorization: Bearer YOUR_TOKEN" -G "https://api.mapx.at/v1/speedlimits" --data-urlencode "corridor@route.txt" -d buffer=30 | jq '.features | length'
 ```
@@ -70,7 +71,7 @@ The router avoids roads closed to the vehicle: weight-class and trailer bans, he
 
 ## Tolls
 
-Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
+Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections; the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -99,7 +100,7 @@ With `steps=true` you can add `voice_instructions=true` and `banner_instructions
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?steps=true&voice_instructions=true&banner_instructions=true&language=en&overview=false" | jq '.routes[0].legs[0].steps[1] | {voiceInstructions, bannerInstructions}'
 ```
 
-- `voiceInstructions[]`: `distanceAlongGeometry` (meters before the end of the step at which to speak), `announcement` and `ssmlAnnouncement`. Announcement distances depend on speed: on motorways 2 km, 1 km and 300 m ahead, on rural roads 1 km, 400 m and 120 m, in town 400 m and 150 m; the last one is spoken without a distance. On foot the announcements come 100 m and 40 m ahead, by bike 250 m and 80 m ahead. The texts follow `language` (`de` or `en`) for every profile. The first step also announces the departure. `language=de|en` selects the language.
+- `voiceInstructions[]`: `distanceAlongGeometry` (meters before the end of the step at which to speak), `announcement` and `ssmlAnnouncement`. Announcement distances depend on speed: on motorways 2 km, 1 km and 300 m ahead, on rural roads 1 km, 400 m and 120 m, in town 400 m and 150 m; the last one is spoken without a distance. On foot the announcements come 100 m and 40 m ahead, by bike 250 m and 80 m ahead. The texts follow `language` (`de` or `en`) for every profile. The first step also announces the departure.
 - `bannerInstructions[]`: `primary` and optional `secondary` with `text`, `components[]` (`type` `icon` for the road number, `text` for names and destination signage), `type`, `modifier`. With destination signage, the destination is the primary text and the road the secondary line.
 
 ## Isochrones, matrix, matching
@@ -112,7 +113,14 @@ const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725
 const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 ```
 
-The isochrone result is a `FeatureCollection` of polygons, largest first. Show it with a `fill` layer; see [Isochrone](https://docs.mapx.at/examples/isochrone.md) and [Matrix](https://docs.mapx.at/examples/matrix.md). Map matching takes a GPS trace and returns the matched route.
+The isochrone result is a `FeatureCollection` of polygons, largest first. Each polygon carries `contour` and ready-made display values `fill` and `fillOpacity`; use `contours_meters` instead of `contours_minutes` for distance contours. Show it as a `fill` layer:
+
+```js
+map.addSource("iso", { type: "geojson", data: iso });
+map.addLayer({ id: "iso", type: "fill", source: "iso", paint: { "fill-color": ["get", "fill"], "fill-opacity": ["get", "fillOpacity"] } });
+```
+
+See [Isochrone](https://docs.mapx.at/examples/isochrone.md) and [Matrix](https://docs.mapx.at/examples/matrix.md). Map matching takes a GPS trace and returns the matched route.
 
 ## Tour planning
 
@@ -128,7 +136,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/opt
 
 ## Handle failures
 
-`422` means the request is valid but unanswerable, for example no route between the points. `400` carries the faulty parameter in `param`. Retry `429` after `Retry-After` seconds. See [Errors and limits](https://docs.mapx.at/api/errors.md).
+`422` means the request is valid but unanswerable, for example no route between the points. `404` `not-found`: a start or destination is not on the road network (more than 1000 m away). `400` carries the faulty parameter in `param`. Retry `429` after `Retry-After` seconds. See [Errors and limits](https://docs.mapx.at/api/errors.md).
 
 ## Next
 

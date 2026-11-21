@@ -1,10 +1,10 @@
-# Static-Images-Guide: Karte als Bild
+# Statische Kartenbilder: Karte als Bild
 
 Source: https://docs.mapx.at/de/guides/static-images/
 
-> Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-Static-Images-API.
+> Kartenbilder als PNG oder WebP mit Pins, Pfaden und GeoJSON für Berichte, E-Mails und Webseiten erzeugen, mit der mapx-API für statische Kartenbilder.
 
-Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen. Der Token steht als `access_token` in der URL, weil ein Bild-Tag keinen Header senden kann. Für Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Seite als erlaubter Origin verwenden; Bilder für E-Mails und PDFs auf dem eigenen Server mit einem geheimen Token (`mx_sk_…`) erzeugen, damit der geheime Token nicht in der Nachricht landet.
+Ein statisches Kartenbild ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dort, wo keine interaktive Karte möglich ist: PDFs, E-Mails, Inserate, Social-Vorschauen. Der Token steht als `access_token` in der URL, weil ein Bild-Tag keinen Header senden kann. Für Webseiten einen öffentlichen Token (`mx_pk_…`) mit der eigenen Seite als erlaubter Origin verwenden; Bilder für E-Mails und PDFs auf dem eigenen Server mit einem geheimen Token (`mx_sk_…`) erzeugen, damit der geheime Token nicht in der Nachricht landet.
 
 ```html
 <img alt="Wiener Innenstadt" width="600" height="400"
@@ -25,13 +25,13 @@ Ein Static Image ist eine HTTP-Anfrage, die ein Bild liefert. Es eignet sich dor
 | Größe | Breite und Höhe 1 bis 1280, mit `@2x` bis 2560 |
 | Format | `.png` oder `.webp` |
 
-Die Relief-Styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) gibt es nur für die Karte im Browser; als Kartenbild antwortet die API mit `404`. Dasselbe gilt für die 3D-Styles (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); für das Bild den Style ohne `-3d` nehmen.
+Die Reliefstile (`relief`, `relief-contours`, `relief-light`, `relief-dark`) gibt es nur für die Karte im Browser; als Kartenbild antwortet die API mit `404`. Dasselbe gilt für die 3D-Stile (`outdoors-3d`, `outdoors-winter-3d`, `relief-3d`, `satellite-3d`, `satellite-streets-3d`, `streets-3d`, `streets-night-3d`, `light-3d`, `dark-3d`); für das Bild den Stil ohne `-3d` nehmen. `traffic-day` und `traffic-night` zeigen aktuelle Verkehrsmeldungen, die nur der Browser lädt; als Kartenbild antworten sie mit `404` und einem Hinweis, stattdessen `streets` bzw. `streets-night` zu nehmen. Auch `satellite-current` (Sentinel-2) gibt es nicht als Bild, dafür `satellite` verwenden. `outdoors` rendert als Bild die volle Vektorkarte; Gebäude werden mitgezeichnet.
 
 Details zum Token: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Bilder liegen in der Zone `heavy` (30 pro Minute). Sie sind cachebar: `If-None-Match` senden, dann antwortet die API mit `304`. Bilder auf der eigenen Seite zwischenspeichern und nicht pro Seitenaufruf anfordern.
 
 ## Overlays
 
-Overlays folgen nach dem Style, getrennt durch Kommas (bis zu 50).
+Overlays folgen nach dem Stil, getrennt durch Kommas (bis zu 50).
 
 | Overlay | Beispiel |
 |---|---|
@@ -58,19 +58,19 @@ Die Route kommt aus [Directions](https://docs.mapx.at/de/guides/navigation.md) m
 
 ## Luftbild für ein Inserat
 
-`satellite` zeigt das Orthophoto, `outdoors` ergänzt Höhenlinien und Wege.
+`satellite` zeigt das Orthofoto, `outdoors` ergänzt Höhenlinien und Wege.
 
 ```
 https://api.mapx.at/v1/static/satellite/pin-m+ff0000(15.3294,48.2272)/15.3294,48.2272,17/800x600.webp?access_token=DEIN_TOKEN
 ```
 
-Die Quellenangabe neben dem Bild anzeigen, siehe [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+Die Quellenangabe neben dem Bild anzeigen, siehe [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).
 
-## Raster-Tiles eines Styles
+## Rasterkacheln eines Stils
 
-Für Clients, die nur Raster-Tiles lesen (Leaflet, QGIS), rendern Static Tiles einen Style als 256- oder 512-px-Tiles: `/v1/styles/{id}/tiles/{256|512}/{z}/{x}/{y}`.
+Für Clients, die nur Rasterkacheln lesen (Leaflet, QGIS), rendern Static Tiles einen Stil als 256- oder 512-px-Kacheln: `/v1/styles/{id}/tiles/{256|512}/{z}/{x}/{y}`.
 
 ## Nächste Schritte
 
 - [Static Images API](https://docs.mapx.at/de/api/static-images.md)
-- [Karten](https://docs.mapx.at/de/guides/maps.md): dieselben Styles interaktiv
+- [Karten](https://docs.mapx.at/de/guides/maps.md): dieselben Stile interaktiv

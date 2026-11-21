@@ -26,12 +26,12 @@ Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinat
 | `cycling-mtb` | Mountainbike: bevorzugt Forststraßen und Singletrails, berücksichtigt die MTB-Schwierigkeit |
 | `walking` | Zu Fuß |
 
-Öffentlicher Verkehr ist eine eigene API: [Transit](https://docs.mapx.at/de/guides/transit.md).
+Öffentlicher Verkehr ist eine eigene API: [ÖV](https://docs.mapx.at/de/guides/transit.md).
 
 ## Eine Route
 
 ```js
-const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=en";
+const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?steps=true&language=de";
 const { routes } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const r = routes[0];
 console.log(r.distance, "m", r.duration, "s");
@@ -44,8 +44,9 @@ console.log(r.distance, "m", r.duration, "s");
 `GET /v1/speedlimits` liefert die gesetzlichen Tempolimits des Straßennetzes als kompaktes GeoJSON, entweder in einer Box (`bbox`, höchstens 0,08 Quadratgrad, etwa 28 mal 28 km) oder in einem Korridor um eine Route (`corridor` als polyline6 plus `buffer` in Metern, Standard 30). Jeder Straßenabschnitt ist ein `LineString` (Digitalisierrichtung) mit `limit_kmh`, `direction` (`both`, `forward`, `backward`) und `id`. Abschnitte ohne gesetzliches Limit fehlen, damit die Schilderanzeige nie eine modellierte Geschwindigkeit zeigt.
 
 ```bash
-# Route als polyline6, dann die Limits in einem 30-m-Korridor
+# Limits in einer Box
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq '.features | length'
+# Route als polyline6, dann die Limits in einem 30-m-Korridor
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?geometries=polyline6&overview=full" | jq -j '.routes[0].geometry' > route.txt
 curl -s -G -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/speedlimits" --data-urlencode "corridor@route.txt" -d buffer=30 | jq '.features | length'
 ```
@@ -70,7 +71,7 @@ Der Router meidet Straßen, die für das Fahrzeug gesperrt sind: Gewichtsklassen
 
 ## Maut
 
-Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
+Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road` und `toll_road_m` zählen nur Sondermautstrecken; die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_m`. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -99,7 +100,7 @@ Mit `steps=true` lassen sich `voice_instructions=true` und `banner_instructions=
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/15.6256,48.2049;15.3294,48.2272?steps=true&voice_instructions=true&banner_instructions=true&language=de&overview=false" | jq '.routes[0].legs[0].steps[1] | {voiceInstructions, bannerInstructions}'
 ```
 
-- `voiceInstructions[]`: `distanceAlongGeometry` (Meter vor dem Ende des Schritts, ab dem angesagt wird), `announcement` und `ssmlAnnouncement`. Die Ansagedistanzen hängen vom Tempo ab: auf Autobahnen 2 km, 1 km und 300 m vorher, auf Landstraßen 1 km, 400 m und 120 m, im Ort 400 m und 150 m; die letzte Ansage kommt ohne Entfernung. Zu Fuß wird 100 m und 40 m vorher angesagt, mit dem Rad 250 m und 80 m vorher. Die Texte folgen `language` (`de` oder `en`) für jedes Profil. Der erste Schritt kündigt auch die Abfahrt an. `language=de|en` wählt die Sprache.
+- `voiceInstructions[]`: `distanceAlongGeometry` (Meter vor dem Ende des Schritts, ab dem angesagt wird), `announcement` und `ssmlAnnouncement`. Die Ansagedistanzen hängen vom Tempo ab: auf Autobahnen 2 km, 1 km und 300 m vorher, auf Landstraßen 1 km, 400 m und 120 m, im Ort 400 m und 150 m; die letzte Ansage kommt ohne Entfernung. Zu Fuß wird 100 m und 40 m vorher angesagt, mit dem Rad 250 m und 80 m vorher. Die Texte folgen `language` (`de` oder `en`) für jedes Profil. Der erste Schritt kündigt auch die Abfahrt an.
 - `bannerInstructions[]`: `primary` und optional `secondary` mit `text`, `components[]` (`type` `icon` für die Straßennummer, `text` für Namen und Zielwegweisung), `type`, `modifier`. Mit Zielwegweisung ist das Ziel der Haupttext und die Straße die Nebenzeile.
 
 ## Isochronen, Matrix, Matching
@@ -112,7 +113,14 @@ const iso = await (await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725
 const m = await (await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?sources=0&annotations=duration,distance", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 ```
 
-Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte zuerst. Mit einem `fill`-Layer anzeigen; siehe [Isochrone](https://docs.mapx.at/de/examples/isochrone.md) und [Matrix](https://docs.mapx.at/de/examples/matrix.md). Map Matching nimmt eine GPS-Spur und liefert die eingerastete Route.
+Das Isochronen-Ergebnis ist eine `FeatureCollection` aus Polygonen, das größte zuerst. Jedes Polygon trägt `contour` sowie fertige Darstellungswerte `fill` und `fillOpacity` mit; mit `contours_meters` statt `contours_minutes` entstehen Distanz-Konturen. Als `fill`-Ebene anzeigen:
+
+```js
+map.addSource("iso", { type: "geojson", data: iso });
+map.addLayer({ id: "iso", type: "fill", source: "iso", paint: { "fill-color": ["get", "fill"], "fill-opacity": ["get", "fillOpacity"] } });
+```
+
+Siehe [Isochrone](https://docs.mapx.at/de/examples/isochrone.md) und [Matrix](https://docs.mapx.at/de/examples/matrix.md). Map Matching nimmt eine GPS-Spur und liefert die eingerastete Route.
 
 ## Tourenplanung
 
@@ -128,7 +136,7 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/opt
 
 ## Fehler behandeln
 
-`422` heißt: Die Anfrage ist gültig, aber nicht beantwortbar, zum Beispiel keine Route zwischen den Punkten. `400` nennt den fehlerhaften Parameter in `param`. `429` nach `Retry-After` Sekunden wiederholen. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
+`422` heißt: Die Anfrage ist gültig, aber nicht beantwortbar, zum Beispiel keine Route zwischen den Punkten. `404` `not-found`: Start oder Ziel liegt nicht am Straßennetz (weiter als 1000 m). `400` nennt den fehlerhaften Parameter in `param`. `429` nach `Retry-After` Sekunden wiederholen. Siehe [Fehler und Limits](https://docs.mapx.at/de/api/errors.md).
 
 ## Nächste Schritte
 

@@ -4,9 +4,11 @@ Source: https://docs.mapx.at/examples/static-image/
 
 > Click a place and get a ready-made static map image URL with a pin, for example for a real estate listing: static images API, runnable code.
 
-A static image is a plain URL that returns a PNG or WebP: for listings, e-mails, PDFs and places without JavaScript. Style, pin, view and size are part of the path. Click the map to move the pin; the image below is the URL shown under it.
+A static image is a plain URL that returns a PNG or WebP: for real-estate listings, e-mails, PDFs and places without JavaScript. Style, pin, view and size are part of the path. Click the map to move the pin; the image below is the URL shown under it.
 
 ## Code
+
+A static image is just an image URL, so no map library is needed; the map here only picks the place.
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";

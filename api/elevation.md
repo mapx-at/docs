@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `elevation` (10/s), `search`
 
 `GET /v1/elevation`
 
-Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414 as HTML), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
+Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
 
 Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or use `/v1/elevation/profile`.
 
@@ -220,7 +220,9 @@ data = res.json()
     "ascent_m": 9.5,
     "descent_m": 0,
     "min_m": 171,
-  …
+    "max_m": 180.5
+  }
+}
 ```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))

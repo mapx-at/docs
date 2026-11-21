@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/radar-animation/
 
 > Regen und Schnee der nächsten drei Stunden in 15-Minuten-Schritten als Animation auf der Karte: Nowcast von GeoSphere Austria, lauffähiger Code.
 
-Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt einen Raster-Layer an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`. OpenLayers lädt einen Layer erst, wenn er sichtbar wird: Die OpenLayers-Fassung holt jeden Schritt beim ersten Zeigen, danach kommt er aus dem Cache.
+Das TileJSON `/v1/weather/tiles/rr_nowcast.json` nennt die 15-Minuten-Schritte unter `mapx:time.times`. Das Beispiel legt je Schritt eine Rasterebene an und schaltet deren Sichtbarkeit um, damit die Animation nicht auf Kacheln wartet. Für einen einzelnen Punkt gibt es `GET /v1/weather/nowcast/{lon},{lat}`. OpenLayers lädt einen Ebene erst, wenn er sichtbar wird: Die OpenLayers-Fassung holt jeden Schritt beim ersten Zeigen, danach kommt er aus dem Cache.
 
 ## Code
 

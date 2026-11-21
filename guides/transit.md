@@ -30,32 +30,32 @@ const { departures } = await (await fetch(url, { headers: { Authorization: "Bear
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 
-`time` is ISO 8601 in Vienna local time. Use `time=2026-11-09T08:00` for a later start and `horizon` (seconds, up to 24 hours) for the window. Outside the timetable period the API answers `422`.
+`time` is ISO 8601 in Vienna local time. Without `time` the request starts now. Use `time` (format `YYYY-MM-DDThh:mm`, Vienna local time) for a later start and `horizon` (seconds, up to 24 hours) for the window. The timetable is valid for a limited period only. Outside it the API answers `422`, and the message (`detail`) names the valid period.
 
 ## Journey planning
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855?depart_at=2026-11-09T08:00&routes=3" | jq '.routes[0].duration'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855" | jq '.routes[0].duration'
 ```
 
-Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), default is now. The response contains walking sections on the road network and rides with line, stops and times.
+Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops and times.
 
 ## Reachability by transit
 
 Walking plus public transport as isochrones: profile `transit` of the isochrone API. The search walks to the stops around the start, rides the scheduled timetable from `depart_at` and walks on from every stop reached.
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/transit/16.3725,48.2085?contours_minutes=10,20,30&depart_at=2026-11-10T08:00" | jq '.features[] | {contour: .properties.contour, km2: .properties.area_km2}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/transit/16.3725,48.2085?contours_minutes=10,20,30" | jq '.features[] | {contour: .properties.contour, km2: .properties.area_km2}'
 ```
 
-Without `depart_at` the isochrone starts now (Vienna local time). Only `contours_minutes` applies. The area depends strongly on the time: the same start has a much smaller area at night. Outside the timetable period the API answers `422`.
+Without `depart_at` the isochrone starts now (Vienna local time); use `depart_at` to pick another time. Only `contours_minutes` applies. The area depends strongly on the time: the same start has a much smaller area at night. Outside the timetable period the API answers `422`.
 
 ### Access by bike or car (Bike & Ride, Park & Ride)
 
 With `access=bike` or `access=car` the first leg is not walked but cycled or driven to a stop. Bikes can be locked at **every** stop (+2 min); cars park at stops with rail, metro or tram service (+3 min, at most 25 min drive); the algorithm takes the fastest combination, so the station in your own village wins over driving on to the next town if the train is quicker. Official P+R sites from the GIP are added for the car (+2 min, then a walk to the stop). Walking from the start still applies, the minimum counts. The exit is always on foot.
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/transit/15.16,48.207?contours_minutes=45&depart_at=2026-11-09T07:00&access=car" | jq '.metadata | {access, access_stops_improved, sites: .access_sites[:3]}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/transit/15.16,48.207?contours_minutes=45&access=car" | jq '.metadata | {access, access_stops_improved, sites: .access_sites[:3]}'
 ```
 
 | Parameter | Values | Meaning |
@@ -70,7 +70,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/
 
 1. Search a stop with [`/v1/stops`](https://docs.mapx.at/api/transit.md) or let the user click the map.
 2. Call `/v1/departures` and refresh every minute.
-3. Show line, destination and `time`; mark missing real-time data with "scheduled".
+3. Show line, destination and `time`; label the times as "scheduled" (timetable data).
 
 ## Next
 

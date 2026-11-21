@@ -25,7 +25,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].center;
 ```
 
-Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
+`features` can be empty; check the length before you read `features[0]`. Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
 ## Reverse geocode
 

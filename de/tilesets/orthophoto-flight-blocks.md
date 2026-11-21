@@ -1,10 +1,10 @@
-# Orthophoto-Flugblöcke (Tileset)
+# Orthofoto-Flugblöcke (Kachelsatz)
 
 Source: https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks/
 
-> Welcher Bildflug liefert welches Orthophoto-Pixel: Gewinnerflächen der BEV-Operate mit Flugzeitraum, als Vektorkacheln z6 bis z17.
+> Welcher Bildflug liefert welches Orthofoto-Pixel: Gewinnerflächen der BEV-Operate mit Flugzeitraum, als Vektorkacheln z6 bis z17.
 
-Zu jedem Pixel des [Orthophotos](https://docs.mapx.at/de/tilesets/orthophoto.md) die Fläche des Bildflugs (Operats), aus dem es stammt, mit Flugzeitraum.
+Zu jedem Pixel des [Orthofotos](https://docs.mapx.at/de/tilesets/orthophoto.md) die Fläche des Bildflugs (Operats), aus dem es stammt, mit Flugzeitraum.
 
 **Nutzungen**
 
@@ -15,7 +15,7 @@ Zu jedem Pixel des [Orthophotos](https://docs.mapx.at/de/tilesets/orthophoto.md)
 
 ## Kennwerte
 
-**Tileset `orthophoto-flight-blocks`**
+**Kachelsatz `orthophoto-flight-blocks`**
 
 | Kennwert | Wert |
 |---|---|
@@ -37,14 +37,14 @@ const map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json" } },
+    sources: { v: { type: "vector", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf"], minzoom: 6, maxzoom: 17, attribution: "mapx.at; BEV, CC BY 4.0" } },
     layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "flight_block_a", paint: { "line-color": "#b5651d" } }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
+Die Quelle nennt Kachel-Adresse, Zoombereich und Quellenangabe selbst; die TileJSON-Adresse `https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks.json` liefert Zoombereich und Grenzen, aber nur `mapx.at` als Quellenangabe. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -61,11 +61,11 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/ort
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/14/8860/5730.pbf
 ```
 
-## Layer-Referenz
+## Ebenen-Referenz
 
-### orthophoto-flight-blocks
+### flight_block_a
 
-Geometrie: **Fläche**, Zoom: **z6–17**, Layer: `flight_block_a`. Befliegungsblöcke der Orthofotos mit Aufnahmedatum.
+Geometrie: **Fläche**, Zoom: **z6–17**, Ebene: `flight_block_a`. Befliegungsblöcke der Orthofotos mit Aufnahmedatum.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -83,19 +83,19 @@ Geometrie: **Fläche**, Zoom: **z6–17**, Layer: `flight_block_a`. Befliegungsb
 
 ## Quelle und Aktualität
 
-- Quelle: BEV „Aktualität Orthophoto Operate Farbe und Infrarot“.
-- Die Flächen zeigen, wo ein Operat im Orthophoto **tatsächlich** zu sehen ist, nicht die ursprünglichen Umrisse. Ein Operat kann mehrere Flächen haben.
+- Quelle: BEV „Aktualität Orthofoto Operate Farbe und Infrarot“.
+- Die Flächen zeigen, wo ein Operat im Orthofoto **tatsächlich** zu sehen ist, nicht die ursprünglichen Umrisse. Ein Operat kann mehrere Flächen haben.
 
 ## Hinweise
 
 - Ein Flugblock ist ein Operat, kein einzelner Flugtag: Es gibt kein Tagesdatum, nur den Zeitraum des Operats; ein Operat kann bis zu drei Monate dauern.
 
-## Attribution
+## Quellenangabe
 
-Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
+Pflicht nach CC BY 4.0. Das TileJSON nennt nur `mapx.at`, die Quelle selbst ergänzen (wie im MapLibre-Beispiel oben):
 
 ```html
-BEV, CC BY 4.0
+mapx.at; BEV, CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

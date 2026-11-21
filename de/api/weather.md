@@ -161,7 +161,25 @@ data = res.json()
       "cape_jkg": 0,
       "snowfall_mm": 0,
       "uncertainty": {
-  …
+        "temperature_c": {
+          "p10": 8.9,
+          "p50": 10.2,
+          "p90": 11.6
+        },
+        "wind_gust_ms": {
+          "p10": 5.1,
+          "p50": 7.4,
+          "p90": 10.2
+        },
+        "precipitation_mm": {
+          "p10": 0,
+          "p50": 0,
+          "p90": 0.3
+        }
+      }
+    }
+  ]
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -412,7 +430,7 @@ res = requests.get("https://api.mapx.at/v1/weather/warnings?bbox=9.4,46.3,17.3,4
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
@@ -434,17 +452,39 @@ data = res.json()
               [
                 11.41,
                 47.26
-              ],
-              [
-                11.41,
-                47.28
-              ],
-              [
-                11.39,
-                47.26
               ]
             ]
-  …
+          ]
+        ]
+      },
+      "properties": {
+        "id": "w4149c1v1",
+        "type": "wind",
+        "type_id": 1,
+        "level": 2,
+        "level_name": "orange",
+        "onset": "2026-11-08T12:00Z",
+        "expires": "2026-11-09T04:00Z",
+        "municipalities": 1,
+        "municipality_ids": [
+          "70101"
+        ],
+        "text": {
+          "de": "Orange Sturmwarnung",
+          "en": "Orange storm warning"
+        },
+        "impact": {
+          "de": "Windspitzen über 70 km/h",
+          "en": "Wind speeds exceeding 70 km/h"
+        },
+        "recommendation": {
+          "de": null,
+          "en": null
+        }
+      }
+    }
+  ]
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))

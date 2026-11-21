@@ -50,15 +50,14 @@ res = requests.get("https://api.mapx.at/v1/geocode?q=Herrengasse%2013%20Wien&lim
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
   "type": "FeatureCollection",
   "query": [
     "herrengasse",
-    "13",
-    "wien"
+    "13"
   ],
   "features": [
     {
@@ -82,7 +81,9 @@ data = res.json()
       },
       "properties": {}
     }
-  …
+  ],
+  "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -135,15 +136,14 @@ res = requests.get("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?lim
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 {
   "type": "FeatureCollection",
   "query": [
     "herrengasse",
-    "13",
-    "wien"
+    "13"
   ],
   "features": [
     {
@@ -167,7 +167,9 @@ data = res.json()
       },
       "properties": {}
     }
-  …
+  ],
+  "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -226,33 +228,40 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "query": [
-    "herrengasse",
-    "13",
-    "wien"
+    16.3665,
+    48.2096
   ],
   "features": [
     {
+      "id": "address-6792135",
       "type": "Feature",
-      "id": "address-1234567",
       "place_type": [
         "address"
       ],
-      "place_name": "Herrengasse 13, 1010 Wien",
-      "text": "Herrengasse 13",
+      "relevance": 1,
+      "properties": {
+        "mapx_type": "address",
+        "class": null,
+        "context": "Innere Stadt, 1010 Wien, W",
+        "zoom": 18
+      },
+      "text": "Fahnengasse 2",
+      "place_name": "Fahnengasse 2, Innere Stadt, 1010 Wien, W",
       "center": [
-        16.3665,
-        48.2096
+        16.366458,
+        48.209337
       ],
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.3665,
-          48.2096
+          16.366458,
+          48.209337
         ]
-      },
-      "properties": {}
+      }
     }
-  …
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+}
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -269,7 +278,9 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array von FeatureCollections in Eingabereihenfolge. Die Anfragen laufen gebündelt über die Multi-Search von Meilisearch (höchstens 4 parallel).
+JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array von FeatureCollections in Eingabereihenfolge. Die Einträge werden in Teilen gesucht, höchstens 4 parallel; der ganze Batch zählt im Rate-Limit als eine Anfrage.
+
+Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
 Höchstens 512 KB.
 
@@ -343,7 +354,7 @@ res = requests.post("https://api.mapx.at/v1/geocode/batch", headers={"Authorizat
 data = res.json()
 ```
 
-**Beispielantwort**
+**Beispielantwort** (gekürzt: Listen zeigen nur die ersten Einträge)
 
 ```json
 [
@@ -351,8 +362,7 @@ data = res.json()
     "type": "FeatureCollection",
     "query": [
       "herrengasse",
-      "13",
-      "wien"
+      "13"
     ],
     "features": [
       {
@@ -375,7 +385,11 @@ data = res.json()
           ]
         },
         "properties": {}
-  …
+      }
+    ],
+    "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+  }
+]
 ```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))

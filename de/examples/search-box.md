@@ -29,21 +29,28 @@ map.once('load', () => map.getContainer().querySelector('.maplibregl-compact-sho
 const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
 let marker, token = crypto.randomUUID();
 
+let ctrl; // AbortController of the running request
 input.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (input.value.trim().length < 2) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (input.value.trim().length < 2) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   const c = map.getCenter();
   const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${c.lng},${c.lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
   try {
-    const res = await fetch(url, AUTH);
+    const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
       b.addEventListener('click', () => pick(s.mapbox_id));
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 
 async function pick(id) {
@@ -79,21 +86,28 @@ const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ sou
 const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
 let token = crypto.randomUUID();
 
+let ctrl; // AbortController of the running request
 input.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (input.value.trim().length < 2) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (input.value.trim().length < 2) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   const [lon, lat] = ol.proj.toLonLat(map.getView().getCenter());
   const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${lon},${lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
   try {
-    const res = await fetch(url, AUTH);
+    const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
       b.addEventListener('click', () => pick(s.mapbox_id));
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 
 async function pick(id) {
@@ -104,7 +118,7 @@ async function pick(id) {
     const at = ol.proj.fromLonLat(f.geometry.coordinates);
     hit.clear();
     hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
-    map.getView().animate({ center: at, zoom: (f.properties.zoom ?? 15) + 1 });
+    map.getView().setCenter(at), map.getView().setZoom((f.properties.zoom ?? 15) + 1); // jump instead of animating: fewer tile requests
     list.replaceChildren();
   } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
   token = crypto.randomUUID(); // the session ends with retrieve
@@ -130,21 +144,28 @@ const map = L.map('map').setView([47.6, 14.3], 8);
 L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 21, attribution: ATTRIBUTION }).addTo(map);
 const input = document.getElementById('q'), types = document.getElementById('types'), list = document.getElementById('treffer');
 let marker, token = crypto.randomUUID();
+let ctrl; // AbortController of the running request
 input.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (input.value.trim().length < 2) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (input.value.trim().length < 2) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   const c = map.getCenter();
   const url = `https://api.mapx.at/v1/searchbox/suggest?q=${encodeURIComponent(input.value)}&session_token=${token}&proximity=${c.lng},${c.lat}&limit=6` + (types.value ? `&types=${types.value}` : '');
   try {
-    const res = await fetch(url, AUTH);
+    const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
       b.addEventListener('click', () => pick(s.mapbox_id));
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 async function pick(id) {
   try {
@@ -154,7 +175,7 @@ async function pick(id) {
     const [lng, lat] = f.geometry.coordinates;
     marker?.remove();
     marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
-    map.flyTo([lat, lng], (f.properties.zoom ?? 15) + 1);
+    map.setView([lat, lng], (f.properties.zoom ?? 15) + 1, { animate: false }); // jump instead of flying: fewer tile requests
     list.replaceChildren();
   } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
   token = crypto.randomUUID(); // the session ends with retrieve

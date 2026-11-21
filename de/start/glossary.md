@@ -6,9 +6,9 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **Annotation.** Zusätzliche Werte je Routensegment, zum Beispiel Geschwindigkeit oder Höhe. Angefordert mit `annotations`.
 
-**Contours.** Höhenlinien, Linien gleicher Höhe. Tileset `contours`.
+**Contours.** Höhenlinien, Linien gleicher Höhe. Kachelsatz `contours`.
 
-**DEM.** Digitales Höhenmodell, hier als Terrain-RGB-Tiles gespeichert. Siehe [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
+**DEM.** Digitales Höhenmodell, hier als Terrain-RGB-Kacheln gespeichert. Siehe [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
 
 **DSM / DTM.** Digitales Oberflächenmodell (mit Gebäuden und Bäumen) und digitales Geländemodell (nackter Boden).
 
@@ -18,18 +18,18 @@ Source: https://docs.mapx.at/de/start/glossary/
 
 **Isochrone.** Ein Gebiet, das von einem Punkt aus innerhalb einer bestimmten Zeit oder Distanz erreichbar ist.
 
-**Orthophoto.** Entzerrte Luftaufnahme.
+**Orthofoto.** Entzerrte Luftaufnahme.
 
-**PMTiles.** Einzeldatei-Archiv von Tiles, gelesen mit HTTP-Range-Requests. Die mapx-Styles lesen ihre Kacheln technisch aus PMTiles; Zugriff für eigene Anwendungen über Style, TileJSON oder `{z}/{x}/{y}`.
+**PMTiles.** Einzeldatei-Archiv von Kacheln, gelesen mit HTTP-Range-Requests. Die mapx-Stile lesen ihre Kacheln aus PMTiles; dafür muss die Seite das Protokoll `pmtiles://` registrieren (`maplibregl.addProtocol`, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md)). Zugriff für eigene Anwendungen sonst über TileJSON oder `{z}/{x}/{y}`.
 
 **Profil.** Die Art des Verkehrsteilnehmers beim Routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 
-**Sprite.** Bildatlas mit den Icons eines Styles.
+**Sprite.** Bildatlas mit den Icons eines Stils.
 
-**Style.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet unter anderem `streets`, `satellite` und `outdoors`; alle Styles stehen in der [Style-Referenz](https://docs.mapx.at/de/reference/style-spec.md).
+**Stil.** Ein JSON-Dokument, das der Karte sagt, welche Daten sie wie zeichnet. mapx bietet unter anderem `streets`, `satellite` und `outdoors`; alle Stile stehen in der [Stil-Referenz](https://docs.mapx.at/de/reference/style-spec.md).
 
-**Tile.** Ein quadratisches Kartenstück, adressiert als `{z}/{x}/{y}`. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
+**Kachel.** Ein quadratisches Kartenstück, adressiert als `{z}/{x}/{y}`. Siehe [Kachelschema](https://docs.mapx.at/de/reference/tile-scheme.md).
 
-**TileJSON.** Eine kleine JSON-Beschreibung eines Tilesets: URL-Vorlage, Zoombereich, Grenzen, Attribution.
+**TileJSON.** Eine kleine JSON-Beschreibung eines Kachelsatzes: URL-Vorlage, Zoombereich, Grenzen, Quellenangabe.
 
-**Tileset.** Eine benannte Sammlung von Tiles, zum Beispiel `streets` oder `contours`. Siehe [Tilesets](https://docs.mapx.at/de/tilesets/index.md).
+**Kachelsatz.** Eine benannte Sammlung von Kacheln, zum Beispiel `streets` oder `contours`. Siehe [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md).

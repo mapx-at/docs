@@ -2,13 +2,15 @@
 
 Source: https://docs.mapx.at/de/guides/qgis/
 
-> DTM, DSM, Orthophoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung und Vektorkachel-Verbindung.
+> DTM, DSM, Orthofoto und Vektorkacheln in QGIS einbinden: XYZ-Verbindung und Vektorkachel-Verbindung.
 
-**Ziel:** Orthophoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Auf dem eigenen Rechner einen geheimen Token (`mx_sk_…`) verwenden: ein öffentlicher Token gilt nur für seine erlaubten Origins, und QGIS ist keine Webseite.
+**Ziel:** Orthofoto, Höhenmodelle und Vektordaten von mapx als Layer in QGIS verwenden, ohne Download, mit kostenlosem Token (an die Layer-URLs `?access_token=DEIN_TOKEN` hängen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Auf dem eigenen Rechner einen geheimen Token (`mx_sk_…`) verwenden: ein öffentlicher Token gilt nur für seine erlaubten Origins, und QGIS ist keine Webseite.
 
 **Voraussetzungen:** QGIS 3.x.
 
-## Orthophoto als XYZ-Layer
+In QGIS laden kannst du die Kachelsätze (Orthofoto, Höhenmodelle, Vektorkacheln), die fertigen mapx-Stile aber nicht: Sie lesen PMTiles-Dateien (`pmtiles://`). Die Quellenangabe zeigt QGIS nicht von selbst; trage sie im Druck-Layout und in Berichten von Hand ein, siehe [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).
+
+## Orthofoto als XYZ-Layer
 
 1. Im Browser-Panel Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
 2. Name `mapx Orthophoto`, URL:
@@ -50,9 +52,9 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TO
 3. **Min. Zoom** 0, **Max. Zoom** 16 eintragen, OK.
 4. Verbindung in die Karte ziehen. QGIS zeigt zunächst einen Standardstil; das Aussehen lässt sich im Layer-Stileditor oder mit einem eigenen Stil ändern.
 
-Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Tilesets: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
+Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Kachelsätze: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
 
 ## Nächste Schritte
 
 - Höhenmodell verstehen: [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md).
-- Quellenangabe in Karten und Berichten: [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+- Quellenangabe in Karten und Berichten: [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).

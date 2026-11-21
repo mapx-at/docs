@@ -1,12 +1,14 @@
-# Static Image fürs Exposé: Beispiel
+# Statisches Kartenbild fürs Exposé: Beispiel
 
 Source: https://docs.mapx.at/de/examples/static-image/
 
-> Ort anklicken und eine fertige Bild-URL einer statischen Karte mit Marker erhalten, etwa fürs Exposé: Static-Images-API, lauffähiger Code.
+> Ort anklicken und eine fertige Bild-URL einer statischen Karte mit Marker erhalten, etwa fürs Exposé: API für statische Kartenbilder, lauffähiger Code.
 
-Ein Static Image ist eine einfache URL, die ein PNG oder WebP liefert: für Exposés, E-Mails, PDFs und Orte ohne JavaScript. Stil, Marker, Ausschnitt und Größe stehen im Pfad. Karte anklicken verschiebt den Marker; das Bild darunter lädt die angezeigte URL.
+Ein statisches Kartenbild ist eine einfache URL, die ein PNG oder WebP liefert: für Exposés, E-Mails, PDFs und Orte ohne JavaScript. Stil, Marker, Ausschnitt und Größe stehen im Pfad. Karte anklicken verschiebt den Marker; das Bild darunter lädt die angezeigte URL.
 
 ## Code
+
+Ein statisches Kartenbild ist nur eine Bild-URL, eine Kartenbibliothek ist nicht nötig; die Karte hier wählt nur den Ort.
 
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
@@ -37,4 +39,4 @@ update();
 
 ## Verwendete APIs
 
-- [Static Images](https://docs.mapx.at/de/api/static-images.md) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`
+- [Statische Kartenbilder](https://docs.mapx.at/de/api/static-images.md) `GET api.mapx.at/v1/static/{style}/{overlay}/{view}/{size}`

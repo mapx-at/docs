@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/guides/leaflet/
 
 ## Basiskarte einbinden
 
-Leaflet zeichnet keine Vektorkacheln. Die mapx-Stile gibt es deshalb fertig gerendert als Rasterkacheln ([Static Tiles](https://docs.mapx.at/de/api/styles.md)), eingebunden mit `L.tileLayer`. Die Kacheln sind 512 Pixel groß: `tileSize: 512` und `zoomOffset: -1` halten den Maßstab wie bei gewöhnlichen 256er-Kacheln. Stile: `streets` (und Varianten), `satellite`, `satellite-streets`, `outdoors`.
+Leaflet zeichnet keine Vektorkacheln. Die mapx-Stile gibt es deshalb fertig gerendert als Rasterkacheln ([Static Tiles](https://docs.mapx.at/de/api/styles.md)), eingebunden mit `L.tileLayer`. Die Kacheln sind 512 Pixel groß: `tileSize: 512` und `zoomOffset: -1` halten den Maßstab wie bei gewöhnlichen 256er-Kacheln. Stile: `streets` (und Varianten), `light`, `dark`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`; nicht als Rasterkachel verfügbar sind `traffic-day`, `traffic-night`, `satellite-current`, die Reliefstile und die `-3d`-Stile.
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -43,7 +43,7 @@ ebene.addData(geojson);
 
 - Kein Vektorstil: die Basiskarte kommt als Bild, Beschriftungen und Ebenen lassen sich nicht einzeln ändern. Dafür [MapLibre](https://docs.mapx.at/de/guides/maps.md).
 - Kein 3D-Gelände und keine 3D-Gebäude, die gibt es nur in MapLibre.
-- Rasterkacheln zählen in der Limit-Zone `static` (5 Anfragen pro Sekunde je IP, kurzzeitig bis 60 auf einmal, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Gewöhnliches Verschieben und Zoomen bleibt deutlich darunter; erst wer dauerhaft schneller neue Kacheln anfordert, bekommt `429`.
+- Rasterkacheln zählen in der Limit-Zone `static` (5 Anfragen pro Sekunde je IP-Adresse, kurzzeitig bis 60 auf einmal, dazu das Minutenlimit von 6000 je Token, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Gewöhnliches Verschieben und Zoomen bleibt deutlich darunter; erst wer dauerhaft schneller neue Kacheln anfordert, bekommt `429`.
 
 ## Beispiele
 

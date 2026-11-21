@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/examples/departures/
 
 > Click near a public transport stop in Austria and see the next departures: transit departures API with a live map and runnable code.
 
-A click finds the nearest stop within 150 m via `/v1/stops` and lists, via `/v1/departures`, the next departures from the scheduled timetable (no real-time data). The dots are the stops of the visible area from `/v1/stops`.
+A click finds the nearest stop within 150 m via `/v1/stops` and lists, via `/v1/departures`, the next departures from the scheduled timetable. The dots are the stops of the visible area from `/v1/stops`.
 
 ## Code
 
@@ -42,7 +42,7 @@ map.on('load', () => {
   load();
 });
 
-// A click finds the nearest stop within 150 m and lists its next 8 departures (timetable, no real-time data).
+// A click finds the nearest stop within 150 m and lists its next 8 departures (scheduled timetable).
 let seq = 0;
 map.on('click', async (e) => {
   const n = ++seq, at = `${e.lngLat.lng.toFixed(6)},${e.lngLat.lat.toFixed(6)}`;
@@ -108,7 +108,7 @@ map.on('click', async (e) => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/departures?stop=${encodeURIComponent(stop)}&limit=8&radius=150`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const { departures } = await res.json(); // scheduled timetable, no real-time data
+    const { departures } = await res.json(); // scheduled timetable
     if (!departures.length) { title.textContent = de ? 'Keine Abfahrten in der Nähe' : 'No departures nearby'; return; }
     title.textContent = departures[0].stop.name;
     for (const d of departures) {
@@ -152,7 +152,7 @@ async function load() {
 map.on('moveend', load);
 load();
 
-// A click finds the nearest stop within 150 m and lists its next 8 departures (timetable, no real-time data).
+// A click finds the nearest stop within 150 m and lists its next 8 departures (scheduled timetable).
 let seq = 0;
 map.on('click', async (e) => {
   const n = ++seq, at = `${e.latlng.lng.toFixed(6)},${e.latlng.lat.toFixed(6)}`;

@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/departures/
 
 > Nahe an eine ÖV-Haltestelle in Österreich klicken und die nächsten Abfahrten sehen: ÖV-Abfahrts-API mit Live-Karte und lauffähigem Code.
 
-Ein Klick sucht über `/v1/stops` die nächste Haltestelle im Umkreis von 150 m und listet über `/v1/departures` die nächsten Abfahrten aus dem Soll-Fahrplan (keine Echtzeitdaten). Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
+Ein Klick sucht über `/v1/stops` die nächste Haltestelle im Umkreis von 150 m und listet über `/v1/departures` die nächsten Abfahrten aus dem Soll-Fahrplan. Die Punkte sind die Haltestellen im sichtbaren Ausschnitt aus `/v1/stops`.
 
 ## Code
 
@@ -42,7 +42,7 @@ map.on('load', () => {
   load();
 });
 
-// A click finds the nearest stop within 150 m and lists its next 8 departures (timetable, no real-time data).
+// A click finds the nearest stop within 150 m and lists its next 8 departures (scheduled timetable).
 let seq = 0;
 map.on('click', async (e) => {
   const n = ++seq, at = `${e.lngLat.lng.toFixed(6)},${e.lngLat.lat.toFixed(6)}`;
@@ -108,7 +108,7 @@ map.on('click', async (e) => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/departures?stop=${encodeURIComponent(stop)}&limit=8&radius=150`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const { departures } = await res.json(); // scheduled timetable, no real-time data
+    const { departures } = await res.json(); // scheduled timetable
     if (!departures.length) { title.textContent = de ? 'Keine Abfahrten in der Nähe' : 'No departures nearby'; return; }
     title.textContent = departures[0].stop.name;
     for (const d of departures) {
@@ -152,7 +152,7 @@ async function load() {
 map.on('moveend', load);
 load();
 
-// A click finds the nearest stop within 150 m and lists its next 8 departures (timetable, no real-time data).
+// A click finds the nearest stop within 150 m and lists its next 8 departures (scheduled timetable).
 let seq = 0;
 map.on('click', async (e) => {
   const n = ++seq, at = `${e.latlng.lng.toFixed(6)},${e.latlng.lat.toFixed(6)}`;

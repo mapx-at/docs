@@ -1,21 +1,21 @@
-# Orthophoto-Tileset: Luftbild Österreich
+# Orthofoto-Kachelsatz: Luftbild Österreich
 
 Source: https://docs.mapx.at/de/tilesets/orthophoto/
 
 > Luftbild Österreich des BEV als WebP-Kacheln, z5 bis z18, 20 cm, mit eindeutiger Flugblock-Auswahl je Pixel.
 
-Das Orthophoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
+Das Orthofoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt der Kachelsatz [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
 
 **Nutzungen**
 
 - **Luftbild-Hintergrund**: Satellitenkarten-Ersatz für Web und Apps
-- **3D-Gelände**: Orthophoto auf dem DTM (https://docs.mapx.at/de/guides/3d-terrain/)
+- **3D-Gelände**: Orthofoto auf dem DTM (https://docs.mapx.at/de/guides/3d-terrain/)
 - **Planung und Dokumentation**: Zustand vor Ort in 20 cm
-- **QGIS**: Luftbild als XYZ- oder PMTiles-Layer (https://docs.mapx.at/de/guides/qgis/)
+- **QGIS**: Luftbild als XYZ- oder PMTiles-Ebene (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
-**Tileset `orthophoto`**
+**Kachelsatz `orthophoto`**
 
 | Kennwert | Wert |
 |---|---|
@@ -46,7 +46,7 @@ const map = new maplibregl.Map({
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
+TileJSON liefert Zoombereich, Grenzen und Quellenangabe. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -55,7 +55,7 @@ TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfra
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
-  attribution: "BEV, CC BY 4.0"
+  attribution: "mapx.at; BEV, CC BY 4.0"
 }).addTo(map);
 ```
 
@@ -76,8 +76,8 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.
 
 ## Quelle und Aktualität
 
-- Quelle: BEV **Digitales Orthophoto (DOP) RGB**, 20 cm, Aufnahmen 2022 bis 2025.
-- **Ein Flug je Pixel:** Wo sich Befliegungen überlappen, gewinnt die mit dem späteren Ende des Flugzeitraums. Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
+- Quelle: BEV **Digitales Orthofoto (DOP) RGB**, 20 cm, Aufnahmen 2022 bis 2025.
+- **Ein Flug je Pixel:** Wo sich Befliegungen überlappen, gewinnt die mit dem späteren Ende des Flugzeitraums. Welcher Flug ein Pixel liefert, zeigt der Kachelsatz [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
 
 ## Hinweise
 
@@ -86,12 +86,12 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.
 - An den Grenzen zu DE, CH, LI, IT, SI, CZ und SK reicht das Bild teils mehr als 3 km ins Ausland; an der Grenze zu Ungarn endet es an der Grenze.
 - Unter z18 mischen sich an Blockgrenzen Pixel beider Flüge; eindeutig ist die Zuordnung nur in z18.
 
-## Attribution
+## Quellenangabe
 
-Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
+Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-Orthophoto: BEV (CC BY 4.0)
+mapx.at; Orthophoto: BEV (CC BY 4.0)
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

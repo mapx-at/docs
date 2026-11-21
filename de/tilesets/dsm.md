@@ -1,4 +1,4 @@
-# DSM-Oberflächenmodell (Tileset)
+# DSM-Oberflächenmodell (Kachelsatz)
 
 Source: https://docs.mapx.at/de/tilesets/dsm/
 
@@ -16,7 +16,7 @@ Das DSM ist das Gegenstück zum [DTM](https://docs.mapx.at/de/tilesets/terrain-r
 
 ## Kennwerte
 
-**Tileset `dsm`**
+**Kachelsatz `dsm`**
 
 | Kennwert | Wert |
 |---|---|
@@ -49,7 +49,7 @@ const map = new maplibregl.Map({
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
+TileJSON liefert Zoombereich, Grenzen und Quellenangabe. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -58,7 +58,7 @@ TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfra
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/dsm/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN", {
   tileSize: 512, zoomOffset: -1, crossOrigin: true,
-  attribution: "BEV, CC BY 4.0"
+  attribution: "mapx.at; BEV, CC BY 4.0"
 }).addTo(map);
 ```
 
@@ -94,12 +94,12 @@ Das DSM entsteht aus dem ALS-DOM 1 m des BEV (Airborne Laserscanning, Oberfläch
 - Außerhalb der Daten ist der Wert eine glatte Fortsetzung, keine Messung (wie beim DTM).
 - Gebäude- und Bewuchshöhe (nDSM) ergeben sich im Client aus DSM minus DTM.
 
-## Attribution
+## Quellenangabe
 
-Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
+Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/cced2282-cfc5-42eb-9acb-b1c799522fcd">BEV – ALS-DOM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/cced2282-cfc5-42eb-9acb-b1c799522fcd">BEV – ALS-DOM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

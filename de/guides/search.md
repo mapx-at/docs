@@ -25,7 +25,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].center;
 ```
 
-Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
+`features` kann leer sein; vor dem Zugriff auf `features[0]` die Länge prüfen. Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
 ## Reverse Geocoding
 

@@ -1,14 +1,14 @@
-# 3D-Gelände-Karte mit Orthophoto
+# 3D-Gelände-Karte mit Orthofoto
 
 Source: https://docs.mapx.at/de/guides/3d-terrain/
 
 > Eine 3D-Karte mit echtem Höhenrelief, Schummerung und Luftbild darüber, mit MapLibre GL JS und kostenlosem Token.
 
-**Ziel:** Eine Karte, auf der das Orthophoto über dem echten Gelände liegt, plastisch schattiert und im Browser kippbar.
+**Ziel:** Eine Karte, auf der das Orthofoto über dem echten Gelände liegt, plastisch schattiert und im Browser kippbar.
 
 **Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
-Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Höhe, Typ `raster-dem`) und das [Orthophoto](https://docs.mapx.at/de/tilesets/orthophoto.md) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](https://docs.mapx.at/de/api/tiles.md) einbinden, ohne einen Dateinamen zu kennen.
+Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Höhe, Typ `raster-dem`) und das [Orthofoto](https://docs.mapx.at/de/tilesets/orthophoto.md) (Bild, Typ `raster`). Beide Kachelsätze lassen sich über [TileJSON](https://docs.mapx.at/de/api/tiles.md) einbinden, ohne einen Dateinamen zu kennen.
 
 1. **Seite anlegen.** Datei `index.html` mit MapLibre GL JS und einem Kartencontainer:
 
@@ -20,11 +20,16 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    <div id="map"></div>
    ```
 
-2. **Quellen deklarieren.** Das Höhenmodell als `raster-dem`, das Orthophoto als `raster`:
+2. **Quellen deklarieren.** Das Höhenmodell als `raster-dem` (zweimal: je eine Quelle für Gelände und Schummerung, das rendert besser), das Orthofoto als `raster`. Dazu der Token, der an jede Anfrage an `mapx.at` gehängt wird:
 
    ```js
+   const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
+   // Token an alle Anfragen an mapx.at hängen (TileJSON und Kacheln)
+   const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
+
    const quellen = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
+     "dem-hillshade": { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
      ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
    };
    ```
@@ -34,7 +39,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    ```js
    const ebenen = [
      { id: "ortho", type: "raster", source: "ortho" },
-     { id: "schummerung", type: "hillshade", source: "dem",
+     { id: "schummerung", type: "hillshade", source: "dem-hillshade",
        paint: { "hillshade-exaggeration": 0.4, "hillshade-shadow-color": "#000000" } }
    ];
    ```
@@ -44,16 +49,12 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    ```html
    <script type="module">
      import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
-     const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…
      const map = new maplibregl.Map({
        attributionControl: false,
        container: "map",
+       transformRequest: withToken,
        center: [12.694, 47.074], zoom: 12, pitch: 65, bearing: 20,
        maxPitch: 80,
-       // Token an alle Anfragen an mapx.at hängen
-       transformRequest: (url) => ({
-         url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url,
-       }),
        style: {
          version: 8,
          sources: quellen,
@@ -67,13 +68,13 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    </script>
    ```
 
-   Die Konstanten `quellen` und `ebenen` aus den Schritten 2 und 3 müssen im selben `<script>` vor `new maplibregl.Map` stehen.
+   Die Konstanten aus den Schritten 2 und 3 (`TOKEN`, `withToken`, `quellen`, `ebenen`) müssen im selben `<script>` vor `new maplibregl.Map` stehen.
 
 5. **Starten.** `npx serve` im Ordner, die ausgegebene Adresse öffnen. Mit gedrückter rechter Maustaste ziehen kippt und dreht die Karte.
 
 ## Ergebnis
 
-Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusätzlich schattiert. Das Orthophoto reicht bis z18 (20 cm), das DTM bis z16 (Rasterweite 1 m); MapLibre vergrößert darüber hinaus automatisch.
+Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusätzlich schattiert. Das Orthofoto reicht bis z18 (20 cm), das DTM bis z16 (Rasterweite 1 m); MapLibre vergrößert darüber hinaus automatisch.
 
 > Mit `exaggeration` lässt sich das Relief überhöhen. `1.0` entspricht der Natur; bei flachem Gelände wirken `1.5` bis `2` plastischer.
 
@@ -82,4 +83,4 @@ Das Luftbild liegt auf dem Gelände rund um den Großglockner, Hänge sind zusä
 - Höhe pro Klick auslesen: `map.queryTerrainElevation(e.lngLat)`, Details in [DTM Geländemodell](https://docs.mapx.at/de/tilesets/terrain-rgb.md).
 - Höhenlinien und Beschriftung darüber: [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md).
 - Höhenprofil entlang einer Linie: [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md).
-- Quellenangabe richtig anzeigen: [Attribution](https://docs.mapx.at/de/reference/attribution.md).
+- Quellenangabe richtig anzeigen: [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).

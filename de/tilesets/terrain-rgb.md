@@ -9,14 +9,14 @@ Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebä
 **Nutzungen**
 
 - **Wander- und Outdoorkarten**: Schummerung als Kartenhintergrund bis z16
-- **3D-Gelände**: Gelände und Flugansichten mit Orthophoto (https://docs.mapx.at/de/guides/3d-terrain/)
+- **3D-Gelände**: Gelände und Flugansichten mit Orthofoto (https://docs.mapx.at/de/guides/3d-terrain/)
 - **Höhenprofile**: Aufstieg und Gefälle entlang einer Route (https://docs.mapx.at/de/guides/elevation-profile/)
 - **Hang- und Expositionsanalyse**: Neigung und Ausrichtung aus den Höhenwerten
 - **QGIS und Analyse**: Höhen als Raster im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
-**Tileset `terrain-rgb`**
+**Kachelsatz `terrain-rgb`**
 
 | Kennwert | Wert |
 |---|---|
@@ -39,16 +39,13 @@ Formel unter „Kodierung“ und zeigt Höhe und RGB-Wert. Bei eingeschaltetem 3
 **MapLibre**
 
 ```js
-import * as maplibregl from "maplibre-gl";
-
-maplibregl.addProtocol("pmtiles", new Protocol().tile);
 const map = new maplibregl.Map({
   attributionControl: false,
   container: "map",
   center: [12.694, 47.074], zoom: 11, pitch: 60,
   style: {
     version: 8,
-    sources: { dem: { type: "raster-dem", url: "pmtiles://@@url:terrain-rgb@@?access_token=DEIN_TOKEN", tileSize: 512, encoding: "mapbox", maxzoom: 16 } },
+    sources: { dem: { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512, encoding: "mapbox" } },
     terrain: { source: "dem", exaggeration: 1.2 },
     layers: [{ id: "hill", type: "hillshade", source: "dem" }]
   }
@@ -57,6 +54,7 @@ map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 ```
+Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -64,7 +62,7 @@ map.on("click", (e) => console.log(map.queryTerrainElevation(e.lngLat)));
 
 1. Browser, Rechtsklick auf **XYZ Tiles**, **Neue Verbindung**.
 2. URL `https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TOKEN`, Min. Zoom 5, Max. Zoom 16, Kachelauflösung 512.
-3. Der Layer zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
+3. Die Ebene zeigt die Rohkacheln (kodierte Farbe). Höhen ergeben sich aus der Formel in „Kodierung“ (`(R*65536 + G*256 + B)*0,1 - 10000`), etwa im Raster-Rechner auf den drei Bändern.
 
   
 
@@ -158,18 +156,18 @@ Das DTM entsteht aus dem ALS-DTM 1 m des BEV (Airborne Laserscanning, nur Gelän
 - Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](https://docs.mapx.at/de/tilesets/dsm.md).
 - **Kein Messwert außerhalb der Daten.** Das Gebiet des Kachelsatzes ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
 
-## Attribution
+## Quellenangabe
 
 Pflicht nach CC BY 4.0. Text:
 
 ```
-Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0
 ```
 
-HTML (wie in den PMTiles-Metadaten, MapLibre übernimmt es automatisch aus dem Tileset):
+HTML (wie im TileJSON, MapLibre übernimmt es automatisch aus dem TileJSON):
 
 ```html
-Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

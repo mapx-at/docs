@@ -1,4 +1,4 @@
-# Höhenlinien-Tileset für Österreich
+# Höhenlinien-Kachelsatz für Österreich
 
 Source: https://docs.mapx.at/de/tilesets/contours/
 
@@ -9,14 +9,14 @@ Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](h
 **Nutzungen**
 
 - **Wander- und Outdoorkarten**: Höhenlinien mit Beschriftung der Indexlinien (https://docs.mapx.at/de/guides/overlay-contours/)
-- **Überlagerung**: Linien über Basiskarte oder Orthophoto (https://docs.mapx.at/de/guides/overlay-contours/)
+- **Überlagerung**: Linien über Basiskarte oder Orthofoto (https://docs.mapx.at/de/guides/overlay-contours/)
 - **Routenplanung**: Steigung und Geländeform lesen
 - **Planungskarten**: Höhenschichten in Fachkarten
 - **QGIS**: Vektorkacheln im Desktop-GIS (https://docs.mapx.at/de/guides/qgis/)
 
 ## Kennwerte
 
-**Tileset `contours`**
+**Kachelsatz `contours`**
 
 | Kennwert | Wert |
 |---|---|
@@ -45,7 +45,7 @@ const map = new maplibregl.Map({
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
 map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-show")?.classList.remove("maplibregl-compact-show")); // Quellen eingeklappt starten (MapLibre lässt sie bis zur ersten Kartenbewegung offen)
 ```
-TileJSON liefert Zoombereich, Grenzen und Attribution. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
+TileJSON liefert Zoombereich, Grenzen und Quellenangabe. Den Token bei jeder Anfrage mitschicken: das `transformRequest` aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in die Kartenoptionen übernehmen.
 
   
 
@@ -62,7 +62,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/con
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.at/v1/tiles/contours/14/8860/5730.pbf
 ```
 
-## Layer-Referenz
+## Ebenen-Referenz
 
 | `lvl` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß-σ) | Mindestlänge |
 |---|---|---|---|---|---|---|
@@ -71,8 +71,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.a
 | 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
 | 16 | ab 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
 
-Unter z10 gibt es keine Linien. Im Style nach `lvl` filtern, sonst liegen in z12 und darüber mehrere Stufen übereinander,
-falls der Client überzoomt.
+Unter z10 gibt es keine Linien. Jede Kachel enthält genau eine Stufe (`lvl`), ein Filter nach `lvl` ist nicht nötig.
 
 ```js
 { id: "hl", type: "line", source: "v", "source-layer": "contour_l",
@@ -84,7 +83,7 @@ falls der Client überzoomt.
 
 ### contour_l
 
-Geometrie: **Linie**, Zoom: **z10–16**, Layer: `contour_l`. Höhenlinien (Isolinien) in vier Detailstufen.
+Geometrie: **Linie**, Zoom: **z10–16**, Ebene: `contour_l`. Höhenlinien (Isolinien) in vier Detailstufen.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
@@ -100,15 +99,15 @@ Geometrie: **Linie**, Zoom: **z10–16**, Layer: `contour_l`. Höhenlinien (Isol
 
 - Durch die Glättung liegt die Linie in groben Stufen bewusst nicht exakt auf der Rohhöhe.
 - Linien enden am Rand der Daten (Staatsgrenze).
-- In Steilwänden liegen 10-m-Linien sehr dicht; Ausdünnen ist Aufgabe des Styles.
+- In Steilwänden liegen 10-m-Linien sehr dicht; Ausdünnen ist Aufgabe des Stils.
 - Beschriftung nur über `ele`, es gibt keine eigenen Label-Punkte.
 
-## Attribution
+## Quellenangabe
 
-Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus TileJSON oder PMTiles:
+Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at; Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

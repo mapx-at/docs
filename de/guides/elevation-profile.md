@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/guides/elevation-profile/
 
 **Voraussetzungen:** ein Browser. Ein kostenloser Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)), kein Framework, keine Bibliothek.
 
-Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt.
+Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert bei `path` und `samples` Höhenwerte, gleichmäßig nach Länge entlang der Linie verteilt. Wer nur die fertigen Summen (Auf- und Abstieg, tiefster und höchster Punkt) braucht, nimmt [`/v1/elevation/profile`](https://docs.mapx.at/de/guides/elevation.md#höhenprofil); hier wird das Profil von Hand gerechnet und gezeichnet.
 
 1. **Anfrage testen.** Die Linie besteht aus `lon,lat`-Paaren, getrennt durch Semikolon (Länge vor Breite). 50 Messpunkte entlang einer Strecke am Großglockner:
 

@@ -49,7 +49,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 
 ## Sprache
 
-`title` und `detail` sind standardmäßig englisch. Mit `Accept-Language: de` kommen deutsche Texte, außer bei Anmeldefehlern und den übrigen Fehlern des Gateways (`405`, `413`, `414`, `429`, `5xx`), die immer englisch sind (`unknown-path` gibt es auf Deutsch); `type`, `code`, `param` und `allowed` bleiben gleich. Antworten tragen `Content-Language` und `Vary: Accept-Language`. Das deutsche `detail` ist die allgemeine Beschreibung des Codes, das englische `detail` ist am genauesten.
+`title` und `detail` sind standardmäßig englisch; einige `detail`-Texte aus Routing und Öffentlichem Verkehr sind derzeit deutsch. Mit `Accept-Language: de` kommen deutsche Texte, außer bei Anmeldefehlern und den übrigen Fehlern des Gateways (`405`, `413`, `414`, `429`, `5xx`), die immer englisch sind (`unknown-path` gibt es auf Deutsch); `type`, `code`, `param` und `allowed` bleiben gleich. Antworten tragen `Content-Language` und `Vary: Accept-Language`. Das deutsche `detail` ist die allgemeine Beschreibung des Codes, das englische `detail` ist am genauesten.
 
 ## Katalog
 
@@ -189,7 +189,7 @@ Was tun: Aus einer Browserseite aufrufen oder auf dem Server einen geheimen Toke
 
 **403** · Public token not allowed here
 
-Ein öffentlicher Token erlaubt nur lesenden Zugriff (`GET`, `HEAD`) auf die öffentlichen Produkte. Batch-Geocoding (`POST /v1/geocode/batch`), Tourenplanung (`POST /v1/optimization`) und `corridor-graph` gehen nur mit einem geheimen Token.
+Ein öffentlicher Token erlaubt nur lesenden Zugriff (`GET`, `HEAD`) auf die öffentlichen Produkte. Batch-Geocoding (`POST /v1/geocode/batch`), Tourenplanung (`POST /v1/optimization`), Adressprüfung per `POST /v1/address/validate`, Verkehrsmeldungen per `POST /v1/traffic/incidents` und `GET /v1/corridor-graph` gehen nur mit einem geheimen Token.
 
 Was tun: Diese Anfrage von einem Server mit einem geheimen Token (`mx_sk_`) senden.
 
@@ -295,7 +295,7 @@ Was tun: Schriften mit `/v1/fonts` auflisten.
 
 Ein Wetter-Parametername ist nicht bekannt.
 
-Was tun: Einen von temperature, precipitation, wind, humidity, cloud, pressure verwenden.
+Was tun: Einen von temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast verwenden.
 
 ### unknown-id
 
@@ -419,7 +419,7 @@ Die Limits je IP-Adresse und Zone und das Minutenlimit je Token stehen unter [Zu
 
 | Header | Wert |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (Kacheln, TileJSON, Höhe), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
+| `Cache-Control` | `public, max-age=3600` (tiles.mapx.at, TileJSON, Höhe), `max-age=86400` (Kacheln über api.mapx.at), `max-age=60` (Search-Box-Vorschläge), `max-age=30` (Abfahrten), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Kachelsatz-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen) |
 | `ETag`, `Last-Modified` | Version; mit `If-None-Match` bzw. `If-Modified-Since` → `304` (Kacheln, Stile, TileJSON, OpenAPI) |
 | `Server-Timing` | `router`, `search`, `render`, `total` in Millisekunden |
 | `RateLimit-Policy` | Zone und Limit des Endpunkts |

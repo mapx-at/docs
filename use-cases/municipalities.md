@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/use-cases/municipalities/
 
 > Address validation, transit departures and an embedded map for municipal websites and administration tools.
 
-Municipal tools work with addresses and need to be understood by residents. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the address register, the timetable and the map for the web page of a municipality.
+Municipal tools work with addresses and need to be understood by residents, and the data is free to use under CC BY 4.0. mapx is free with an API token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); replace `YOUR_TOKEN` with your own. The pieces below combine the address register, the timetable and the map for the web page of a municipality.
 
 ## Check addresses
 
@@ -12,7 +12,7 @@ Forms for registrations, applications and reports should accept only existing ad
 
 ```js
 const q = new URLSearchParams({ street: "Haubtplatz", housenumber: "1", postcode: "3390", place: "Melk" });
-const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}&access_token=YOUR_TOKEN`)).json();
+const r = await (await fetch(`https://api.mapx.at/v1/address/validate?${q}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 console.log(r.status, r.deviations.map((d) => `${d.field}: ${d.input} > ${d.expected}`), r.address?.full_address ?? r.candidates?.map((c) => c.full_address));
 ```
 
@@ -20,7 +20,7 @@ While the person types, offer [address autofill](https://docs.mapx.at/examples/a
 
 ## Departures at the town hall
 
-Residents ask "When does the next bus go?". The timetable (scheduled, no real-time data) is one request away:
+Residents ask "When does the next bus go?". The scheduled timetable is one request away:
 
 ```js
 const H = { headers: { Authorization: "Bearer YOUR_TOKEN" } };

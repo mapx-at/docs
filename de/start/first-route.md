@@ -33,7 +33,7 @@ route = requests.get(url, params={"overview": "simplified"}, headers={"Authoriza
 print(route["distance"] / 1000, "km", route["duration"] / 60, "min")
 ```
 
-`distance` ist in Metern, `duration` in Sekunden. Weitere Profile: `driving-traffic` (umfährt gemeldete Sperren), `driving-truck`, `cycling`, `cycling-mtb` und `walking`; Parameter je Profil in der [Directions-Referenz](https://docs.mapx.at/de/api/directions.md). Siehe den [Navigation-Guide](https://docs.mapx.at/de/guides/navigation.md).
+Die Antwort des `curl`-Beispiels sieht so aus: `{"distance":90076.3,"duration":3649.0}`. `distance` ist in Metern, `duration` in Sekunden. Bei `401` oder `403` siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Weitere Profile: `driving-traffic` (umfährt gemeldete Sperren), `driving-truck`, `cycling`, `cycling-mtb` und `walking`; Parameter je Profil in der [Directions-Referenz](https://docs.mapx.at/de/api/directions.md). Siehe den [Navigation-Guide](https://docs.mapx.at/de/guides/navigation.md).
 
 ## Auf der Karte zeichnen
 
@@ -42,11 +42,14 @@ Mit der Karte aus [Erste Karte](https://docs.mapx.at/de/start/first-map.md) in `
 ```js
 const url = "https://api.mapx.at/v1/directions/driving/16.3725,48.2085;15.3294,48.2272?overview=simplified";
 const route = (await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).routes[0];
-map.on("load", () => {
+const draw = () => {
   map.addSource("route", { type: "geojson", data: { type: "Feature", geometry: route.geometry } });
   map.addLayer({ id: "route", type: "line", source: "route", paint: { "line-color": "#1d5bd8", "line-width": 5 } });
-  map.fitBounds([[15.3294, 48.2085], [16.3725, 48.2272]], { padding: 40 });
-});
+  const bounds = new maplibregl.LngLatBounds();
+  route.geometry.coordinates.forEach((c) => bounds.extend(c));
+  map.fitBounds(bounds, { padding: 40 });
+};
+map.loaded() ? draw() : map.once("load", draw); // die Karte kann beim Eintreffen der Route schon geladen sein
 ```
 
 ## Nächste Schritte

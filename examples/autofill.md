@@ -30,13 +30,17 @@ const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map(
 const list = document.getElementById('treffer');
 let marker;
 
+let ctrl; // AbortController of the running request
 f.street.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (f.street.value.trim().length < 3) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (f.street.value.trim().length < 3) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, AUTH);
+    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = s.full_address;
       b.addEventListener('click', () => {
@@ -48,7 +52,10 @@ f.street.addEventListener('input', async () => {
       });
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 
@@ -74,13 +81,17 @@ const map = new ol.Map({ target: 'map', layers: [base, new ol.layer.Vector({ sou
 const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map((k) => [k, document.getElementById(k)]));
 const list = document.getElementById('treffer');
 
+let ctrl; // AbortController of the running request
 f.street.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (f.street.value.trim().length < 3) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (f.street.value.trim().length < 3) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, AUTH);
+    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = s.full_address;
       b.addEventListener('click', () => {
@@ -88,12 +99,15 @@ f.street.addEventListener('input', async () => {
         const at = ol.proj.fromLonLat(s.coordinates);
         hit.clear();
         hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
-        map.getView().animate({ center: at, zoom: 17 });
+        map.getView().setCenter(at), map.getView().setZoom(17); // jump instead of animating: fewer tile requests
         list.replaceChildren();
       });
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 
@@ -117,13 +131,17 @@ L.tileLayer('https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_
 const f = Object.fromEntries(['street', 'housenumber', 'postcode', 'place'].map((k) => [k, document.getElementById(k)]));
 const list = document.getElementById('treffer');
 let marker;
+let ctrl; // AbortController of the running request
 f.street.addEventListener('input', async () => {
-  list.replaceChildren();
-  if (f.street.value.trim().length < 3) return;
+  ctrl?.abort(); // a newer input cancels the older request
+  if (f.street.value.trim().length < 3) { list.replaceChildren(); return; }
+  ctrl = new AbortController();
   try {
-    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, AUTH);
+    const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    for (const s of (await res.json()).suggestions) {
+    const items = (await res.json()).suggestions;
+    list.replaceChildren(); // clear only now, so fast typing never shows two lists
+    for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
       b.type = 'button'; b.textContent = s.full_address;
       b.addEventListener('click', () => {
@@ -131,12 +149,15 @@ f.street.addEventListener('input', async () => {
         const [lng, lat] = s.coordinates;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
-        map.flyTo([lat, lng], 17);
+        map.setView([lat, lng], 17, { animate: false }); // jump instead of flying: fewer tile requests
         list.replaceChildren();
       });
       li.append(b); list.append(li);
     }
-  } catch (e) { list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message; }
+  } catch (e) {
+    if (e.name === 'AbortError') return; // replaced by a newer input
+    list.textContent = (de ? 'Fehler: ' : 'Error: ') + e.message;
+  }
 });
 ````
 

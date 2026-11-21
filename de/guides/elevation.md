@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/guides/elevation/
 
-> Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Tilesets für Österreich.
+> Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Kachelsätze für Österreich.
 
 mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
@@ -35,25 +35,27 @@ Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Beispiel mi
 
 ## 3D-Gelände in der Karte
 
-Das Tileset `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)):
+Der Kachelsatz `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)):
 
 ```js
 map.on("load", () => {
+  // zwei getrennte Quellen: eine für das Gelände, eine für die Schummerung (bessere Darstellung)
   map.addSource("dem", { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512 });
+  map.addSource("dem-hillshade", { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512 });
   map.setTerrain({ source: "dem", exaggeration: 1.2 });
-  map.addLayer({ id: "hillshade", type: "hillshade", source: "dem" });
+  map.addLayer({ id: "hillshade", type: "hillshade", source: "dem-hillshade" });
+  map.setPitch(60);
 });
-map.setPitch(60);
 ```
 
-Schritt für Schritt mit Luftbild: [3D-Gelände mit Orthophoto](https://docs.mapx.at/de/guides/3d-terrain.md). Der Style `outdoors` enthält Schummerung und Höhenlinien bereits.
+Schritt für Schritt mit Luftbild: [3D-Gelände mit Orthofoto](https://docs.mapx.at/de/guides/3d-terrain.md). Der Stil `outdoors` enthält Schummerung und Höhenlinien bereits; die fertigen 3D-Stile `outdoors-3d` und `satellite-3d` bringen das Gelände mit, siehe [Karten](https://docs.mapx.at/de/guides/maps.md).
 
-## Höhen aus Tiles lesen
+## Höhen aus Kacheln lesen
 
-Die Tiles verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Für Massenarbeit die Tiles selbst dekodieren, siehe [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md). Für einzelne Punkte ist die API einfacher.
+Die Kacheln verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 + G * 256 + B) * 0.1`. Für Massenarbeit die Kacheln selbst dekodieren, siehe [Terrain-RGB](https://docs.mapx.at/de/reference/terrain-rgb.md). Für einzelne Punkte ist die API einfacher.
 
 ## Nächste Schritte
 
 - [Elevation API](https://docs.mapx.at/de/api/elevation.md)
-- [Tilesets](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Datenblatt des Geländemodells
+- [Kachelsätze](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Datenblatt des Geländemodells
 - [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md)

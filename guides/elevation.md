@@ -39,14 +39,16 @@ Add the `terrain-rgb` tileset as `raster-dem` source and turn on terrain:
 
 ```js
 map.on("load", () => {
+  // two separate sources: one for the terrain, one for the hillshade (better rendering)
   map.addSource("dem", { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512 });
+  map.addSource("dem-hillshade", { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", tileSize: 512 });
   map.setTerrain({ source: "dem", exaggeration: 1.2 });
-  map.addLayer({ id: "hillshade", type: "hillshade", source: "dem" });
+  map.addLayer({ id: "hillshade", type: "hillshade", source: "dem-hillshade" });
+  map.setPitch(60);
 });
-map.setPitch(60);
 ```
 
-Step-by-step with aerial imagery: [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md). The style `outdoors` already includes hillshade and contours.
+Step-by-step with aerial imagery: [3D terrain with orthophoto](https://docs.mapx.at/guides/3d-terrain.md). The style `outdoors` already includes hillshade and contours; the ready-made 3D styles `outdoors-3d` and `satellite-3d` bring the terrain along, see [Maps](https://docs.mapx.at/guides/maps.md).
 
 ## Read heights from tiles
 

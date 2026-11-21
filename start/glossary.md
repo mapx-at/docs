@@ -20,7 +20,7 @@ Source: https://docs.mapx.at/start/glossary/
 
 **Orthophoto.** Rectified aerial photograph.
 
-**PMTiles.** Single-file archive of tiles, read with HTTP range requests. The mapx styles read their tiles from PMTiles under the hood; your own applications use the style, TileJSON or `{z}/{x}/{y}`.
+**PMTiles.** Single-file archive of tiles, read with HTTP range requests. The mapx styles read their tiles from PMTiles; the page must register the `pmtiles://` protocol for that (`maplibregl.addProtocol`, see [First map](https://docs.mapx.at/start/first-map.md)). Otherwise your own applications use TileJSON or `{z}/{x}/{y}`.
 
 **Profile.** The kind of traveler for routing: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
 

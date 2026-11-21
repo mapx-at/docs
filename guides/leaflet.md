@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/guides/leaflet/
 
 ## Add the basemap
 
-Leaflet does not draw vector tiles. The mapx styles are therefore also available rendered as raster tiles ([Static Tiles](https://docs.mapx.at/api/styles.md)), added with `L.tileLayer`. The tiles are 512 pixels: `tileSize: 512` and `zoomOffset: -1` keep the scale of ordinary 256 pixel tiles. Styles: `streets` (and variants), `satellite`, `satellite-streets`, `outdoors`.
+Leaflet does not draw vector tiles. The mapx styles are therefore also available rendered as raster tiles ([Static Tiles](https://docs.mapx.at/api/styles.md)), added with `L.tileLayer`. The tiles are 512 pixels: `tileSize: 512` and `zoomOffset: -1` keep the scale of ordinary 256 pixel tiles. Styles: `streets` (and variants), `light`, `dark`, `satellite`, `satellite-streets`, `outdoors`, `outdoors-winter`; not available as raster tiles are `traffic-day`, `traffic-night`, `satellite-current`, the relief styles and the `-3d` styles.
 
 ```html
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -43,7 +43,7 @@ layer.addData(geojson);
 
 - No vector style: the basemap arrives as an image, labels and layers cannot be changed one by one. Use [MapLibre](https://docs.mapx.at/guides/maps.md) for that.
 - No 3D terrain and no 3D buildings, these are only available in MapLibre.
-- Raster tiles count in the rate limit zone `static` (5 requests per second per IP, briefly up to 60 at once, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Ordinary panning and zooming stays well below that; only requesting new tiles faster for a sustained period returns `429`.
+- Raster tiles count in the rate limit zone `static` (5 requests per second per IP address, briefly up to 60 at once, plus the per-minute limit of 6000 per token, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Ordinary panning and zooming stays well below that; only requesting new tiles faster for a sustained period returns `429`.
 
 ## Examples
 

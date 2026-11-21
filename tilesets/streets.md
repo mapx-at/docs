@@ -70,6 +70,25 @@ A layer name ending in `_a` is an area, `_l` a line, `_p` a point. `min_zoom` on
 
 | Layer | Geometry | Zoom | Fields | Content |
 |---|---|---|---|---|
+| `aerialway_l` | line | z12–16 | `kind` string, `min_zoom` number, `name` string | Aerial ropeways and lifts (DLM): cable_car, gondola, chair_lift, drag_lift … |
+| `airport_p` | point | z8–16 | `icao` string, `kind` string, `min_zoom` number, `name` string | Airfields (BEV DLM Verkehr): airport, airfield, heliport, military |
+| `boundary_l` | line | z0–16 | `admin_level` number, `kind` string, `left` string, `min_zoom` number, `right` string | Boundaries (BEV VGD): country, state, district, municipality; left/right area on the left/right |
+| `boundary_label_p` | point | z4–16 | `admin_level` number, `code` string, `kind` string, `min_zoom` number, `name` string | Names of state, district, municipality; code identifier |
+| `building_a` | polygon | z12–16 | `has_parts` boolean, `height` number, `kind` string, `max_height` number, `min_zoom` number | Buildings (DKM) with height from the DLM, otherwise from surface minus terrain model; kind building or church, school, station, castle, hut …; merged at z12–14 with mean height; has_parts: body is in building_part_a |
+| `building_part_a` | polygon | z13–16 | `height` number, `min_height` number, `source` string | Building parts for 3D (from z13): tower parts from the surface model, in Vienna the City of Vienna building block model (from z15); min_height, height, source dsm or wien |
+| `housenumber_p` | point | z16–16 | `housenumber` string, `kind` string, `street` string | House numbers (BEV address register): kind building = building coordinate, parcel = parcel address |
+| `landuse_a` | polygon | z2–16 | `kind` string, `kind_detail` string, `min_zoom` number, `sort_rank` number | Land use from the DKM: residential, garden, farmland, vineyard, alpine_meadow, forest, glacier, rock, water, wetland, transport, quarry, cemetery, recreation |
+| `natural_p` | point | z8–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Mountains, saddles, valleys, field names, castles, ruins … |
+| `place_p` | point | z0–16 | `capital` string, `kind` string, `min_zoom` number, `name` string, `name_alt` string, `sort_rank` number | Places (BEV Geographical Names): city, town, village, hamlet, suburb, locality; capital |
+| `poi_p` | point | z13–16 | `ele` number, `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `sort_rank` number | Churches, summit crosses and facilities (BEV DLM, in Vienna additionally Wien-OGD): schools, huts, gas stations, museums … |
+| `rail_l` | line | z6–16 | `construction` boolean, `kind` string, `kind_detail` string, `min_zoom` number, `structure` string | Rail (GIP): rail, narrow_gauge, rack, subway, tram, funicular, ferry |
+| `road_l` | line | z6–16 | `kind` string, `kind_detail` string, `min_zoom` number, `name` string, `oneway` boolean, `ref` string, `sort_rank` number, `structure` string | Roads and paths (GIP): highway, major_road, minor_road, service, track, path; structure bridge/tunnel |
+| `ski_a` | polygon | z10–16 | `kind` string, `min_zoom` number | Ski areas (Umweltbundesamt, as of 2017) |
+| `transit_p` | point | z10–16 | `kind` string, `min_zoom` number, `name` string | Railway stations, stops, lift stations |
+| `water_a` | polygon | z6–16 | `area_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Standing waters (GGN): lake, reservoir, pond |
+| `water_l` | line | z6–16 | `catchment_km2` number, `kind` string, `min_zoom` number, `name` string, `sort_rank` number, `structure` string | Flowing waters (GGN): river, stream, canal, ditch |
+| `water_label_l` | line | z10–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Water names along the line |
+| `water_label_p` | point | z6–16 | `kind` string, `min_zoom` number, `name` string, `sort_rank` number | Lake names, one point per lake |
 
 Every field and value of each layer: [Basemap: layer reference](https://docs.mapx.at/reference/style-spec.md).
 
@@ -80,14 +99,14 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 | Land use, buildings | BEV Digital Cadastral Map (DKM), heights from the DLM | 1 Apr 2026 |
 | Building heights without DLM value, tower parts | BEV ALS surface and terrain model 1 m | 15 Sep 2025 |
 | Building parts Vienna | Stadt Wien – data.wien.gv.at, building block model (CC BY 4.0) | 21 Nov 2026 |
-| Roads, rail | GIP-OGD (Graph Integration Platform) | 30 Apr 2026 |
-| Lifts, stations, POI | BEV DLM, Wien-OGD (Vienna only) | |
+| Roads, rail | GIP-OGD (Graph Integration Platform) | 8 Jul 2026 |
+| Lifts, stations, POI | BEV DLM, Wien-OGD (Vienna only) | DLM 23 Mar 2026, Wien-OGD 5 Nov 2026 |
 | Boundaries | BEV administrative boundaries (VGD) | 1 Oct 2026 |
 | Places, names, summits | BEV Geographical Names | 23 Mar 2026 |
 | House numbers | BEV address register | 1 Oct 2026 |
 | Water | BMLUK Gesamtgewässernetz (GGN v19) | |
 | Ski areas | Umweltbundesamt | 2017 |
-| Airfields | BEV DLM Verkehr (CC BY 4.0) | |
+| Airfields | BEV DLM Verkehr (CC BY 4.0) | 23 Mar 2026 |
 
 ## Notes
 
@@ -97,10 +116,10 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 
 ## Attribution
 
-Required under CC BY 4.0. MapLibre picks up the text automatically from TileJSON or PMTiles:
+Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
+mapx.at; Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

@@ -1,8 +1,8 @@
-# FAQ: Token, Lizenz, Offline-Nutzung
+# FAQ: Token, Lizenz, Aktualität der Daten
 
 Source: https://docs.mapx.at/de/start/faq/
 
-> Antworten zu mapx: Token nötig, Kosten, kommerzielle Nutzung unter CC BY 4.0, Aktualität der Daten, Offline-Karten, Daten außerhalb Österreichs, Fehler 401 und 403.
+> Antworten zu mapx: kostenlos mit Konto und Token, kommerzielle Nutzung unter CC BY 4.0, Aktualität der Daten, Kacheln, Daten außerhalb Österreichs, Fehler 401 und 403.
 
 ## Brauche ich einen Token oder ein Konto?
 
@@ -14,39 +14,39 @@ Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://a
 
 ## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
 
-Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
+Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 21 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
 
-## Was kostet es?
+## Ist mapx kostenlos?
 
-Nichts. Rate Limits gelten pro Token und Zone.
+Ja, mit Konto und Token. Die Rate Limits gelten je IP-Adresse und Zone, dazu je Token ein Minutenlimit, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md#rate-limits).
 
 ## Ist kommerzielle Nutzung erlaubt?
 
-Ja. Die Daten stehen unter [CC BY 4.0](https://docs.mapx.at/de/reference/attribution.md): die Quelle nennen, alles andere ist frei.
+Ja. Die amtlichen Daten stehen unter [CC BY 4.0](https://docs.mapx.at/de/reference/attribution.md): die Quelle nennen. Für die Sentinel-2-Kacheln gelten die Copernicus-Bedingungen; Einzelheiten stehen unter [Quellen und Lizenzen](https://docs.mapx.at/de/reference/attribution.md) und in den [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
 
 ## Wie aktuell sind die Daten?
 
-Jedes Tileset hat ein Quelldatum. Es steht auf seiner Seite unter [Tilesets](https://docs.mapx.at/de/tilesets/index.md) und im Feld `stand` von `GET /v1/tiles`.
+Jeder Kachelsatz hat ein Quelldatum. Es steht auf seiner Seite unter [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md) und im Feld `stand` von `GET /v1/tiles`.
 
 ## Ändert sich eine URL bei neuen Daten?
 
-API-URLs (`/v1/tiles/streets/...`, TileJSON) bleiben gleich. Über Style und TileJSON kommen immer die aktuellen Daten.
+API-URLs (`/v1/tiles/streets/...`, TileJSON) bleiben gleich. Über Stil und TileJSON kommen immer die aktuellen Daten.
 
 ## Kann ich die Kacheln herunterladen?
 
-Nein. mapx liefert Karten und Kacheln über die API: Style, TileJSON oder `{z}/{x}/{y}`, siehe [Karten](https://docs.mapx.at/de/guides/maps.md) und [QGIS](https://docs.mapx.at/de/guides/qgis.md). Ganze Tileset-Dateien zum Selbsthosten gibt es nicht.
+Nein. mapx liefert Karten und Kacheln über die API: Stil, TileJSON oder `{z}/{x}/{y}`, siehe [Karten](https://docs.mapx.at/de/guides/maps.md) und [QGIS](https://docs.mapx.at/de/guides/qgis.md). Ganze Kachelsatz-Dateien zum Selbsthosten gibt es nicht.
 
 ## Gibt es Daten außerhalb Österreichs?
 
-Nur Österreich. Orthophoto und Basiskarte reichen an der Grenze ein Stück in die Nachbarländer.
+Nur Österreich. Orthofoto und Basiskarte reichen an der Grenze ein Stück in die Nachbarländer.
 
 ## Was ist der Unterschied zwischen DTM und DSM?
 
 Das DTM ist der nackte Boden, das DSM enthält Bäume und Gebäude. Das DTM für Steigungen und Profile verwenden, das DSM für Sichtbarkeit und Gebäudehöhen. Siehe [Höhen](https://docs.mapx.at/de/guides/elevation.md).
 
-## Warum kommt 404 für ein Tile?
+## Warum kommt 404 für eine Kachel?
 
-Das Tile liegt außerhalb des Datengebiets oder Zoombereichs, die Endung passt nicht zum Typ (`pbf` Vektor, `webp` Raster) oder der Tileset-Name ist falsch. 404 als leeres Tile behandeln.
+Der Zoom liegt außerhalb des Bereichs des Kachelsatzes, die Endung passt nicht zum Typ (`pbf` Vektor, `webp` Raster) oder der Name des Kachelsatzes ist falsch. Kacheln innerhalb des Zoombereichs, aber außerhalb Österreichs kommen als `204` ohne Inhalt.
 
 ## Warum kommt 429?
 
@@ -58,7 +58,7 @@ Längen- und Breitengrad sind vertauscht. mapx und GeoJSON verwenden `lon,lat`. 
 
 ## Meine Karte ist unscharf
 
-Raster-Tiles haben 512 px. Im Client `tileSize: 512` setzen. Siehe [Tile-Schema](https://docs.mapx.at/de/reference/tile-scheme.md).
+Rasterkacheln haben 512 px. Im Client `tileSize: 512` setzen. Siehe [Kachelschema](https://docs.mapx.at/de/reference/tile-scheme.md).
 
 ## Wo melde ich ein Problem?
 

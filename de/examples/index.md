@@ -29,10 +29,10 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 - [ÖV-Verbindung](https://docs.mapx.at/de/examples/transit-route.md): Start und Ziel klicken, Fuß- und Fahrabschnitte erhalten.
 - [Abfahrten an einer Haltestelle](https://docs.mapx.at/de/examples/departures.md): Nahe an eine Haltestelle klicken, nächste Abfahrten sehen.
 - [Verkehrslage und Meldungen](https://docs.mapx.at/de/examples/traffic.md): Verkehrsstil plus die aktiven Meldungen im sichtbaren Ausschnitt.
-- [Static Image fürs Exposé](https://docs.mapx.at/de/examples/static-image.md): Ort anklicken, fertige Bild-URL mit Marker erhalten.
-- [Eigenes GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md): Punkte, Linie und Fläche über dem mapx-Stil, Popup per Klick.
+- [Statisches Kartenbild fürs Exposé](https://docs.mapx.at/de/examples/static-image.md): Ort anklicken, fertige Bild-URL mit Marker erhalten.
+- [Eigenes GeoJSON auf der Karte](https://docs.mapx.at/de/examples/geojson-overlay.md): Punkte, Linie und Fläche über dem mapx-Stil; Klick auf einen Punkt zeigt seinen Namen in einem Popup.
 
 ## Hinweise
 
-- Alle Daten stammen aus amtlichen Quellen, keine OSM-Daten. Attribution: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+- Alle Daten stammen aus amtlichen Quellen, kein OpenStreetMap. Quellenangabe: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 - Alle Beispiele rufen die Endpunkte unter `https://api.mapx.at/v1/` mit einem öffentlichen Token auf (siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).

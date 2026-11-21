@@ -79,7 +79,29 @@ data = res.json()
       "license": "CC BY 4.0",
       "resolution_m": 100,
       "cell_center": [
-  …
+        15.33149,
+        48.22776
+      ],
+      "data_until": "2025-12-31"
+    },
+    "retrieved_at": "2026-11-08T07:31:55Z"
+  },
+  "snow": {
+    "snow_days_per_winter": {
+      "normal": 36.6,
+      "recent": 18.4
+    },
+    "max_depth_cm": {
+      "normal": 8.3,
+      "recent": 6.1
+    },
+    "current": {
+      "depth_cm": 0,
+      "date": "2026-11-06"
+    }
+  },
+  "attribution": "mapx.at; Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (https://data.hub.geosphere.at)"
+}
 ```
 
 | Feld | Typ | Beschreibung |
