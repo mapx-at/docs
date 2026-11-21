@@ -13,6 +13,8 @@ Source: https://docs.mapx.at/de/reference/style-spec/
 | `light`, `dark` | Ruhige Grundkarte für eigene Daten, hell bzw. dunkel |
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 | `outdoors-winter` | Gelände in Schneefarben, Skigebiete und Lifte hervorgehoben |
+| `relief`, `relief-contours` | Reine Reliefkarte: Höhenstufen (Täler grün bis Gipfel weiß) mit Schummerung, Gewässer und wenige Namen; `relief-contours` zusätzlich mit Höhenlinien |
+| `relief-light`, `relief-dark` | Nur graue Schummerung auf hellem bzw. dunklem Grund, Hintergrund für eigene Daten |
 | `traffic-day` | Basiskarte mit Verkehrsebene |
 | `traffic-night` | Nachtkarte (`streets-night`) mit Verkehrsebene, Farben für dunklen Grund |
 

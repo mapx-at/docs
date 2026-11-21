@@ -19,6 +19,11 @@ mapx liefert Karten als fertige Styles und als Tiles. Ein Style ergibt eine voll
 | `light`, `dark` | Ruhige, fast einfarbige Grundkarte (hell bzw. dunkel) für eigene Daten |
 | `outdoors` | Höhenlinien, Schummerung, Wege |
 | `outdoors-winter` | Wie `outdoors` in Schneefarben, Skigebiete und Seilbahnen/Lifte hervorgehoben |
+| `relief` | Reine Reliefkarte: Höhenstufen von grünen Tälern über Gelb, Ocker und Braun bis Grau und Weiß in der Gipfelregion, kräftige Schummerung, Seen und Flüsse, wenige Namen (Orte, Gipfel mit Höhe, Gewässer); keine Straßen und Gebäude |
+| `relief-contours` | Wie `relief`, zusätzlich Höhenlinien mit Höhenangaben |
+| `relief-light`, `relief-dark` | Nur graue Schummerung auf hellem bzw. dunklem Grund, sehr zurückhaltend, als Hintergrund für eigene Daten |
+
+Die Relief-Styles brauchen MapLibre GL JS ab 5.6 (Layertyp `color-relief`) und gibt es nur für die Karte im Browser, nicht als Static Images oder Static Tiles. Sie zeigen nur Österreich (Geländemodell BEV ALS-DTM 1 m, z5 bis z16), außerhalb bleibt die Fläche einfarbig.
 
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…

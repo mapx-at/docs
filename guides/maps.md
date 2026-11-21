@@ -19,6 +19,11 @@ mapx delivers maps as ready-made styles and as tiles. Use a style to get a compl
 | `light`, `dark` | Calm, almost monochrome base map (light or dark) for your own data |
 | `outdoors` | Contours, hillshade, trails |
 | `outdoors-winter` | Like `outdoors` in snow colours, ski areas and cable cars/lifts highlighted |
+| `relief` | Pure relief map: elevation tints from green valleys through yellow, ochre and brown to grey and white at the peaks, strong hillshade, lakes and rivers, a few names (places, peaks with height, water); no roads or buildings |
+| `relief-contours` | Like `relief`, with contour lines and their heights |
+| `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, very restrained, a backdrop for your own data |
+
+The relief styles need MapLibre GL JS 5.6 or later (layer type `color-relief`) and exist only for maps in the browser, not as static images or static tiles. They show Austria only (terrain model BEV ALS-DTM 1 m, z5 to z16); the area outside stays plain.
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…

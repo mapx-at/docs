@@ -25,6 +25,8 @@ A static image is one HTTP request that returns a picture. Use it where an inter
 | size | width and height 1 to 1280, up to 2560 with `@2x` |
 | format | `.png` or `.webp` |
 
+The relief styles (`relief`, `relief-contours`, `relief-light`, `relief-dark`) exist only for maps in the browser; as a static image the API answers `404`.
+
 Images are in the `heavy` zone (30 per minute). They are cacheable: send `If-None-Match` and the API answers `304`. Cache images on your side and do not request them per page view.
 
 ## Overlays

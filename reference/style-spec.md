@@ -13,6 +13,8 @@ Source: https://docs.mapx.at/reference/style-spec/
 | `light`, `dark` | Calm base map for your own data, light or dark |
 | `outdoors` | Contours, hillshade, trails |
 | `outdoors-winter` | Terrain in snow colours, ski areas and lifts highlighted |
+| `relief`, `relief-contours` | Pure relief map: elevation tints (green valleys to white peaks) with hillshade, water and a few names; `relief-contours` adds contour lines |
+| `relief-light`, `relief-dark` | Grey hillshade only on a light or dark background, a backdrop for your own data |
 | `traffic-day` | Base map with the traffic layer |
 | `traffic-night` | Night map (`streets-night`) with the traffic layer, colours for a dark background |
 

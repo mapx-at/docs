@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `tiles` (10
 
 `GET /v1/styles`
 
-Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter.
+Available style ids: streets, streets-dawn, streets-dusk, streets-night, traffic-day, traffic-night, light, dark, satellite, satellite-streets, satellite-current (Sentinel-2 with roads and names), outdoors, outdoors-winter, relief, relief-contours, relief-light, relief-dark (terrain only: elevation tints and hillshade, rendered in the browser with MapLibre GL JS 5.6 or later).
 
 **Example**
 
@@ -166,9 +166,9 @@ data = res.json()
 
 `GET /v1/styles/{id}/tiles/{tilesize}/{z}/{x}/{y}`
 
-Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter. `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`. Labels are rendered with a margin and clipped. No data or below minimum zoom: 404.
+Styles streets*, light, dark, satellite, satellite-streets, outdoors, outdoors-winter (not the relief styles, they are rendered in the browser only). `tilesize` 256 (standard XYZ, map zoom z-1) or 512 (map zoom z). `y` with optional `@2x` and `.png` (default) or `.webp`.
 
-Zone `static`. `ETag`, `Cache-Control`.
+Labels are rendered with a margin and clipped. No data or below minimum zoom: 404. Zone `static`. `ETag`, `Cache-Control`.
 
 **Parameters**
 
