@@ -406,7 +406,7 @@ data = res.json()
 
 Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at`, `transit_stops` und `attribution`.
 
-`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400).
+`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400). Sperren: driving, driving-traffic und driving-truck reichen nicht über aktive Vollsperren aus den Verkehrsmeldungen hinaus (dieselben, die Directions umfährt, siehe `/v1/traffic/incidents` mit `closed: true`), auch nicht über Sperren ohne Verbindlichkeitsvermerk wie Wintersperren von Passstraßen: Eine Isochrone hat kein Ziel hinter der Sperre, einen letzten Ausweg gibt es daher nicht; die Straße, auf der der Startpunkt einrastet, bleibt befahrbar. `metadata.closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `fetched`), `metadata.closures_avoided` listet die Sperren, an denen die größte Stufe endet (`id`, `text`, `road`, `category`, `binding`).
 
 **Parameter**
 
@@ -502,7 +502,9 @@ data = res.json()
 
 `GET /v1/matrix/{profile}/{coordinates}`
 
-2 bis 25 Koordinaten. `sources`/`destinations` als Indexliste (`0;2`) oder `all`.
+2 bis 25 Koordinaten. `sources`/`destinations` als Indexliste (`0;2`) oder `all`. Zone `heavy`. Sperren: driving, driving-traffic und driving-truck rechnen mit denselben Sperren und Gewichten wie Directions (verbindliche Sperren nie, übrige Vollsperren wie Wintersperren nur als letzter Ausweg, zeitlich bedingte Regelungen nur bei driving-traffic); jeder Eintrag passt daher zu Dauer und Distanz einer Directions-Anfrage zwischen denselben zwei Punkten.
+
+`closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `fetched`); cycling und walking beachten keine Sperren und haben kein `closures`.
 
 **Parameter**
 
@@ -589,7 +591,13 @@ data = res.json()
         48.2049
       ]
     }
-  ]
+  ],
+  "closures": {
+    "applied": true,
+    "count": 113,
+    "binding": 8,
+    "fetched": "2026-11-22T01:39:31Z"
+  }
 }
 ```
 
@@ -597,6 +605,7 @@ data = res.json()
 |---|---|---|
 | `durations` | array | Sekunden |
 | `distances` | array | Meter |
+| `closures` | object | Berücksichtigte Straßensperren (nur driving, driving-traffic, driving-truck; fehlt bei cycling und walking). |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

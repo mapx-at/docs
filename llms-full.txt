@@ -826,6 +826,8 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
+Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, of which binding `binding`) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/directions.md#isochrones) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `metadata.closures` has the same fields, `metadata.closures_avoided` lists the closures at which the largest contour stops.
+
 ## Voice and banner instructions
 
 With `steps=true` you can add `voice_instructions=true` and `banner_instructions=true` (all road profiles: driving, driving-truck, cycling, cycling-mtb and walking). The format follows Mapbox: each step carries the instructions for the maneuver at its end.
@@ -4330,7 +4332,7 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400).
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `metadata.closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`), `metadata.closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`).
 
 **Parameters**
 
@@ -4426,7 +4428,9 @@ data = res.json()
 
 `GET /v1/matrix/{profile}/{coordinates}`
 
-2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`.
+2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`. Zone `heavy`. Closures: driving, driving-traffic and driving-truck compute with the same closures and weights as directions (binding closures never, other full closures such as winter closures only as a last resort, conditional regulations only with driving-traffic), so each entry matches the duration and distance of a directions request between the same two points.
+
+`closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`); cycling and walking ignore closures and have no `closures`.
 
 **Parameters**
 
@@ -4513,7 +4517,13 @@ data = res.json()
         48.2049
       ]
     }
-  ]
+  ],
+  "closures": {
+    "applied": true,
+    "count": 113,
+    "binding": 8,
+    "fetched": "2026-11-22T01:39:31Z"
+  }
 }
 ```
 
@@ -4521,6 +4531,7 @@ data = res.json()
 |---|---|---|
 | `durations` | array | seconds |
 | `distances` | array | meters |
+| `closures` | object | Road closures taken into account (driving, driving-traffic, driving-truck only; absent for cycling and walking). |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

@@ -99,6 +99,8 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
+Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, of which binding `binding`) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/directions.md#isochrones) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `metadata.closures` has the same fields, `metadata.closures_avoided` lists the closures at which the largest contour stops.
+
 ## Voice and banner instructions
 
 With `steps=true` you can add `voice_instructions=true` and `banner_instructions=true` (all road profiles: driving, driving-truck, cycling, cycling-mtb and walking). The format follows Mapbox: each step carries the instructions for the maneuver at its end.

@@ -99,6 +99,8 @@ Vignettenstraßen bleiben mit `exclude=toll` erlaubt. Quelle der Maut: ASFINAG, 
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
+Matrix und Isochrone rechnen in denselben Profilen mit denselben Sperren. Ein Eintrag der [Matrix](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) hat dieselbe Dauer und Distanz wie eine Route zwischen denselben zwei Punkten, auch wenn sie nur als letzter Ausweg durch eine Sperre führt; `closures` nennt, ob Sperren berücksichtigt wurden (`applied`), wie viele (`count`, davon verbindlich `binding`) und den Stand der Meldungen (`fetched`). Eine [Isochrone](https://docs.mapx.at/de/api/directions.md#isochrones) reicht über keine Vollsperre hinaus, auch nicht über eine ohne Verbindlichkeitsvermerk, weil es ohne Ziel keinen letzten Ausweg gibt; `metadata.closures` hat dieselben Felder, `metadata.closures_avoided` listet die Sperren, an denen die größte Stufe endet.
+
 ## Sprach- und Bannerhinweise
 
 Mit `steps=true` lassen sich `voice_instructions=true` und `banner_instructions=true` (alle Straßenprofile: driving, driving-truck, cycling, cycling-mtb und walking) ergänzen. Das Format folgt Mapbox: Jeder Schritt trägt die Hinweise für das Manöver an seinem Ende.
