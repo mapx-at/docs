@@ -12,7 +12,9 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/weather/current`
 
-Messnetz von GeoSphere Austria, 10-Minuten-Werte (Temperatur, Luftfeuchte, Wind, Böe, Niederschlag, Luftdruck). Die nächste Station zuerst. Die Werte kommen aus einem lokalen Cache und werden nie je Anfrage abgerufen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
+Messnetz der GeoSphere Austria, 10-Minuten-Werte (Temperatur, Feuchte, Wind, Böe, Niederschlag, Luftdruck). Nächste Station zuerst; `altitude_m` der Station mit `location.elevation_m` des Punkts vergleichen (Geländehöhe aus dem mapx-DGM, 1 m). Die Werte kommen aus einem lokalen Zwischenspeicher, nie je Anfrage von der Quelle.
+
+Punkte außerhalb Österreichs und der Umgebung: 404 `outside-coverage`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -21,7 +23,7 @@ Messnetz von GeoSphere Austria, 10-Minuten-Werte (Temperatur, Luftfeuchte, Wind,
 | `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
 | `lat` | query | string | ja | – | Breite |
 | `limit` | query | string |  | `3` | 1 bis 10, Standard 3 |
-| `radius` | query | string |  | `50` | Suchradius in km, Standard 50 |
+| `radius` | query | string |  | `50000` | Suchradius in Metern, 1 bis 600000, Standard 50000 |
 
 **Beispiel**
 
@@ -52,31 +54,41 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
+  "location": {
+    "lon": 16.3725,
+    "lat": 48.2085,
+    "elevation_m": 171.4
+  },
   "features": [
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.35,
-          48.25
+          16.35667,
+          48.24861
         ]
       },
       "properties": {
-        "station_id": "11010",
-        "name": "Wien Hohe Warte",
+        "station_id": "11035",
+        "name": "Wien/Hohe Warte",
         "state": "Wien",
         "altitude_m": 198,
-        "distance_m": 4200,
-        "time": "2026-11-08T11:50:00Z",
+        "distance_m": 4600,
+        "time": "2026-11-08T11:50Z",
         "temperature_c": 9.4,
         "humidity_pct": 71,
         "wind_speed_ms": 3.1,
+        "wind_gust_ms": 5.8,
         "wind_direction_deg": 290,
-        "pressure_hpa": 1002.1
+        "precipitation_mm_10min": 0,
+        "pressure_hpa": 1002.1,
+        "pressure_msl_hpa": 1018.6
       }
     }
-  ]
+  ],
+  "time": "2026-11-08T11:50Z",
+  "attribution": "mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
 }
 ```
 
@@ -87,6 +99,7 @@ data = res.json()
 | `400` | Parameter fehlt oder ist ungültig |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
@@ -94,7 +107,9 @@ data = res.json()
 
 `GET /v1/weather/forecast`
 
-Modell nwp-v2-1h-1km von GeoSphere Austria, bilinear auf den Punkt interpoliert, ab der aktuellen Stunde. Österreich mit Rand. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
+Modell nwp-v2-1h-1km der GeoSphere Austria (Läufe alle 3 h), bilinear auf den Punkt, ab der aktuellen Stunde. Österreich mit Rand; außerhalb 404 `outside-coverage`. Ein neuer Lauf wird mit seinen ersten 24 Stunden veröffentlicht und im Hintergrund verlängert; bis dahin kommen die späteren Stunden aus dem vorigen Lauf (`previous_run`).
+
+`weather_symbol.code` ist das GeoSphere-Symbol 1 bis 32: 1 klar, 2 überwiegend klar, 3 teils bewölkt, 4 überwiegend bewölkt, 5 bedeckt, 6–7 Nebel, 8–13 Regen, 14–19 Schnee, 20–25 Schneeregen, 26–32 Gewitter (ohne Tag/Nacht-Unterscheidung). Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -102,8 +117,8 @@ Modell nwp-v2-1h-1km von GeoSphere Austria, bilinear auf den Punkt interpoliert,
 |---|---|---|---|---|---|
 | `lon` | query | string | ja | – | Länge (auch `lng`), WGS84 |
 | `lat` | query | string | ja | – | Breite |
-| `hours` | query | string |  | `24` | 1 bis 60, Standard 24 |
-| `ensemble` | query | string |  | – | true: `uncertainty` (p10/p50/p90 des Ensembles für Temperatur, Böe, Niederschlag) zu jeder Stunde ergänzen |
+| `hours` | query | string |  | `24` | 1 bis 48, Standard 24; größere Werte ergeben 400 |
+| `ensemble` | query | string |  | – | true oder false (Standard). true: `uncertainty` (p10/p50/p90 des Ensembles für Temperatur, Böe, Niederschlag) zu den Stunden, die das Ensemble abdeckt (die nächsten 24 h); siehe `ensemble.status` |
 
 **Beispiel**
 
@@ -137,15 +152,32 @@ data = res.json()
     "lon": 16.3725,
     "lat": 48.2085,
     "grid_lon": 16.3717,
-    "grid_lat": 48.213
+    "grid_lat": 48.213,
+    "elevation_m": 171.4,
+    "grid_elevation_m": 178.9
   },
-  "reference_time": "2026-11-08T06:00:00Z",
+  "model": "GeoSphere AROME nwp-v2-1h-1km",
+  "reference_time": "2026-11-08T06:00Z",
+  "interval": "1h",
+  "valid_until": "2026-11-08T12:00Z",
+  "ensemble": {
+    "model": "GeoSphere ensemble-v2-1h-1km",
+    "reference_time": "2026-11-08T03:00Z",
+    "valid_until": "2026-11-09T09:00Z",
+    "percentiles": [
+      10,
+      50,
+      90
+    ],
+    "status": "current"
+  },
   "hours": [
     {
-      "time": "2026-11-08T12:00:00Z",
+      "time": "2026-11-08T12:00Z",
       "temperature_c": 10.1,
       "precipitation_mm": 0,
       "wind_speed_ms": 3.4,
+      "wind_gust_ms": 7.2,
       "wind_direction_deg": 285,
       "humidity_pct": 68,
       "cloud_cover_pct": 40,
@@ -193,13 +225,13 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Niederschlags-Nowcast für einen Punkt (15-Minuten-Schritte, 3 h) {#precipitation-nowcast-for-a-point-15-min-steps-3-h}
+## Niederschlags-Nowcast für einen Punkt (15-Minuten-Schritte, bis 3 h nach der Analyse) {#precipitation-nowcast-for-a-point-15-min-steps-up-to-3-h-after-the-analysis}
 
 `GET /v1/weather/nowcast/{coordinates}`
 
-INCA-Nowcast nowcast-v1-15min-1km von GeoSphere, bilinear auf den Punkt interpoliert. `precipitation_starts_in_min` / `precipitation_ends_in_min` werden aus den 15-Minuten-Schritten abgeleitet (nass ab 0,1 mm/h); `null`, wenn sich im Vorhersagezeitraum nichts ändert.
+INCA-Nowcast nowcast-v1-15min-1km der GeoSphere Austria (alle 15 min eine neue Analyse), bilinear auf den Punkt. Der Horizont endet 3 h nach `reference_time` (der Analyse); weil ein Lauf 20 bis 40 Minuten nach seiner Analysezeit erscheint, reichen die Schritte etwa 2 bis 2,5 h über jetzt hinaus, siehe `valid_until`.
 
-Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
+`precipitation_starts_in_min` / `precipitation_ends_in_min` werden aus den 15-Minuten-Schritten abgeleitet (nass ab 0,1 mm/h); `null`, wenn sich im Horizont nichts ändert. Außerhalb 404 `outside-coverage`; unlesbare Koordinaten 400 `invalid-coordinates`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -237,16 +269,22 @@ data = res.json()
 {
   "location": {
     "lon": 16.3725,
-    "lat": 48.2085
+    "lat": 48.2085,
+    "grid_lon": 16.37303,
+    "grid_lat": 48.20932,
+    "elevation_m": 171.4,
+    "grid_elevation_m": 175.2
   },
+  "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45Z",
   "interval": "15min",
+  "valid_until": "2026-11-08T13:45Z",
   "precipitation_now": false,
   "precipitation_starts_in_min": 30,
   "precipitation_ends_in_min": null,
   "steps": [
     {
-      "time": "2026-11-08T11:00Z",
+      "time": "2026-11-08T11:15Z",
       "minutes_from_now": 5,
       "precipitation_mm": 0,
       "precipitation_rate_mm_h": 0,
@@ -277,9 +315,9 @@ data = res.json()
 
 `GET /v1/weather/tiles/{param}.json`
 
-param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (stündlich, AROME) oder rr_nowcast, pt_nowcast (Niederschlagsradar-Nowcast, 15-Minuten-Schritte). `mapx:time.times` listet die verfügbaren Stunden (UTC), `mapx:time.template` enthält den Platzhalter `{time}`; `tiles` verwendet `now`.
+param: temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall (stündlich, AROME) oder rr_nowcast, pt_nowcast (Niederschlagsradar-Nowcast, 15-Minuten-Schritte). `mapx:time.times` listet die verfügbaren Stunden (UTC), `mapx:time.template` hat den Platzhalter `{time}` und den Modelllauf als `run` (Kacheln des aktuellen Laufs dürfen einen Tag zwischengespeichert werden); `tiles` nutzt `now`.
 
-Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
+`maxzoom` ist 12 (1-km-Daten); der Kachel-Endpunkt liefert auch z13 und z14 (geglättet). Die Legendenwerte in `mapx:legend` sind in `unit`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -316,11 +354,30 @@ data = res.json()
 ```json
 {
   "tilejson": "3.0.0",
+  "name": "mapx weather: Air temperature 2 m",
   "tiles": [
     "https://api.mapx.at/v1/weather/tiles/temperature/now/{z}/{x}/{y}.png"
   ],
   "minzoom": 0,
-  "maxzoom": 14
+  "maxzoom": 12,
+  "mapx:time": {
+    "reference_time": "2026-11-08T06:00Z",
+    "default": "now",
+    "times": [
+      "2026-11-08T10:00Z",
+      "2026-11-08T11:00Z"
+    ],
+    "template": "https://api.mapx.at/v1/weather/tiles/temperature/{time}/{z}/{x}/{y}.png?run=2026-11-08T06:00Z"
+  },
+  "mapx:legend": {
+    "unit": "°C",
+    "stops": [
+      {
+        "value": -25,
+        "color": "rgba(88,40,140,0.78)"
+      }
+    ]
+  }
 }
 ```
 
@@ -338,7 +395,9 @@ data = res.json()
 
 `GET /v1/weather/tiles/{param}/{time}/{z}/{x}/{y}.png`
 
-Farbskala je Parameter (siehe Legende im TileJSON). time: `now` oder eine UTC-Stunde wie `2026-11-07T20:00Z`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
+Farbskala je Parameter (siehe Legende im TileJSON). time: `now` oder eine Zeit wie `2026-11-07T20:00Z` (ein UTC-Offset wie `+01:00` ist erlaubt, `+` in der URL als `%2B`); sie rastet auf den nächsten Schritt innerhalb von 30 Minuten ein, der tatsächlich verwendete Schritt steht im Header `X-Weather-Time`.
+
+Cache: `max-age=86400` für eine feste Zeit mit dem aktuellen `run`, sonst 300 s (Nowcast 120 s), weil sich der Inhalt einer festen Zeit mit dem nächsten Modelllauf ändert. Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -346,9 +405,10 @@ Farbskala je Parameter (siehe Legende im TileJSON). time: `now` oder eine UTC-St
 |---|---|---|---|---|---|
 | `param` | path | string | ja | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast |
 | `time` | path | string | ja | – | now oder 2026-11-07T20:00Z (Nowcast: 15-Minuten-Schritte wie 2026-11-07T20:15Z) |
-| `z` | path | integer | ja | – | 0 bis 14 |
+| `z` | path | integer | ja | – | 0 bis 14 (TileJSON-maxzoom 12) |
 | `x` | path | integer | ja | – | Spalte |
 | `y` | path | string | ja | – | Zeile, mit .png |
+| `run` | query | string |  | – | Modelllauf (`mapx:time.reference_time`) wie im TileJSON-Template; wirkt nur auf das Caching |
 
 **Beispiel**
 
@@ -374,7 +434,7 @@ res = requests.get("https://api.mapx.at/v1/weather/tiles/temperature/now/6/34/22
 open("result.png", "wb").write(res.content)
 ```
 
-**Beispielantwort**: `image/png` · PNG; Header X-Weather-Reference-Time
+**Beispielantwort**: `image/png` · PNG; Header X-Weather-Reference-Time (Modelllauf), X-Weather-Time (gezeigter Zeitschritt)
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -401,7 +461,7 @@ Zentral alle 5 Minuten abgerufen, nie je Anfrage. Ohne `bbox` und `lon`/`lat` ko
 |---|---|---|---|---|---|
 | `lon` | query | string |  | – | Länge: nur Warnungen, die den Punkt enthalten (mit lat) |
 | `lat` | query | string |  | – | Breite |
-| `bbox` | query | string |  | – | west,south,east,north in Grad (WGS84): nur Warnungen, die das Rechteck berühren |
+| `bbox` | query | string |  | – | west,süd,ost,nord in Grad (WGS84): nur Warnungen, deren Gebiet (Polygon, nicht nur dessen Hüllrechteck) das Rechteck berührt |
 | `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat oder cold |
 | `min_level` | query | string |  | – | 1 (gelb, Standard) bis 3 (rot) |
 | `active` | query | string |  | – | now: nur jetzt gültige Warnungen; all (Standard): auch kommende |

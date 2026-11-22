@@ -82,6 +82,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-parameter`](#unknown-parameter) | 404 | Unknown parameter |
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
+| [`outside-coverage`](#outside-coverage) | 404 | Outside coverage |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Method not allowed |
 | [`payload-too-large`](#payload-too-large) | 413 | Payload too large |
 | [`uri-too-long`](#uri-too-long) | 414 | URI too long |
@@ -312,6 +313,14 @@ What to do: Search again and use the id from the fresh response.
 The tile is outside the zoom or tile range of the tileset or style.
 
 What to do: Stay within `minzoom`/`maxzoom` and `bounds` of the TileJSON.
+
+### outside-coverage
+
+**404** · Outside coverage
+
+The point lies outside the area for which the data exist (weather, nowcast, air quality and climate cover Austria and its surroundings). `detail` names the data and adds "(lon and lat swapped?)" when the swapped coordinates would be inside.
+
+What to do: Send a point in Austria as `lon,lat` (longitude about 9.5 to 17.2, latitude about 46.4 to 49.0).
 
 ### method-not-allowed
 

@@ -12,9 +12,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [M
 
 `GET /v1/climate/{coordinate}`
 
-Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
+Climate of one point from open data of GeoSphere Austria: solar potential (yearly global radiation in kWh/m2 and modelled sunshine hours, mean of the last 3 complete years, 100 m), temperature and precipitation (normal 1991-2020, last 10 years, trend, monthly normals, 1 km), hot/summer/frost/ice days and tropical nights per year, snow days per winter and the current snow depth, and the drought index SPEI (90 and 365 days, latest value with class).
 
-Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. Outside Austria 404; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
+Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. Values are derived per grid cell and cached; the first request for a new cell fetches them from the source and can take 10 to 20 seconds (`sections` limits the work), later requests come from the cache. Outside Austria 404 `outside-coverage`; unreadable coordinates 400 `invalid-coordinates`; 503 while the source is unavailable or rate limited. Data source: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (attribution required).
 
 **Parameters**
 
@@ -51,10 +51,10 @@ data = res.json()
 
 ```json
 {
-  "location": [
-    15.3294,
-    48.2272
-  ],
+  "location": {
+    "lon": 15.3294,
+    "lat": 48.2272
+  },
   "status": "complete",
   "solar": {
     "period": "2023-2025",
@@ -63,13 +63,13 @@ data = res.json()
     "global_radiation_horizontal_kwh_m2_year": 1219.1,
     "direct_radiation_kwh_m2_year": 911.6,
     "diffuse_radiation_kwh_m2_year": 375.5,
-    "sunshine_hours_year": 2949.5,
-    "relative_sunshine_pct": 60.3,
+    "model_sunshine_hours_year": 2949.5,
+    "model_relative_sunshine_pct": 60.3,
     "by_year": [
       {
         "year": 2025,
         "global_radiation_kwh_m2": 1310.8,
-        "sunshine_hours": 2958.4
+        "model_sunshine_hours": 2958.4
       }
     ],
     "source": {
@@ -106,7 +106,6 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `location` | array | [longitude, latitude] (WGS84), optional height. |
 | `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |

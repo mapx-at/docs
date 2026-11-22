@@ -105,7 +105,7 @@ function abspielen() {
   document.getElementById('zeit').max = times.length - 1;
   layers = times.map((t, k) => new ol.layer.Tile({
     opacity: 0.85, visible: false,
-    source: new ol.source.XYZ({ url: tj['mapx:time'].template.replace('{time}', t) + '?access_token=' + TOKEN, tileSize: 512, maxZoom: 10, transition: 0, attributions: k ? undefined : 'Wetter: GeoSphere Austria, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>' }),
+    source: new ol.source.XYZ({ url: tj['mapx:time'].template.replace('{time}', t) + (tj['mapx:time'].template.includes('?') ? '&' : '?') + 'access_token=' + TOKEN, tileSize: 512, maxZoom: 10, transition: 0, attributions: k ? undefined : 'Wetter: GeoSphere Austria, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>' }),
   }));
   layers.forEach((l) => map.addLayer(l));
   zeigen(0);
@@ -137,7 +137,7 @@ function zeigen(i) {
   document.getElementById('zeit').value = i;
   document.getElementById('info').textContent = `Radar nowcast ${times[i]} (UTC), ${de ? 'Quelle' : 'Source'}: GeoSphere Austria, CC BY 4.0`;
   // one layer per time step, created on first use and then kept hidden: the second round plays without waiting for tiles
-  layers[i] ??= L.tileLayer(template.replace('{time}', times[i]) + '?access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, maxNativeZoom: 11, maxZoom: 21, opacity: 0, attribution: 'Wetter: GeoSphere Austria, CC BY 4.0' }).addTo(map);
+  layers[i] ??= L.tileLayer(template.replace('{time}', times[i]) + (template.includes('?') ? '&' : '?') + 'access_token=' + TOKEN, { tileSize: 512, zoomOffset: -1, maxNativeZoom: 11, maxZoom: 21, opacity: 0, attribution: 'Wetter: GeoSphere Austria, CC BY 4.0' }).addTo(map);
   layers.forEach((l, k) => l?.setOpacity(k === i ? 0.85 : 0));
 }
 function abspielen() {

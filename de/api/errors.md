@@ -82,6 +82,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-parameter`](#unknown-parameter) | 404 | Unbekannter Parameter |
 | [`unknown-id`](#unknown-id) | 404 | Unbekannte Id |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Kachel außerhalb des Bereichs |
+| [`outside-coverage`](#outside-coverage) | 404 | Außerhalb des Datengebiets |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Methode nicht erlaubt |
 | [`payload-too-large`](#payload-too-large) | 413 | Payload too large |
 | [`uri-too-long`](#uri-too-long) | 414 | URI too long |
@@ -312,6 +313,14 @@ Was tun: Neu suchen und die Id aus der frischen Antwort verwenden.
 Die Kachel liegt außerhalb des Zoom- oder Kachelbereichs des Tilesets oder Stils.
 
 Was tun: Innerhalb von `minzoom`/`maxzoom` und `bounds` des TileJSON bleiben.
+
+### outside-coverage
+
+**404** · Außerhalb des Datengebiets
+
+Der Punkt liegt außerhalb des Gebiets, für das Daten vorliegen (Wetter, Nowcast, Luftgüte und Klima decken Österreich und Umgebung ab). `detail` nennt die Daten und ergänzt „(lon and lat swapped?)“, wenn die vertauschten Koordinaten im Gebiet lägen.
+
+Was tun: Einen Punkt in Österreich als `lon,lat` senden (Länge etwa 9,5 bis 17,2, Breite etwa 46,4 bis 49,0).
 
 ### method-not-allowed
 

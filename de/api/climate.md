@@ -12,9 +12,9 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/climate/{coordinate}`
 
-Klima eines Punktes aus offenen Daten von GeoSphere Austria: Sonnenpotenzial (jährliche Globalstrahlung in kWh/m2 und Sonnenstunden, Mittel der letzten 3 vollständigen Jahre, 100 m), Temperatur und Niederschlag (Klimanormale 1991-2020, letzte 10 Jahre, Trend, Monatsnormale, 1 km), Hitze-, Sommer-, Frost- und Eistage sowie Tropennächte pro Jahr, Schneetage pro Winter und die aktuelle Schneehöhe sowie der Dürreindex SPEI (90 und 365 Tage, letzter Wert mit Klasse).
+Klima eines Punkts aus offenen Daten der GeoSphere Austria: Sonnenpotenzial (jährliche Globalstrahlung in kWh/m² und modellierte Sonnenstunden, Mittel der letzten 3 vollen Jahre, 100 m), Temperatur und Niederschlag (Normalwert 1991–2020, letzte 10 Jahre, Trend, Monatsnormalwerte, 1 km), Hitze-, Sommer-, Frost- und Eistage sowie Tropennächte je Jahr, Schneetage je Winter und die aktuelle Schneehöhe sowie der Dürreindex SPEI (90 und 365 Tage, letzter Wert mit Klasse).
 
-Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Rasterzelle abgeleitet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie von der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Außerhalb Österreichs 404; 503, solange die Quelle nicht verfügbar ist oder drosselt. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Quellenangabe erforderlich).
+Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved_at`. Die Werte werden je Gitterzelle berechnet und zwischengespeichert; die erste Anfrage für eine neue Zelle holt sie bei der Quelle und kann 10 bis 20 Sekunden dauern (`sections` begrenzt den Aufwand), spätere Anfragen kommen aus dem Cache. Außerhalb Österreichs 404 `outside-coverage`; unlesbare Koordinaten 400 `invalid-coordinates`; 503, solange die Quelle nicht verfügbar oder ausgelastet ist. Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (Namensnennung erforderlich).
 
 **Parameter**
 
@@ -51,10 +51,10 @@ data = res.json()
 
 ```json
 {
-  "location": [
-    15.3294,
-    48.2272
-  ],
+  "location": {
+    "lon": 15.3294,
+    "lat": 48.2272
+  },
   "status": "complete",
   "solar": {
     "period": "2023-2025",
@@ -63,13 +63,13 @@ data = res.json()
     "global_radiation_horizontal_kwh_m2_year": 1219.1,
     "direct_radiation_kwh_m2_year": 911.6,
     "diffuse_radiation_kwh_m2_year": 375.5,
-    "sunshine_hours_year": 2949.5,
-    "relative_sunshine_pct": 60.3,
+    "model_sunshine_hours_year": 2949.5,
+    "model_relative_sunshine_pct": 60.3,
     "by_year": [
       {
         "year": 2025,
         "global_radiation_kwh_m2": 1310.8,
-        "sunshine_hours": 2958.4
+        "model_sunshine_hours": 2958.4
       }
     ],
     "source": {
@@ -106,7 +106,6 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `location` | array | [Länge, Breite] (WGS84), optional Höhe. |
 | `status` | string | `partial`: einige Abschnitte werden noch geladen |
 | `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
 | `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
