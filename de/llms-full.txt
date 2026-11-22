@@ -6370,7 +6370,7 @@ open("result.png", "wb").write(res.content)
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lng,lat)` (Beschriftung wird nicht gezeichnet), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lng,lat)` (Beschriftung: ein bis zwei Buchstaben/Ziffern oder ein Iconname wie fuel, museum, parking), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size, marker-symbol).
 
 Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
