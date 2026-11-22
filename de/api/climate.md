@@ -20,7 +20,7 @@ Jeder Abschnitt hat `source` (Datensatz, Zelle, letzter Datentag) und `retrieved
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `coordinate` | path | string | ja | – | lng,lat oder lng,lat.json |
 | `sections` | query | string |  | `all` | Gewünschte Abschnitte, durch Komma getrennt (Standard: alle) |
 
 **Beispiel**

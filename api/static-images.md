@@ -21,7 +21,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
-| `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
+| `view` | path | string | yes | – | lng,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
 **Example**
@@ -66,7 +66,7 @@ open("result.png", "wb").write(res.content)
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lon,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lng,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
 
 Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
@@ -76,7 +76,7 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 |---|---|---|---|---|---|
 | `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `overlay` | path | string | yes | – | pin-..., path-..., geojson(...), comma-separated |
-| `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
+| `view` | path | string | yes | – | lng,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
 **Example**

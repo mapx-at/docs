@@ -21,7 +21,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `heavy` (30/min) · Guide: 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors oder outdoors-winter |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `view` | path | string | ja | – | lng,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
 | `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**
@@ -66,7 +66,7 @@ open("result.png", "wb").write(res.content)
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lon,lat)` (Beschriftung wird nicht gezeichnet), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: Liste, durch Komma getrennt (höchstens 50, 20000 Stützpunkte), aus `pin-{s|m|l}[-label]+{hex}(lng,lat)` (Beschriftung wird nicht gezeichnet), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` und `geojson({URL-encoded GeoJSON})` mit simplestyle-Eigenschaften (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
 
 Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
@@ -76,7 +76,7 @@ Beispiel: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400
 |---|---|---|---|---|---|
 | `style` | path | string | ja | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors oder outdoors-winter |
 | `overlay` | path | string | ja | – | pin-..., path-..., geojson(...), durch Komma getrennt |
-| `view` | path | string | ja | – | lon,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
+| `view` | path | string | ja | – | lng,lat,zoom[,bearing] (Drehung in Grad, Neigung nur 0) oder `auto` (nur mit Overlays, passt den Ausschnitt an) |
 | `size` | path | string | ja | – | \{width\}x\{height\}[@2x][.png\|.webp], je 1 bis 1280 |
 
 **Beispiel**

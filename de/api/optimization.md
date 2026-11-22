@@ -21,7 +21,7 @@ Aufwendig:
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat;... |
 | `source` | query | string |  | – | any (Standard) oder first (Punkt 0 ist der Start) |
 | `destination` | query | string |  | – | any (Standard) oder last (letzter Punkt ist das Ende) |
 | `roundtrip` | query | string |  | – | true (Standard) kehrt zum Start zurück, oder false; true mit destination=last braucht source=first |

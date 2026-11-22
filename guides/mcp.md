@@ -153,17 +153,17 @@ Limits, counting and tools are the same for both ways.
 
 ## Tools
 
-The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `geocode` turns a place name into coordinates for the other tools.
+The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `geocode` turns a place name into coordinates for the other tools.
 
 | Group | Tool | Purpose | Main inputs |
 |---|---|---|---|
-| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `near`, `types`, `limit` |
-| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius`, `types` |
+| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `proximity`, `types`, `limit` |
+| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lng`, `lat`, `radius`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
 | Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `points` (2 to 25), `exclude`, `truck` |
-| Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
+| Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lng`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Travel times between 2 to 25 points | `profile`, `points`, `sources`, `destinations` |
 | Routing | `optimize_stops` | Fastest order of 2 to 25 stops | `profile`, `points`, `roundtrip`, `start`, `end` |
 | Public transport | `transit_route` | Connections between two points from the scheduled timetable | `points` (2), `depart_at`, `arrive_by`, `access`, `connections` |
@@ -174,10 +174,10 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
 | Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
-| Weather | `weather` | Current observations, hourly forecast or nowcast | `lon`, `lat`, `kind`, `hours` |
+| Weather | `weather` | Current observations, hourly forecast or nowcast | `lng`, `lat`, `kind`, `hours` |
 | Weather | `weather_warnings` | Official weather warnings | `at`, `bbox`, `type`, `min_level`, `active_now` |
-| Weather | `climate` | Long-term climate facts, solar potential | `lon`, `lat`, `sections` |
-| Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
+| Weather | `climate` | Long-term climate facts, solar potential | `lng`, `lat`, `sections` |
+| Weather | `air_quality` | Air quality index and pollutants | `lng`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
 `search_places` with free text and `near` searches only within `radius` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.

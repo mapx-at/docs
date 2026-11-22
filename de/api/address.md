@@ -20,7 +20,7 @@ Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Pos
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Unvollständige Eingabe, z. B. `Hauptpl 3 Mel` |
 | `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 druckbare Zeichen), ohne Wirkung |
-| `proximity` | query | string |  | – | lon,lat, bevorzugt nahe Adressen, liefert auch die Entfernung |
+| `proximity` | query | string |  | – | lng,lat, bevorzugt nahe Adressen, liefert auch die Entfernung |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
@@ -89,7 +89,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -188,7 +188,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
@@ -298,7 +298,7 @@ data = res.json()
 | `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
 | `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
 | `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added); bei `not_found` wegen unbekannter Hausnummer `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `coordinates` | array,null | [lng, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
 | `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
 | `address_code` | string,null | Adresscode des BEV-Adressregisters. |
 | `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen; bei `not_found` wegen unbekannter Hausnummer: bis zu 5 nächste Nummern der Straße; jeweils aufgebaut wie `address`; sonst leer. |
@@ -427,7 +427,7 @@ data = res.json()
 | `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
 | `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
 | `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added); bei `not_found` wegen unbekannter Hausnummer `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
+| `coordinates` | array,null | [lng, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
 | `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
 | `address_code` | string,null | Adresscode des BEV-Adressregisters. |
 | `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen; bei `not_found` wegen unbekannter Hausnummer: bis zu 5 nächste Nummern der Straße; jeweils aufgebaut wie `address`; sonst leer. |

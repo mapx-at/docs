@@ -20,7 +20,7 @@ Official address register only (BEV). Completes street, house number, postcode a
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Partial input, e.g. `Hauptpl 3 Mel` |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 printable characters), no effect |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses, also returns the distance |
+| `proximity` | query | string |  | – | lng,lat, prefers near addresses, also returns the distance |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -89,7 +89,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -188,7 +188,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -298,7 +298,7 @@ data = res.json()
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `coordinates` | array,null | [lng, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |
@@ -427,7 +427,7 @@ data = res.json()
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `coordinates` | array,null | [lng, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |

@@ -163,7 +163,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
@@ -287,7 +287,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | query | string |  | `driving` | Default driving |
-| `coordinates` | query | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | query | string | yes | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
@@ -406,14 +406,14 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at` (local time with offset) and `transit_stops`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lng`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`) |
-| `coordinate` | path | string | yes | – | lon,lat |
+| `coordinate` | path | string | yes | – | lng,lat |
 | `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
 | `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
 | `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
@@ -511,7 +511,7 @@ data = res.json()
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `sources` | query | string |  | – | Indices, semicolon-separated |
 | `destinations` | query | string |  | – | Indices, semicolon-separated |
 | `annotations` | query | string |  | – | duration (default), distance or both |
@@ -623,14 +623,14 @@ data = res.json()
 
 2 to 100 GPS points snapped to the road network. Without timestamps a single point far off the trace (out and straight back, both legs over 300 m and together more than 3 times the direct distance) counts as an outlier: its tracepoint is `null` and the matching continues.
 
-Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
+Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lng, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
 | `radiuses` | query | string |  | – | One value per point, 5 to 500 m, semicolon-separated (the matcher searches candidates within the largest value); otherwise 400 |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |

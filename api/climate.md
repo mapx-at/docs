@@ -20,7 +20,7 @@ Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. 
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | yes | – | lng,lat or lng,lat.json |
 | `sections` | query | string |  | `all` | Comma-separated sections to return (default: all) |
 
 **Example**

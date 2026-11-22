@@ -75,11 +75,11 @@ Für den öffentlichen Verkehr zum Ausgangspunkt der Tour das Profil `bike_trans
 ## Wetter am Ziel
 
 ```js
-const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json(); // Großglockner
+const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lng=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json(); // Großglockner
 console.log(f.hours.map((h) => `${new Date(h.time).toLocaleTimeString("de-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" })} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`GET /v1/weather/current?lon=…&lat=…` liefert die Messwerte der nächsten Stationen. Als Kartenebene siehe das [Wetter-Overlay](https://docs.mapx.at/de/examples/weather-overlay.md). Wetterdaten: GeoSphere Austria (CC BY 4.0).
+`GET /v1/weather/current?lng=…&lat=…` liefert die Messwerte der nächsten Stationen. Als Kartenebene siehe das [Wetter-Overlay](https://docs.mapx.at/de/examples/weather-overlay.md). Wetterdaten: GeoSphere Austria (CC BY 4.0).
 
 ## Nächste Schritte
 

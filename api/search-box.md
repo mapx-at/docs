@@ -20,10 +20,10 @@ Search as you type over addresses, streets, places and official points of intere
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
+| `proximity` | query | string |  | – | lng,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `fuel`), see `/v1/searchbox/list/category` |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -90,7 +90,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -117,7 +117,7 @@ FeatureCollection with the one hit, in the same format as suggest and geocode (s
 |---|---|---|---|---|---|
 | `id` | path | string | yes | – | `id` of a hit from suggest, geocode or category |
 | `session_token` | query | string |  | – | As in suggest |
-| `proximity` | query | string |  | – | lon,lat, only for the distance |
+| `proximity` | query | string |  | – | lng,lat, only for the distance |
 
 **Example**
 
@@ -188,7 +188,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -214,8 +214,8 @@ Places of the category (several comma-separated), nearest first with `proximity`
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `category` | path | string | yes | – | Category id(s) |
-| `proximity` | query | string |  | – | lon,lat |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `10` | 1 to 25, default 10 |
 
 **Example**
@@ -282,7 +282,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |

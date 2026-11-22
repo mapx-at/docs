@@ -20,10 +20,10 @@ Suche beim Tippen über Adressen, Straßen, Orte und amtliche POIs. FeatureColle
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Suchtext |
 | `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
-| `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode (samt den nächsten Orten einer in `q` genannten Kategorie), liefert auch die Entfernung |
+| `proximity` | query | string |  | – | lng,lat; gleiche Reihung wie bei geocode (samt den nächsten Orten einer in `q` genannten Kategorie), liefert auch die Entfernung |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category haben keine Wirkung) |
 | `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `fuel`), siehe `/v1/searchbox/list/category` |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
@@ -90,7 +90,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -117,7 +117,7 @@ FeatureCollection mit diesem einen Treffer, im selben Format wie suggest und geo
 |---|---|---|---|---|---|
 | `id` | path | string | ja | – | `id` eines Treffers aus suggest, geocode oder category |
 | `session_token` | query | string |  | – | Wie bei suggest |
-| `proximity` | query | string |  | – | lon,lat, nur für die Entfernung |
+| `proximity` | query | string |  | – | lng,lat, nur für die Entfernung |
 
 **Beispiel**
 
@@ -188,7 +188,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -214,8 +214,8 @@ Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `category` | path | string | ja | – | Kategorie-Id(s) |
-| `proximity` | query | string |  | – | lon,lat |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
 | `limit` | query | string |  | `10` | 1 bis 25, Standard 10 |
 
 **Beispiel**
@@ -282,7 +282,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |

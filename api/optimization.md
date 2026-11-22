@@ -21,7 +21,7 @@ Expensive: zone `heavy`.
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `source` | query | string |  | – | any (default) or first (point 0 is the start) |
 | `destination` | query | string |  | – | any (default) or last (last point is the end) |
 | `roundtrip` | query | string |  | – | true (default) returns to the start, or false; true with destination=last needs source=first |

@@ -20,8 +20,8 @@ Split larger point sets into several requests; for points along a line send only
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
-| `path` | query | string |  | – | lon,lat;lon,lat;... (2 to 512 vertices) |
+| `points` | query | string |  | – | lng,lat;lng,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
+| `path` | query | string |  | – | lng,lat;lng,lat;... (2 to 512 vertices) |
 | `samples` | query | integer (2–1024) |  | `100` | With path only |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain) or dsm (surface) |
 
@@ -94,7 +94,7 @@ One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavaila
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | yes | – | lng,lat or lng,lat.json |
 
 **Example**
 
@@ -162,7 +162,7 @@ With `model=dsm` buildings and vegetation count as terrain, so ascent is higher.
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | query | string | yes | – | lon,lat;lon,lat;... (2 to 512 points) |
+| `coordinates` | query | string | yes | – | lng,lat;lng,lat;... (2 to 512 points) |
 | `samples` | query | integer (2–1024) |  | `100` | 2 to 1024, default 100 |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain, default) or dsm (surface) |
 
@@ -241,7 +241,7 @@ data = res.json()
 
 `POST /v1/elevation/profile`
 
-Same response as GET. Body: a GeoJSON LineString, a Feature with a LineString (e.g. `routes[0].geometry` from `/v1/directions?geometries=geojson&overview=full`) or `{"coordinates": [[lon, lat], ...]}`, 2 to 20000 vertices; `samples` and `model` in the body or as query parameters.
+Same response as GET. Body: a GeoJSON LineString, a Feature with a LineString (e.g. `routes[0].geometry` from `/v1/directions?geometries=geojson&overview=full`) or `{"coordinates": [[lng, lat], ...]}`, 2 to 20000 vertices; `samples` and `model` in the body or as query parameters.
 
 **Parameters**
 

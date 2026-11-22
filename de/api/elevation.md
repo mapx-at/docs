@@ -20,8 +20,8 @@ Größere Punktmengen auf mehrere Anfragen aufteilen; für Punkte entlang einer 
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (höchstens 512; die URL-Grenze von etwa 8 KB erlaubt meist weniger) |
-| `path` | query | string |  | – | lon,lat;lon,lat;... (2 bis 512 Stützpunkte) |
+| `points` | query | string |  | – | lng,lat;lng,lat;... (höchstens 512; die URL-Grenze von etwa 8 KB erlaubt meist weniger) |
+| `path` | query | string |  | – | lng,lat;lng,lat;... (2 bis 512 Stützpunkte) |
 | `samples` | query | integer (2–1024) |  | `100` | Nur mit path |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (Gelände) oder dsm (Oberfläche) |
 
@@ -94,7 +94,7 @@ Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn ni
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat oder lon,lat.json |
+| `coordinate` | path | string | ja | – | lng,lat oder lng,lat.json |
 
 **Beispiel**
 
@@ -162,7 +162,7 @@ Die Summen hängen dadurch kaum von `samples` ab, und Geländerauschen wird nich
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... (2 bis 512 Punkte) |
+| `coordinates` | query | string | ja | – | lng,lat;lng,lat;... (2 bis 512 Punkte) |
 | `samples` | query | integer (2–1024) |  | `100` | 2 bis 1024, Standard 100 |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (Gelände, Standard) oder dsm (Oberfläche) |
 
@@ -241,7 +241,7 @@ data = res.json()
 
 `POST /v1/elevation/profile`
 
-Antwort wie bei GET. Körper: ein GeoJSON-LineString, ein Feature mit LineString (z. B. `routes[0].geometry` aus `/v1/directions?geometries=geojson&overview=full`) oder `{"coordinates": [[lon, lat], ...]}`, 2 bis 20000 Stützpunkte; `samples` und `model` im Körper oder als Query-Parameter.
+Antwort wie bei GET. Körper: ein GeoJSON-LineString, ein Feature mit LineString (z. B. `routes[0].geometry` aus `/v1/directions?geometries=geojson&overview=full`) oder `{"coordinates": [[lng, lat], ...]}`, 2 bis 20000 Stützpunkte; `samples` und `model` im Körper oder als Query-Parameter.
 
 **Parameter**
 

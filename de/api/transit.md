@@ -20,7 +20,7 @@ Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat (genau Start und Ziel) |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat (genau Start und Ziel) |
 | `depart_at` | query | string |  | – | Früheste Abfahrt, z. B. 2026-11-09T08:00 |
 | `arrive_by` | query | string |  | – | Späteste Ankunft, statt depart_at |
 | `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
@@ -132,7 +132,7 @@ Wie transit, aber der erste Abschnitt mit dem Rad (Modus `cycling`, bis 15 min).
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat (genau Start und Ziel) |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat (genau Start und Ziel) |
 | `depart_at` | query | string |  | – | Früheste Abfahrt |
 | `arrive_by` | query | string |  | – | Späteste Ankunft |
 | `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
@@ -246,12 +246,12 @@ Je Abfahrt: Zeit, Linie (`name` wie bei transit: `U1`, `R52`, `RJ 754`; dazu `sh
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`, alle Steige), Steig-Id wie `at:43:7226:0:2` (nur dieser Steig; `stops[0]` hat dann `platform_id` und `platform`) oder lon,lat |
+| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`, alle Steige), Steig-Id wie `at:43:7226:0:2` (nur dieser Steig; `stops[0]` hat dann `platform_id` und `platform`) oder lng,lat |
 | `time` | query | string |  | `now` | Startzeit, ISO 8601 (Ortszeit Wien oder mit `Z`/Offset) oder Unix-Sekunden, Standard jetzt; eine Ortszeit in der Lücke der Umstellung auf Sommerzeit rückt in die Sommerzeit vor |
 | `limit` | query | string |  | `20` | 1 bis 100, Standard 20 |
-| `radius` | query | string |  | `300` | Nur mit lon,lat: Meter, 1 bis 2000, Standard 300 |
+| `radius` | query | string |  | `300` | Nur mit lng,lat: Meter, 1 bis 2000, Standard 300 |
 | `horizon` | query | string |  | `14400` | Zeitfenster in Sekunden, 60 bis 86400, Standard 14400 |
-| `modes` | query | string |  | `all` | Nur Abfahrten dieser Verkehrsmittel, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle. Bei lon,lat nur Haltestellen, an denen eines davon hält; `stops[]` nennt nur diese Verkehrsmittel und Linien |
+| `modes` | query | string |  | `all` | Nur Abfahrten dieser Verkehrsmittel, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle. Bei lng,lat nur Haltestellen, an denen eines davon hält; `stops[]` nennt nur diese Verkehrsmittel und Linien |
 
 **Beispiel**
 
@@ -351,16 +351,16 @@ data = res.json()
 
 `GET /v1/stops`
 
-Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) und `lines` (Liniennamen wie in `/v1/departures`, Fernzüge als Gattung wie `RJ`, `RJX`, `IC`).
+Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lng,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) und `lines` (Liniennamen wie in `/v1/departures`, Fernzüge als Gattung wie `RJ`, `RJX`, `IC`).
 
-Mit `modes` nur Haltestellen, an denen eines dieser Verkehrsmittel hält, `modes` und `lines` nennen dann nur diese. Als lat,lon angegebene Koordinaten ergeben 400.
+Mit `modes` nur Haltestellen, an denen eines dieser Verkehrsmittel hält, `modes` und `lines` nennen dann nur diese. Als lat,lng angegebene Koordinaten ergeben 400.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north in Grad, höchstens 1 Quadratgrad |
-| `near` | query | string |  | – | lon,lat, statt bbox |
+| `near` | query | string |  | – | lng,lat, statt bbox |
 | `radius` | query | string |  | `500` | Nur mit near: Meter, 1 bis 5000, Standard 500 |
 | `limit` | query | string |  | `50` | 1 bis 500, Standard 50 |
 | `modes` | query | string |  | `all` | Nur Haltestellen, an denen eines dieser Verkehrsmittel hält, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle |

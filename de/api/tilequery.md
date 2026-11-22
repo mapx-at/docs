@@ -21,7 +21,7 @@ Mehrere Tilesets, durch Komma getrennt, ergänzen `tilequery.tileset`; `dtm`/`ds
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `tilesets` | path | string | ja | – | Tileset-Namen, durch Komma getrennt (höchstens 15), z. B. `streets,contours` |
-| `coordinate` | path | string | ja | – | lon,lat (der Pfad endet auf `.json`) |
+| `coordinate` | path | string | ja | – | lng,lat (der Pfad endet auf `.json`) |
 | `radius` | query | string |  | `0` | Meter, 0 bis 2000, Standard 0 |
 | `limit` | query | string |  | `5` | 1 bis 50, Standard 5 |
 | `layers` | query | string |  | – | Layer-Namen, durch Komma getrennt |

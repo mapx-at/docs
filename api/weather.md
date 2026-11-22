@@ -20,7 +20,7 @@ Points outside Austria and surroundings: 404 `outside-coverage`. Data source: Ge
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lng` | query | string | yes | – | Longitude, WGS84 |
 | `lat` | query | string | yes | – | Latitude |
 | `limit` | query | string |  | `3` | 1 to 10, default 3 |
 | `radius` | query | string |  | `50000` | Search radius in metres, 1 to 600000, default 50000 |
@@ -30,13 +30,13 @@ Points outside Austria and surroundings: 404 `outside-coverage`. Data source: Ge
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -45,7 +45,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -115,7 +115,7 @@ GeoSphere Austria model nwp-v2-1h-1km (runs every 3 h), bilinear to the point, f
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lng` | query | string | yes | – | Longitude, WGS84 |
 | `lat` | query | string | yes | – | Latitude |
 | `hours` | query | string |  | `24` | 1 to 48, default 24; larger values give 400 |
 | `ensemble` | query | string |  | – | true or false (default). true: add `uncertainty` (p10/p50/p90 of the ensemble for temperature, gust, precipitation) to the hours the ensemble covers (the next 24 h); see `ensemble.status` |
@@ -125,13 +125,13 @@ GeoSphere Austria model nwp-v2-1h-1km (runs every 3 h), bilinear to the point, f
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -140,7 +140,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -239,7 +239,7 @@ GeoSphere INCA nowcast nowcast-v1-15min-1km (a new analysis every 15 min), bilin
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat, e.g. 16.3725,48.2085 |
+| `coordinates` | path | string | yes | – | lng,lat, e.g. 16.3725,48.2085 |
 
 **Example**
 
@@ -457,13 +457,13 @@ open("result.png", "wb").write(res.content)
 
 Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` (each with `de` and `en`) are optional: they are present only when GeoSphere has published a text for the warning and are often missing.
 
-Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Fetched centrally every 5 minutes, never per request. Without `bbox` and `lng`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
+| `lng` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
 | `lat` | query | string |  | – | Latitude |
 | `bbox` | query | string |  | – | west,south,east,north in degrees (WGS84): only warnings whose area (polygon, not just its bounding box) touches the box |
 | `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat or cold |

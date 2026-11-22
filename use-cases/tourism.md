@@ -75,11 +75,11 @@ For public transport to the trailhead use the profile `bike_transit` (`GET /v1/d
 ## Weather for the destination
 
 ```js
-const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
+const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lng=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
 console.log(f.hours.map((h) => `${new Date(h.time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" })} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`GET /v1/weather/current?lon=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
+`GET /v1/weather/current?lng=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
 
 ## Next steps
 

@@ -20,7 +20,7 @@ Chemisches Wettermodell von GeoSphere (3 km), bilinear auf den Punkt interpolier
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | ja | – | lon,lat, z. B. 16.37,48.21 |
+| `coordinate` | path | string | ja | – | lng,lat, z. B. 16.37,48.21 |
 | `hours` | query | integer |  | `24` | 1 bis 72, Standard 24; der tägliche Lauf (00 UTC) reicht 48 h weit, weniger Stunden als verlangt sind mit `truncated: true` gekennzeichnet |
 
 **Beispiel**

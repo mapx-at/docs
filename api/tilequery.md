@@ -21,7 +21,7 @@ Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `tilesets` | path | string | yes | – | Tileset names, comma-separated (at most 15), e.g. `streets,contours` |
-| `coordinate` | path | string | yes | – | lon,lat (the path ends in `.json`) |
+| `coordinate` | path | string | yes | – | lng,lat (the path ends in `.json`) |
 | `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
 | `limit` | query | string |  | `5` | 1 to 50, default 5 |
 | `layers` | query | string |  | – | Comma-separated layer names |

@@ -20,7 +20,7 @@ Exactly origin and destination. Connections with walks on the GIP.at network and
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat (exactly origin and destination) |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat (exactly origin and destination) |
 | `depart_at` | query | string |  | – | Earliest departure, e.g. 2026-11-09T08:00 |
 | `arrive_by` | query | string |  | – | Latest arrival, instead of depart_at |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
@@ -132,7 +132,7 @@ Like transit, but the first leg by bike (mode `cycling`, up to 15 min). The bike
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat (exactly origin and destination) |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat (exactly origin and destination) |
 | `depart_at` | query | string |  | – | Earliest departure |
 | `arrive_by` | query | string |  | – | Latest arrival |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
@@ -246,12 +246,12 @@ Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `sh
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lon,lat |
+| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lng,lat |
 | `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local time, or with `Z`/offset) or Unix seconds, default now; a local time in the spring-forward gap moves on to summer time |
 | `limit` | query | string |  | `20` | 1 to 100, default 20 |
-| `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
+| `radius` | query | string |  | `300` | With lng,lat only: meters, 1 to 2000, default 300 |
 | `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
-| `modes` | query | string |  | `all` | Only departures of these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. With lon,lat only stations served by one of them; `stops[]` lists only these modes and lines |
+| `modes` | query | string |  | `all` | Only departures of these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. With lng,lat only stations served by one of them; `stops[]` lists only these modes and lines |
 
 **Example**
 
@@ -351,16 +351,16 @@ data = res.json()
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lng,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
 
-With `modes` only stations served by one of these modes, and `modes`/`lines` list only them. Coordinates given as lat,lon answer 400.
+With `modes` only stations served by one of these modes, and `modes`/`lines` list only them. Coordinates given as lat,lng answer 400.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north in degrees, at most 1 square degree |
-| `near` | query | string |  | – | lon,lat, instead of bbox |
+| `near` | query | string |  | – | lng,lat, instead of bbox |
 | `radius` | query | string |  | `500` | With near only: meters, 1 to 5000, default 500 |
 | `limit` | query | string |  | `50` | 1 to 500, default 50 |
 | `modes` | query | string |  | `all` | Only stations served by these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all |

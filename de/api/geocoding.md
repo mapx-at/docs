@@ -14,7 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (3
 
 Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Orte von Interesse. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `properties.type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
-Adressen: nennt die Eingabe nach der Hausnummer einen Ort oder eine PLZ (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), kommen Treffer in diesem Ort zuerst; gibt es die Nummer dort nicht, folgen die Grundnummer (`12` zu `12a`), die Straße in diesem Ort und die nächsten Nummern, nie zuerst dieselbe Nummer in einem anderen Ort. Hausnummernbereiche (`1-3`, `15 - 16`) bleiben Bereiche. Häufige Abkürzungen werden ausgeschrieben (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Koordinaten als Suchtext (`16.37,48.21` oder `48.21, 16.37`, beide mit Dezimalpunkt; Reihenfolge aus dem Wertebereich Österreichs erkannt) antworten wie `/v1/reverse` mit `query` [lon, lat]. Antwort: FeatureCollection im gemeinsamen Format aller Such-Endpunkte (Schema `Place`): `id`, Punkt-`geometry`, `bbox` bei Flächen, und in `properties` immer `type`, `name`, `place_formatted`, `relevance` (Trefferwert der Suche, 0 bis 1, niedriger beim Rückfall auf Grundnummer, Straße oder Nachbarnummer), `accuracy` (`rooftop` = Punkt am Gebäude, `parcel` = Punkt am Grundstück, `street`, sonst `null`) und `address` (die Felder einzeln: `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, nur vorhandene); mit `proximity` auch `distance` (m). Gewässer (Seen, Flüsse, Bäche aus den BEV-Geonamen) sind Treffer vom Typ `place` mit `properties.class` `see`, `fluss`, `bach` oder `gewaesser`. `query` listet die Suchwörter ohne Satzzeichen. Für günstige Abfragen immer `types` angeben.
+Adressen: nennt die Eingabe nach der Hausnummer einen Ort oder eine PLZ (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), kommen Treffer in diesem Ort zuerst; gibt es die Nummer dort nicht, folgen die Grundnummer (`12` zu `12a`), die Straße in diesem Ort und die nächsten Nummern, nie zuerst dieselbe Nummer in einem anderen Ort. Hausnummernbereiche (`1-3`, `15 - 16`) bleiben Bereiche. Häufige Abkürzungen werden ausgeschrieben (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Koordinaten als Suchtext (`16.37,48.21` oder `48.21, 16.37`, beide mit Dezimalpunkt; Reihenfolge aus dem Wertebereich Österreichs erkannt) antworten wie `/v1/reverse` mit `query` [lng, lat]. Antwort: FeatureCollection im gemeinsamen Format aller Such-Endpunkte (Schema `Place`): `id`, Punkt-`geometry`, `bbox` bei Flächen, und in `properties` immer `type`, `name`, `place_formatted`, `relevance` (Trefferwert der Suche, 0 bis 1, niedriger beim Rückfall auf Grundnummer, Straße oder Nachbarnummer), `accuracy` (`rooftop` = Punkt am Gebäude, `parcel` = Punkt am Grundstück, `street`, sonst `null`) und `address` (die Felder einzeln: `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, nur vorhandene); mit `proximity` auch `distance` (m). Gewässer (Seen, Flüsse, Bäche aus den BEV-Geonamen) sind Treffer vom Typ `place` mit `properties.class` `see`, `fluss`, `bach` oder `gewaesser`. `query` listet die Suchwörter ohne Satzzeichen. Für günstige Abfragen immer `types` angeben.
 
 **Parameter**
 
@@ -23,8 +23,8 @@ Adressen: nennt die Eingabe nach der Hausnummer einen Ort oder eine PLZ (`Hauptp
 | `q` | query | string | ja | – | Suchtext (auch Pfadform `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 bis 10, Standard 5 |
 | `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
-| `proximity` | query | string |  | – | lon,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen, Treffer jenseits von 40 km ohne besondere Bedeutung nie vor nahen; exakte Ortsnamen bleiben oben; nennt der Suchtext eine Kategorie (`Bahnhof`, `Museum`, siehe `/v1/searchbox/list/category`), kommen auch die nächsten Orte dieser Kategorie; wird ignoriert, wenn bbox gesetzt ist |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat; nahe Treffer (bis etwa 40 km) stehen vor entfernten, die nur etwas besser passen, Treffer jenseits von 40 km ohne besondere Bedeutung nie vor nahen; exakte Ortsnamen bleiben oben; nennt der Suchtext eine Kategorie (`Bahnhof`, `Museum`, siehe `/v1/searchbox/list/category`), kommen auch die nächsten Orte dieser Kategorie; wird ignoriert, wenn bbox gesetzt ist |
 
 **Beispiel**
 
@@ -96,7 +96,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -124,8 +124,8 @@ Wie `/v1/geocode?q=...`; der Suchtext ist das Pfadsegment (optional mit `.json`)
 | `q` | path | string | ja | – | Suchtext, URL-codiert |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 | `types` | query | string |  | – | Ergebnistypen, durch Komma getrennt: address, street, locality, place, district, region, postcode, poi, road_ref (Straßenkilometer; Eingaben wie `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
-| `proximity` | query | string |  | – | lon,lat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat |
 
 **Beispiel**
 
@@ -199,7 +199,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -303,7 +303,7 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lng, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
 | `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
 | `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
@@ -322,7 +322,7 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array in Eingabereihenfolge mit einer FeatureCollection je Eintrag (gleiches Format wie geocode, Schema `Place`, samt Ortsvorrang und Koordinaten als `q`; ohne `distance`); ein ungültiger Eintrag lässt den Batch nicht scheitern, sondern wird an seiner Stelle mit einem Problem-Objekt beantwortet (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
+JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lng,lat], `bbox`. Antwort: Array in Eingabereihenfolge mit einer FeatureCollection je Eintrag (gleiches Format wie geocode, Schema `Place`, samt Ortsvorrang und Koordinaten als `q`; ohne `distance`); ein ungültiger Eintrag lässt den Batch nicht scheitern, sondern wird an seiner Stelle mit einem Problem-Objekt beantwortet (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 

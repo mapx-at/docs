@@ -1396,17 +1396,17 @@ Limits, counting and tools are the same for both ways.
 
 ## Tools
 
-The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `geocode` turns a place name into coordinates for the other tools.
+The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `geocode` turns a place name into coordinates for the other tools.
 
 | Group | Tool | Purpose | Main inputs |
 |---|---|---|---|
-| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `near`, `types`, `limit` |
-| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius`, `types` |
+| Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `proximity`, `types`, `limit` |
+| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lng`, `lat`, `radius`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
 | Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `points` (2 to 25), `exclude`, `truck` |
-| Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
+| Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lng`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Travel times between 2 to 25 points | `profile`, `points`, `sources`, `destinations` |
 | Routing | `optimize_stops` | Fastest order of 2 to 25 stops | `profile`, `points`, `roundtrip`, `start`, `end` |
 | Public transport | `transit_route` | Connections between two points from the scheduled timetable | `points` (2), `depart_at`, `arrive_by`, `access`, `connections` |
@@ -1417,10 +1417,10 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
 | Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
-| Weather | `weather` | Current observations, hourly forecast or nowcast | `lon`, `lat`, `kind`, `hours` |
+| Weather | `weather` | Current observations, hourly forecast or nowcast | `lng`, `lat`, `kind`, `hours` |
 | Weather | `weather_warnings` | Official weather warnings | `at`, `bbox`, `type`, `min_level`, `active_now` |
-| Weather | `climate` | Long-term climate facts, solar potential | `lon`, `lat`, `sections` |
-| Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
+| Weather | `climate` | Long-term climate facts, solar potential | `lng`, `lat`, `sections` |
+| Weather | `air_quality` | Air quality index and pollutants | `lng`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
 `search_places` with free text and `near` searches only within `radius` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.
@@ -2809,7 +2809,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `properties.type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
-Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection in the format shared by all search endpoints (schema `Place`): `id`, point `geometry`, `bbox` for areas, and in `properties` always `type`, `name`, `place_formatted`, `relevance` (match score of the search, 0 to 1, lower for a fallback to the base number, street or a neighboring number), `accuracy` (`rooftop` = point on the building, `parcel` = point on the plot, `street`, otherwise `null`) and `address` (separate fields `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, only those present); with `proximity` also `distance` (m). Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
+Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lng, lat]. Response: FeatureCollection in the format shared by all search endpoints (schema `Place`): `id`, point `geometry`, `bbox` for areas, and in `properties` always `type`, `name`, `place_formatted`, `relevance` (match score of the search, 0 to 1, lower for a fallback to the base number, street or a neighboring number), `accuracy` (`rooftop` = point on the building, `parcel` = point on the plot, `street`, otherwise `null`) and `address` (separate fields `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, only those present); with `proximity` also `distance` (m). Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
 
 **Parameters**
 
@@ -2818,8 +2818,8 @@ Addresses: when the input names a place or postcode after the house number (`Hau
 | `q` | query | string | yes | – | Search text (also path form `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
 | `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
-| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better, matches beyond 40 km without special importance never ahead of nearby ones; exact place names stay on top; a search text naming a category (`Bahnhof`, `Museum`, see `/v1/searchbox/list/category`) also brings the nearest places of that category; ignored when bbox is set |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better, matches beyond 40 km without special importance never ahead of nearby ones; exact place names stay on top; a search text naming a category (`Bahnhof`, `Museum`, see `/v1/searchbox/list/category`) also brings the nearest places of that category; ignored when bbox is set |
 
 **Example**
 
@@ -2891,7 +2891,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -2919,8 +2919,8 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 | `q` | path | string | yes | – | Search text, URL-encoded |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 | `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
-| `proximity` | query | string |  | – | lon,lat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat |
 
 **Example**
 
@@ -2994,7 +2994,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3098,7 +3098,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3117,7 +3117,7 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same format as geocode, schema `Place`, including the place precedence and coordinates as `q`; no `distance`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
+JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lng,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same format as geocode, schema `Place`, including the place precedence and coordinates as `q`; no `distance`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
@@ -3288,10 +3288,10 @@ Search as you type over addresses, streets, places and official points of intere
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
+| `proximity` | query | string |  | – | lng,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `fuel`), see `/v1/searchbox/list/category` |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -3358,7 +3358,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3385,7 +3385,7 @@ FeatureCollection with the one hit, in the same format as suggest and geocode (s
 |---|---|---|---|---|---|
 | `id` | path | string | yes | – | `id` of a hit from suggest, geocode or category |
 | `session_token` | query | string |  | – | As in suggest |
-| `proximity` | query | string |  | – | lon,lat, only for the distance |
+| `proximity` | query | string |  | – | lng,lat, only for the distance |
 
 **Example**
 
@@ -3456,7 +3456,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3482,8 +3482,8 @@ Places of the category (several comma-separated), nearest first with `proximity`
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `category` | path | string | yes | – | Category id(s) |
-| `proximity` | query | string |  | – | lon,lat |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lng,lat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lng -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `10` | 1 to 25, default 10 |
 
 **Example**
@@ -3550,7 +3550,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3650,7 +3650,7 @@ Official address register only (BEV). Completes street, house number, postcode a
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Partial input, e.g. `Hauptpl 3 Mel` |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 printable characters), no effect |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses, also returns the distance |
+| `proximity` | query | string |  | – | lng,lat, prefers near addresses, also returns the distance |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -3719,7 +3719,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3818,7 +3818,7 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `query` | array | Geocoding only: the search words, or [lng, lat] for reverse geocoding and coordinates as search text. |
 | `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
 | `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
@@ -3928,7 +3928,7 @@ data = res.json()
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `coordinates` | array,null | [lng, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |
@@ -4057,7 +4057,7 @@ data = res.json()
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
 | `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
-| `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
+| `coordinates` | array,null | [lng, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
 | `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |
@@ -4242,7 +4242,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
@@ -4366,7 +4366,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | query | string |  | `driving` | Default driving |
-| `coordinates` | query | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | query | string | yes | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
@@ -4485,14 +4485,14 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at` (local time with offset) and `transit_stops`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lng`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`) |
-| `coordinate` | path | string | yes | – | lon,lat |
+| `coordinate` | path | string | yes | – | lng,lat |
 | `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
 | `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
 | `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
@@ -4590,7 +4590,7 @@ data = res.json()
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `sources` | query | string |  | – | Indices, semicolon-separated |
 | `destinations` | query | string |  | – | Indices, semicolon-separated |
 | `annotations` | query | string |  | – | duration (default), distance or both |
@@ -4702,14 +4702,14 @@ data = res.json()
 
 2 to 100 GPS points snapped to the road network. Without timestamps a single point far off the trace (out and straight back, both legs over 300 m and together more than 3 times the direct distance) counts as an outlier: its tracepoint is `null` and the matching continues.
 
-Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
+Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lng, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
 | `radiuses` | query | string |  | – | One value per point, 5 to 500 m, semicolon-separated (the matcher searches candidates within the largest value); otherwise 400 |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
@@ -4785,7 +4785,7 @@ Expensive: zone `heavy`.
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
 | `source` | query | string |  | – | any (default) or first (point 0 is the start) |
 | `destination` | query | string |  | – | any (default) or last (last point is the end) |
 | `roundtrip` | query | string |  | – | true (default) returns to the start, or false; true with destination=last needs source=first |
@@ -5001,7 +5001,7 @@ Exactly origin and destination. Connections with walks on the GIP.at network and
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat (exactly origin and destination) |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat (exactly origin and destination) |
 | `depart_at` | query | string |  | – | Earliest departure, e.g. 2026-11-09T08:00 |
 | `arrive_by` | query | string |  | – | Latest arrival, instead of depart_at |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
@@ -5113,7 +5113,7 @@ Like transit, but the first leg by bike (mode `cycling`, up to 15 min). The bike
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat;lon,lat (exactly origin and destination) |
+| `coordinates` | path | string | yes | – | lng,lat;lng,lat (exactly origin and destination) |
 | `depart_at` | query | string |  | – | Earliest departure |
 | `arrive_by` | query | string |  | – | Latest arrival |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
@@ -5227,12 +5227,12 @@ Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `sh
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lon,lat |
+| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lng,lat |
 | `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local time, or with `Z`/offset) or Unix seconds, default now; a local time in the spring-forward gap moves on to summer time |
 | `limit` | query | string |  | `20` | 1 to 100, default 20 |
-| `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
+| `radius` | query | string |  | `300` | With lng,lat only: meters, 1 to 2000, default 300 |
 | `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
-| `modes` | query | string |  | `all` | Only departures of these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. With lon,lat only stations served by one of them; `stops[]` lists only these modes and lines |
+| `modes` | query | string |  | `all` | Only departures of these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. With lng,lat only stations served by one of them; `stops[]` lists only these modes and lines |
 
 **Example**
 
@@ -5332,16 +5332,16 @@ data = res.json()
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lng,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
 
-With `modes` only stations served by one of these modes, and `modes`/`lines` list only them. Coordinates given as lat,lon answer 400.
+With `modes` only stations served by one of these modes, and `modes`/`lines` list only them. Coordinates given as lat,lng answer 400.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `bbox` | query | string |  | – | west,south,east,north in degrees, at most 1 square degree |
-| `near` | query | string |  | – | lon,lat, instead of bbox |
+| `near` | query | string |  | – | lng,lat, instead of bbox |
 | `radius` | query | string |  | `500` | With near only: meters, 1 to 5000, default 500 |
 | `limit` | query | string |  | `50` | 1 to 500, default 50 |
 | `modes` | query | string |  | `all` | Only stations served by these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all |
@@ -5434,7 +5434,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min) · Guide: [
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
-| `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
+| `view` | path | string | yes | – | lng,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
 **Example**
@@ -5479,7 +5479,7 @@ open("result.png", "wb").write(res.content)
 
 `GET /v1/static/{style}/{overlay}/{view}/{size}`
 
-`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lon,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
+`overlay`: comma-separated list (at most 50, 20000 vertices) of `pin-{s|m|l}[-label]+{hex}(lng,lat)` (label not drawn), `path-{width}[+{stroke}[-{opacity}][+{fill}[-{opacity}]]]({polyline, precision 5, URL-encoded})` and `geojson({URL-encoded GeoJSON})` with simplestyle properties (stroke, stroke-width, stroke-opacity, fill, fill-opacity, marker-color, marker-size).
 
 Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.png`
 
@@ -5489,7 +5489,7 @@ Example: `/v1/static/satellite/pin-s+ff0000(15.33,48.22)/15.33,48.22,15/600x400.
 |---|---|---|---|---|---|
 | `style` | path | string | yes | – | streets, streets-dawn, streets-dusk, streets-night, light, dark, satellite, satellite-streets, outdoors or outdoors-winter |
 | `overlay` | path | string | yes | – | pin-..., path-..., geojson(...), comma-separated |
-| `view` | path | string | yes | – | lon,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
+| `view` | path | string | yes | – | lng,lat,zoom[,bearing] (rotation in degrees, pitch only 0) or `auto` (only with overlays, fits the extent) |
 | `size` | path | string | yes | – | \{width\}x\{height\}[@2x][.png\|.webp], each 1 to 1280 |
 
 **Example**
@@ -5557,7 +5557,7 @@ Several comma-separated tilesets add `tilequery.tileset`; `dtm`/`dsm` return the
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `tilesets` | path | string | yes | – | Tileset names, comma-separated (at most 15), e.g. `streets,contours` |
-| `coordinate` | path | string | yes | – | lon,lat (the path ends in `.json`) |
+| `coordinate` | path | string | yes | – | lng,lat (the path ends in `.json`) |
 | `radius` | query | string |  | `0` | Meters, 0 to 2000, default 0 |
 | `limit` | query | string |  | `5` | 1 to 50, default 5 |
 | `layers` | query | string |  | – | Comma-separated layer names |
@@ -5662,8 +5662,8 @@ Split larger point sets into several requests; for points along a line send only
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `points` | query | string |  | – | lon,lat;lon,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
-| `path` | query | string |  | – | lon,lat;lon,lat;... (2 to 512 vertices) |
+| `points` | query | string |  | – | lng,lat;lng,lat;... (at most 512; the URL limit of about 8 KB usually allows fewer) |
+| `path` | query | string |  | – | lng,lat;lng,lat;... (2 to 512 vertices) |
 | `samples` | query | integer (2–1024) |  | `100` | With path only |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain) or dsm (surface) |
 
@@ -5736,7 +5736,7 @@ One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavaila
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | yes | – | lng,lat or lng,lat.json |
 
 **Example**
 
@@ -5804,7 +5804,7 @@ With `model=dsm` buildings and vegetation count as terrain, so ascent is higher.
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | query | string | yes | – | lon,lat;lon,lat;... (2 to 512 points) |
+| `coordinates` | query | string | yes | – | lng,lat;lng,lat;... (2 to 512 points) |
 | `samples` | query | integer (2–1024) |  | `100` | 2 to 1024, default 100 |
 | `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain, default) or dsm (surface) |
 
@@ -5883,7 +5883,7 @@ data = res.json()
 
 `POST /v1/elevation/profile`
 
-Same response as GET. Body: a GeoJSON LineString, a Feature with a LineString (e.g. `routes[0].geometry` from `/v1/directions?geometries=geojson&overview=full`) or `{"coordinates": [[lon, lat], ...]}`, 2 to 20000 vertices; `samples` and `model` in the body or as query parameters.
+Same response as GET. Body: a GeoJSON LineString, a Feature with a LineString (e.g. `routes[0].geometry` from `/v1/directions?geometries=geojson&overview=full`) or `{"coordinates": [[lng, lat], ...]}`, 2 to 20000 vertices; `samples` and `model` in the body or as query parameters.
 
 **Parameters**
 
@@ -6050,7 +6050,7 @@ Points outside Austria and surroundings: 404 `outside-coverage`. Data source: Ge
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lng` | query | string | yes | – | Longitude, WGS84 |
 | `lat` | query | string | yes | – | Latitude |
 | `limit` | query | string |  | `3` | 1 to 10, default 3 |
 | `radius` | query | string |  | `50000` | Search radius in metres, 1 to 600000, default 50000 |
@@ -6060,13 +6060,13 @@ Points outside Austria and surroundings: 404 `outside-coverage`. Data source: Ge
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -6075,7 +6075,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/weather/current?lon=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/weather/current?lng=16.3725&lat=48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -6145,7 +6145,7 @@ GeoSphere Austria model nwp-v2-1h-1km (runs every 3 h), bilinear to the point, f
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string | yes | – | Longitude (also `lng`), WGS84 |
+| `lng` | query | string | yes | – | Longitude, WGS84 |
 | `lat` | query | string | yes | – | Latitude |
 | `hours` | query | string |  | `24` | 1 to 48, default 24; larger values give 400 |
 | `ensemble` | query | string |  | – | true or false (default). true: add `uncertainty` (p10/p50/p90 of the ensemble for temperature, gust, precipitation) to the hours the ensemble covers (the next 24 h); see `ensemble.status` |
@@ -6155,13 +6155,13 @@ GeoSphere Austria model nwp-v2-1h-1km (runs every 3 h), bilinear to the point, f
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -6170,7 +6170,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/weather/forecast?lon=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/weather/forecast?lng=16.3725&lat=48.2085&hours=6&ensemble=true", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -6269,7 +6269,7 @@ GeoSphere INCA nowcast nowcast-v1-15min-1km (a new analysis every 15 min), bilin
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinates` | path | string | yes | – | lon,lat, e.g. 16.3725,48.2085 |
+| `coordinates` | path | string | yes | – | lng,lat, e.g. 16.3725,48.2085 |
 
 **Example**
 
@@ -6487,13 +6487,13 @@ open("result.png", "wb").write(res.content)
 
 Active and upcoming official weather warnings (up to 4 days ahead) as GeoJSON MultiPolygons in WGS84, one feature per warning (merged municipalities). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 yellow, 2 orange, 3 red; `text`, `impact` and `recommendation` (each with `de` and `en`) are optional: they are present only when GeoSphere has published a text for the warning and are often missing.
 
-Fetched centrally every 5 minutes, never per request. Without `bbox` and `lon`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
+Fetched centrally every 5 minutes, never per request. Without `bbox` and `lng`/`lat` all warnings are returned. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lon` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
+| `lng` | query | string |  | – | Longitude: only warnings that contain the point (with lat) |
 | `lat` | query | string |  | – | Latitude |
 | `bbox` | query | string |  | – | west,south,east,north in degrees (WGS84): only warnings whose area (polygon, not just its bounding box) touches the box |
 | `type` | query | string |  | – | wind, rain, snow, black_ice, thunderstorm, heat or cold |
@@ -6617,7 +6617,7 @@ Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat, e.g. 16.37,48.21 |
+| `coordinate` | path | string | yes | – | lng,lat, e.g. 16.37,48.21 |
 | `hours` | query | integer |  | `24` | 1 to 72, default 24; the daily run (00 UTC) reaches 48 h, fewer hours are marked with `truncated: true` |
 
 **Example**
@@ -6722,7 +6722,7 @@ Each section has `source` (dataset, cell, last day of data) and `retrieved_at`. 
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat or lon,lat.json |
+| `coordinate` | path | string | yes | – | lng,lat or lng,lat.json |
 | `sections` | query | string |  | `all` | Comma-separated sections to return (default: all) |
 
 **Example**
@@ -13215,11 +13215,11 @@ For public transport to the trailhead use the profile `bike_transit` (`GET /v1/d
 ## Weather for the destination
 
 ```js
-const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lon=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
+const f = await (await fetch("https://api.mapx.at/v1/weather/forecast?lng=12.694&lat=47.074&hours=12", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json(); // Grossglockner
 console.log(f.hours.map((h) => `${new Date(h.time).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" })} ${h.temperature_c}°C ${h.precipitation_mm} mm`).join("\n"));
 ```
 
-`GET /v1/weather/current?lon=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
+`GET /v1/weather/current?lng=…&lat=…` gives the measurements of the nearest stations. As a map layer see the [weather overlay](https://docs.mapx.at/examples/weather-overlay.md). Weather data: GeoSphere Austria (CC BY 4.0).
 
 ## Next steps
 

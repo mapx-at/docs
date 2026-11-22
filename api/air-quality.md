@@ -20,7 +20,7 @@ Austria and surroundings. Data source: GeoSphere Austria, CC BY 4.0 (attribution
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `coordinate` | path | string | yes | – | lon,lat, e.g. 16.37,48.21 |
+| `coordinate` | path | string | yes | – | lng,lat, e.g. 16.37,48.21 |
 | `hours` | query | integer |  | `24` | 1 to 72, default 24; the daily run (00 UTC) reaches 48 h, fewer hours are marked with `truncated: true` |
 
 **Example**

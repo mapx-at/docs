@@ -163,7 +163,7 @@ Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betro
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true für Abbiegehinweise (mit Manövern und Kreuzungen) |
 | `geometries` | query | string |  | – | geojson (Standard) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (Standard, vereinfachte Routengeometrie), full (alle Stützpunkte) oder false (keine Geometrie) |
@@ -287,7 +287,7 @@ Gleiche Antwort wie `/v1/directions/{profile}/{coordinates}` (bevorzugt); alle Q
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | query | string |  | `driving` | Standard driving |
-| `coordinates` | query | string | ja | – | lon,lat;lon,lat;... |
+| `coordinates` | query | string | ja | – | lng,lat;lng,lat;... |
 | `steps` | query | string |  | – | true für Abbiegehinweise (mit Manövern und Kreuzungen) |
 | `geometries` | query | string |  | – | geojson (Standard) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (Standard, vereinfachte Routengeometrie), full (alle Stützpunkte) oder false (keine Geometrie) |
@@ -406,14 +406,14 @@ data = res.json()
 
 Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at` (Ortszeit mit Offset) und `transit_stops`.
 
-`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400). Sperren: driving, driving-traffic und driving-truck reichen nicht über aktive Vollsperren aus den Verkehrsmeldungen hinaus (dieselben, die Directions umfährt, siehe `/v1/traffic/incidents` mit `closed: true`), auch nicht über Sperren ohne Verbindlichkeitsvermerk wie Wintersperren von Passstraßen: Eine Isochrone hat kein Ziel hinter der Sperre, einen letzten Ausweg gibt es daher nicht; die Straße, auf der der Startpunkt einrastet, bleibt befahrbar. `closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` listet die Sperren, an denen die größte Stufe endet (`id`, `text`, `road`, `category`, `binding`), beide auf oberster Ebene wie bei Directions und Matrix.
+`access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lng`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400). Sperren: driving, driving-traffic und driving-truck reichen nicht über aktive Vollsperren aus den Verkehrsmeldungen hinaus (dieselben, die Directions umfährt, siehe `/v1/traffic/incidents` mit `closed: true`), auch nicht über Sperren ohne Verbindlichkeitsvermerk wie Wintersperren von Passstraßen: Eine Isochrone hat kein Ziel hinter der Sperre, einen letzten Ausweg gibt es daher nicht; die Straße, auf der der Startpunkt einrastet, bleibt befahrbar. `closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` listet die Sperren, an denen die größte Stufe endet (`id`, `text`, `road`, `category`, `binding`), beide auf oberster Ebene wie bei Directions und Matrix.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | path | string | ja | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking oder transit (zu Fuß und mit öffentlichem Verkehr ab `depart_at`) |
-| `coordinate` | path | string | ja | – | lon,lat |
+| `coordinate` | path | string | ja | – | lng,lat |
 | `contours_minutes` | query | string |  | `5` | Bis zu 4 Werte, durch Komma getrennt (Standard 5,10,15) |
 | `contours_meters` | query | string |  | – | Distanzen statt Minuten (nicht für `transit`) |
 | `depart_at` | query | string |  | `now` | Nur `transit`: Abfahrt, ISO 8601 in Ortszeit Europe/Vienna ohne Offset (`2026-11-10T08:00`), mit `Z`/Offset oder als Unix-Sekunden; Standard jetzt |
@@ -511,7 +511,7 @@ data = res.json()
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat;... |
 | `sources` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
 | `destinations` | query | string |  | – | Indizes, durch Strichpunkt getrennt |
 | `annotations` | query | string |  | – | duration (Standard), distance oder beides |
@@ -623,14 +623,14 @@ data = res.json()
 
 2 bis 100 GPS-Punkte, auf das Straßennetz eingepasst. Ohne Zeitstempel gilt ein einzelner Punkt weit abseits der Spur (hin und gleich zurück, beide Schenkel über 300 m und zusammen mehr als das Dreifache des direkten Abstands) als Ausreißer: sein Tracepoint ist `null`, das Matching läuft weiter.
 
-Liegen aufeinanderfolgende Punkte mehr als 5 km (mit Zeitstempeln: 300 s) auseinander, teilt sich die Spur in mehrere `matchings`. Lässt sich kein Teil zuordnen, antwortet die API mit 422 (`No match`). Längere Spuren: `POST https://routing.mapx.at/match` mit einem geheimen Token (`mx_sk_…`; öffentliche Tokens erlauben nur GET) und dem JSON-Body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (höchstens 512 KB); die Antwort hat ein eigenes Format, nicht das von Mapbox: eine GeoJSON-FeatureCollection mit einem LineString je eingepasstem Abschnitt und `tracepoints` (eingepasster Punkt und Konfidenz je Eingabepunkt, `null`, wenn nicht zugeordnet).
+Liegen aufeinanderfolgende Punkte mehr als 5 km (mit Zeitstempeln: 300 s) auseinander, teilt sich die Spur in mehrere `matchings`. Lässt sich kein Teil zuordnen, antwortet die API mit 422 (`No match`). Längere Spuren: `POST https://routing.mapx.at/match` mit einem geheimen Token (`mx_sk_…`; öffentliche Tokens erlauben nur GET) und dem JSON-Body `{"coordinates": [[lng, lat], ...], "timestamps": [...], "radius": 25}` (höchstens 512 KB); die Antwort hat ein eigenes Format, nicht das von Mapbox: eine GeoJSON-FeatureCollection mit einem LineString je eingepasstem Abschnitt und `tracepoints` (eingepasster Punkt und Konfidenz je Eingabepunkt, `null`, wenn nicht zugeordnet).
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
 | `profile` | path | string | ja | – | driving, driving-traffic (umfährt aktive Sperren aus den EVIS/ASFINAG-Meldungen und verlangsamt Autobahnabschnitte, auf denen Anzeigen ein gesenktes Tempolimit zeigen; keine flächendeckende Verkehrslage), driving-truck (Lkw über 3,5 t; Fahrzeugmaße über weight/height/width/length/truck_type), cycling, cycling-mtb oder walking |
-| `coordinates` | path | string | ja | – | lon,lat;lon,lat;... |
+| `coordinates` | path | string | ja | – | lng,lat;lng,lat;... |
 | `timestamps` | query | string |  | – | Unix-Sekunden, durch Strichpunkt getrennt |
 | `radiuses` | query | string |  | – | Ein Wert je Punkt, 5 bis 500 m, durch Semikolon getrennt (das Matching sucht Kandidaten im größten Wert); sonst 400 |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
