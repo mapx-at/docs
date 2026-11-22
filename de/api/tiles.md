@@ -56,7 +56,7 @@ data = res.json()
         17.17,
         49.02
       ],
-      "attribution": "mapx.at; Datenquellen: BEV, GIP.at, ...",
+      "attribution": "mapx.at; BEV (DKM, Administrative Boundaries, Address Register, Geographical Names), GIP.at, BMLUK (GGN), Umweltbundesamt (CC BY 4.0)",
       "reference_date": "2026-04-01",
       "built": "2026-11-21 11:22:18"
     }

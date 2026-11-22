@@ -51,10 +51,10 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.37,
-    "lat": 48.21
-  },
+  "location": [
+    16.37,
+    48.21
+  ],
   "model": "GeoSphere chemical weather forecast",
   "reference_time": "2026-11-08T00:00:00Z",
   "index_scale": {
@@ -84,7 +84,7 @@ data = res.json()
       "saharan_dust_load_mgm2": 0
     }
   ],
-  "attribution": "mapx.at; Luftqualität: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
 }
 ```
 

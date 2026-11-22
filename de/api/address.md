@@ -83,7 +83,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -182,7 +182,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -257,7 +257,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -386,7 +386,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",

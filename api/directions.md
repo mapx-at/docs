@@ -54,7 +54,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "legal_only": true,
-  "attribution": "mapx.at; Datenquelle: GIP.at — Graphenintegrations-Plattform, CC BY 4.0",
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
@@ -260,7 +260,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -384,7 +384,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -406,7 +406,7 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `metadata.closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`), `metadata.closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`).
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
 **Parameters**
 
@@ -504,7 +504,7 @@ data = res.json()
 
 2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`. Zone `heavy`. Closures: driving, driving-traffic and driving-truck compute with the same closures and weights as directions (binding closures never, other full closures such as winter closures only as a last resort, conditional regulations only with driving-traffic), so each entry matches the duration and distance of a directions request between the same two points.
 
-`closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`); cycling and walking ignore closures and have no `closures`.
+`closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`); cycling and walking ignore closures and have no `closures`.
 
 **Parameters**
 
@@ -595,7 +595,8 @@ data = res.json()
   "closures": {
     "applied": true,
     "count": 113,
-    "binding": 8,
+    "binding": true,
+    "binding_count": 8,
     "fetched": "2026-11-22T01:39:31Z"
   }
 }

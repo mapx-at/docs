@@ -51,10 +51,10 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 15.3294,
-    "lat": 48.2272
-  },
+  "location": [
+    15.3294,
+    48.2272
+  ],
   "status": "complete",
   "solar": {
     "period": "2023-2025",
@@ -100,12 +100,13 @@ data = res.json()
       "date": "2026-11-06"
     }
   },
-  "attribution": "mapx.at; Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0)"
 }
 ```
 
 | Field | Type | Description |
 |---|---|---|
+| `location` | array | [longitude, latitude] (WGS84), optional height. |
 | `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |

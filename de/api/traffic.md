@@ -171,7 +171,7 @@ data = res.json()
       "properties": {
         "type": "road_closure",
         "impact": "critical",
-        "kind": "Straßensperre",
+        "kind": "road_closure",
         "text": "A13 Brenner Autobahn: In Fahrtrichtung von Brenner (I) nach Innsbruck bei Anschlussstelle Brenner Nord Auffahrtsrampe gesperrt, 25.01.2025 08:00 - 31.01.2028 23:30, Rampensperre.",
         "road": "A13",
         "road_section": "A13.33.4",
@@ -344,7 +344,7 @@ data = res.json()
       "properties": {
         "type": "road_closure",
         "impact": "critical",
-        "kind": "Straßensperre",
+        "kind": "road_closure",
         "text": "A13 Brenner Autobahn: In Fahrtrichtung von Brenner (I) nach Innsbruck bei Anschlussstelle Brenner Nord Auffahrtsrampe gesperrt, 25.01.2025 08:00 - 31.01.2028 23:30, Rampensperre.",
         "road": "A13",
         "road_section": "A13.33.4",

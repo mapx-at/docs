@@ -16,7 +16,7 @@ MapLibre shows the attribution automatically when you load a style or a TileJSON
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
-  maxzoom: 18, attribution: "mapx.at; Orthophoto: BEV, CC BY 4.0" }
+  maxzoom: 18, attribution: "mapx.at; BEV Orthophoto (CC BY 4.0)" }
 ```
 
 ## In print, reports and static images
@@ -43,16 +43,18 @@ Put a visible line next to the image, in readable size, for example `Source: map
 
 JSON responses with data carry a top-level `attribution` field; it always starts with `mapx.at; ` before the source from the table. Show it when you display or pass on the data.
 
+Format: `mapx.at; <source> (<license>); …`, English and without prefix words such as "Data source:"; the same text for every `Accept-Language`.
+
 | API | Source |
 |---|---|
-| Geocoding, Search Box, Address | BEV (address register, geographical names, administrative boundaries), CC BY 4.0 |
-| Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
-| Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
-| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
-| Weather | GeoSphere Austria, CC BY 4.0 |
-| Climate | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0) |
+| Directions, Isochrone, Matrix, Matching | GIP.at (CC BY 4.0) |
+| Tolls, Traffic | ASFINAG / EVIS.AT (CC BY 4.0); GIP.at (CC BY 4.0) (tolls: ASFINAG (CC BY 4.0)) |
+| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0) |
+| Weather | GeoSphere Austria (CC BY 4.0) |
+| Climate | GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0) |
+| Air quality | GeoSphere Austria (CC BY 4.0) |
 | Tilequery | Source of the queried tileset, see [Tilesets](https://docs.mapx.at/tilesets/index.md) |
-| Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
+| Elevation | BEV ALS-DTM 1 m (CC BY 4.0); BEV ALS-DOM 1 m (CC BY 4.0) |
 
 The credit is also stored in the TileJSON.

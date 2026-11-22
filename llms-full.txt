@@ -827,7 +827,7 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
-Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, of which binding `binding`) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/directions.md#isochrones) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `metadata.closures` has the same fields, `metadata.closures_avoided` lists the closures at which the largest contour stops.
+Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, `binding_count` of them binding, `binding` true if any) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/directions.md#isochrones) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `closures` (top level, as with matrix and directions) has the same fields, `closures_avoided` lists the closures at which the largest contour stops. `category` of a closure is the same English enum as `kind` in the [traffic reports](https://docs.mapx.at/api/traffic.md) (`road_closure`, `winter_closure`, `roadworks`, …).
 
 ## Voice and banner instructions
 
@@ -916,7 +916,7 @@ Results are sorted by importance: closures and binding reports first, then motor
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
 ```
 
-Every report has `type` and `impact` (`critical` closed for cars, `major` binding, lane restriction or accident, `minor` other unplanned, `low` other planned), `kind` (category of the source, in German, e.g. `Straßensperre`, `Bauarbeiten`), `road` (road number, `null` for municipal streets) and from EVIS `road_name`, `direction` (direction as text), `regions` (federal states), `creator` and `transport_modes`. `closed: true` means closed for cars; a `road_closure` with `closed: false` applies to other modes only (e.g. pedestrians, cycles) or traffic is led over the opposite carriageway.
+Every report has `type` and `impact` (`critical` closed for cars, `major` binding, lane restriction or accident, `minor` other unplanned, `low` other planned), `kind` (detailed category as an English enum after DATEX II: `road_closure`, `winter_closure`, `tunnel_closure`, `ramp_closure`, `lane_closure`, `roadworks`, `maintenance_works`, `repair_works`, `resurfacing_works`, `safety_upgrade_works`, `grass_cutting`, `alternating_traffic`, `temporary_traffic_lights`, `traffic_management`, `speed_restriction`, `congestion`, `accident`, `obstruction`, `hazardous_driving_conditions`, `weather`, `safety_exercise`, `route_recommendation`, `event`, `other`; the same values as `category` of the closures in directions, matrix, isochrone and optimized-trips), `road` (road number, `null` for municipal streets) and from EVIS `road_name`, `direction` (direction as text), `regions` (federal states), `creator` and `transport_modes`. `closed: true` means closed for cars; a `road_closure` with `closed: false` applies to other modes only (e.g. pedestrians, cycles) or traffic is led over the opposite carriageway.
 
 ## Lane details on motorways
 
@@ -2188,7 +2188,7 @@ data = res.json()
         17.17,
         49.02
       ],
-      "attribution": "mapx.at; Datenquellen: BEV, GIP.at, ...",
+      "attribution": "mapx.at; BEV (DKM, Administrative Boundaries, Address Register, Geographical Names), GIP.at, BMLUK (GGN), Umweltbundesamt (CC BY 4.0)",
       "reference_date": "2026-04-01",
       "built": "2026-11-21 11:22:18"
     }
@@ -2827,7 +2827,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -2930,7 +2930,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3034,7 +3034,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3176,7 +3176,7 @@ data = res.json()
         }
       }
     ],
-    "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+    "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
   },
   {
     "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
@@ -3294,7 +3294,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3392,7 +3392,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3486,7 +3486,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3655,7 +3655,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3754,7 +3754,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
 }
 ```
 
@@ -3829,7 +3829,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -3958,7 +3958,7 @@ data = res.json()
     "postcode": "3390",
     "place": "Melk"
   },
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
+  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)",
   "deviations": [
     {
       "field": "street",
@@ -4075,7 +4075,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "legal_only": true,
-  "attribution": "mapx.at; Datenquelle: GIP.at — Graphenintegrations-Plattform, CC BY 4.0",
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
@@ -4281,7 +4281,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -4405,7 +4405,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at, CC BY 4.0"
+  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -4427,7 +4427,7 @@ data = res.json()
 
 Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
 
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `metadata.closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`), `metadata.closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`).
+`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
 **Parameters**
 
@@ -4525,7 +4525,7 @@ data = res.json()
 
 2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`. Zone `heavy`. Closures: driving, driving-traffic and driving-truck compute with the same closures and weights as directions (binding closures never, other full closures such as winter closures only as a last resort, conditional regulations only with driving-traffic), so each entry matches the duration and distance of a directions request between the same two points.
 
-`closures` reports whether closures were applied (`applied`, `count`, `binding`, `fetched`); cycling and walking ignore closures and have no `closures`.
+`closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`); cycling and walking ignore closures and have no `closures`.
 
 **Parameters**
 
@@ -4616,7 +4616,8 @@ data = res.json()
   "closures": {
     "applied": true,
     "count": 113,
-    "binding": 8,
+    "binding": true,
+    "binding_count": 8,
     "fetched": "2026-11-22T01:39:31Z"
   }
 }
@@ -4979,7 +4980,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
   "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
@@ -5092,7 +5093,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
   "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
@@ -5208,7 +5209,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
   "departures": [
     {
       "destination": {
@@ -5321,7 +5322,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
   "stops": [
     {
       "distance": 219,
@@ -6031,11 +6032,11 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "elevation_m": 171.4
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "elevation_m": 171.4,
   "features": [
     {
       "type": "Feature",
@@ -6065,7 +6066,7 @@ data = res.json()
     }
   ],
   "time": "2026-11-08T11:50:00Z",
-  "attribution": "mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
 }
 ```
 
@@ -6125,14 +6126,16 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "grid_lon": 16.3717,
-    "grid_lat": 48.213,
-    "elevation_m": 171.4,
-    "grid_elevation_m": 178.9
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "grid_location": [
+    16.3717,
+    48.213
+  ],
+  "elevation_m": 171.4,
+  "grid_elevation_m": 178.9,
   "model": "GeoSphere AROME nwp-v2-1h-1km",
   "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
@@ -6244,14 +6247,16 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "grid_lon": 16.37303,
-    "grid_lat": 48.20932,
-    "elevation_m": 171.4,
-    "grid_elevation_m": 175.2
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "grid_location": [
+    16.37303,
+    48.20932
+  ],
+  "elevation_m": 171.4,
+  "grid_elevation_m": 175.2,
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
@@ -6473,7 +6478,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "updated": "2026-11-08T08:00:00Z",
-  "attribution": "mapx.at; Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
@@ -6591,10 +6596,10 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.37,
-    "lat": 48.21
-  },
+  "location": [
+    16.37,
+    48.21
+  ],
   "model": "GeoSphere chemical weather forecast",
   "reference_time": "2026-11-08T00:00:00Z",
   "index_scale": {
@@ -6624,7 +6629,7 @@ data = res.json()
       "saharan_dust_load_mgm2": 0
     }
   ],
-  "attribution": "mapx.at; Luftqualität: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
 }
 ```
 
@@ -6696,10 +6701,10 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 15.3294,
-    "lat": 48.2272
-  },
+  "location": [
+    15.3294,
+    48.2272
+  ],
   "status": "complete",
   "solar": {
     "period": "2023-2025",
@@ -6745,12 +6750,13 @@ data = res.json()
       "date": "2026-11-06"
     }
   },
-  "attribution": "mapx.at; Datenquelle: GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0)"
 }
 ```
 
 | Field | Type | Description |
 |---|---|---|
+| `location` | array | [longitude, latitude] (WGS84), optional height. |
 | `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
@@ -6947,7 +6953,7 @@ data = res.json()
       "properties": {
         "type": "road_closure",
         "impact": "critical",
-        "kind": "Straßensperre",
+        "kind": "road_closure",
         "text": "A13 Brenner Autobahn: In Fahrtrichtung von Brenner (I) nach Innsbruck bei Anschlussstelle Brenner Nord Auffahrtsrampe gesperrt, 25.01.2025 08:00 - 31.01.2028 23:30, Rampensperre.",
         "road": "A13",
         "road_section": "A13.33.4",
@@ -7120,7 +7126,7 @@ data = res.json()
       "properties": {
         "type": "road_closure",
         "impact": "critical",
-        "kind": "Straßensperre",
+        "kind": "road_closure",
         "text": "A13 Brenner Autobahn: In Fahrtrichtung von Brenner (I) nach Innsbruck bei Anschlussstelle Brenner Nord Auffahrtsrampe gesperrt, 25.01.2025 08:00 - 31.01.2028 23:30, Rampensperre.",
         "road": "A13",
         "road_section": "A13.33.4",
@@ -7886,7 +7892,7 @@ PMTiles files carry the release date in their name and never change; they may be
 
 ## Attribution
 
-JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data. It always starts with `mapx.at; `, e.g. `mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (…)` for weather or `mapx.at; Datenquelle: GIP.at …` for routing, matrix and isochrone. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`, `mapx.at` as the first source `mapx`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
+JSON responses carrying data have a top-level `attribution` field (plain text, no HTML) naming the source to credit when displaying or passing on the data. It always starts with `mapx.at; `, in the form `mapx.at; <source> (<license>); …` without prefix words, e.g. `mapx.at; GeoSphere Austria (CC BY 4.0)` for weather or `mapx.at; GIP.at (CC BY 4.0)` for routing, matrix and isochrone. The text is the same for every `Accept-Language`. Exceptions: the lists `/v1/styles`, `/v1/fonts`, `/v1/sprites` (arrays); styles credit their sources in `sources`, `mapx.at` as the first source `mapx`. See [Attribution](https://docs.mapx.at/reference/attribution.md).
 
 ---
 
@@ -9620,7 +9626,7 @@ MapLibre shows the attribution automatically when you load a style or a TileJSON
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
-  maxzoom: 18, attribution: "mapx.at; Orthophoto: BEV, CC BY 4.0" }
+  maxzoom: 18, attribution: "mapx.at; BEV Orthophoto (CC BY 4.0)" }
 ```
 
 ## In print, reports and static images
@@ -9647,17 +9653,19 @@ Put a visible line next to the image, in readable size, for example `Source: map
 
 JSON responses with data carry a top-level `attribution` field; it always starts with `mapx.at; ` before the source from the table. Show it when you display or pass on the data.
 
+Format: `mapx.at; <source> (<license>); …`, English and without prefix words such as "Data source:"; the same text for every `Accept-Language`.
+
 | API | Source |
 |---|---|
-| Geocoding, Search Box, Address | BEV (address register, geographical names, administrative boundaries), CC BY 4.0 |
-| Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
-| Tolls, Traffic | ASFINAG / EVIS.AT, CC BY 4.0, road network GIP.at |
-| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0), data source Mobilitätsverbünde Österreich OG |
-| Weather | GeoSphere Austria, CC BY 4.0 |
-| Climate | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Air quality | GeoSphere Austria (chemical weather model), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0) |
+| Directions, Isochrone, Matrix, Matching | GIP.at (CC BY 4.0) |
+| Tolls, Traffic | ASFINAG / EVIS.AT (CC BY 4.0); GIP.at (CC BY 4.0) (tolls: ASFINAG (CC BY 4.0)) |
+| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0) |
+| Weather | GeoSphere Austria (CC BY 4.0) |
+| Climate | GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0) |
+| Air quality | GeoSphere Austria (CC BY 4.0) |
 | Tilequery | Source of the queried tileset, see [Tilesets](https://docs.mapx.at/tilesets/index.md) |
-| Elevation | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
+| Elevation | BEV ALS-DTM 1 m (CC BY 4.0); BEV ALS-DOM 1 m (CC BY 4.0) |
 
 The credit is also stored in the TileJSON.
 

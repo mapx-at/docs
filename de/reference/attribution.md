@@ -43,16 +43,18 @@ Eine sichtbare Zeile neben das Bild setzen, in lesbarer Größe, zum Beispiel `Q
 
 JSON-Antworten mit Daten tragen ein `attribution`-Feld auf oberster Ebene, es beginnt immer mit `mapx.at; ` vor der Quelle aus der Tabelle. Es ist anzuzeigen, wenn die Daten dargestellt oder weitergegeben werden.
 
+Format: `mapx.at; <Quelle> (<Lizenz>); …`, englisch und ohne Vorsätze wie „Datenquelle:“; für jede `Accept-Language` derselbe Text.
+
 | API | Quelle |
 |---|---|
-| Geocoding, Search Box, Address | BEV (Adressregister, Geographische Namen, Verwaltungsgrenzen), CC BY 4.0 |
-| Directions, Isochrone, Matrix, Matching | GIP.at, CC BY 4.0 |
-| Maut, Verkehr | ASFINAG / EVIS.AT, CC BY 4.0, Straßennetz GIP.at |
-| Öffentlicher Verkehr | ÖBB-Personenverkehr AG (CC BY 4.0), Datenquelle Mobilitätsverbünde Österreich OG |
-| Wetter | GeoSphere Austria, CC BY 4.0 |
-| Klima | GeoSphere Austria (APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE), CC BY 4.0 |
-| Luftqualität | GeoSphere Austria (Chemiewettermodell), CC BY 4.0 |
+| Geocoding, Search Box, Address | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0) |
+| Directions, Isochrone, Matrix, Matching | GIP.at (CC BY 4.0) |
+| Maut, Verkehr | ASFINAG / EVIS.AT (CC BY 4.0); GIP.at (CC BY 4.0) (Maut: ASFINAG (CC BY 4.0)) |
+| Öffentlicher Verkehr | ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0) |
+| Wetter | GeoSphere Austria (CC BY 4.0) |
+| Klima | GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0) |
+| Luftqualität | GeoSphere Austria (CC BY 4.0) |
 | Tilequery | Quelle des abgefragten Kachelsatzes, siehe [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md) |
-| Höhe | BEV – ALS-DTM / ALS-DOM 1 m, CC BY 4.0 |
+| Höhe | BEV ALS-DTM 1 m (CC BY 4.0); BEV ALS-DOM 1 m (CC BY 4.0) |
 
 Die Quellenangabe steht auch im TileJSON.

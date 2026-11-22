@@ -54,11 +54,11 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "elevation_m": 171.4
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "elevation_m": 171.4,
   "features": [
     {
       "type": "Feature",
@@ -88,7 +88,7 @@ data = res.json()
     }
   ],
   "time": "2026-11-08T11:50:00Z",
-  "attribution": "mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
 }
 ```
 
@@ -148,14 +148,16 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "grid_lon": 16.3717,
-    "grid_lat": 48.213,
-    "elevation_m": 171.4,
-    "grid_elevation_m": 178.9
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "grid_location": [
+    16.3717,
+    48.213
+  ],
+  "elevation_m": 171.4,
+  "grid_elevation_m": 178.9,
   "model": "GeoSphere AROME nwp-v2-1h-1km",
   "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
@@ -267,14 +269,16 @@ data = res.json()
 
 ```json
 {
-  "location": {
-    "lon": 16.3725,
-    "lat": 48.2085,
-    "grid_lon": 16.37303,
-    "grid_lat": 48.20932,
-    "elevation_m": 171.4,
-    "grid_elevation_m": 175.2
-  },
+  "location": [
+    16.3725,
+    48.2085
+  ],
+  "grid_location": [
+    16.37303,
+    48.20932
+  ],
+  "elevation_m": 171.4,
+  "grid_elevation_m": 175.2,
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
@@ -496,7 +500,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "updated": "2026-11-08T08:00:00Z",
-  "attribution": "mapx.at; Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
+  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
