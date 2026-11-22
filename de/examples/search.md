@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/search/
 
 > Orte, Adressen und Gipfel in Österreich suchen und auf der Karte anspringen: Beispiel zur Geocoding-API mit MapLibre GL JS und lauffähigem Code.
 
-Die Geocoding-API liefert eine GeoJSON-`FeatureCollection` im Mapbox-Stil. Jeder Treffer hat `place_name`, `center` und meist eine `bbox` zum Zoomen.
+Die Geocoding-API liefert eine GeoJSON-`FeatureCollection`. Jeder Treffer hat eine Punkt-`geometry`, `properties.name` und `properties.place_formatted` für die Anzeigezeile und bei Flächen eine `bbox` zum Zoomen.
 
 ## Code
 
@@ -42,11 +42,11 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         marker?.remove();
-        marker = new maplibregl.Marker().setLngLat(f.center).addTo(map);
-        f.bbox ? map.fitBounds([[f.bbox[0], f.bbox[1]], [f.bbox[2], f.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: f.center, zoom: f.properties.zoom ?? 14 });
+        marker = new maplibregl.Marker().setLngLat(f.geometry.coordinates).addTo(map);
+        f.bbox ? map.fitBounds([[f.bbox[0], f.bbox[1]], [f.bbox[2], f.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: f.geometry.coordinates, zoom: f.properties.zoom ?? 14 });
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
@@ -92,12 +92,12 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         hit.clear();
-        hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.center))));
+        hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.geometry.coordinates))));
         const view = map.getView();
-        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 0 }) : (view.setCenter(ol.proj.fromLonLat(f.center)), view.setZoom((f.properties.zoom ?? 14) + 1));
+        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 0 }) : (view.setCenter(ol.proj.fromLonLat(f.geometry.coordinates)), view.setZoom((f.properties.zoom ?? 14) + 1));
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
@@ -141,9 +141,9 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
-        const [lng, lat] = f.center;
+        const [lng, lat] = f.geometry.coordinates;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
         f.bbox ? map.fitBounds([[f.bbox[1], f.bbox[0]], [f.bbox[3], f.bbox[2]]], { padding: [60, 60], maxZoom: 18, animate: false }) : map.setView([lat, lng], (f.properties.zoom ?? 14) + 1, { animate: false });

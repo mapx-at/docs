@@ -38,16 +38,16 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
         marker?.remove();
-        marker = new maplibregl.Marker().setLngLat(s.coordinates).addTo(map);
-        map.flyTo({ center: s.coordinates, zoom: 16 });
+        marker = new maplibregl.Marker().setLngLat(s.geometry.coordinates).addTo(map);
+        map.flyTo({ center: s.geometry.coordinates, zoom: 16 });
         list.replaceChildren();
       });
       li.append(b); list.append(li);
@@ -89,14 +89,14 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
-        const at = ol.proj.fromLonLat(s.coordinates);
+        const at = ol.proj.fromLonLat(s.geometry.coordinates);
         hit.clear();
         hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
         map.getView().setCenter(at), map.getView().setZoom(17); // jump instead of animating: fewer tile requests
@@ -139,14 +139,14 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
-        const [lng, lat] = s.coordinates;
+        const [lng, lat] = s.geometry.coordinates;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
         map.setView([lat, lng], 17, { animate: false }); // jump instead of flying: fewer tile requests

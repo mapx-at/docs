@@ -12,9 +12,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `properties.type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
-Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`; `relevance` is the match score of the search (0 to 1, lower for a fallback to the base number, street or a neighboring number); for addresses and streets `properties.address` holds the separate fields (`street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`) and `properties.accuracy` is `rooftop` (point on the building), `parcel` (point on the plot) or `street`. Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
+Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection in the format shared by all search endpoints (schema `Place`): `id`, point `geometry`, `bbox` for areas, and in `properties` always `type`, `name`, `place_formatted`, `relevance` (match score of the search, 0 to 1, lower for a fallback to the base number, street or a neighboring number), `accuracy` (`rooftop` = point on the building, `parcel` = point on the plot, `street`, otherwise `null`) and `address` (separate fields `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, only those present); with `proximity` also `distance` (m). Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
 
 **Parameters**
 
@@ -61,17 +61,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6792483",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 0.97,
+      "id": "address-6792483",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.365282,
+          48.210154
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Herrengasse 13",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 0.97,
+        "accuracy": "parcel",
         "address": {
           "street": "Herrengasse",
           "housenumber": "13",
@@ -82,26 +86,20 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel"
-      },
-      "text": "Herrengasse 13",
-      "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.365282,
-        48.210154
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.365282,
-          48.210154
-        ]
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -113,7 +111,7 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
 
-## Forward geocoding, Mapbox path form
+## Forward geocoding, path form
 
 `GET /v1/geocode/{q}`
 
@@ -164,30 +162,33 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "station-at_49_1320",
       "type": "Feature",
-      "place_type": [
-        "poi"
-      ],
-      "relevance": 0.999,
-      "properties": {
-        "mapx_type": "station",
-        "class": "station",
-        "context": "Bahnhof, Wien",
-        "zoom": 15,
-        "category": "train_station"
-      },
-      "text": "Wien Stephansplatz",
-      "place_name": "Wien Stephansplatz, Bahnhof, Wien",
-      "center": [
-        16.371607,
-        48.208086
-      ],
+      "id": "station-at_49_1320",
       "geometry": {
         "type": "Point",
         "coordinates": [
           16.371607,
           48.208086
+        ]
+      },
+      "properties": {
+        "type": "poi",
+        "name": "Wien Stephansplatz",
+        "place_formatted": "Bahnhof, Wien",
+        "relevance": 0.999,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 15,
+        "class": "station",
+        "category": "train_station",
+        "maki": "rail",
+        "stop_id": "at:49:1320",
+        "modes": [
+          "subway"
         ]
       }
     }
@@ -195,6 +196,13 @@ data = res.json()
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -210,7 +218,7 @@ data = res.json()
 
 `GET /v1/reverse`
 
-Nearest features around a point, nearest first, each with `properties.distance` (meters from the point) and the fields of geocode (`properties.address`, `properties.accuracy`). Use `types` to restrict (e.g. `address`). A coordinate that is not a number or out of range gives 400 `invalid-coordinates` with `param` `lng` or `lat`; `limit` and `radius` are checked separately (400 `invalid-parameter`).
+Nearest features around a point, nearest first, in the same format as geocode (schema `Place`), each with `properties.distance` (meters from the point); `relevance` is 1. Use `types` to restrict (e.g. `address`). A coordinate that is not a number or out of range gives 400 `invalid-coordinates` with `param` `lng` or `lat`; `limit` and `radius` are checked separately (400 `invalid-parameter`).
 
 For a point outside Austria the response has no features and a `warning` (often the order was swapped; it is lng, lat).
 
@@ -218,7 +226,7 @@ For a point outside Austria the response has no features and a `warning` (often 
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lng` | query | string | yes | – | Longitude (also `lon`, `longitude`) |
+| `lng` | query | string | yes | – | Longitude |
 | `lat` | query | string | yes | – | Latitude |
 | `radius` | query | string |  | `500` | Meters, 1 to 5000, default 500 |
 | `limit` | query | string |  | `1` | 1 to 10, default 1 |
@@ -259,17 +267,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6793782",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 1,
+      "id": "address-6793782",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.372605,
+          48.208728
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Stephansplatz 1",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 1,
+        "accuracy": "parcel",
         "address": {
           "street": "Stephansplatz",
           "housenumber": "1",
@@ -280,27 +292,21 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel",
-        "distance": 27
-      },
-      "text": "Stephansplatz 1",
-      "place_name": "Stephansplatz 1, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.372605,
-        48.208728
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.372605,
-          48.208728
-        ]
+        "distance": 27,
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -316,7 +322,7 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same fields as geocode, including the place precedence and coordinates as `q`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
+JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same format as geocode, schema `Place`, including the place precedence and coordinates as `q`; no `distance`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
@@ -399,21 +405,26 @@ data = res.json()
   {
     "type": "FeatureCollection",
     "query": [
-      "Herrengasse"
+      "Herrengasse",
+      "13"
     ],
     "features": [
       {
-        "id": "address-6792483",
         "type": "Feature",
-        "place_type": [
-          "address"
-        ],
-        "relevance": 0.97,
+        "id": "address-6792483",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            16.365282,
+            48.210154
+          ]
+        },
         "properties": {
-          "mapx_type": "address",
-          "class": null,
-          "context": "Innere Stadt, 1010 Wien, W",
-          "zoom": 18,
+          "type": "address",
+          "name": "Herrengasse 13",
+          "place_formatted": "Innere Stadt, 1010 Wien, W",
+          "relevance": 0.97,
+          "accuracy": "parcel",
           "address": {
             "street": "Herrengasse",
             "housenumber": "13",
@@ -424,20 +435,7 @@ data = res.json()
             "district": "Wien (Stadt)",
             "state": "Wien"
           },
-          "accuracy": "parcel"
-        },
-        "text": "Herrengasse 13",
-        "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-        "center": [
-          16.365282,
-          48.210154
-        ],
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            16.365282,
-            48.210154
-          ]
+          "zoom": 18
         }
       }
     ],
@@ -451,7 +449,8 @@ data = res.json()
     "code": "invalid-parameter",
     "param": "types",
     "allowed": [
-      "address"
+      "address",
+      "street"
     ]
   }
 ]

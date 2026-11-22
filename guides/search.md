@@ -22,32 +22,32 @@ All data is official: the address register, place names, administrative boundari
 ```js
 const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const [lon, lat] = features[0].center;
+const [lon, lat] = features[0].geometry.coordinates;
 ```
 
 `features` can be empty; check the length before you read `features[0]`. Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
-Postcode, place, street and house number come as separate fields in `properties.address`, no need to split `place_name`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
+All search endpoints (geocode, reverse, batch, Search Box, Autofill) answer in the same format: a GeoJSON `FeatureCollection`, each hit with a stable `id`, a point `geometry` and in `properties` the fields `type`, `name`, `place_formatted` (display line: `name, place_formatted`), `relevance`, `accuracy` and `address`. Postcode, place, street and house number come as separate fields in `properties.address`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
 
 ## Reverse geocode
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].place_name'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].properties | {name, place_formatted, distance}'
 ```
 
 ## Type-ahead search
 
-Call `suggest` on every pause in typing (debounce 200 ms), then `retrieve` once for the chosen entry. Send the same `session_token` for both calls.
+Call `suggest` on every pause in typing (debounce 200 ms). Suggestions already carry the coordinates; `retrieve` returns a single hit again by its `id` (for example one saved earlier). `session_token` is optional and has no effect.
 
 ```js
 const token = crypto.randomUUID();
 const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const id = s.suggestions[0].mapbox_id;
+const id = s.features[0].id;
 const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
-Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_church`) and the administrative context. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](https://docs.mapx.at/examples/search.md).
+Points of interest carry a category (`properties.category`, for example `place_of_worship_church`) and the administrative fields in `properties.address`. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](https://docs.mapx.at/examples/search.md).
 
 ## Places by category
 
@@ -60,11 +60,12 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 
 ## Address forms
 
-Autofill returns split fields that map to form inputs.
+Autofill returns addresses only, with split fields in `properties.address` that map to form inputs.
 
 ```js
 const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const { address_line1, postcode, place, coordinates } = a.suggestions[0];
+const { name, address } = a.features[0].properties; // address: street, housenumber, postcode, place, …
+const [lon, lat] = a.features[0].geometry.coordinates;
 ```
 
 Validation checks what the user typed:

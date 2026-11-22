@@ -22,32 +22,32 @@ Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de
 ```js
 const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const [lon, lat] = features[0].center;
+const [lon, lat] = features[0].geometry.coordinates;
 ```
 
 `features` kann leer sein; vor dem Zugriff auf `features[0]` die Länge prüfen. Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
-PLZ, Ort, Straße und Hausnummer stehen getrennt in `properties.address`, ohne `place_name` zu zerlegen. Ein Ort nach der Hausnummer hat Vorrang: `Hauptplatz 12a Graz` liefert Graz (Hauptplatz 12, die Straße, die Nachbarnummern), auch wenn es 12a nur anderswo gibt. Koordinaten wie `48.21, 16.37` als Suchtext werden wie bei Reverse Geocoding beantwortet.
+Alle Such-Endpunkte (geocode, reverse, batch, Search Box, Autofill) antworten im selben Format: eine GeoJSON-`FeatureCollection`, jeder Treffer mit stabiler `id`, Punkt-`geometry` und in `properties` den Feldern `type`, `name`, `place_formatted` (Anzeigezeile: `name, place_formatted`), `relevance`, `accuracy` und `address`. PLZ, Ort, Straße und Hausnummer stehen getrennt in `properties.address`. Ein Ort nach der Hausnummer hat Vorrang: `Hauptplatz 12a Graz` liefert Graz (Hauptplatz 12, die Straße, die Nachbarnummern), auch wenn es 12a nur anderswo gibt. Koordinaten wie `48.21, 16.37` als Suchtext werden wie bei Reverse Geocoding beantwortet.
 
 ## Reverse Geocoding
 
 ```bash
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].place_name'
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].properties | {name, place_formatted, distance}'
 ```
 
 ## Type-ahead-Suche
 
-`suggest` bei jeder Tipppause aufrufen (Debounce 200 ms), danach `retrieve` einmal für den gewählten Eintrag. Für beide Aufrufe denselben `session_token` senden.
+`suggest` bei jeder Tipppause aufrufen (Debounce 200 ms). Die Vorschläge tragen schon die Koordinaten; `retrieve` liefert einen einzelnen Treffer über seine `id` erneut (etwa einen früher gespeicherten). `session_token` ist optional und ohne Wirkung.
 
 ```js
 const token = crypto.randomUUID();
 const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const id = s.suggestions[0].mapbox_id;
+const id = s.features[0].id;
 const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
-Vorschläge tragen eine Kategorie (`poi_category_ids`, zum Beispiel `place_of_worship_church`) und den Verwaltungskontext. Die vorige Anfrage abbrechen, wenn eine neue Taste gedrückt wird (`AbortController`). Beispiel: [Suche](https://docs.mapx.at/de/examples/search.md).
+POIs tragen eine Kategorie (`properties.category`, zum Beispiel `place_of_worship_church`) und die Verwaltungsangaben in `properties.address`. Die vorige Anfrage abbrechen, wenn eine neue Taste gedrückt wird (`AbortController`). Beispiel: [Suche](https://docs.mapx.at/de/examples/search.md).
 
 ## Orte nach Kategorie
 
@@ -60,11 +60,12 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/
 
 ## Adressformulare
 
-Autofill liefert getrennte Felder, die sich auf Formularfelder abbilden lassen.
+Autofill liefert nur Adressen, mit getrennten Feldern in `properties.address`, die sich auf Formularfelder abbilden lassen.
 
 ```js
 const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-const { address_line1, postcode, place, coordinates } = a.suggestions[0];
+const { name, address } = a.features[0].properties; // address: street, housenumber, postcode, place, …
+const [lon, lat] = a.features[0].geometry.coordinates;
 ```
 
 Die Validierung prüft, was der Nutzer eingegeben hat:

@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/searchbox/suggest`
 
-Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs.
+Search as you type over addresses, streets, places and official points of interest. FeatureCollection in the same format as geocode (schema `Place`, with point geometry); points of interest also carry `category` and `maki`, stops `stop_id` and `modes`. `/retrieve/{id}` returns a single hit by its `id`.
 
 **Parameters**
 
@@ -54,20 +54,46 @@ data = res.json()
 
 ```json
 {
-  "suggestions": [
+  "type": "FeatureCollection",
+  "features": [
     {
-      "name": "Stephansdom",
-      "mapbox_id": "poi-4711",
-      "feature_type": "poi",
-      "place_formatted": "Place of worship, Wien",
-      "poi_category": [
-        "place_of_worship"
-      ]
+      "type": "Feature",
+      "id": "place-7158611",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3731,
+          48.2085
+        ]
+      },
+      "properties": {
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
+      }
     }
   ],
-  "attribution": "mapx.at; ..."
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -83,13 +109,13 @@ data = res.json()
 
 `GET /v1/searchbox/retrieve/{id}`
 
-FeatureCollection with one feature (point, bbox, coordinates, context); 404 for an unknown id.
+FeatureCollection with the one hit, in the same format as suggest and geocode (schema `Place`); 404 for an unknown id.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `id` | path | string | yes | – | `mapbox_id` from suggest |
+| `id` | path | string | yes | – | `id` of a hit from suggest, geocode or category |
 | `session_token` | query | string |  | – | As in suggest |
 | `proximity` | query | string |  | – | lon,lat, only for the distance |
 
@@ -98,7 +124,7 @@ FeatureCollection with one feature (point, bbox, coordinates, context); 404 for 
 **curl**
 
 ```bash
-ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.suggestions[0].mapbox_id')
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.features[0].id')
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/$ID" | jq
 ```
 
@@ -107,7 +133,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 ```js
 const headers = { Authorization: "Bearer YOUR_TOKEN" };
 const s = await (await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", { headers })).json();
-const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.suggestions[0].mapbox_id), { headers });
+const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.features[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -118,7 +144,7 @@ import requests
 
 h = {"Authorization": "Bearer YOUR_TOKEN"}
 s = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", headers=h).json()
-res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["suggestions"][0]["mapbox_id"], headers=h)
+res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["features"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -130,6 +156,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "place-7158611",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -138,12 +165,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Stephansdom"
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -159,7 +207,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`).
+Places of the category (several comma-separated), nearest first with `proximity` (then with `properties.distance`). Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`). Same format as suggest (schema `Place`).
 
 **Parameters**
 
@@ -202,6 +250,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "poi-51234",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -210,12 +259,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Tankstelle Am Stadtrand"
+        "type": "poi",
+        "name": "Tankstelle Am Stadtrand",
+        "place_formatted": "Tankstelle, Wien",
+        "relevance": 1,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "distance": 412,
+        "zoom": 16,
+        "category": "gas_station",
+        "maki": "fuel"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

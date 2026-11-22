@@ -34,7 +34,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    popup.setLngLat(e.lngLat).setText(f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
+    popup.setLngLat(e.lngLat).setText(f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
   } catch (err) { popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map); }
 });
 ````
@@ -66,7 +66,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    label.textContent = f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby');
+    label.textContent = f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby');
   } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
   popup.setPosition(e.coordinate);
 });
@@ -97,7 +97,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    show(e.latlng, f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby'));
+    show(e.latlng, f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby'));
   } catch (err) { show(e.latlng, (de ? 'Fehler: ' : 'Error: ') + err.message); }
 });
 ````

@@ -12,9 +12,9 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s), `heavy` (3
 
 `GET /v1/geocode`
 
-Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Orte von Interesse. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `place_type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
+Suche über das amtliche Adressregister, Straßen, Orte, Gemeinden, Bezirke, Postleitzahlen und Orte von Interesse. Straßenkilometer: `B83 km 329,7`, `A1 km 41` oder `L190 km 3.5` (Klasse A, S, B oder L, Nummer, das Wort `km`) liefern den Punkt der Straße bei diesem Kilometer als `properties.type` `road_ref` mit `properties.road_ref` (`ref`, `km`); der Index enthält auf Autobahnen, Schnellstraßen und Bundesstraßen alle 0,1 km einen Punkt und auf Landesstraßen alle 0,5 km (GIP.at), geliefert wird der nächstgelegene; dieselbe Landesstraßennummer in mehreren Bundesländern ergibt mehrere Treffer.
 
-Adressen: nennt die Eingabe nach der Hausnummer einen Ort oder eine PLZ (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), kommen Treffer in diesem Ort zuerst; gibt es die Nummer dort nicht, folgen die Grundnummer (`12` zu `12a`), die Straße in diesem Ort und die nächsten Nummern, nie zuerst dieselbe Nummer in einem anderen Ort. Hausnummernbereiche (`1-3`, `15 - 16`) bleiben Bereiche. Häufige Abkürzungen werden ausgeschrieben (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Koordinaten als Suchtext (`16.37,48.21` oder `48.21, 16.37`, beide mit Dezimalpunkt; Reihenfolge aus dem Wertebereich Österreichs erkannt) antworten wie `/v1/reverse` mit `query` [lon, lat]. Antwort: FeatureCollection mit `place_type`, `place_name`, `center`, `geometry`, `bbox`; `relevance` ist der Trefferwert der Suche (0 bis 1, niedriger beim Rückfall auf Grundnummer, Straße oder Nachbarnummer); bei Adressen und Straßen enthält `properties.address` die Felder einzeln (`street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`), und `properties.accuracy` ist `rooftop` (Punkt am Gebäude), `parcel` (Punkt am Grundstück) oder `street`. Gewässer (Seen, Flüsse, Bäche aus den BEV-Geonamen) sind Treffer vom Typ `place` mit `properties.class` `see`, `fluss`, `bach` oder `gewaesser`. `query` listet die Suchwörter ohne Satzzeichen. Für günstige Abfragen immer `types` angeben.
+Adressen: nennt die Eingabe nach der Hausnummer einen Ort oder eine PLZ (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), kommen Treffer in diesem Ort zuerst; gibt es die Nummer dort nicht, folgen die Grundnummer (`12` zu `12a`), die Straße in diesem Ort und die nächsten Nummern, nie zuerst dieselbe Nummer in einem anderen Ort. Hausnummernbereiche (`1-3`, `15 - 16`) bleiben Bereiche. Häufige Abkürzungen werden ausgeschrieben (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Koordinaten als Suchtext (`16.37,48.21` oder `48.21, 16.37`, beide mit Dezimalpunkt; Reihenfolge aus dem Wertebereich Österreichs erkannt) antworten wie `/v1/reverse` mit `query` [lon, lat]. Antwort: FeatureCollection im gemeinsamen Format aller Such-Endpunkte (Schema `Place`): `id`, Punkt-`geometry`, `bbox` bei Flächen, und in `properties` immer `type`, `name`, `place_formatted`, `relevance` (Trefferwert der Suche, 0 bis 1, niedriger beim Rückfall auf Grundnummer, Straße oder Nachbarnummer), `accuracy` (`rooftop` = Punkt am Gebäude, `parcel` = Punkt am Grundstück, `street`, sonst `null`) und `address` (die Felder einzeln: `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, nur vorhandene); mit `proximity` auch `distance` (m). Gewässer (Seen, Flüsse, Bäche aus den BEV-Geonamen) sind Treffer vom Typ `place` mit `properties.class` `see`, `fluss`, `bach` oder `gewaesser`. `query` listet die Suchwörter ohne Satzzeichen. Für günstige Abfragen immer `types` angeben.
 
 **Parameter**
 
@@ -61,17 +61,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6792483",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 0.97,
+      "id": "address-6792483",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.365282,
+          48.210154
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Herrengasse 13",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 0.97,
+        "accuracy": "parcel",
         "address": {
           "street": "Herrengasse",
           "housenumber": "13",
@@ -82,26 +86,20 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel"
-      },
-      "text": "Herrengasse 13",
-      "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.365282,
-        48.210154
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.365282,
-          48.210154
-        ]
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -113,7 +111,7 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Geocoding, Mapbox-Pfadform {#forward-geocoding-mapbox-path-form}
+## Geocoding, Pfadform {#forward-geocoding-path-form}
 
 `GET /v1/geocode/{q}`
 
@@ -164,30 +162,33 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "station-at_49_1320",
       "type": "Feature",
-      "place_type": [
-        "poi"
-      ],
-      "relevance": 0.999,
-      "properties": {
-        "mapx_type": "station",
-        "class": "station",
-        "context": "Bahnhof, Wien",
-        "zoom": 15,
-        "category": "train_station"
-      },
-      "text": "Wien Stephansplatz",
-      "place_name": "Wien Stephansplatz, Bahnhof, Wien",
-      "center": [
-        16.371607,
-        48.208086
-      ],
+      "id": "station-at_49_1320",
       "geometry": {
         "type": "Point",
         "coordinates": [
           16.371607,
           48.208086
+        ]
+      },
+      "properties": {
+        "type": "poi",
+        "name": "Wien Stephansplatz",
+        "place_formatted": "Bahnhof, Wien",
+        "relevance": 0.999,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 15,
+        "class": "station",
+        "category": "train_station",
+        "maki": "rail",
+        "stop_id": "at:49:1320",
+        "modes": [
+          "subway"
         ]
       }
     }
@@ -195,6 +196,13 @@ data = res.json()
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -210,7 +218,7 @@ data = res.json()
 
 `GET /v1/reverse`
 
-Nächste Objekte um einen Punkt, das nächste zuerst, jeweils mit `properties.distance` (Meter vom Punkt) und den Feldern von geocode (`properties.address`, `properties.accuracy`). Mit `types` einschränken (z. B. `address`). Eine Koordinate, die keine Zahl ist oder außerhalb des Wertebereichs liegt, ergibt 400 `invalid-coordinates` mit `param` `lng` bzw.
+Nächste Objekte um einen Punkt, das nächste zuerst, im selben Format wie geocode (Schema `Place`), jeweils mit `properties.distance` (Meter vom Punkt); `relevance` ist 1. Mit `types` einschränken (z. B. `address`). Eine Koordinate, die keine Zahl ist oder außerhalb des Wertebereichs liegt, ergibt 400 `invalid-coordinates` mit `param` `lng` bzw.
 
 `lat`; `limit` und `radius` werden getrennt geprüft (400 `invalid-parameter`). Für einen Punkt außerhalb Österreichs hat die Antwort keine Features und einen Hinweis `warning` (oft ist die Reihenfolge vertauscht; sie lautet lng, lat).
 
@@ -218,7 +226,7 @@ Nächste Objekte um einen Punkt, das nächste zuerst, jeweils mit `properties.di
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `lng` | query | string | ja | – | Länge (auch `lon`, `longitude`) |
+| `lng` | query | string | ja | – | Länge |
 | `lat` | query | string | ja | – | Breite |
 | `radius` | query | string |  | `500` | Meter, 1 bis 5000, Standard 500 |
 | `limit` | query | string |  | `1` | 1 bis 10, Standard 1 |
@@ -259,17 +267,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6793782",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 1,
+      "id": "address-6793782",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.372605,
+          48.208728
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Stephansplatz 1",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 1,
+        "accuracy": "parcel",
         "address": {
           "street": "Stephansplatz",
           "housenumber": "1",
@@ -280,27 +292,21 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel",
-        "distance": 27
-      },
-      "text": "Stephansplatz 1",
-      "place_name": "Stephansplatz 1, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.372605,
-        48.208728
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.372605,
-          48.208728
-        ]
+        "distance": 27,
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -316,7 +322,7 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array in Eingabereihenfolge mit einer FeatureCollection je Eintrag (gleiche Felder wie geocode, samt Ortsvorrang und Koordinaten als `q`); ein ungültiger Eintrag lässt den Batch nicht scheitern, sondern wird an seiner Stelle mit einem Problem-Objekt beantwortet (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
+JSON-Array; jeder Eintrag hat `q` oder strukturiert `street`/`housenumber`/`postcode`/`place`, optional `types` (String oder Liste), `limit` (1 bis 10), `proximity` [lon,lat], `bbox`. Antwort: Array in Eingabereihenfolge mit einer FeatureCollection je Eintrag (gleiches Format wie geocode, Schema `Place`, samt Ortsvorrang und Koordinaten als `q`; ohne `distance`); ein ungültiger Eintrag lässt den Batch nicht scheitern, sondern wird an seiner Stelle mit einem Problem-Objekt beantwortet (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
@@ -399,21 +405,26 @@ data = res.json()
   {
     "type": "FeatureCollection",
     "query": [
-      "Herrengasse"
+      "Herrengasse",
+      "13"
     ],
     "features": [
       {
-        "id": "address-6792483",
         "type": "Feature",
-        "place_type": [
-          "address"
-        ],
-        "relevance": 0.97,
+        "id": "address-6792483",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            16.365282,
+            48.210154
+          ]
+        },
         "properties": {
-          "mapx_type": "address",
-          "class": null,
-          "context": "Innere Stadt, 1010 Wien, W",
-          "zoom": 18,
+          "type": "address",
+          "name": "Herrengasse 13",
+          "place_formatted": "Innere Stadt, 1010 Wien, W",
+          "relevance": 0.97,
+          "accuracy": "parcel",
           "address": {
             "street": "Herrengasse",
             "housenumber": "13",
@@ -424,20 +435,7 @@ data = res.json()
             "district": "Wien (Stadt)",
             "state": "Wien"
           },
-          "accuracy": "parcel"
-        },
-        "text": "Herrengasse 13",
-        "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-        "center": [
-          16.365282,
-          48.210154
-        ],
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            16.365282,
-            48.210154
-          ]
+          "zoom": 18
         }
       }
     ],
@@ -451,7 +449,8 @@ data = res.json()
     "code": "invalid-parameter",
     "param": "types",
     "allowed": [
-      "address"
+      "address",
+      "street"
     ]
   }
 ]

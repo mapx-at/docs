@@ -257,7 +257,7 @@ Source: https://docs.mapx.at/start/first-search/
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1" | jq '.features[0] | {place_name, center}'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1" | jq '.features[0] | {name: .properties.name, place_formatted: .properties.place_formatted, coordinates: .geometry.coordinates}'
 ```
 
 **JavaScript**
@@ -265,7 +265,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q=
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const { features } = await res.json();
-console.log(features[0].place_name, features[0].center); // center is [lon, lat]
+console.log(features[0].properties.name, features[0].geometry.coordinates); // coordinates are [lon, lat]
 ```
 
 **Python**
@@ -275,10 +275,10 @@ import requests
 
 res = requests.get("https://api.mapx.at/v1/geocode", params={"q": "Stephansplatz 1, Wien", "types": "address", "limit": 1}, headers={"Authorization": "Bearer YOUR_TOKEN"})
 feature = res.json()["features"][0]
-print(feature["place_name"], feature["center"])
+print(feature["properties"]["name"], feature["properties"]["place_formatted"], feature["geometry"]["coordinates"])
 ```
 
-The response is a GeoJSON `FeatureCollection`; the `curl` example returns, for example, `{"place_name":"Stephansplatz 1, Innere Stadt, 1010 Wien, W","center":[16.372605,48.208728]}`. On `401` or `403` see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Each feature has `place_name`, `center` (`lon,lat`) and `geometry`. `types=address` limits the results to addresses; without it a street or place can come first even for a house number.
+The response is a GeoJSON `FeatureCollection`; the `curl` example returns, for example, `{"name":"Stephansplatz 1","place_formatted":"Innere Stadt, 1010 Wien, W","coordinates":[16.372605,48.208728]}`. On `401` or `403` see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). Each feature has an `id`, a point `geometry` (`[lon, lat]`) and in `properties` the fields `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address` (street, house number, postcode, place … separately); Search Box and Autofill answer in the same format. `types=address` limits the results to addresses; without it a street or place can come first even for a house number.
 
 ## Show the result on the map
 
@@ -287,8 +287,8 @@ Add this to the page from [First map](https://docs.mapx.at/start/first-map.md) a
 ```js
 const res = await fetch("https://api.mapx.at/v1/geocode?q=Stephansplatz%201,%20Wien&types=address&limit=1", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const [hit] = (await res.json()).features;
-new maplibregl.Marker().setLngLat(hit.center).addTo(map);
-map.flyTo({ center: hit.center, zoom: 16 });
+new maplibregl.Marker().setLngLat(hit.geometry.coordinates).addTo(map);
+map.flyTo({ center: hit.geometry.coordinates, zoom: 16 });
 ```
 
 ## Next
@@ -661,32 +661,32 @@ All data is official: the address register, place names, administrative boundari
 ```js
 const url = "https://api.mapx.at/v1/geocode?q=Herrengasse%2013,%201010%20Wien&types=address&limit=3";
 const { features } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const [lon, lat] = features[0].center;
+const [lon, lat] = features[0].geometry.coordinates;
 ```
 
 `features` can be empty; check the length before you read `features[0]`. Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
-Postcode, place, street and house number come as separate fields in `properties.address`, no need to split `place_name`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
+All search endpoints (geocode, reverse, batch, Search Box, Autofill) answer in the same format: a GeoJSON `FeatureCollection`, each hit with a stable `id`, a point `geometry` and in `properties` the fields `type`, `name`, `place_formatted` (display line: `name, place_formatted`), `relevance`, `accuracy` and `address`. Postcode, place, street and house number come as separate fields in `properties.address`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
 
 ## Reverse geocode
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].place_name'
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/reverse?lng=16.3725&lat=48.2085&types=address&limit=1" | jq '.features[0].properties | {name, place_formatted, distance}'
 ```
 
 ## Type-ahead search
 
-Call `suggest` on every pause in typing (debounce 200 ms), then `retrieve` once for the chosen entry. Send the same `session_token` for both calls.
+Call `suggest` on every pause in typing (debounce 200 ms). Suggestions already carry the coordinates; `retrieve` returns a single hit again by its `id` (for example one saved earlier). `session_token` is optional and has no effect.
 
 ```js
 const token = crypto.randomUUID();
 const s = await (await fetch(`https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&proximity=16.3725,48.2085&limit=5&session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const id = s.suggestions[0].mapbox_id;
+const id = s.features[0].id;
 const r = await (await fetch(`https://api.mapx.at/v1/searchbox/retrieve/${id}?session_token=${token}`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 const [lon, lat] = r.features[0].geometry.coordinates;
 ```
 
-Suggestions carry a category (`poi_category_ids`, for example `place_of_worship_church`) and the administrative context. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](https://docs.mapx.at/examples/search.md).
+Points of interest carry a category (`properties.category`, for example `place_of_worship_church`) and the administrative fields in `properties.address`. Cancel the previous request when a new key is typed (`AbortController`). Example: [Search](https://docs.mapx.at/examples/search.md).
 
 ## Places by category
 
@@ -699,11 +699,12 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 
 ## Address forms
 
-Autofill returns split fields that map to form inputs.
+Autofill returns addresses only, with split fields in `properties.address` that map to form inputs.
 
 ```js
 const a = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013,%201010%20Wien&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-const { address_line1, postcode, place, coordinates } = a.suggestions[0];
+const { name, address } = a.features[0].properties; // address: street, housenumber, postcode, place, …
+const [lon, lat] = a.features[0].geometry.coordinates;
 ```
 
 Validation checks what the user typed:
@@ -1439,7 +1440,7 @@ Routing profiles are `driving`, `driving-traffic`, `driving-truck`, `cycling`, `
 
 ## Limits and counting
 
-Every tool call counts like an API call and appears in your usage view as MCP. Some tools make several API calls, for example free-text search in `search_places` (up to 11). The protocol messages themselves (each request to `/mcp`) are listed separately as product `mcp`; they do not use up the per-minute limit. The per-minute limit of your token (6000 by default) and the zone limits of the API apply, over MCP per token instead of per IP address ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB. Per token, at most 4 calls run at the same time; further ones wait or fail with a waiting time. If a limit is exceeded, the assistant gets an error message with a waiting time.
+Every tool call counts like an API call and appears in your usage view as MCP. Some tools make several API calls, for example `search_places` with `near_place` (one extra geocoding call) or free-text search with `near` (up to two when nothing lies within the radius). The protocol messages themselves (each request to `/mcp`) are listed separately as product `mcp`; they do not use up the per-minute limit. The per-minute limit of your token (6000 by default) and the zone limits of the API apply, over MCP per token instead of per IP address ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB. Per token, at most 4 calls run at the same time; further ones wait or fail with a waiting time. If a limit is exceeded, the assistant gets an error message with a waiting time.
 
 ## Errors
 
@@ -2748,9 +2749,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `properties.type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
-Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`; `relevance` is the match score of the search (0 to 1, lower for a fallback to the base number, street or a neighboring number); for addresses and streets `properties.address` holds the separate fields (`street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`) and `properties.accuracy` is `rooftop` (point on the building), `parcel` (point on the plot) or `street`. Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
+Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection in the format shared by all search endpoints (schema `Place`): `id`, point `geometry`, `bbox` for areas, and in `properties` always `type`, `name`, `place_formatted`, `relevance` (match score of the search, 0 to 1, lower for a fallback to the base number, street or a neighboring number), `accuracy` (`rooftop` = point on the building, `parcel` = point on the plot, `street`, otherwise `null`) and `address` (separate fields `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, only those present); with `proximity` also `distance` (m). Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
 
 **Parameters**
 
@@ -2797,17 +2798,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6792483",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 0.97,
+      "id": "address-6792483",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.365282,
+          48.210154
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Herrengasse 13",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 0.97,
+        "accuracy": "parcel",
         "address": {
           "street": "Herrengasse",
           "housenumber": "13",
@@ -2818,26 +2823,20 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel"
-      },
-      "text": "Herrengasse 13",
-      "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.365282,
-        48.210154
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.365282,
-          48.210154
-        ]
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -2849,7 +2848,7 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
 
-## Forward geocoding, Mapbox path form
+## Forward geocoding, path form
 
 `GET /v1/geocode/{q}`
 
@@ -2900,30 +2899,33 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "station-at_49_1320",
       "type": "Feature",
-      "place_type": [
-        "poi"
-      ],
-      "relevance": 0.999,
-      "properties": {
-        "mapx_type": "station",
-        "class": "station",
-        "context": "Bahnhof, Wien",
-        "zoom": 15,
-        "category": "train_station"
-      },
-      "text": "Wien Stephansplatz",
-      "place_name": "Wien Stephansplatz, Bahnhof, Wien",
-      "center": [
-        16.371607,
-        48.208086
-      ],
+      "id": "station-at_49_1320",
       "geometry": {
         "type": "Point",
         "coordinates": [
           16.371607,
           48.208086
+        ]
+      },
+      "properties": {
+        "type": "poi",
+        "name": "Wien Stephansplatz",
+        "place_formatted": "Bahnhof, Wien",
+        "relevance": 0.999,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 15,
+        "class": "station",
+        "category": "train_station",
+        "maki": "rail",
+        "stop_id": "at:49:1320",
+        "modes": [
+          "subway"
         ]
       }
     }
@@ -2931,6 +2933,13 @@ data = res.json()
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -2946,7 +2955,7 @@ data = res.json()
 
 `GET /v1/reverse`
 
-Nearest features around a point, nearest first, each with `properties.distance` (meters from the point) and the fields of geocode (`properties.address`, `properties.accuracy`). Use `types` to restrict (e.g. `address`). A coordinate that is not a number or out of range gives 400 `invalid-coordinates` with `param` `lng` or `lat`; `limit` and `radius` are checked separately (400 `invalid-parameter`).
+Nearest features around a point, nearest first, in the same format as geocode (schema `Place`), each with `properties.distance` (meters from the point); `relevance` is 1. Use `types` to restrict (e.g. `address`). A coordinate that is not a number or out of range gives 400 `invalid-coordinates` with `param` `lng` or `lat`; `limit` and `radius` are checked separately (400 `invalid-parameter`).
 
 For a point outside Austria the response has no features and a `warning` (often the order was swapped; it is lng, lat).
 
@@ -2954,7 +2963,7 @@ For a point outside Austria the response has no features and a `warning` (often 
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `lng` | query | string | yes | – | Longitude (also `lon`, `longitude`) |
+| `lng` | query | string | yes | – | Longitude |
 | `lat` | query | string | yes | – | Latitude |
 | `radius` | query | string |  | `500` | Meters, 1 to 5000, default 500 |
 | `limit` | query | string |  | `1` | 1 to 10, default 1 |
@@ -2995,17 +3004,21 @@ data = res.json()
   ],
   "features": [
     {
-      "id": "address-6793782",
       "type": "Feature",
-      "place_type": [
-        "address"
-      ],
-      "relevance": 1,
+      "id": "address-6793782",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.372605,
+          48.208728
+        ]
+      },
       "properties": {
-        "mapx_type": "address",
-        "class": null,
-        "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18,
+        "type": "address",
+        "name": "Stephansplatz 1",
+        "place_formatted": "Innere Stadt, 1010 Wien, W",
+        "relevance": 1,
+        "accuracy": "parcel",
         "address": {
           "street": "Stephansplatz",
           "housenumber": "1",
@@ -3016,27 +3029,21 @@ data = res.json()
           "district": "Wien (Stadt)",
           "state": "Wien"
         },
-        "accuracy": "parcel",
-        "distance": 27
-      },
-      "text": "Stephansplatz 1",
-      "place_name": "Stephansplatz 1, Innere Stadt, 1010 Wien, W",
-      "center": [
-        16.372605,
-        48.208728
-      ],
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          16.372605,
-          48.208728
-        ]
+        "distance": 27,
+        "zoom": 18
       }
     }
   ],
   "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -3052,7 +3059,7 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same fields as geocode, including the place precedence and coordinates as `q`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
+JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same format as geocode, schema `Place`, including the place precedence and coordinates as `q`; no `distance`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
@@ -3135,21 +3142,26 @@ data = res.json()
   {
     "type": "FeatureCollection",
     "query": [
-      "Herrengasse"
+      "Herrengasse",
+      "13"
     ],
     "features": [
       {
-        "id": "address-6792483",
         "type": "Feature",
-        "place_type": [
-          "address"
-        ],
-        "relevance": 0.97,
+        "id": "address-6792483",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            16.365282,
+            48.210154
+          ]
+        },
         "properties": {
-          "mapx_type": "address",
-          "class": null,
-          "context": "Innere Stadt, 1010 Wien, W",
-          "zoom": 18,
+          "type": "address",
+          "name": "Herrengasse 13",
+          "place_formatted": "Innere Stadt, 1010 Wien, W",
+          "relevance": 0.97,
+          "accuracy": "parcel",
           "address": {
             "street": "Herrengasse",
             "housenumber": "13",
@@ -3160,20 +3172,7 @@ data = res.json()
             "district": "Wien (Stadt)",
             "state": "Wien"
           },
-          "accuracy": "parcel"
-        },
-        "text": "Herrengasse 13",
-        "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
-        "center": [
-          16.365282,
-          48.210154
-        ],
-        "geometry": {
-          "type": "Point",
-          "coordinates": [
-            16.365282,
-            48.210154
-          ]
+          "zoom": 18
         }
       }
     ],
@@ -3187,7 +3186,8 @@ data = res.json()
     "code": "invalid-parameter",
     "param": "types",
     "allowed": [
-      "address"
+      "address",
+      "street"
     ]
   }
 ]
@@ -3222,7 +3222,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/searchbox/suggest`
 
-Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retrieve`), with category (`poi_category`, `poi_category_ids`, `maki`) and `context`. Official POIs.
+Search as you type over addresses, streets, places and official points of interest. FeatureCollection in the same format as geocode (schema `Place`, with point geometry); points of interest also carry `category` and `maki`, stops `stop_id` and `modes`. `/retrieve/{id}` returns a single hit by its `id`.
 
 **Parameters**
 
@@ -3264,20 +3264,46 @@ data = res.json()
 
 ```json
 {
-  "suggestions": [
+  "type": "FeatureCollection",
+  "features": [
     {
-      "name": "Stephansdom",
-      "mapbox_id": "poi-4711",
-      "feature_type": "poi",
-      "place_formatted": "Place of worship, Wien",
-      "poi_category": [
-        "place_of_worship"
-      ]
+      "type": "Feature",
+      "id": "place-7158611",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3731,
+          48.2085
+        ]
+      },
+      "properties": {
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
+      }
     }
   ],
-  "attribution": "mapx.at; ..."
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -3293,13 +3319,13 @@ data = res.json()
 
 `GET /v1/searchbox/retrieve/{id}`
 
-FeatureCollection with one feature (point, bbox, coordinates, context); 404 for an unknown id.
+FeatureCollection with the one hit, in the same format as suggest and geocode (schema `Place`); 404 for an unknown id.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `id` | path | string | yes | – | `mapbox_id` from suggest |
+| `id` | path | string | yes | – | `id` of a hit from suggest, geocode or category |
 | `session_token` | query | string |  | – | As in suggest |
 | `proximity` | query | string |  | – | lon,lat, only for the distance |
 
@@ -3308,7 +3334,7 @@ FeatureCollection with one feature (point, bbox, coordinates, context); 404 for 
 **curl**
 
 ```bash
-ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.suggestions[0].mapbox_id')
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.features[0].id')
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/$ID" | jq
 ```
 
@@ -3317,7 +3343,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 ```js
 const headers = { Authorization: "Bearer YOUR_TOKEN" };
 const s = await (await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", { headers })).json();
-const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.suggestions[0].mapbox_id), { headers });
+const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.features[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -3328,7 +3354,7 @@ import requests
 
 h = {"Authorization": "Bearer YOUR_TOKEN"}
 s = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", headers=h).json()
-res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["suggestions"][0]["mapbox_id"], headers=h)
+res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["features"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -3340,6 +3366,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "place-7158611",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3348,12 +3375,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Stephansdom"
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -3369,7 +3417,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity`. Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`).
+Places of the category (several comma-separated), nearest first with `proximity` (then with `properties.distance`). Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`). Same format as suggest (schema `Place`).
 
 **Parameters**
 
@@ -3412,6 +3460,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "poi-51234",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3420,12 +3469,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Tankstelle Am Stadtrand"
+        "type": "poi",
+        "name": "Tankstelle Am Stadtrand",
+        "place_formatted": "Tankstelle, Wien",
+        "relevance": 1,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "distance": 412,
+        "zoom": 16,
+        "category": "gas_station",
+        "maki": "fuel"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -3514,15 +3584,15 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`. A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
+Official address register only (BEV). Completes street, house number, postcode and place. FeatureCollection of addresses in the same format as geocode (schema `Place`, separate fields in `properties.address`, with `distance` for `proximity`). A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Partial input, e.g. `Hauptpl 3 Mel` |
-| `session_token` | query | string |  | – | Session id (1 to 64 characters), echoed back |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses |
+| `session_token` | query | string |  | – | Arbitrary session id (up to 128 printable characters), no effect |
+| `proximity` | query | string |  | – | lon,lat, prefers near addresses, also returns the distance |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -3553,24 +3623,48 @@ data = res.json()
 
 ```json
 {
-  "session_token": "abc-1",
-  "suggestions": [
+  "type": "FeatureCollection",
+  "features": [
     {
-      "id": "address-1234567",
-      "address_line1": "Hauptplatz 3",
-      "street": "Hauptplatz",
-      "housenumber": "3",
-      "postcode": "3390",
-      "place": "Melk",
-      "full_address": "Hauptplatz 3, 3390 Melk",
-      "coordinates": [
-        15.3298,
-        48.2273
-      ]
+      "type": "Feature",
+      "id": "address-6444189",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.329874,
+          48.227329
+        ]
+      },
+      "properties": {
+        "type": "address",
+        "name": "Hauptplatz 3",
+        "place_formatted": "3390 Melk, NÖ",
+        "relevance": 0.97,
+        "accuracy": "rooftop",
+        "address": {
+          "street": "Hauptplatz",
+          "housenumber": "3",
+          "postcode": "3390",
+          "place": "Melk",
+          "locality": "Melk",
+          "municipality": "Melk",
+          "district": "Melk",
+          "state": "Niederösterreich"
+        },
+        "zoom": 18
+      }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -3586,9 +3680,7 @@ data = res.json()
 
 `GET /v1/autofill/retrieve/{id}`
 
-`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature; `features[].id` is the address id, `properties` carry the same fields as a suggestion (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
-
-`session_token` echoes the parameter (`null` without it). 404 for an unknown id.
+`id` of a suggestion (`address-<AdrCD>`). FeatureCollection with the one address, in the same format as suggest (schema `Place`). 404 for an unknown id.
 
 **Parameters**
 
@@ -3602,7 +3694,7 @@ data = res.json()
 **curl**
 
 ```bash
-ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1" | jq -r '.suggestions[0].id')
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1" | jq -r '.features[0].id')
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/$ID" | jq
 ```
 
@@ -3611,7 +3703,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/r
 ```js
 const headers = { Authorization: "Bearer YOUR_TOKEN" };
 const s = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", { headers })).json();
-const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/" + encodeURIComponent(s.suggestions[0].id), { headers });
+const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/" + encodeURIComponent(s.features[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -3622,7 +3714,7 @@ import requests
 
 h = {"Authorization": "Bearer YOUR_TOKEN"}
 s = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", headers=h).json()
-res = requests.get("https://api.mapx.at/v1/autofill/retrieve/" + s["suggestions"][0]["id"], headers=h)
+res = requests.get("https://api.mapx.at/v1/autofill/retrieve/" + s["features"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -3631,44 +3723,47 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
-  "session_token": null,
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
-      "id": "address-7065749",
+      "id": "address-6444189",
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.242382,
-          47.813929
+          15.329874,
+          48.227329
         ]
       },
       "properties": {
-        "id": "address-7065749",
-        "address_line1": "Herrengasse 13",
-        "street": "Herrengasse",
-        "housenumber": "13",
-        "postcode": "2700",
-        "place": "Wiener Neustadt",
-        "municipality": "Wiener Neustadt",
-        "state": "Niederösterreich",
-        "full_address": "Herrengasse 13, 2700 Wiener Neustadt",
-        "coordinates": [
-          16.242382,
-          47.813929
-        ]
+        "type": "address",
+        "name": "Hauptplatz 3",
+        "place_formatted": "3390 Melk, NÖ",
+        "relevance": 1,
+        "accuracy": "rooftop",
+        "address": {
+          "street": "Hauptplatz",
+          "housenumber": "3",
+          "postcode": "3390",
+          "place": "Melk",
+          "locality": "Melk",
+          "municipality": "Melk",
+          "district": "Melk",
+          "state": "Niederösterreich"
+        },
+        "zoom": 18
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
 
 | Field | Type | Description |
 |---|---|---|
-| `session_token` | string,null | The `session_token` parameter, echoed back (`null` without it). |
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
-| `features` | array | One point feature; `id` is the address id `address-<AdrCD>`, `properties` hold `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` and `coordinates` [lon, lat]. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -10232,7 +10327,7 @@ Source: https://docs.mapx.at/examples/search/
 
 > Search for places, addresses and peaks in Austria and fly to the hit on the map: geocoding API example with MapLibre GL JS and runnable code.
 
-The geocoding API returns a Mapbox-style GeoJSON `FeatureCollection`. Each hit has `place_name`, `center` and usually a `bbox` for zooming.
+The geocoding API returns a GeoJSON `FeatureCollection`. Each hit has a point `geometry`, `properties.name` and `properties.place_formatted` for the display line, and for areas a `bbox` for zooming.
 
 ## Code
 
@@ -10270,11 +10365,11 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         marker?.remove();
-        marker = new maplibregl.Marker().setLngLat(f.center).addTo(map);
-        f.bbox ? map.fitBounds([[f.bbox[0], f.bbox[1]], [f.bbox[2], f.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: f.center, zoom: f.properties.zoom ?? 14 });
+        marker = new maplibregl.Marker().setLngLat(f.geometry.coordinates).addTo(map);
+        f.bbox ? map.fitBounds([[f.bbox[0], f.bbox[1]], [f.bbox[2], f.bbox[3]]], { padding: 60, maxZoom: 17 }) : map.flyTo({ center: f.geometry.coordinates, zoom: f.properties.zoom ?? 14 });
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
@@ -10320,12 +10415,12 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         hit.clear();
-        hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.center))));
+        hit.addFeature(new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(f.geometry.coordinates))));
         const view = map.getView();
-        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 0 }) : (view.setCenter(ol.proj.fromLonLat(f.center)), view.setZoom((f.properties.zoom ?? 14) + 1));
+        f.bbox ? view.fit(ol.proj.transformExtent(f.bbox, 'EPSG:4326', 'EPSG:3857'), { padding: [60, 60, 60, 60], maxZoom: 18, duration: 0 }) : (view.setCenter(ol.proj.fromLonLat(f.geometry.coordinates)), view.setZoom((f.properties.zoom ?? 14) + 1));
         liste.replaceChildren();
       });
       li.append(b); liste.append(li);
@@ -10369,9 +10464,9 @@ eingabe.addEventListener('input', async () => {
     liste.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const f of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = f.place_name;
+      b.type = 'button'; b.textContent = [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
-        const [lng, lat] = f.center;
+        const [lng, lat] = f.geometry.coordinates;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
         f.bbox ? map.fitBounds([[f.bbox[1], f.bbox[0]], [f.bbox[3], f.bbox[2]]], { padding: [60, 60], maxZoom: 18, animate: false }) : map.setView([lat, lng], (f.properties.zoom ?? 14) + 1, { animate: false });
@@ -11279,7 +11374,7 @@ Source: https://docs.mapx.at/examples/search-box/
 
 > Suggestions while typing, position after the click and a type filter: type-ahead search with the mapx Search Box API, runnable code.
 
-Search Box works in two steps: `suggest` returns suggestions while the user types, `retrieve` returns the position of the chosen one. Use the same `session_token` for both calls and a new one for the next search. The type filter limits the suggestions.
+`suggest` returns suggestions with position while the user types, in the same format as geocoding; the example fetches the chosen one again with `retrieve` by its `id` (as you would for an id saved earlier). `session_token` is optional and has no effect. The type filter limits the suggestions.
 
 ## Code
 
@@ -11314,12 +11409,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {
@@ -11371,12 +11466,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {
@@ -11429,12 +11524,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {
@@ -11505,16 +11600,16 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
         marker?.remove();
-        marker = new maplibregl.Marker().setLngLat(s.coordinates).addTo(map);
-        map.flyTo({ center: s.coordinates, zoom: 16 });
+        marker = new maplibregl.Marker().setLngLat(s.geometry.coordinates).addTo(map);
+        map.flyTo({ center: s.geometry.coordinates, zoom: 16 });
         list.replaceChildren();
       });
       li.append(b); list.append(li);
@@ -11556,14 +11651,14 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
-        const at = ol.proj.fromLonLat(s.coordinates);
+        const at = ol.proj.fromLonLat(s.geometry.coordinates);
         hit.clear();
         hit.addFeature(new ol.Feature(new ol.geom.Point(at)));
         map.getView().setCenter(at), map.getView().setZoom(17); // jump instead of animating: fewer tile requests
@@ -11606,14 +11701,14 @@ f.street.addEventListener('input', async () => {
   try {
     const res = await fetch(`https://api.mapx.at/v1/autofill/suggest?q=${encodeURIComponent(f.street.value)}&limit=5&session_token=demo`, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = s.full_address;
+      b.type = 'button'; b.textContent = [s.properties.name, s.properties.place_formatted].filter(Boolean).join(', ');
       b.addEventListener('click', () => {
         for (const k of Object.keys(f)) f[k].value = s[k] ?? '';
-        const [lng, lat] = s.coordinates;
+        const [lng, lat] = s.geometry.coordinates;
         marker?.remove();
         marker = L.circleMarker([lat, lng], { radius: 8, color: '#fff', weight: 2, fillColor: '#2346d8', fillOpacity: 1 }).addTo(map);
         map.setView([lat, lng], 17, { animate: false }); // jump instead of flying: fewer tile requests
@@ -11798,7 +11893,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    popup.setLngLat(e.lngLat).setText(f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
+    popup.setLngLat(e.lngLat).setText(f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby')).addTo(map);
   } catch (err) { popup.setLngLat(e.lngLat).setText((de ? 'Fehler: ' : 'Error: ') + err.message).addTo(map); }
 });
 ````
@@ -11830,7 +11925,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    label.textContent = f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby');
+    label.textContent = f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby');
   } catch (err) { label.textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
   popup.setPosition(e.coordinate);
 });
@@ -11861,7 +11956,7 @@ map.on('click', async (e) => {
     const res = await fetch(`https://api.mapx.at/v1/reverse?lng=${lng}&lat=${lat}&limit=1&types=address,street,place`, AUTH);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const f = (await res.json()).features[0];
-    show(e.latlng, f ? f.place_name : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby'));
+    show(e.latlng, f ? [f.properties.name, f.properties.place_formatted].filter(Boolean).join(', ') : (de ? 'In der Nähe nichts gefunden' : 'Nothing found nearby'));
   } catch (err) { show(e.latlng, (de ? 'Fehler: ' : 'Error: ') + err.message); }
 });
 ````

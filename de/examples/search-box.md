@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/examples/search-box/
 
 > Vorschläge beim Tippen, Position nach dem Klick und Typfilter: Suche mit Autovervollständigung über die mapx-Search-Box-API, lauffähiger Code.
 
-Die Search Box arbeitet in zwei Schritten: `suggest` liefert Vorschläge beim Tippen, `retrieve` die Position des gewählten. Für beide Aufrufe dasselbe `session_token` verwenden, für die nächste Suche ein neues. Der Typfilter begrenzt die Vorschläge.
+`suggest` liefert beim Tippen Vorschläge samt Position, im selben Format wie das Geocoding; das Beispiel holt den gewählten mit `retrieve` über seine `id` erneut (wie für eine früher gespeicherte Id). `session_token` ist optional und ohne Wirkung. Der Typfilter begrenzt die Vorschläge.
 
 ## Code
 
@@ -39,12 +39,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {
@@ -96,12 +96,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {
@@ -154,12 +154,12 @@ input.addEventListener('input', async () => {
   try {
     const res = await fetch(url, { ...AUTH, signal: ctrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const items = (await res.json()).suggestions;
+    const items = (await res.json()).features;
     list.replaceChildren(); // clear only now, so fast typing never shows two lists
     for (const s of items) {
       const li = document.createElement('li'), b = document.createElement('button');
-      b.type = 'button'; b.textContent = `${s.name} (${s.feature_type}) ${s.place_formatted ?? ''}`;
-      b.addEventListener('click', () => pick(s.mapbox_id));
+      b.type = 'button'; b.textContent = `${s.properties.name} (${s.properties.type}) ${s.properties.place_formatted}`;
+      b.addEventListener('click', () => pick(s.id));
       li.append(b); list.append(li);
     }
   } catch (e) {

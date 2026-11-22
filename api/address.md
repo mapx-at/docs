@@ -12,15 +12,15 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`. A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
+Official address register only (BEV). Completes street, house number, postcode and place. FeatureCollection of addresses in the same format as geocode (schema `Place`, separate fields in `properties.address`, with `distance` for `proximity`). A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Partial input, e.g. `Hauptpl 3 Mel` |
-| `session_token` | query | string |  | – | Session id (1 to 64 characters), echoed back |
-| `proximity` | query | string |  | – | lon,lat, prefers near addresses |
+| `session_token` | query | string |  | – | Arbitrary session id (up to 128 printable characters), no effect |
+| `proximity` | query | string |  | – | lon,lat, prefers near addresses, also returns the distance |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -51,24 +51,48 @@ data = res.json()
 
 ```json
 {
-  "session_token": "abc-1",
-  "suggestions": [
+  "type": "FeatureCollection",
+  "features": [
     {
-      "id": "address-1234567",
-      "address_line1": "Hauptplatz 3",
-      "street": "Hauptplatz",
-      "housenumber": "3",
-      "postcode": "3390",
-      "place": "Melk",
-      "full_address": "Hauptplatz 3, 3390 Melk",
-      "coordinates": [
-        15.3298,
-        48.2273
-      ]
+      "type": "Feature",
+      "id": "address-6444189",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          15.329874,
+          48.227329
+        ]
+      },
+      "properties": {
+        "type": "address",
+        "name": "Hauptplatz 3",
+        "place_formatted": "3390 Melk, NÖ",
+        "relevance": 0.97,
+        "accuracy": "rooftop",
+        "address": {
+          "street": "Hauptplatz",
+          "housenumber": "3",
+          "postcode": "3390",
+          "place": "Melk",
+          "locality": "Melk",
+          "municipality": "Melk",
+          "district": "Melk",
+          "state": "Niederösterreich"
+        },
+        "zoom": 18
+      }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
+| `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -84,9 +108,7 @@ data = res.json()
 
 `GET /v1/autofill/retrieve/{id}`
 
-`id` from `suggestions[].id` (`address-<AdrCD>`). FeatureCollection with one point feature; `features[].id` is the address id, `properties` carry the same fields as a suggestion (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`).
-
-`session_token` echoes the parameter (`null` without it). 404 for an unknown id.
+`id` of a suggestion (`address-<AdrCD>`). FeatureCollection with the one address, in the same format as suggest (schema `Place`). 404 for an unknown id.
 
 **Parameters**
 
@@ -100,7 +122,7 @@ data = res.json()
 **curl**
 
 ```bash
-ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1" | jq -r '.suggestions[0].id')
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1" | jq -r '.features[0].id')
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/retrieve/$ID" | jq
 ```
 
@@ -109,7 +131,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/autofill/r
 ```js
 const headers = { Authorization: "Bearer YOUR_TOKEN" };
 const s = await (await fetch("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", { headers })).json();
-const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/" + encodeURIComponent(s.suggestions[0].id), { headers });
+const res = await fetch("https://api.mapx.at/v1/autofill/retrieve/" + encodeURIComponent(s.features[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -120,7 +142,7 @@ import requests
 
 h = {"Authorization": "Bearer YOUR_TOKEN"}
 s = requests.get("https://api.mapx.at/v1/autofill/suggest?q=Herrengasse%2013%20Wien&limit=1", headers=h).json()
-res = requests.get("https://api.mapx.at/v1/autofill/retrieve/" + s["suggestions"][0]["id"], headers=h)
+res = requests.get("https://api.mapx.at/v1/autofill/retrieve/" + s["features"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -129,44 +151,47 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
-  "session_token": null,
-  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",
-      "id": "address-7065749",
+      "id": "address-6444189",
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.242382,
-          47.813929
+          15.329874,
+          48.227329
         ]
       },
       "properties": {
-        "id": "address-7065749",
-        "address_line1": "Herrengasse 13",
-        "street": "Herrengasse",
-        "housenumber": "13",
-        "postcode": "2700",
-        "place": "Wiener Neustadt",
-        "municipality": "Wiener Neustadt",
-        "state": "Niederösterreich",
-        "full_address": "Herrengasse 13, 2700 Wiener Neustadt",
-        "coordinates": [
-          16.242382,
-          47.813929
-        ]
+        "type": "address",
+        "name": "Hauptplatz 3",
+        "place_formatted": "3390 Melk, NÖ",
+        "relevance": 1,
+        "accuracy": "rooftop",
+        "address": {
+          "street": "Hauptplatz",
+          "housenumber": "3",
+          "postcode": "3390",
+          "place": "Melk",
+          "locality": "Melk",
+          "municipality": "Melk",
+          "district": "Melk",
+          "state": "Niederösterreich"
+        },
+        "zoom": 18
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
 
 | Field | Type | Description |
 |---|---|---|
-| `session_token` | string,null | The `session_token` parameter, echoed back (`null` without it). |
+| `query` | array | Geocoding only: the search words, or [lon, lat] for reverse geocoding and coordinates as search text. |
+| `features` | array | Hits, best or nearest first. Each is a GeoJSON point feature with a stable `id` (and `bbox` for areas); `properties` always hold `type`, `name`, `place_formatted`, `relevance`, `accuracy` and `address`, depending on the hit also `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (schema `Place`). |
+| `warning` | string | Reverse geocoding only: the point is outside Austria. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
-| `features` | array | One point feature; `id` is the address id `address-<AdrCD>`, `properties` hold `id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address` and `coordinates` [lon, lat]. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

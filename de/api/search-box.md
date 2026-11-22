@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/searchbox/suggest`
 
-Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retrieve`), mit Kategorie (`poi_category`, `poi_category_ids`, `maki`) und `context`. Amtliche POIs.
+Suche beim Tippen über Adressen, Straßen, Orte und amtliche POIs. FeatureCollection im selben Format wie geocode (Schema `Place`, mit Punktgeometrie); POIs tragen zusätzlich `category` und `maki`, Haltestellen `stop_id` und `modes`. `/retrieve/{id}` liefert einen einzelnen Treffer über seine `id`.
 
 **Parameter**
 
@@ -54,20 +54,46 @@ data = res.json()
 
 ```json
 {
-  "suggestions": [
+  "type": "FeatureCollection",
+  "features": [
     {
-      "name": "Stephansdom",
-      "mapbox_id": "poi-4711",
-      "feature_type": "poi",
-      "place_formatted": "Place of worship, Wien",
-      "poi_category": [
-        "place_of_worship"
-      ]
+      "type": "Feature",
+      "id": "place-7158611",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3731,
+          48.2085
+        ]
+      },
+      "properties": {
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
+      }
     }
   ],
-  "attribution": "mapx.at; ..."
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -83,13 +109,13 @@ data = res.json()
 
 `GET /v1/searchbox/retrieve/{id}`
 
-FeatureCollection mit einem Objekt (Punkt, bbox, Koordinaten, Kontext); 404 bei unbekannter Id.
+FeatureCollection mit diesem einen Treffer, im selben Format wie suggest und geocode (Schema `Place`); 404 bei unbekannter Id.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `id` | path | string | ja | – | `mapbox_id` aus suggest |
+| `id` | path | string | ja | – | `id` eines Treffers aus suggest, geocode oder category |
 | `session_token` | query | string |  | – | Wie bei suggest |
 | `proximity` | query | string |  | – | lon,lat, nur für die Entfernung |
 
@@ -98,7 +124,7 @@ FeatureCollection mit einem Objekt (Punkt, bbox, Koordinaten, Kontext); 404 bei 
 **curl**
 
 ```bash
-ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.suggestions[0].mapbox_id')
+ID=$(curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1" | jq -r '.features[0].id')
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/retrieve/$ID" | jq
 ```
 
@@ -107,7 +133,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/
 ```js
 const headers = { Authorization: "Bearer YOUR_TOKEN" };
 const s = await (await fetch("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", { headers })).json();
-const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.suggestions[0].mapbox_id), { headers });
+const res = await fetch("https://api.mapx.at/v1/searchbox/retrieve/" + encodeURIComponent(s.features[0].id), { headers });
 const data = await res.json();
 ```
 
@@ -118,7 +144,7 @@ import requests
 
 h = {"Authorization": "Bearer YOUR_TOKEN"}
 s = requests.get("https://api.mapx.at/v1/searchbox/suggest?q=Stephansdom&limit=1", headers=h).json()
-res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["suggestions"][0]["mapbox_id"], headers=h)
+res = requests.get("https://api.mapx.at/v1/searchbox/retrieve/" + s["features"][0]["id"], headers=h)
 data = res.json()
 ```
 
@@ -130,6 +156,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "place-7158611",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -138,12 +165,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Stephansdom"
+        "type": "place",
+        "name": "Stephansdom",
+        "place_formatted": "Kirche und Kapelle, Wien",
+        "relevance": 0.99,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "zoom": 16,
+        "class": "kirche",
+        "category": "place_of_worship_church",
+        "maki": "religious-christian"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -159,7 +207,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten zuerst. Ids wie in `/v1/searchbox/list/category` (z. B. `gas_station`, `train_station`).
+Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten zuerst (dann mit `properties.distance`). Ids wie in `/v1/searchbox/list/category` (z. B. `gas_station`, `train_station`). Gleiches Format wie suggest (Schema `Place`).
 
 **Parameter**
 
@@ -202,6 +250,7 @@ data = res.json()
   "features": [
     {
       "type": "Feature",
+      "id": "poi-51234",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -210,12 +259,33 @@ data = res.json()
         ]
       },
       "properties": {
-        "name": "Tankstelle Am Stadtrand"
+        "type": "poi",
+        "name": "Tankstelle Am Stadtrand",
+        "place_formatted": "Tankstelle, Wien",
+        "relevance": 1,
+        "accuracy": null,
+        "address": {
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "distance": 412,
+        "zoom": 16,
+        "category": "gas_station",
+        "maki": "fuel"
       }
     }
-  ]
+  ],
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `query` | array | Nur Geocoding: die Suchwörter, bzw. [lon, lat] bei Rückwärtssuche und Koordinaten als Suchtext. |
+| `features` | array | Treffer, der beste bzw. nächste zuerst. Jeder ist ein GeoJSON-Punkt-Feature mit stabiler `id` (und `bbox` bei Flächen); `properties` enthalten immer `type`, `name`, `place_formatted`, `relevance`, `accuracy` und `address`, je nach Treffer auch `distance`, `zoom`, `class`, `category`, `maki`, `stop_id`, `modes`, `road_ref` (Schema `Place`). |
+| `warning` | string | Nur Rückwärtssuche: der Punkt liegt außerhalb Österreichs. |
+| `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe verpflichtend. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
