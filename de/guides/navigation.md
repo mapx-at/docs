@@ -71,7 +71,7 @@ Der Router meidet Straßen, die für das Fahrzeug gesperrt sind: Gewichtsklassen
 
 ## Maut
 
-Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road` und `toll_road_m` zählen nur Sondermautstrecken; die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_m`. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
+Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road` und `toll_road_m` zählen nur Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_m`. `toll.vignette_m` zählt die Routenmeter auf Autobahnen und Schnellstraßen des Straßengraphen, ohne Rastplätze, Sondermautstrecken und die vignettenfreien Abschnitte der ASFINAG-Daten. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -86,7 +86,14 @@ Vignettenstraßen bleiben mit `exclude=toll` erlaubt. Quelle der Maut: ASFINAG, 
 
 ## Sperren
 
-Verbindliche Totalsperren aus den Verkehrsmeldungen (EVIS/ASFINAG) werden von `driving` und `driving-traffic` umfahren. Die betroffenen Straßen sind für die Routensuche gesperrt; `routes[].closures_avoided` listet die Sperren, die die Route ohne Sperren durchfahren hätte (`id`, `text`, `road`, `category`). Lässt sich eine Sperre nicht umfahren, führt die Route hindurch und `routes[].closures_unavoidable` nennt sie. Zeitlich bedingte Sperren (Wochentage, Uhrzeiten im Text) erschweren eine Straße nur und werden nicht gelistet. Quelle: ASFINAG, CC BY 4.0; Texte unverändert anzeigen.
+`driving`, `driving-traffic` und `driving-truck` umfahren jede aktive Vollsperre aus den Verkehrsmeldungen (EVIS/ASFINAG), also jede Meldung mit `closed: true` in [`/v1/traffic/incidents`](https://docs.mapx.at/de/api/traffic.md). Es gibt zwei Arten:
+
+| Art | Beispiel | Routing | `binding` |
+|---|---|---|---|
+| Verbindliche Sperre (EVIS-Vermerk mandatory, Verkehrsregelungen) | behördlich gesperrte Autobahnauffahrt | nie befahren | `true` |
+| Vollsperre ohne diesen Vermerk | Wintersperre einer Passstraße, Straßensperre wegen Bauarbeiten | nur als letzter Ausweg befahren, wenn Start oder Ziel an oder hinter der Sperre liegt | `false` |
+
+`routes[].closures_avoided` listet die Sperren, die die Route ohne Sperren durchfahren hätte (`id`, `text`, `road`, `category`, `binding`). Führt die Route trotzdem durch eine Sperre, weil Start oder Ziel an oder hinter ihr liegt, nennt sie `routes[].closures_unavoidable`; das als Warnung anzeigen. Zeitlich bedingte Regelungen (Wochentage oder Uhrzeiten nur im Text) werden nur gemieden, von `driving-traffic`, und nicht gelistet. Rad- und Fußprofile beachten die Sperren nicht, die Meldungen betreffen den Kfz-Verkehr. Quelle: ASFINAG, CC BY 4.0; Texte unverändert anzeigen.
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'

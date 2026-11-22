@@ -31,7 +31,21 @@ console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m ab Start) und p.elevations[i] (m) sind bereit für ein Diagramm
 ```
 
-Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Beispiel mit Diagramm: [Höhenprofil](https://docs.mapx.at/de/examples/elevation-profile.md). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.
+Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Anstieg und Abstieg werden mit 3 m Hysterese gezählt (`ascent_threshold_m`): eine Steigung oder ein Gefälle zählt erst, wenn sich die Höhe mindestens 3 m vom letzten Wendepunkt entfernt hat. Geländerauschen summiert sich so nicht auf, und die Summen hängen kaum von `samples` ab. Mit `model=dsm` zählen Bäume und Gebäude als Gelände, der Anstieg fällt höher aus.
+
+Eine Routengeometrie geht mit `POST /v1/elevation/profile` direkt ins Profil (GeoJSON-LineString, ein Feature oder `{"coordinates": [...]}`, bis 20000 Stützpunkte):
+
+```js
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7303,47.0792?geometries=geojson&overview=full", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).routes[0];
+const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?samples=200", {
+  method: "POST",
+  headers: { Authorization: "Bearer DEIN_TOKEN", "Content-Type": "application/json" },
+  body: JSON.stringify(route.geometry),
+})).json();
+console.log(prof.properties.ascent_m);
+```
+
+ Beispiel mit Diagramm: [Höhenprofil](https://docs.mapx.at/de/examples/elevation-profile.md). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.
 
 ## 3D-Gelände in der Karte
 

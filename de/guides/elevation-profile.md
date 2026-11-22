@@ -76,7 +76,7 @@ Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert
 
 Ein SVG-Diagramm mit Fläche und Linie der Höhe über der Strecke und darunter Länge, Aufstieg und Abstieg.
 
-> Je mehr `samples`, desto genauer der Auf- und Abstieg, aber desto mehr Rauschen. Mit `model=dsm` zeigt das Profil die Oberfläche (Bäume, Gebäude) statt des Geländes, siehe [DTM und DSM](https://docs.mapx.at/de/start/faq.md#was-ist-der-unterschied-zwischen-dtm-und-dsm). Ein Pfad hat 2 bis 512 Stützpunkte, `samples` 2 bis 1024.
+> Die einfache Summe in diesem Beispiel wächst mit `samples`, weil sie Geländerauschen mitzählt. [`/v1/elevation/profile`](https://docs.mapx.at/de/api/elevation.md) zählt Auf- und Abstieg stattdessen mit 3 m Hysterese, das hängt kaum von `samples` ab; für angezeigte Summen dessen `ascent_m` und `descent_m` verwenden. Mit `model=dsm` zeigt das Profil die Oberfläche (Bäume, Gebäude) statt des Geländes, siehe [DTM und DSM](https://docs.mapx.at/de/start/faq.md#was-ist-der-unterschied-zwischen-dtm-und-dsm). Ein Pfad hat 2 bis 512 Stützpunkte, `samples` 2 bis 1024.
 
 ## Nächste Schritte
 

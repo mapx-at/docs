@@ -22,7 +22,7 @@ Haltestellen derselben Station von verschiedenen Betreibern werden zusammengefü
 
 ## Abfahrtstafel
 
-Eine Haltestellen-`id` übergeben oder eine Koordinate, um die Abfahrten aller Haltestellen in der Umgebung zu erhalten.
+Eine Haltestellen-`id` übergeben oder eine Koordinate, um die Abfahrten aller Haltestellen in der Umgebung zu erhalten. Eine Steig-Id wie `at:43:7226:0:2` liefert nur die Abfahrten von diesem Steig (`stops[0]` hat dann `platform_id` und `platform`), die Stations-Id alle Steige.
 
 ```js
 const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8";
@@ -30,7 +30,9 @@ const { departures } = await (await fetch(url, { headers: { Authorization: "Bear
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 
-`time` ist ISO 8601 in Wiener Ortszeit. Ohne `time` gilt jetzt. Mit `time` (Format `JJJJ-MM-TTThh:mm`, Wiener Ortszeit) lässt sich ein späterer Start setzen, mit `horizon` (Sekunden, bis zu 24 Stunden) das Zeitfenster. Der Fahrplan gilt nur für einen begrenzten Zeitraum. Außerhalb davon antwortet die API mit `422`, und die Meldung (`detail`) nennt den gültigen Zeitraum.
+`time` ist ISO 8601 in Wiener Ortszeit. Ohne `time` gilt jetzt. Mit `time` (Format `JJJJ-MM-TTThh:mm`, Wiener Ortszeit) lässt sich ein späterer Start setzen, mit `horizon` (Sekunden, bis zu 24 Stunden) das Zeitfenster. Der Fahrplan gilt nur für einen begrenzten Zeitraum: `timetable.valid_from` und `timetable.valid_to` in jeder Antwort nennen ihn (rund um den Fahrplanwechsel im Dezember sind beide Fahrplanjahre zusammen geladen). Außerhalb davon antwortet die API mit `422`, und die Meldung (`detail`) nennt den gültigen Zeitraum. Ungültige Daten oder Uhrzeiten wie `2026-02-31` oder `T25:00` ergeben `400`. An den Tagen der Zeitumstellung stimmen die Zeiten; eine Ortszeit, die es nicht gibt (im Frühjahr zwischen 02:00 und 03:00), rückt in die Sommerzeit vor.
+
+`line.name` ist der Linienname für Fahrgäste, in Abfahrten und Verbindungen gleich: `U1`, `S50`, `R52`, Busnummern, Fernzüge mit Zugnummer wie `RJ 754`. `trip_short_name` enthält die Zugnummer.
 
 ## Verbindungssuche
 
@@ -38,7 +40,7 @@ for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.hea
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855" | jq '.routes[0].duration'
 ```
 
-Genau einen Start und ein Ziel übergeben. `depart_at` (früheste Abfahrt) oder `arrive_by` (späteste Ankunft) verwenden, jeweils im Format `JJJJ-MM-TTThh:mm` in Wiener Ortszeit; Standard ist jetzt. Die Antwort enthält mehrere Verbindungen in `routes[]` (Anzahl wählbar mit `routes`, siehe [ÖV-API](https://docs.mapx.at/de/api/transit.md)), dazu Fußwege auf dem Straßennetz und Fahrten mit Linie, Haltestellen und Zeiten.
+Genau einen Start und ein Ziel übergeben. `depart_at` (früheste Abfahrt) oder `arrive_by` (späteste Ankunft) verwenden, jeweils im Format `JJJJ-MM-TTThh:mm` in Wiener Ortszeit; Standard ist jetzt. Die Antwort enthält mehrere Verbindungen in `routes[]` (Anzahl wählbar mit `routes`, siehe [ÖV-API](https://docs.mapx.at/de/api/transit.md)), dazu Fußwege auf dem Straßennetz und Fahrten mit Linie, Haltestellen, Zeiten und Steig (`from.platform`, `to.platform`, `stops[].platform`, `null`, wenn unbekannt). Umsteigen an derselben Station dauert mindestens 2 Minuten, nach einem Fußweg bleibt mindestens 1 Minute bis zur Abfahrt. Mit `bike_transit` ist der erste Abschnitt mit dem Rad; das Rad bleibt an der Haltestelle, Umstiege und der letzte Abschnitt sind zu Fuß. Keine Haltestelle in Reichweite oder keine Verbindung: `422`.
 
 ## Erreichbarkeit mit ÖV
 

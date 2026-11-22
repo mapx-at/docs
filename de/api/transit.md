@@ -12,7 +12,9 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10
 
 `GET /v1/directions/transit/{coordinates}`
 
-Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten (Linie, Haltestellen, Zeiten). Zeit über `depart_at` (Standard jetzt) oder `arrive_by`, ISO 8601 in Wiener Ortszeit. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten (Linie, Haltestellen, Zeiten, `platform` bei `from`, `to` und `stops[]`, wenn bekannt, sonst null). Zeit über `depart_at` (Standard jetzt) oder `arrive_by`, ISO 8601 in Wiener Ortszeit; ungültige Daten oder Uhrzeiten wie `T25:00` oder `2026-02-31` ergeben 400.
+
+`line.name` ist der Linienname für Fahrgäste wie in `/v1/departures` (`U3`, `S50`, `R52`, Fernzüge mit Zugnummer wie `RJ 754`), `trip_short_name` die Zugnummer. Umsteigen an derselben Station dauert mindestens 2 Minuten, nach einem Fußweg bleibt mindestens 1 Minute bis zur Abfahrt. Höchstens `routes` Verbindungen, sortiert nach Ankunft (`depart_at`) bzw. nach Abfahrt, späteste zuerst (`arrive_by`); Verbindungen, die nicht besser als eine andere sind (nicht früher, nicht schneller, nicht weniger Fahrten), und Flügelzüge mit gleichen Zeiten erscheinen nur einmal. Ein direkter Fußweg steht vorne, wenn er nicht langsamer als die beste Fahrt ist. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`); außerhalb davon und wenn keine Haltestelle erreichbar ist oder keine Verbindung gefunden wird 422. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
@@ -51,26 +53,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -93,15 +100,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -120,7 +126,7 @@ data = res.json()
 
 `GET /v1/directions/bike_transit/{coordinates}`
 
-Wie transit, aber der erste und letzte Abschnitt mit dem Rad (Modus `cycling`, je bis 15 min); das Rad wird nicht mitgenommen.
+Wie transit, aber der erste Abschnitt mit dem Rad (Modus `cycling`, bis 15 min). Das Rad bleibt an der Einstiegshaltestelle (es wird nicht mitgenommen), Umstiege und der letzte Abschnitt sind zu Fuß. Kurze Wege können als direkte Radroute kommen.
 
 **Parameter**
 
@@ -159,26 +165,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -201,15 +212,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -228,16 +238,16 @@ data = res.json()
 
 `GET /v1/departures`
 
-Nächste Abfahrten an einer Haltestelle (Id aus `/v1/stops`, z. B. `at:43:7226`) oder an allen Haltestellen um eine Koordinate. Die Betriebstage folgen Kalender und Gültigkeitszeitraum des Fahrplans, Fahrten über Mitternacht sind enthalten. Je Abfahrt: Zeit, Linie (Name, Verkehrsmittel, route_type), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle.
+Nächste Abfahrten an einer Haltestelle (Id aus `/v1/stops`, z. B. `at:43:7226`) oder an allen Haltestellen um eine Koordinate. Die Betriebstage folgen Kalender und Gültigkeitszeitraum des Fahrplans, Fahrten über Mitternacht sind enthalten; an den Tagen der Zeitumstellung stimmen die Zeiten (GTFS-Zeiten zählen ab Mittag minus 12 Stunden).
 
-Die Zeiten stammen aus dem Soll-Fahrplan: `realtime` ist immer false. Außerhalb des Gültigkeitszeitraums 422, unbekannte Haltestelle 404. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+Je Abfahrt: Zeit, Linie (`name` wie bei transit: `U1`, `R52`, `RJ 754`; dazu `short_name`, `trip_short_name`, Verkehrsmittel, route_type), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle. Die Zeiten stammen aus dem Soll-Fahrplan: `realtime` ist immer false. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`, alle Fahrplanjahre zusammen). Außerhalb davon 422, unbekannte Haltestelle 404, ungültige Zeit 400. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
 | Name | Ort | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|---|
-| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`; eine Steig-Id wie `at:43:7226:0:2` wird zur Station zusammengefasst) oder lon,lat |
-| `time` | query | string |  | `now` | Startzeit, ISO 8601 (Ortszeit Wien) oder Unix-Sekunden, Standard jetzt |
+| `stop` | query | string | ja | – | Haltestellen-Id (IFOPT `at:<state>:<nr>`, alle Steige), Steig-Id wie `at:43:7226:0:2` (nur dieser Steig; `stops[0]` hat dann `platform_id` und `platform`) oder lon,lat |
+| `time` | query | string |  | `now` | Startzeit, ISO 8601 (Ortszeit Wien oder mit `Z`/Offset) oder Unix-Sekunden, Standard jetzt; eine Ortszeit in der Lücke der Umstellung auf Sommerzeit rückt in die Sommerzeit vor |
 | `limit` | query | string |  | `20` | 1 bis 100, Standard 20 |
 | `radius` | query | string |  | `300` | Nur mit lon,lat: Meter, 1 bis 2000, Standard 300 |
 | `horizon` | query | string |  | `14400` | Zeitfenster in Sekunden, 60 bis 86400, Standard 14400 |
@@ -317,7 +327,11 @@ data = res.json()
       "name": "Melk Bahnhof"
     }
   ],
-  "time": "2026-11-23T08:00:00+01:00"
+  "time": "2026-11-23T08:00:00+01:00",
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -337,7 +351,9 @@ data = res.json()
 
 `GET /v1/stops`
 
-Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) und `lines`.
+Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) und `lines` (Liniennamen wie in `/v1/departures`, Fernzüge als Gattung wie `RJ`, `RJX`, `IC`).
+
+Als lat,lon angegebene Koordinaten ergeben 400.
 
 **Parameter**
 

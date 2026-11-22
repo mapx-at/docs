@@ -31,7 +31,21 @@ console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
 
-Up to 1024 samples along a line of 2 to 512 vertices. Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
+Up to 1024 samples along a line of 2 to 512 vertices. Ascent and descent are counted with a 3 m hysteresis (`ascent_threshold_m`): a rise or fall counts only once the elevation has moved at least 3 m from the last turning point, so terrain noise does not add up and the totals hardly depend on `samples`. With `model=dsm` trees and buildings count as terrain and the ascent comes out higher.
+
+A route geometry goes straight into the profile with `POST /v1/elevation/profile` (GeoJSON LineString, a Feature or `{"coordinates": [...]}`, up to 20000 vertices):
+
+```js
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7303,47.0792?geometries=geojson&overview=full", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).routes[0];
+const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?samples=200", {
+  method: "POST",
+  headers: { Authorization: "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
+  body: JSON.stringify(route.geometry),
+})).json();
+console.log(prof.properties.ascent_m);
+```
+
+ Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
 
 ## 3D terrain in the map
 

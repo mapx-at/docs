@@ -28,7 +28,7 @@ Aufwendig:
 | `steps` | query | string |  | – | true für Abbiegehinweise |
 | `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
 | `overview` | query | string |  | – | simplified (Standard) \| full \| false |
-| `language` | query | string |  | – | de (Standard) oder en |
+| `language` | query | string |  | – | de (Standard) oder en; andere Werte 400 |
 
 **Beispiel**
 

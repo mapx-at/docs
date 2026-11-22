@@ -790,7 +790,7 @@ The router avoids roads closed to the vehicle: weight-class and trailer bans, he
 
 ## Tolls
 
-Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections; the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
+Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. `toll.vignette_m` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -805,7 +805,14 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 
 ## Closures
 
-Binding full closures from the traffic reports (EVIS/ASFINAG) are avoided by `driving` and `driving-traffic`. The roads concerned are blocked for the route search; `routes[].closures_avoided` lists the closures that the route without closures would have driven through (`id`, `text`, `road`, `category`). If a closure cannot be avoided, the route runs through it and `routes[].closures_unavoidable` lists it. Conditional closures (weekdays, hours in the text) only discourage a road and are not listed. Source: ASFINAG, CC BY 4.0; show the texts unchanged.
+`driving`, `driving-traffic` and `driving-truck` avoid every active full closure from the traffic reports (EVIS/ASFINAG), that is every report with `closed: true` in [`/v1/traffic/incidents`](https://docs.mapx.at/api/traffic.md). There are two kinds:
+
+| Kind | Example | Routing | `binding` |
+|---|---|---|---|
+| Binding closure (EVIS compliance option mandatory, traffic regulations) | motorway ramp closed by order | never driven | `true` |
+| Full closure without that flag | winter closure of a pass road, road closed for works | driven only as a last resort, when start or destination lies on or behind the closure | `false` |
+
+`routes[].closures_avoided` lists the closures that the route without closures would have driven through (`id`, `text`, `road`, `category`, `binding`). If the route still runs through a closure because start or destination lies on or behind it, `routes[].closures_unavoidable` lists it; show it to the user as a warning. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, by `driving-traffic`, and are not listed. Cycling and walking ignore the closures, the reports concern motor traffic. Source: ASFINAG, CC BY 4.0; show the texts unchanged.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
@@ -981,7 +988,7 @@ Stops of the same station from different operators are merged and share one `id`
 
 ## Departure board
 
-Pass a stop `id`, or a coordinate to get the departures of all stops around it.
+Pass a stop `id`, or a coordinate to get the departures of all stops around it. A platform id such as `at:43:7226:0:2` returns only the departures from that platform (`stops[0]` then carries `platform_id` and `platform`); the station id returns all platforms.
 
 ```js
 const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8";
@@ -989,7 +996,9 @@ const { departures } = await (await fetch(url, { headers: { Authorization: "Bear
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 
-`time` is ISO 8601 in Vienna local time. Without `time` the request starts now. Use `time` (format `YYYY-MM-DDThh:mm`, Vienna local time) for a later start and `horizon` (seconds, up to 24 hours) for the window. The timetable is valid for a limited period only. Outside it the API answers `422`, and the message (`detail`) names the valid period.
+`time` is ISO 8601 in Vienna local time. Without `time` the request starts now. Use `time` (format `YYYY-MM-DDThh:mm`, Vienna local time) for a later start and `horizon` (seconds, up to 24 hours) for the window. The timetable is valid for a limited period only: `timetable.valid_from` and `timetable.valid_to` in every response name it (around the December timetable change both timetable years are loaded together). Outside it the API answers `422`, and the message (`detail`) names the valid period. Invalid dates or times such as `2026-02-31` or `T25:00` answer `400`. On the days the clocks change the times are exact; a local time that does not exist (between 02:00 and 03:00 in spring) moves on to summer time.
+
+`line.name` is the line name passengers see, the same in departures and journeys: `U1`, `S50`, `R52`, bus numbers, long-distance trains by train number such as `RJ 754`. `trip_short_name` holds the train number.
 
 ## Journey planning
 
@@ -997,7 +1006,7 @@ for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.hea
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855" | jq '.routes[0].duration'
 ```
 
-Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops and times.
+Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops, times and platform (`from.platform`, `to.platform`, `stops[].platform`, `null` if unknown). Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. With `bike_transit` the first leg is cycled; the bike stays at the stop, changes and the last leg are walked. No stop within reach or no connection: `422`.
 
 ## Reachability by transit
 
@@ -1151,7 +1160,21 @@ console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
 
-Up to 1024 samples along a line of 2 to 512 vertices. Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
+Up to 1024 samples along a line of 2 to 512 vertices. Ascent and descent are counted with a 3 m hysteresis (`ascent_threshold_m`): a rise or fall counts only once the elevation has moved at least 3 m from the last turning point, so terrain noise does not add up and the totals hardly depend on `samples`. With `model=dsm` trees and buildings count as terrain and the ascent comes out higher.
+
+A route geometry goes straight into the profile with `POST /v1/elevation/profile` (GeoJSON LineString, a Feature or `{"coordinates": [...]}`, up to 20000 vertices):
+
+```js
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7303,47.0792?geometries=geojson&overview=full", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).routes[0];
+const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?samples=200", {
+  method: "POST",
+  headers: { Authorization: "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
+  body: JSON.stringify(route.geometry),
+})).json();
+console.log(prof.properties.ascent_m);
+```
+
+ Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
 
 ## 3D terrain in the map
 
@@ -1843,7 +1866,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
 
 An SVG chart with area and line of elevation over distance, with length, ascent and descent below.
 
-> More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](https://docs.mapx.at/start/faq.md#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
+> The simple sum in this example grows with `samples`, because it adds up terrain noise. [`/v1/elevation/profile`](https://docs.mapx.at/api/elevation.md) counts ascent and descent with a 3 m hysteresis instead, which hardly depends on `samples`; use its `ascent_m` and `descent_m` when you show totals. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](https://docs.mapx.at/start/faq.md#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
 
 ## Next steps
 
@@ -3958,7 +3981,7 @@ open("result.bin", "wb").write(res.content)
 
 Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving` and `driving-traffic` avoid binding full closures from the traffic reports (EVIS/ASFINAG) and list them in `routes[].closures_avoided`; `driving` without active closures along the route is unchanged. `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/flow`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving`, `driving-traffic` and `driving-truck` avoid the active full closures from the traffic reports (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Binding closures (EVIS compliance option mandatory, traffic regulations) are never driven; full closures without that flag, such as winter closures of passes, are driven only as a last resort, when start or destination lies on or behind them. `routes[].closures_avoided` lists the closures the route without closures would have used (`binding` tells the two apart), `routes[].closures_unavoidable` those the route still runs through. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, and only by `driving-traffic`. Cycling and walking ignore the closures (the reports concern motor traffic). `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/flow`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
 
 **Parameters**
 
@@ -3969,10 +3992,10 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `steps` | query | string |  | – | true for turn-by-turn steps (with maneuvers and intersections) |
 | `geometries` | query | string |  | – | geojson (default) \| polyline \| polyline6 |
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
-| `language` | query | string |  | – | de (default) or en |
+| `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
 | `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` |
+| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
@@ -4389,7 +4412,9 @@ data = res.json()
 
 `GET /v1/matching/{profile}/{coordinates}`
 
-2 to 100 GPS points snapped to the road network. Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
+2 to 100 GPS points snapped to the road network. Without timestamps a single point far off the trace (out and straight back, both legs over 300 m and together more than 3 times the direct distance) counts as an outlier: its tracepoint is `null` and the matching continues.
+
+Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lon, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
 
 **Parameters**
 
@@ -4398,7 +4423,7 @@ data = res.json()
 | `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
 | `coordinates` | path | string | yes | – | lon,lat;lon,lat;... |
 | `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
-| `radiuses` | query | string |  | – | Meters per point (largest value counts, 5 to 500) |
+| `radiuses` | query | string |  | – | One value per point, 5 to 500 m, semicolon-separated (the matcher searches candidates within the largest value); otherwise 400 |
 | `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
 
 **Example**
@@ -4442,6 +4467,7 @@ data = res.json()
 | `400` | A parameter is missing or invalid |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `422` | Valid request that cannot be answered (for example no route) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
 
@@ -4479,7 +4505,7 @@ Expensive: zone `heavy`.
 | `steps` | query | string |  | – | true for turn-by-turn steps |
 | `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
 | `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de (default) or en |
+| `language` | query | string |  | – | de (default) or en; other values 400 |
 
 **Example**
 
@@ -4679,7 +4705,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `search` (10/
 
 `GET /v1/directions/transit/{coordinates}`
 
-Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times, `platform` at `from`, `to` and `stops[]` where known, otherwise null). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time; invalid dates or times such as `T25:00` or `2026-02-31` answer 400.
+
+`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -4718,26 +4746,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -4760,15 +4793,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -4787,7 +4819,7 @@ data = res.json()
 
 `GET /v1/directions/bike_transit/{coordinates}`
 
-Like transit, but the first and last leg by bike (mode `cycling`, up to 15 min each); the bike is not taken on board.
+Like transit, but the first leg by bike (mode `cycling`, up to 15 min). The bike stays at the boarding stop (bikes are not taken on board), changes and the last leg are walked. Short trips may come as a direct bike route.
 
 **Parameters**
 
@@ -4826,26 +4858,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -4868,15 +4905,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -4895,16 +4931,16 @@ data = res.json()
 
 `GET /v1/departures`
 
-Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included. Per departure: time, line (name, mode, route_type), headsign, destination, platform (null if unknown), operator, stop.
+Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included; times are exact on the days clocks change (GTFS times count from noon minus 12 h).
 
-Times come from the scheduled timetable: `realtime` is always false. Outside the feed period 422, unknown station 404. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, mode, route_type), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, a platform id such as `at:43:7226:0:2` is merged into its station) or lon,lat |
-| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local) or Unix seconds, default now |
+| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lon,lat |
+| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local time, or with `Z`/offset) or Unix seconds, default now; a local time in the spring-forward gap moves on to summer time |
 | `limit` | query | string |  | `20` | 1 to 100, default 20 |
 | `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
 | `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
@@ -4984,7 +5020,11 @@ data = res.json()
       "name": "Melk Bahnhof"
     }
   ],
-  "time": "2026-11-23T08:00:00+01:00"
+  "time": "2026-11-23T08:00:00+01:00",
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -5004,7 +5044,9 @@ data = res.json()
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines`.
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
+
+Coordinates given as lat,lon answer 400.
 
 **Parameters**
 
@@ -5323,9 +5365,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `elevation` (10/s), `search`
 
 `GET /v1/elevation`
 
-Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. There is no POST form, and the gateway limits the request URL to about 8 KB (longer URLs get 414), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
+Either `points` (up to 512 points) or `path` (polyline on the sphere, split evenly by length into `samples` points). Outside the area `elevation` is null. The gateway limits the request URL to about 8 KB (longer URLs get 414 as problem+json), so in practice a GET carries about 400 points with 6 decimals, fewer with more digits.
 
-Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or use `/v1/elevation/profile`.
+Split larger point sets into several requests; for points along a line send only the vertices as `path` and let `samples` (up to 1024) do the sampling, or send the line to `POST /v1/elevation/profile` (up to 20000 vertices).
 
 **Parameters**
 
@@ -5465,15 +5507,17 @@ data = res.json()
 
 `GET /v1/elevation/profile`
 
-One GeoJSON line with z coordinate; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `min_m`, `max_m`.
+One GeoJSON line; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `ascent_threshold_m`, `min_m`, `max_m`. Ascent and descent are counted with hysteresis: a rise or fall counts only once the elevation has moved at least `ascent_threshold_m` (3 m) from the last turning point, so the totals hardly depend on `samples` and terrain noise is not summed up (flat Marchfeld, 9.6 km: 0 m instead of 46 m unfiltered; Grossglockner High Alpine Road up from Heiligenblut: about 1150 m).
+
+With `model=dsm` buildings and vegetation count as terrain, so ascent is higher. The line has z coordinates when every sample has an elevation; otherwise all positions are 2D and the gaps are `null` in `elevations`. For a route geometry use the POST form.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `coordinates` | query | string | yes | – | lon,lat;lon,lat;... (2 to 512 points) |
-| `samples` | query | string |  | `100` | 2 to 1024, default 100 |
-| `model` | query | string |  | – | dtm\|dsm |
+| `samples` | query | integer (2–1024) |  | `100` | 2 to 1024, default 100 |
+| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (terrain, default) or dsm (surface) |
 
 **Example**
 
@@ -5530,6 +5574,152 @@ data = res.json()
     ],
     "ascent_m": 9.5,
     "descent_m": 0,
+    "ascent_threshold_m": 3,
+    "min_m": 171,
+    "max_m": 180.5
+  }
+}
+```
+
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing or invalid |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+
+## Elevation profile for a line in the body (e.g. a route geometry)
+
+`POST /v1/elevation/profile`
+
+Same response as GET. Body: a GeoJSON LineString, a Feature with a LineString (e.g. `routes[0].geometry` from `/v1/directions?geometries=geojson&overview=full`) or `{"coordinates": [[lon, lat], ...]}`, 2 to 20000 vertices; `samples` and `model` in the body or as query parameters.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `samples` | query | integer (2–1024) |  | `100` | 2 to 1024, default 100 |
+| `model` | query | `dtm` \| `dsm` |  | `dtm` | dtm (default) or dsm |
+
+**Request body (JSON)**
+
+```json
+{
+  "type": "LineString",
+  "coordinates": [
+    [
+      12.8418,
+      47.0378
+    ],
+    [
+      12.7865,
+      47.0739
+    ],
+    [
+      12.7303,
+      47.0792
+    ]
+  ]
+}
+```
+
+**Example**
+
+**curl**
+
+```bash
+curl -s -X POST "https://api.mapx.at/v1/elevation/profile" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"LineString","coordinates":[[12.8418,47.0378],[12.7865,47.0739],[12.7303,47.0792]]}' | jq
+```
+
+**JavaScript**
+
+```js
+const res = await fetch("https://api.mapx.at/v1/elevation/profile", {
+  method: "POST",
+  headers: { "Authorization": "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
+  body: JSON.stringify({
+    "type": "LineString",
+    "coordinates": [
+      [
+        12.8418,
+        47.0378
+      ],
+      [
+        12.7865,
+        47.0739
+      ],
+      [
+        12.7303,
+        47.0792
+      ]
+    ]
+  }),
+});
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+res = requests.post("https://api.mapx.at/v1/elevation/profile", headers={"Authorization": "Bearer YOUR_TOKEN"}, json={
+    "type": "LineString",
+    "coordinates": [
+      [
+        12.8418,
+        47.0378
+      ],
+      [
+        12.7865,
+        47.0739
+      ],
+      [
+        12.7303,
+        47.0792
+      ]
+    ]
+  })
+data = res.json()
+```
+
+**Example response**
+
+```json
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [
+        16.37,
+        48.21,
+        171
+      ],
+      [
+        16.38,
+        48.22,
+        180.5
+      ]
+    ]
+  },
+  "properties": {
+    "distances": [
+      0,
+      1400
+    ],
+    "elevations": [
+      171,
+      180.5
+    ],
+    "ascent_m": 9.5,
+    "descent_m": 0,
+    "ascent_threshold_m": 3,
     "min_m": 171,
     "max_m": 180.5
   }

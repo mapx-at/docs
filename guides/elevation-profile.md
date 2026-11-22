@@ -76,7 +76,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
 
 An SVG chart with area and line of elevation over distance, with length, ascent and descent below.
 
-> More `samples` give a finer ascent and descent but also more noise. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](https://docs.mapx.at/start/faq.md#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
+> The simple sum in this example grows with `samples`, because it adds up terrain noise. [`/v1/elevation/profile`](https://docs.mapx.at/api/elevation.md) counts ascent and descent with a 3 m hysteresis instead, which hardly depends on `samples`; use its `ascent_m` and `descent_m` when you show totals. With `model=dsm` the profile follows the surface (trees, buildings) instead of the ground, see [DTM and DSM](https://docs.mapx.at/start/faq.md#what-is-the-difference-between-dtm-and-dsm). A path has 2 to 512 vertices, `samples` 2 to 1024.
 
 ## Next steps
 

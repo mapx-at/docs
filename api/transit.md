@@ -12,7 +12,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `search` (10/
 
 `GET /v1/directions/transit/{coordinates}`
 
-Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times, `platform` at `from`, `to` and `stops[]` where known, otherwise null). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time; invalid dates or times such as `T25:00` or `2026-02-31` answer 400.
+
+`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -51,26 +53,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -93,15 +100,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -120,7 +126,7 @@ data = res.json()
 
 `GET /v1/directions/bike_transit/{coordinates}`
 
-Like transit, but the first and last leg by bike (mode `cycling`, up to 15 min each); the bike is not taken on board.
+Like transit, but the first leg by bike (mode `cycling`, up to 15 min). The bike stays at the boarding stop (bikes are not taken on board), changes and the last leg are walked. Short trips may come as a direct bike route.
 
 **Parameters**
 
@@ -159,26 +165,31 @@ data = res.json()
 
 ```json
 {
+  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
+  "query": {
+    "depart_at": "2026-11-23T08:00:00+01:00",
+    "profile": "transit"
+  },
   "routes": [
     {
-      "arrival": "2026-11-23T08:12:51+01:00",
-      "departure": "2026-11-23T08:00:26+01:00",
+      "arrival": "2026-11-23T08:15:51+01:00",
+      "departure": "2026-11-23T08:01:26+01:00",
       "distance": 4801,
-      "duration": 745,
+      "duration": 865,
       "geometry": {
-        "type": "LineString",
         "coordinates": [
           [
             16.3725,
             48.2085
           ]
-        ]
+        ],
+        "type": "LineString"
       },
       "legs": [
         {
-          "arrival": "2026-11-23T08:02:00+01:00",
-          "departure": "2026-11-23T08:00:26+01:00",
+          "arrival": "2026-11-23T08:03:00+01:00",
+          "departure": "2026-11-23T08:01:26+01:00",
           "distance": 117,
           "duration": 94,
           "from": {
@@ -201,15 +212,14 @@ data = res.json()
       ],
       "summary": "U3",
       "transfers": 0,
-      "weight": 745,
+      "weight": 865,
       "weight_name": "duration"
     }
   ],
-  "query": {
-    "depart_at": "2026-11-23T08:00:00+01:00",
-    "profile": "transit"
-  },
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)"
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -228,16 +238,16 @@ data = res.json()
 
 `GET /v1/departures`
 
-Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included. Per departure: time, line (name, mode, route_type), headsign, destination, platform (null if unknown), operator, stop.
+Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included; times are exact on the days clocks change (GTFS times count from noon minus 12 h).
 
-Times come from the scheduled timetable: `realtime` is always false. Outside the feed period 422, unknown station 404. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, mode, route_type), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
-| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, a platform id such as `at:43:7226:0:2` is merged into its station) or lon,lat |
-| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local) or Unix seconds, default now |
+| `stop` | query | string | yes | – | Station id (IFOPT `at:<state>:<nr>`, all platforms), platform id such as `at:43:7226:0:2` (only this platform; `stops[0]` then carries `platform_id` and `platform`) or lon,lat |
+| `time` | query | string |  | `now` | Start time, ISO 8601 (Vienna local time, or with `Z`/offset) or Unix seconds, default now; a local time in the spring-forward gap moves on to summer time |
 | `limit` | query | string |  | `20` | 1 to 100, default 20 |
 | `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
 | `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
@@ -317,7 +327,11 @@ data = res.json()
       "name": "Melk Bahnhof"
     }
   ],
-  "time": "2026-11-23T08:00:00+01:00"
+  "time": "2026-11-23T08:00:00+01:00",
+  "timetable": {
+    "valid_from": "2025-12-14",
+    "valid_to": "2027-12-11"
+  }
 }
 ```
 
@@ -337,7 +351,9 @@ data = res.json()
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines`.
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
+
+Coordinates given as lat,lon answer 400.
 
 **Parameters**
 

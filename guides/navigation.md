@@ -71,7 +71,7 @@ The router avoids roads closed to the vehicle: weight-class and trailer bans, he
 
 ## Tolls
 
-Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections; the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
+Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. `toll.vignette_m` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -86,7 +86,14 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 
 ## Closures
 
-Binding full closures from the traffic reports (EVIS/ASFINAG) are avoided by `driving` and `driving-traffic`. The roads concerned are blocked for the route search; `routes[].closures_avoided` lists the closures that the route without closures would have driven through (`id`, `text`, `road`, `category`). If a closure cannot be avoided, the route runs through it and `routes[].closures_unavoidable` lists it. Conditional closures (weekdays, hours in the text) only discourage a road and are not listed. Source: ASFINAG, CC BY 4.0; show the texts unchanged.
+`driving`, `driving-traffic` and `driving-truck` avoid every active full closure from the traffic reports (EVIS/ASFINAG), that is every report with `closed: true` in [`/v1/traffic/incidents`](https://docs.mapx.at/api/traffic.md). There are two kinds:
+
+| Kind | Example | Routing | `binding` |
+|---|---|---|---|
+| Binding closure (EVIS compliance option mandatory, traffic regulations) | motorway ramp closed by order | never driven | `true` |
+| Full closure without that flag | winter closure of a pass road, road closed for works | driven only as a last resort, when start or destination lies on or behind the closure | `false` |
+
+`routes[].closures_avoided` lists the closures that the route without closures would have driven through (`id`, `text`, `road`, `category`, `binding`). If the route still runs through a closure because start or destination lies on or behind it, `routes[].closures_unavoidable` lists it; show it to the user as a warning. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, by `driving-traffic`, and are not listed. Cycling and walking ignore the closures, the reports concern motor traffic. Source: ASFINAG, CC BY 4.0; show the texts unchanged.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'

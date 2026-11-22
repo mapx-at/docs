@@ -22,7 +22,7 @@ Stops of the same station from different operators are merged and share one `id`
 
 ## Departure board
 
-Pass a stop `id`, or a coordinate to get the departures of all stops around it.
+Pass a stop `id`, or a coordinate to get the departures of all stops around it. A platform id such as `at:43:7226:0:2` returns only the departures from that platform (`stops[0]` then carries `platform_id` and `platform`); the station id returns all platforms.
 
 ```js
 const url = "https://api.mapx.at/v1/departures?stop=at:49:1320&limit=8";
@@ -30,7 +30,9 @@ const { departures } = await (await fetch(url, { headers: { Authorization: "Bear
 for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.headsign, d.platform ?? "");
 ```
 
-`time` is ISO 8601 in Vienna local time. Without `time` the request starts now. Use `time` (format `YYYY-MM-DDThh:mm`, Vienna local time) for a later start and `horizon` (seconds, up to 24 hours) for the window. The timetable is valid for a limited period only. Outside it the API answers `422`, and the message (`detail`) names the valid period.
+`time` is ISO 8601 in Vienna local time. Without `time` the request starts now. Use `time` (format `YYYY-MM-DDThh:mm`, Vienna local time) for a later start and `horizon` (seconds, up to 24 hours) for the window. The timetable is valid for a limited period only: `timetable.valid_from` and `timetable.valid_to` in every response name it (around the December timetable change both timetable years are loaded together). Outside it the API answers `422`, and the message (`detail`) names the valid period. Invalid dates or times such as `2026-02-31` or `T25:00` answer `400`. On the days the clocks change the times are exact; a local time that does not exist (between 02:00 and 03:00 in spring) moves on to summer time.
+
+`line.name` is the line name passengers see, the same in departures and journeys: `U1`, `S50`, `R52`, bus numbers, long-distance trains by train number such as `RJ 754`. `trip_short_name` holds the train number.
 
 ## Journey planning
 
@@ -38,7 +40,7 @@ for (const d of departures) console.log(d.time.slice(11, 16), d.line.name, d.hea
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3725,48.2085;16.4202,48.1855" | jq '.routes[0].duration'
 ```
 
-Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops and times.
+Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops, times and platform (`from.platform`, `to.platform`, `stops[].platform`, `null` if unknown). Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. With `bike_transit` the first leg is cycled; the bike stays at the stop, changes and the last leg are walked. No stop within reach or no connection: `422`.
 
 ## Reachability by transit
 

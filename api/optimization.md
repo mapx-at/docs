@@ -28,7 +28,7 @@ Expensive: zone `heavy`.
 | `steps` | query | string |  | – | true for turn-by-turn steps |
 | `geometries` | query | string |  | – | geojson\|polyline\|polyline6 |
 | `overview` | query | string |  | – | simplified (default) \| full \| false |
-| `language` | query | string |  | – | de (default) or en |
+| `language` | query | string |  | – | de (default) or en; other values 400 |
 
 **Example**
 
