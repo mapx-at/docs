@@ -527,7 +527,7 @@ Bei starker Neigung lädt MapLibre für die Ferne Kacheln kleinerer Zoomstufen. 
 
 In den Stadt-Stilen `maxPitch` nicht über 78 setzen: Bei stärkerer Neigung schneidet MapLibre das Gelände am Horizont ab, die Gebäude auf Hügeln dahinter zeichnet es aber weiter, sie scheinen dann zu schweben.
 
-Gebäudekörper erscheinen ab etwa Zoom 13 (zusammengefasste Gebäude mit mittlerer Höhe, ab Zoom 15 jedes Gebäude mit eigener Höhe). Die Höhen stammen aus dem BEV-Gebäudemodell, fehlende aus den Höhenmodellen (Oberfläche minus Gelände); hohe Türme stehen als eigene Teile (`building_part_a`) auf den Gebäuden. Gelände gibt es nur für Österreich. Die 3D-Stile gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Statische Kartenbilder oder Static Tiles; dort den Stil ohne `-3d` verwenden (für `relief-3d` gibt es auch kein Bild).
+Gebäudekörper wachsen zwischen Zoom 12 und 13 aus dem Boden und stehen dann auch in der Ferne einer geneigten Karte (zusammengefasste Gebäude mit mittlerer Höhe, ab Zoom 15 jedes Gebäude mit eigener Höhe). Die Höhen stammen aus dem BEV-Gebäudemodell, fehlende aus den Höhenmodellen (Oberfläche minus Gelände); hohe Türme stehen als eigene Teile (`building_part_a`) auf den Gebäuden. Gelände gibt es nur für Österreich. Die 3D-Stile gibt es nur für die Karte im Browser (MapLibre GL JS), nicht als Statische Kartenbilder oder Static Tiles; dort den Stil ohne `-3d` verwenden (für `relief-3d` gibt es auch kein Bild).
 
 ```js
 const TOKEN = "DEIN_TOKEN"; // öffentlicher Token mx_pk_…

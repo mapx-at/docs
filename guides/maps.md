@@ -59,7 +59,7 @@ At a steep pitch MapLibre loads tiles of lower zoom levels for the distance. Bel
 
 Keep `maxPitch` at 78 or below in the city styles: at a steeper pitch MapLibre cuts the terrain off at the horizon but still draws the buildings on hills behind it, so they appear to float.
 
-Buildings appear as bodies from about zoom 13 (merged buildings with an average height, from zoom 15 every building with its own height). Heights come from the BEV building model, missing ones from the elevation models (surface minus terrain); tall towers are separate parts (`building_part_a`) on top of the buildings. Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style without `-3d` there (there is no image for `relief-3d` either).
+Buildings rise as bodies between zoom 12 and 13 and then also stand in the distance of a tilted map (merged buildings with an average height, from zoom 15 every building with its own height). Heights come from the BEV building model, missing ones from the elevation models (surface minus terrain); tall towers are separate parts (`building_part_a`) on top of the buildings. Terrain covers Austria only. The 3D styles exist only for maps in the browser (MapLibre GL JS), not as static images or static tiles; use the style without `-3d` there (there is no image for `relief-3d` either).
 
 ```js
 const TOKEN = "YOUR_TOKEN"; // public token mx_pk_…
