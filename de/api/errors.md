@@ -382,6 +382,8 @@ Teure Gruppen haben zusätzlich ein Gesamtlimit für alle Clients zusammen; wird
 
 Was tun: `Retry-After` Sekunden warten, dann mit wachsendem Abstand erneut. Der Header `RateLimit-Policy` jeder Antwort (vom Gateway aus seiner Zonentabelle gesetzt) nennt die Zone.
 
+In der Nutzungsansicht des Kontos steht das Minutenlimit je Token als `rate-limited`, das Limit einer Zone als `rate-limited:<Zone>` (z. B. `rate-limited:search`, `rate-limited:connections` bei zu vielen gleichzeitigen Verbindungen), jeweils beim Token der Anfrage.
+
 ### quota-exceeded
 
 **429** · Quota exceeded

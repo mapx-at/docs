@@ -151,7 +151,7 @@ Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `
 
 ## Rate limits
 
-The zones below apply per IP address (per token over MCP). On top of that, each token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted too. Every API response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30); the gateway sets it from the same table as its limits, so it always names the zone that actually applies. The PMTiles requests of the styles (`https://tiles.mapx.at/…pmtiles`) do not carry it; they count in the `tiles` zone. Exceeding a limit returns `429` with `Retry-After`. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
+The zones below apply per IP address (per token over MCP). On top of that, each token may make 6000 requests per minute by default; rejected requests are counted too and show up in the usage view under the token of the request, as `rate-limited` (per-minute limit) or `rate-limited:<zone>` (zone limit, e.g. `rate-limited:search`). Every API response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30); the gateway sets it from the same table as its limits, so it always names the zone that actually applies. The PMTiles requests of the styles (`https://tiles.mapx.at/…pmtiles`) do not carry it; they count in the `tiles` zone. Exceeding a limit returns `429` with `Retry-After`. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
 
 | Zone | Requests | Used by |
 |---|---|---|
@@ -7702,6 +7702,8 @@ Too many requests. `429` has two causes: the limit per IP address and zone (endp
 Expensive groups also have an overall limit for all clients together; reaching it answers the same way.
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response (set by the gateway from its zone table) shows the zone.
+
+The usage view of your account lists the per-minute limit of a token as `rate-limited` and the limit of a zone as `rate-limited:<zone>` (e.g. `rate-limited:search`, or `rate-limited:connections` for too many simultaneous connections), each under the token of the request.
 
 ### quota-exceeded
 

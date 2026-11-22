@@ -382,6 +382,8 @@ Expensive groups also have an overall limit for all clients together; reaching i
 
 What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response (set by the gateway from its zone table) shows the zone.
 
+The usage view of your account lists the per-minute limit of a token as `rate-limited` and the limit of a zone as `rate-limited:<zone>` (e.g. `rate-limited:search`, or `rate-limited:connections` for too many simultaneous connections), each under the token of the request.
+
 ### quota-exceeded
 
 **429** · Quota exceeded
