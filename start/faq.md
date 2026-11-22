@@ -22,7 +22,7 @@ Yes, with an account and a token. The rate limits apply per IP address and zone,
 
 ## May I use it commercially?
 
-Yes. The official data is licensed [CC BY 4.0](https://docs.mapx.at/reference/attribution.md): name the source. The Sentinel-2 tiles follow the Copernicus terms; details are under [Sources and licenses](https://docs.mapx.at/reference/attribution.md) and in the [terms of use](https://mapx.at/en/terms/).
+Yes. The open government data is licensed [CC BY 4.0](https://docs.mapx.at/reference/attribution.md): name the source. The Sentinel-2 tiles follow the Copernicus terms; details are under [Sources and licenses](https://docs.mapx.at/reference/attribution.md) and in the [terms of use](https://mapx.at/en/terms/).
 
 ## How current is the data?
 

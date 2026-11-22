@@ -22,7 +22,7 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 - [3D buildings](https://docs.mapx.at/examples/buildings-3d.md): Extruded buildings with BEV heights, camera tilted.
 - [Search Box with suggestions](https://docs.mapx.at/examples/search-box.md): Suggestions while typing, position after the click, type filter.
 - [Address autofill in a form](https://docs.mapx.at/examples/autofill.md): Type a street, pick a suggestion, the form fills itself.
-- [Address validation](https://docs.mapx.at/examples/address-validation.md): Check an address against the official register and show the corrected result.
+- [Address validation](https://docs.mapx.at/examples/address-validation.md): Check an address against the BEV address register and show the corrected result.
 - [Reverse geocoding](https://docs.mapx.at/examples/reverse-geocode.md): Click the map, get the nearest address.
 - [Truck route with options](https://docs.mapx.at/examples/truck-route.md): Vehicle size, avoid tolls and motorways, alternatives.
 - [Tour planning](https://docs.mapx.at/examples/optimization.md): Click stops, get the best order from the depot and back.
@@ -34,5 +34,6 @@ Each example runs live on the page, shows the complete code and a single HTML fi
 
 ## Notes
 
-- All data comes from official sources, no OpenStreetMap. Attribution: [License](https://docs.mapx.at/reference/attribution.md).
+- All data comes from open government data, no OpenStreetMap. Attribution: [License](https://docs.mapx.at/reference/attribution.md).
 - All examples call the endpoints under `https://api.mapx.at/v1/` with a public token (see [Access and limits](https://docs.mapx.at/start/access-and-limits.md)).
+- Try single API calls without a map in the [Playground](https://docs.mapx.at/playground.md).

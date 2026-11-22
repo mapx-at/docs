@@ -22,7 +22,7 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 - [3D-Gebäude](https://docs.mapx.at/de/examples/buildings-3d.md): Gebäude mit BEV-Höhen als 3D-Körper, Kamera geneigt.
 - [Search Box mit Vorschlägen](https://docs.mapx.at/de/examples/search-box.md): Vorschläge beim Tippen, Position nach dem Klick, Typfilter.
 - [Adress-Autofill im Formular](https://docs.mapx.at/de/examples/autofill.md): Straße tippen, Vorschlag wählen, das Formular füllt sich.
-- [Adressvalidierung](https://docs.mapx.at/de/examples/address-validation.md): Eine Adresse gegen das amtliche Register prüfen und das korrigierte Ergebnis zeigen.
+- [Adressvalidierung](https://docs.mapx.at/de/examples/address-validation.md): Eine Adresse gegen das Adressregister des BEV prüfen und das korrigierte Ergebnis zeigen.
 - [Reverse Geocoding](https://docs.mapx.at/de/examples/reverse-geocode.md): Karte anklicken, nächste Adresse erhalten.
 - [Lkw-Route mit Optionen](https://docs.mapx.at/de/examples/truck-route.md): Fahrzeugmaße, Maut und Autobahn meiden, Alternativen.
 - [Tourenplanung](https://docs.mapx.at/de/examples/optimization.md): Haltestellen anklicken, beste Reihenfolge ab Depot und zurück.
@@ -34,5 +34,6 @@ Jedes Beispiel läuft live auf der Seite, zeigt den vollständigen Code und eine
 
 ## Hinweise
 
-- Alle Daten stammen aus amtlichen Quellen, kein OpenStreetMap. Quellenangabe: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+- Alle Daten stammen aus offenen Verwaltungsdaten, kein OpenStreetMap. Quellenangabe: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 - Alle Beispiele rufen die Endpunkte unter `https://api.mapx.at/v1/` mit einem öffentlichen Token auf (siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
+- Einzelne API-Aufrufe ohne Karte im [Playground](https://docs.mapx.at/de/playground.md) ausprobieren.

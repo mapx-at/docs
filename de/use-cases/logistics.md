@@ -29,7 +29,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 
 ## Fahrzeiten für viele Paare
 
-`matrix` beantwortet alle Paare in einer Anfrage, im Rahmen der Grenzen der [Matrix-API](https://docs.mapx.at/de/api/directions.md). Mit `sources` und `destinations` (Indizes) lässt sich nur eine Zeile abfragen.
+`matrix` beantwortet alle Paare in einer Anfrage, im Rahmen der Grenzen der [Matrix-API](https://docs.mapx.at/de/api/matrix.md). Mit `sources` und `destinations` (Indizes) lässt sich nur eine Zeile abfragen.
 
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];

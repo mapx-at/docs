@@ -77,7 +77,7 @@ Without `depart_at` the isochrone starts now (Vienna local time); use `depart_at
 
 ### Access by bike or car (Bike & Ride, Park & Ride)
 
-With `access=bike` or `access=car` the first leg is not walked but cycled or driven to a stop. Bikes can be locked at **every** stop (+2 min); cars park at stops with rail, metro or tram service (+3 min, at most 25 min drive); the algorithm takes the fastest combination, so the station in your own village wins over driving on to the next town if the train is quicker. Official P+R sites from the GIP are added for the car (+2 min, then a walk to the stop). Walking from the start still applies, the minimum counts. The exit is always on foot.
+With `access=bike` or `access=car` the first leg is not walked but cycled or driven to a stop. Bikes can be locked at **every** stop (+2 min); cars park at stops with rail, metro or tram service (+3 min, at most 25 min drive); the algorithm takes the fastest combination, so the station in your own village wins over driving on to the next town if the train is quicker. Designated P+R sites from the GIP are added for the car (+2 min, then a walk to the stop). Walking from the start still applies, the minimum counts. The exit is always on foot.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/transit/15.16,48.207?contours_minutes=45&access=car" | jq '.metadata | {access, access_stops_improved, sites: .access_sites[:3]}'
@@ -86,10 +86,10 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/
 | Parameter | Values | Meaning |
 |---|---|---|
 | `access` | `foot` (default), `bike`, `car` | Mode to the first stop |
-| `park` | `any` (default), `official` | `official`: bike only at stops within 200 m of a B+R site, car only at official P+R sites |
+| `park` | `any` (default), `official` | `official`: bike only at stops within 200 m of a B+R site, car only at designated P+R sites |
 | `sites` | 1 to 50 (default 10) | Entries in `metadata.access_sites` |
 
-`metadata.access_sites` lists the accesses that beat walking, sorted by travel time: `source` (`site` for an official P+R, `stop` for parking at the stop), `kind`, `name`, `lon`, `lat`, `arrive_min` (travel time), `ready_min` (ready to board, incl. parking and walk) and `stops_won`. Bringing the bike on the train (`egress=bike`) is not offered: the timetable data carry no bike-carriage information.
+`metadata.access_sites` lists the accesses that beat walking, sorted by travel time: `source` (`site` for a designated P+R site, `stop` for parking at the stop), `kind`, `name`, `lon`, `lat`, `arrive_min` (travel time), `ready_min` (ready to board, incl. parking and walk) and `stops_won`. Bringing the bike on the train (`egress=bike`) is not offered: the timetable data carry no bike-carriage information.
 
 ## Show departures in an app
 

@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 `GET /v1/geocode`
 
-Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `properties.type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
+Search over the BEV address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `properties.type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
 Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lng, lat]. Response: FeatureCollection in the format shared by all search endpoints (schema `Place`): `id`, point `geometry`, `bbox` for areas, and in `properties` always `type`, `name`, `place_formatted`, `relevance` (match score of the search, 0 to 1, lower for a fallback to the base number, street or a neighboring number), `accuracy` (`rooftop` = point on the building, `parcel` = point on the plot, `street`, otherwise `null`) and `address` (separate fields `street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`, only those present); with `proximity` also `distance` (m). Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
 
@@ -105,7 +105,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
@@ -208,7 +208,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
@@ -312,7 +312,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
@@ -460,7 +460,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `405` | Method not allowed |

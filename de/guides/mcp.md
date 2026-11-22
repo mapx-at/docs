@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/guides/mcp/
 
 > claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 22 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 22 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 22 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus offenen Verwaltungsdaten, jede Antwort nennt ihre Quelle.
 
 | Eigenschaft | Wert |
 |---|---|
@@ -159,7 +159,7 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lng, lat}` in WGS8
 |---|---|---|---|
 | Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI oder Straßenkilometer | `query`, `proximity`, `types`, `limit` |
 | Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lng`, `lat`, `radius`, `types` |
-| Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
+| Suche | `validate_address` | Adresse gegen das Adressregister des BEV prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
 | Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Suche | `list_place_categories` | Kategorie-Ids für `search_places` | keine |
 | Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `points` (2 bis 25), `exclude`, `truck` |
@@ -175,7 +175,7 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lng, lat}` in WGS8
 | Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `points`, `buffer` |
 | Verkehr | `sign_limits` | Aktuell von Wechselverkehrszeichen auf Autobahnen angezeigte Tempolimits | `at`, `bbox`, `limit` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lng`, `lat`, `kind`, `hours` |
-| Wetter | `weather_warnings` | Amtliche Wetterwarnungen | `at`, `bbox`, `type`, `min_level`, `active_now` |
+| Wetter | `weather_warnings` | Wetterwarnungen von GeoSphere Austria | `at`, `bbox`, `type`, `min_level`, `active_now` |
 | Wetter | `climate` | Langfristige Klimadaten, Solarpotenzial | `lng`, `lat`, `sections` |
 | Wetter | `air_quality` | Luftgüteindex und Schadstoffe | `lng`, `lat`, `hours` |
 | Karte | `static_map` | Kartenbild mit Markern und Linie | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
@@ -206,7 +206,7 @@ Der Assistent erhält den Fehler als Text und kann darauf reagieren. Fehlercodes
 
 ## Grenzen
 
-- Nur Österreich; die Daten stammen aus amtlichen offenen Daten, jede Antwort nennt die Quelle.
+- Nur Österreich; die Daten stammen aus offenen Verwaltungsdaten, jede Antwort nennt die Quelle.
 - Alle Werkzeuge lesen nur; nichts wird geändert oder gespeichert.
 - ÖV-Antworten stammen aus dem Soll-Fahrplan.
 - Klima, Wetter, Warnungen und Luftqualität stammen von der GeoSphere Austria, Verkehrsmeldungen von ASFINAG und EVIS.AT.

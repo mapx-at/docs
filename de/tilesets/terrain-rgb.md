@@ -16,7 +16,7 @@ Das DTM ist ein Höhenkachelsatz für ganz Österreich: Geländehöhe ohne Gebä
 
 ## Kennwerte
 
-**Kachelsatz `terrain-rgb`**
+**Tileset `terrain-rgb`**
 
 | Kennwert | Wert |
 |---|---|
@@ -154,7 +154,7 @@ Das DTM entsteht aus dem ALS-DTM 1 m des BEV (Airborne Laserscanning, nur Gelän
 - Quantisierung 0,1 m. Die Abweichung zur Quelle liegt im Rundungsbereich (höchstens 0,05 m).
 - Höhengenauigkeit laut BEV ± 0,50 m, Details unter [Vertikale Auflösung und Genauigkeit](#vertikale-auflösung-und-genauigkeit).
 - Das DTM zeigt das Gelände ohne Gebäude, Bäume und Brücken. Für die Oberfläche gibt es das [DSM](https://docs.mapx.at/de/tilesets/dsm.md).
-- **Kein Messwert außerhalb der Daten.** Das Gebiet des Kachelsatzes ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
+- **Kein Messwert außerhalb der Daten.** Das Gebiet des Tilesets ist das Rechteck 9,53–17,17° O, 46,37–49,02° N. Pixel ohne Quelldaten (außerhalb Österreichs, Lücken) sind eine glatte Fortsetzung des Geländes, keine Messung.
 
 ## Quellenangabe
 

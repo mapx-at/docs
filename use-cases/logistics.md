@@ -29,7 +29,7 @@ const notices = r.routes[0].legs.flatMap((l) => l.steps).flatMap((s) => s.notice
 
 ## Travel times for many pairs
 
-`matrix` answers all pairs in one request, up to the limits of the [Matrix API](https://docs.mapx.at/api/directions.md). Use `sources` and `destinations` (indices) to ask for one row only.
+`matrix` answers all pairs in one request, up to the limits of the [Matrix API](https://docs.mapx.at/api/matrix.md). Use `sources` and `destinations` (indices) to ask for one row only.
 
 ```js
 const depots = [[16.3725, 48.2085], [15.3294, 48.2272], [14.2858, 48.3069]];

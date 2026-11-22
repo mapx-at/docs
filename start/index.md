@@ -7,11 +7,12 @@ Source: https://docs.mapx.at/start/
 mapx needs a free account and an API token ([get one in a minute](https://docs.mapx.at/start/access-and-limits.md)). Pick a page and copy the code. Code samples use `YOUR_TOKEN` as a placeholder.
 
 - [What is mapx](https://docs.mapx.at/start/what-is-mapx.md): The products in one minute.
-- [Access and limits](https://docs.mapx.at/start/access-and-limits.md): Free token, rate limits, attribution.
-- [First map in 5 minutes](https://docs.mapx.at/start/first-map.md): One HTML file.
-- [First search](https://docs.mapx.at/start/first-search.md): Find an address with one request.
-- [First route](https://docs.mapx.at/start/first-route.md): Drive from Vienna to Melk.
-- [Glossary](https://docs.mapx.at/start/glossary.md): Tile, TileJSON, profile, isochrone and more.
+- [Step 1: Access and limits](https://docs.mapx.at/start/access-and-limits.md): Free token, rate limits, attribution.
+- [Step 2: First map in 5 minutes](https://docs.mapx.at/start/first-map.md): One HTML file.
+- [Step 3: First search](https://docs.mapx.at/start/first-search.md): Find an address with one request.
+- [Step 4: First route](https://docs.mapx.at/start/first-route.md): Drive from Vienna to Melk.
+- [Glossary](https://docs.mapx.at/reference/glossary.md): Tile, TileJSON, profile, isochrone and more.
+- [Use cases](https://docs.mapx.at/use-cases/index.md): Logistics, tourism, municipalities.
 - [FAQ](https://docs.mapx.at/start/faq.md): Short answers to common questions.
 
 ## Next

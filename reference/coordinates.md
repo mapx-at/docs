@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/reference/coordinates/
 
-> Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
+> Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and Austrian government data in MGI and ETRS89.
 
 ## Order: longitude first
 
@@ -26,9 +26,9 @@ Inputs to the APIs are always **WGS84 (EPSG:4326)**. Tiles are in **Web Mercator
 
 Web Mercator distances in Austria are about 50 % larger than true metres (factor `1 / cos(latitude)`). Do not measure lengths and areas in EPSG:3857; use geodesic measurement or a local system such as EPSG:31287 (MGI / Austria Lambert) or EPSG:3035 (ETRS89-LAEA).
 
-## Official sources: MGI and ETRS89
+## Government data: MGI and ETRS89
 
-The authorities' source data uses different systems: Austrian national survey (MGI, for example Gauss-Krüger M28/M31/M34 and Lambert) and ETRS89 (for example ETRS89-LAEA, UTM). Between MGI and WGS84/ETRS89 there is a positional offset of several metres that is corrected with an official transformation grid.
+The government source data uses different systems: Austrian national survey (MGI, for example Gauss-Krüger M28/M31/M34 and Lambert) and ETRS89 (for example ETRS89-LAEA, UTM). Between MGI and WGS84/ETRS89 there is a positional offset of several metres that is corrected with an official transformation grid.
 
 **mapx transforms correctly**: all products are converted to WGS84 and Web Mercator with the official transformation procedure. You get layers that line up without applying a transformation yourself. When you overlay your own official data in MGI, use the transformation grid of your software (for example QGIS with the BEV grid), otherwise it shifts by a few metres.
 

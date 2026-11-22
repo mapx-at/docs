@@ -119,7 +119,7 @@ Die Basiskarte hat 19 Ebenen. Dieses Beispiel nutzt fünf: `landuse_a` (Nutzung)
 
 ## Ergebnis
 
-Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Kachelsatz.
+Eine Karte im eigenen Look: Flächen nach Nutzung, Seen, Straßennetz mit Wegen, Gebäude und die Verwaltungsgrenzen. Alle Daten kommen aus einem einzigen Tileset.
 
 ## Beschriftung und Schriften
 

@@ -177,6 +177,6 @@ map.on('click', async (e) => {
 
 ## Verwendete APIs
 
-- [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/stops`
-- [Öffentlicher Verkehr](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/departures`
+- [ÖV](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/stops`
+- [ÖV](https://docs.mapx.at/de/api/transit.md) `GET api.mapx.at/v1/departures`
 - [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (Leaflet)

@@ -15,6 +15,7 @@ Each guide shows the common tasks of one product with code that runs as it is.
 - [Transit departures](https://docs.mapx.at/guides/transit.md): Journeys, stops, departure boards.
 - [Static images](https://docs.mapx.at/guides/static-images.md): Map images for reports and web pages.
 - [Elevation and terrain](https://docs.mapx.at/guides/elevation.md): Heights, profiles, 3D terrain.
+- [Weather and environment](https://docs.mapx.at/guides/weather.md): Observations, forecast, warnings, air quality, climate.
 - [MCP server](https://docs.mapx.at/guides/mcp.md): Use mapx from AI assistants.
 
 ## Use cases

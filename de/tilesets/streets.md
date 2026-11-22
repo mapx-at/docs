@@ -1,8 +1,8 @@
-# Vektor-Basiskarte (Kachelsatz streets)
+# Vektor-Basiskarte (Tileset streets)
 
 Source: https://docs.mapx.at/de/tilesets/streets/
 
-> Vektor-Basiskarte Österreich aus offenen Behördendaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
+> Vektor-Basiskarte Österreich aus offenen Verwaltungsdaten: Nutzung, Gebäude, Straßen, Bahn, Gewässer, Grenzen, Namen, Hausnummern. z0 bis z16.
 
 Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK in 19 Ebenen. Sie enthält keine OpenStreetMap-Daten. Höhenlinien und Relief sind eigene Produkte und lassen sich darüberlegen.
 
@@ -16,7 +16,7 @@ Die Basiskarte vereint die offenen Daten von BEV, GIP, Umweltbundesamt und BMLUK
 
 ## Kennwerte
 
-**Kachelsatz `streets`**
+**Tileset `streets`**
 
 | Kennwert | Wert |
 |---|---|
@@ -113,7 +113,7 @@ Alle Felder und Werte jeder Ebene: [Basiskarte: Ebenen-Referenz](https://docs.ma
 
 - Nicht enthalten: Halte von Privatbahnen sowie U-Bahn- und Straßenbahnhaltestellen; kleine Flugfelder fehlen teils. Skigebiete haben den Stand 2017.
 - Ausland: praktisch leer (nur Bodensee und Gewässer bis knapp hinter die Grenze).
-- Der Kachelsatz enthält keine Glyphen und Sprites. Die mapx-Stile laden sie von `https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf` und `/v1/styles/streets/sprite`; ein eigener Stil braucht eine `glyphs`-Adresse (zum Beispiel den Endpunkt `/v1/fonts`, mit Token).
+- Das Tileset enthält keine Glyphen und Sprites. Die mapx-Stile laden sie von `https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf` und `/v1/styles/streets/sprite`; ein eigener Stil braucht eine `glyphs`-Adresse (zum Beispiel den Endpunkt `/v1/fonts`, mit Token).
 
 ## Quellenangabe
 

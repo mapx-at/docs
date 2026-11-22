@@ -1,99 +1,12 @@
-# Routing API: directions, isochrones, matrix
+# Directions API: routes for car, truck, bike and foot
 
 Source: https://docs.mapx.at/api/directions/
 
-> Routing API for Austria: routes for car, truck, bike and foot, isochrones, travel-time matrices and map matching, with parameters and examples.
+> Directions API for Austria: routes for car, truck, bike and foot on the GIP.at road graph, plus the corridor graph for offline rerouting, with parameters and examples.
 
-Routing on the Austrian road graph (GIP.at). Profiles: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`.
+Routing on the Austrian road graph (GIP.at). Profiles: `driving`, `driving-traffic`, `driving-truck`, `cycling`, `cycling-mtb`, `walking`. Isochrones, matrix, map matching and speed limits have their own pages: [Isochrone](https://docs.mapx.at/api/isochrone.md), [Matrix](https://docs.mapx.at/api/matrix.md), [Map Matching](https://docs.mapx.at/api/map-matching.md), [Speed limits](https://docs.mapx.at/api/speed-limits.md).
 
-Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `heavy` (30/min) · Guide: [Navigation](https://docs.mapx.at/guides/navigation.md)
-
-## Speed limits (GIP.at, statutory limits only)
-
-`GET /v1/speedlimits`
-
-Statutory speed limits of the road network as compact GeoJSON, either inside a box (`bbox`, at most 0.08 square degrees, about 28 x 28 km) or in a corridor around a route (`corridor` as polyline6, e.g. `routes[].geometry` with `geometries=polyline6`, plus `buffer` in meters).
-
-One LineString feature per road link in digitizing direction with `limit_kmh`, `direction` (`both`, `forward` or `backward` relative to the geometry) and `id` (GIP link id); if the directions differ there is one feature per direction. Only statutory limits (5, 10, 20 ... 130 km/h, including the default limits inside built-up areas and on rural roads) are returned. Links without a value (many motorways) and modeled speeds such as 53 or 84 km/h are left out. At most 60,000 features. Source: GIP.at (CC BY 4.0).
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat in degrees, at most 0.08 square degrees; instead of corridor |
-| `corridor` | query | string |  | – | Route as polyline6 (at most 20,000 points); instead of bbox |
-| `buffer` | query | string |  | `30` | With corridor only: meters around the route, 1 to 500, default 30 |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/speedlimits?bbox=15.325,48.225,15.335,48.23", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response**
-
-```json
-{
-  "type": "FeatureCollection",
-  "legal_only": true,
-  "attribution": "mapx.at; GIP.at (CC BY 4.0)",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": [
-          [
-            15.3294,
-            48.2272
-          ],
-          [
-            15.3301,
-            48.2275
-          ]
-        ]
-      },
-      "properties": {
-        "limit_kmh": 50,
-        "direction": "both",
-        "id": 1543486
-      }
-    }
-  ]
-}
-```
-
-| Field | Type | Description |
-|---|---|---|
-| `legal_only` | boolean | always true: only statutory limits are listed |
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `502` | Upstream service unavailable |
+Base URL: `https://api.mapx.at` · Rate-limit zone: `heavy` (30/min), `route` (5/s) · Guide: [Navigation](https://docs.mapx.at/guides/navigation.md)
 
 ## Corridor graph for offline rerouting
 
@@ -143,7 +56,7 @@ open("result.bin", "wb").write(res.content)
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
@@ -169,7 +82,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
-| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
+| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the GeoSphere Austria warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
 | `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
@@ -180,7 +93,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
 | `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
 | `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
+| `width` | query | string |  | `2.55` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
 | `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
 | `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
 
@@ -268,7 +181,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
@@ -293,7 +206,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `overview` | query | string |  | – | simplified (default, simplified route geometry), full (every vertex) or false (no geometry) |
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
-| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
+| `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the GeoSphere Austria warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
 | `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
@@ -304,7 +217,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
 | `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
 | `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
+| `width` | query | string |  | `2.55` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
 | `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
 | `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
 
@@ -392,289 +305,10 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
-| `422` | Valid request that cannot be answered (for example no route) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `502` | Upstream service unavailable |
-
-## Isochrones
-
-`GET /v1/isochrone/{profile}/{coordinate}`
-
-Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at` (local time with offset) and `transit_stops`.
-
-`access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lng`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic, driving-truck, cycling, cycling-mtb, walking or transit (walking plus public transport from `depart_at`) |
-| `coordinate` | path | string | yes | – | lng,lat |
-| `contours_minutes` | query | string |  | `5` | Up to 4 values, comma-separated (default 5,10,15) |
-| `contours_meters` | query | string |  | – | Distances instead of minutes (not for `transit`) |
-| `depart_at` | query | string |  | `now` | Only `transit`: departure, ISO 8601 local time Europe/Vienna without offset (`2026-11-10T08:00`), or with `Z`/offset, or Unix seconds; default now |
-| `access` | query | string |  | – | Only `transit`: foot (default) \| bike (Bike & Ride) \| car (Park & Ride) |
-| `park` | query | string |  | `bike every stop` | Only `transit` with bike/car: any (default: bike every stop, car rail stops) \| official (only official P+R/B+R sites) |
-| `sites` | query | string |  | `10` | Only `transit` with bike/car: number of access entries in `metadata.access_sites` (default 10, max 50) |
-| `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
-| `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
-| `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
-| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/isochrone/walking/16.3725,48.2085?contours_minutes=5,10,15", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response** (shortened: lists show only their first entries)
-
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "contour": 15,
-        "metric": "time",
-        "color": "#bf4040",
-        "opacity": 0.33
-      },
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [
-                16.3,
-                48.2
-              ],
-              [
-                16.4,
-                48.2
-              ]
-            ]
-          ]
-        ]
-      }
-    }
-  ]
-}
-```
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `404` | Not found (name, path or position) |
-| `422` | Valid request that cannot be answered (for example no route) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `502` | Upstream service unavailable |
-
-## Travel time / distance matrix
-
-`GET /v1/matrix/{profile}/{coordinates}`
-
-2 to 25 coordinates. `sources`/`destinations` as index list (`0;2`) or `all`. Zone `heavy`. Closures: driving, driving-traffic and driving-truck compute with the same closures and weights as directions (binding closures never, other full closures such as winter closures only as a last resort, conditional regulations only with driving-traffic), so each entry matches the duration and distance of a directions request between the same two points.
-
-`closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`); cycling and walking ignore closures and have no `closures`.
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
-| `sources` | query | string |  | – | Indices, semicolon-separated |
-| `destinations` | query | string |  | – | Indices, semicolon-separated |
-| `annotations` | query | string |  | – | duration (default), distance or both |
-| `weight` | query | string |  | `40` | driving-truck only: gross weight in t (default 40, 0.5 to 60); avoids weight-class bans and weight limits |
-| `height` | query | string |  | `4` | driving-truck only: vehicle height in m (default 4, 1.5 to 5); avoids height limits |
-| `width` | query | string |  | `2` | driving-truck only: vehicle width in m (default 2.55, 1 to 3.5) |
-| `length` | query | string |  | – | driving-truck only: vehicle length in m (2 to 40); length limits are only checked when given |
-| `truck_type` | query | `semi` \| `rigid` \| `trailer` |  | – | driving-truck only: semi (articulated lorry, default), rigid (lorry without trailer) or trailer (lorry with trailer) |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/matrix/driving/16.3725,48.2085;15.3294,48.2272;14.2858,48.3069?annotations=duration,distance", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response**
-
-```json
-{
-  "durations": [
-    [
-      0,
-      2890.4
-    ],
-    [
-      2901.2,
-      0
-    ]
-  ],
-  "sources": [
-    {
-      "name": "",
-      "location": [
-        16.3725,
-        48.2083
-      ]
-    },
-    {
-      "name": "",
-      "location": [
-        15.6256,
-        48.2049
-      ]
-    }
-  ],
-  "destinations": [
-    {
-      "name": "",
-      "location": [
-        16.3725,
-        48.2083
-      ]
-    },
-    {
-      "name": "",
-      "location": [
-        15.6256,
-        48.2049
-      ]
-    }
-  ],
-  "closures": {
-    "applied": true,
-    "count": 113,
-    "binding": true,
-    "binding_count": 8,
-    "fetched": "2026-11-22T01:39:31Z"
-  }
-}
-```
-
-| Field | Type | Description |
-|---|---|---|
-| `durations` | array | seconds |
-| `distances` | array | meters |
-| `closures` | object | Road closures taken into account (driving, driving-traffic, driving-truck only; absent for cycling and walking). |
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
-| `429` | Rate limit exceeded, wait `Retry-After` seconds |
-| `502` | Upstream service unavailable |
-
-## Map matching
-
-`GET /v1/matching/{profile}/{coordinates}`
-
-2 to 100 GPS points snapped to the road network. Without timestamps a single point far off the trace (out and straight back, both legs over 300 m and together more than 3 times the direct distance) counts as an outlier: its tracepoint is `null` and the matching continues.
-
-Consecutive points more than 5 km (or, with timestamps, 300 s) apart split the trace into several `matchings`. If no part can be matched the response is 422 (`No match`). Longer traces: `POST https://routing.mapx.at/match` with a secret token (`mx_sk_…`; public tokens allow GET only) and a JSON body `{"coordinates": [[lng, lat], ...], "timestamps": [...], "radius": 25}` (at most 512 KB); it answers in its own form, not the Mapbox form: a GeoJSON FeatureCollection with one LineString per matched segment plus `tracepoints` (snapped point and confidence per input point, `null` if unmatched).
-
-**Parameters**
-
-| Name | In | Type | Required | Default | Description |
-|---|---|---|---|---|---|
-| `profile` | path | string | yes | – | driving, driving-traffic (avoids active closures from the EVIS/ASFINAG reports and slows motorway sections where variable message signs show a lowered limit; no area-wide live traffic), driving-truck (trucks over 3.5 t; vehicle size via weight/height/width/length/truck_type), cycling, cycling-mtb or walking |
-| `coordinates` | path | string | yes | – | lng,lat;lng,lat;... |
-| `timestamps` | query | string |  | – | Unix seconds, semicolon-separated |
-| `radiuses` | query | string |  | – | One value per point, 5 to 500 m, semicolon-separated (the matcher searches candidates within the largest value); otherwise 400 |
-| `geometries` | query | string |  | – | geojson \| polyline \| polyline6 |
-
-**Example**
-
-**curl**
-
-```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110" | jq
-```
-
-**JavaScript**
-
-```js
-const res = await fetch("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
-const data = await res.json();
-```
-
-**Python**
-
-```python
-import requests
-
-res = requests.get("https://api.mapx.at/v1/matching/driving/16.3725,48.2085;16.3680,48.2100;16.3600,48.2110", headers={"Authorization": "Bearer YOUR_TOKEN"})
-data = res.json()
-```
-
-**Example response**
-
-```json
-{
-  "matchings": [],
-  "tracepoints": []
-}
-```
-
-**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
-
-| Status | Meaning |
-|---|---|
-| `400` | A parameter is missing or invalid |
-| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
-| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `422` | Valid request that cannot be answered (for example no route) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |

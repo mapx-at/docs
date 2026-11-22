@@ -96,7 +96,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -220,7 +220,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -308,7 +308,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -444,18 +444,18 @@ open("result.png", "wb").write(res.content)
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Amtliche Wetterwarnungen (GeoSphere Austria) {#official-weather-warnings-geosphere-austria}
+## Wetterwarnungen (GeoSphere Austria) {#weather-warnings-geosphere-austria}
 
 `GET /v1/weather/warnings`
 
-Aktive und kommende amtliche Wetterwarnungen (bis zu 4 Tage im Voraus) als GeoJSON-MultiPolygone in WGS84, ein Objekt je Warnung (zusammengefasste Gemeinden). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 gelb, 2 orange, 3 rot; `text`, `impact` und `recommendation` (jeweils mit `de` und `en`) sind optional: Sie sind nur vorhanden, wenn GeoSphere zur Warnung einen Text veröffentlicht hat, und fehlen oft.
+Aktive und kommende Wetterwarnungen von GeoSphere Austria (bis zu 4 Tage im Voraus) als GeoJSON-MultiPolygone in WGS84, ein Objekt je Warnung (zusammengefasste Gemeinden). `type`: wind, rain, snow, black_ice, thunderstorm, heat, cold; `level`: 1 gelb, 2 orange, 3 rot; `text`, `impact` und `recommendation` (jeweils mit `de` und `en`) sind optional: Sie sind nur vorhanden, wenn GeoSphere zur Warnung einen Text veröffentlicht hat, und fehlen oft.
 
 Zentral alle 5 Minuten abgerufen, nie je Anfrage. Ohne `bbox` und `lng`/`lat` kommen alle Warnungen. Datenquelle: GeoSphere Austria, CC BY 4.0 (Quellenangabe erforderlich).
 
@@ -555,7 +555,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |

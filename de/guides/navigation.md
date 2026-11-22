@@ -26,7 +26,7 @@ Das Routing läuft auf dem österreichischen Straßengraphen (GIP.at). Koordinat
 | `cycling-mtb` | Mountainbike: bevorzugt Forststraßen und Singletrails, berücksichtigt die MTB-Schwierigkeit |
 | `walking` | Zu Fuß |
 
-Öffentlicher Verkehr ist eine eigene API: [ÖV](https://docs.mapx.at/de/guides/transit.md).
+ÖV ist eine eigene API: [ÖV](https://docs.mapx.at/de/guides/transit.md).
 
 ## Eine Route
 
@@ -99,7 +99,7 @@ Vignettenstraßen bleiben mit `exclude=toll` erlaubt. Quelle der Maut: ASFINAG, 
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
-Matrix und Isochrone rechnen in denselben Profilen mit denselben Sperren. Ein Eintrag der [Matrix](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) hat dieselbe Dauer und Distanz wie eine Route zwischen denselben zwei Punkten, auch wenn sie nur als letzter Ausweg durch eine Sperre führt; `closures` nennt, ob Sperren berücksichtigt wurden (`applied`), wie viele (`count`, davon verbindlich `binding_count`, `binding` true, wenn mindestens eine) und den Stand der Meldungen (`fetched`). Eine [Isochrone](https://docs.mapx.at/de/api/directions.md#isochrones) reicht über keine Vollsperre hinaus, auch nicht über eine ohne Verbindlichkeitsvermerk, weil es ohne Ziel keinen letzten Ausweg gibt; `closures` (oberste Ebene wie bei Matrix und Directions) hat dieselben Felder, `closures_avoided` listet die Sperren, an denen die größte Stufe endet. `category` einer Sperre ist dasselbe englische Enum wie `kind` der [Verkehrsmeldungen](https://docs.mapx.at/de/api/traffic.md) (`road_closure`, `winter_closure`, `roadworks`, …).
+Matrix und Isochrone rechnen in denselben Profilen mit denselben Sperren. Ein Eintrag der [Matrix](https://docs.mapx.at/de/api/matrix.md) hat dieselbe Dauer und Distanz wie eine Route zwischen denselben zwei Punkten, auch wenn sie nur als letzter Ausweg durch eine Sperre führt; `closures` nennt, ob Sperren berücksichtigt wurden (`applied`), wie viele (`count`, davon verbindlich `binding_count`, `binding` true, wenn mindestens eine) und den Stand der Meldungen (`fetched`). Eine [Isochrone](https://docs.mapx.at/de/api/isochrone.md) reicht über keine Vollsperre hinaus, auch nicht über eine ohne Verbindlichkeitsvermerk, weil es ohne Ziel keinen letzten Ausweg gibt; `closures` (oberste Ebene wie bei Matrix und Directions) hat dieselben Felder, `closures_avoided` listet die Sperren, an denen die größte Stufe endet. `category` einer Sperre ist dasselbe englische Enum wie `kind` der [Verkehrsmeldungen](https://docs.mapx.at/de/api/traffic.md) (`road_closure`, `winter_closure`, `roadworks`, …).
 
 ## Sprach- und Bannerhinweise
 
@@ -149,6 +149,6 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" https://api.mapx.at/v1/opt
 
 ## Nächste Schritte
 
-- [Directions API](https://docs.mapx.at/de/api/directions.md), [Optimization API](https://docs.mapx.at/de/api/optimization.md)
+- [Directions API](https://docs.mapx.at/de/api/directions.md), [Isochrone API](https://docs.mapx.at/de/api/isochrone.md), [Matrix API](https://docs.mapx.at/de/api/matrix.md), [Map Matching API](https://docs.mapx.at/de/api/map-matching.md), [Optimization API](https://docs.mapx.at/de/api/optimization.md)
 - [Verkehr](https://docs.mapx.at/de/guides/traffic.md): Störungen entlang einer Route
 - [Routen-Beispiel](https://docs.mapx.at/de/examples/route.md)

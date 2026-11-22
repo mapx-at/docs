@@ -58,7 +58,7 @@ console.log(`up ${Math.round(p.ascent)} m, down ${Math.round(p.descent)} m, ${Ma
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
 
-The height model is the official DTM of the BEV. See [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md) for a finished chart and the [live example](https://docs.mapx.at/examples/elevation-profile.md).
+The height model is the DTM of the BEV. See [Elevation profile](https://docs.mapx.at/guides/elevation-profile.md) for a finished chart and the [live example](https://docs.mapx.at/examples/elevation-profile.md).
 
 ## Reachability for the area
 

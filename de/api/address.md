@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/api/address/
 
-> Adress-Autofill für Formulare und Adressvalidierung gegen das amtliche österreichische Adressregister: Endpunkte, Parameter und Beispiele.
+> Adress-Autofill für Formulare und Adressvalidierung gegen das österreichische Adressregister (BEV): Endpunkte, Parameter und Beispiele.
 
-Autofill vervollständigt eine Postadresse beim Tippen. Die Validierung prüft eine Adresse gegen das amtliche Register.
+Autofill vervollständigt eine Postadresse beim Tippen. Die Validierung prüft eine Adresse gegen das Adressregister des BEV.
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/autofill/suggest`
 
-Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Postleitzahl und Ort. FeatureCollection von Adressen im selben Format wie geocode (Schema `Place`, die Felder getrennt in `properties.address`, mit `distance` bei `proximity`). Ein vollständiger Ort oder eine PLZ nach der Hausnummer hat Vorrang wie bei geocode (`Hauptplatz 12a Graz` schlägt Adressen in Graz vor, die nächsten Nummern zuerst, wenn es 12a dort nicht gibt).
+Nur das Adressregister des BEV. Vervollständigt Straße, Hausnummer, Postleitzahl und Ort. FeatureCollection von Adressen im selben Format wie geocode (Schema `Place`, die Felder getrennt in `properties.address`, mit `distance` bei `proximity`). Ein vollständiger Ort oder eine PLZ nach der Hausnummer hat Vorrang wie bei geocode (`Hauptplatz 12a Graz` schlägt Adressen in Graz vor, die nächsten Nummern zuerst, wenn es 12a dort nicht gibt).
 
 **Parameter**
 
@@ -98,7 +98,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
@@ -197,7 +197,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -207,7 +207,7 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Prüft eine Adresse gegen das amtliche Register. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1, bei `not_found` 0), `deviations[]` je Feld (kind: spelling | wrong | added | unknown), `coordinates`, `id` und `address_code`.
+Prüft eine Adresse gegen das Adressregister des BEV. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1, bei `not_found` 0), `deviations[]` je Feld (kind: spelling | wrong | added | unknown), `coordinates`, `id` und `address_code`.
 
 Versteht Str./Straße, Abkürzungen, Umlaute und ß; ein Hausnummernbereich (`1-3`) ist nicht die Nummer 13. Ein angegebener Ort oder eine angegebene PLZ hat Vorrang: Kandidaten anderswo zählen nur, wenn dort keiner liegt. Eine andere Hausnummer ist nie eine Korrektur: gibt es die Nummer in der Straße nicht, ist `status` `not_found`, `deviations` enthält `{"field": "housenumber", "kind": "unknown"}` und `candidates[]` listet die nächsten Nummern dieser Straße (bis zu 5), z. B. `street=Rathausplatz&housenumber=999&postcode=3100`. Bei `ambiguous` sind `address`, `coordinates`, `id` und `address_code` `null`, und `candidates[]` (bis zu 5, jeweils aufgebaut wie `address`) listet die möglichen Adressen, z. B. `q=Hauptplatz 3` (ohne Ort): `{"status": "ambiguous", "address": null, "id": null, "candidates": [{"id": "address-5111737", "full_address": "Hauptplatz 3, 6511 Zams", ...}, {"id": "address-6067644", "full_address": "Hauptplatz 3, 9170 Ferlach", ...}]}`. Bei `match` und `corrected` ist `candidates` leer.
 
@@ -308,7 +308,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
@@ -437,7 +437,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |

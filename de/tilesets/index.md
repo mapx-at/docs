@@ -1,12 +1,12 @@
-# Kachelsätze: Vektor- und Rasterkacheln
+# Tilesets: Vektor- und Rasterkacheln
 
 Source: https://docs.mapx.at/de/tilesets/
 
-> Alle mapx-Kachelsätze für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthofoto, Gelände- und Oberflächenmodell.
+> Alle mapx-Tilesets für Österreich mit Typ, Zoombereich und Stand: Basiskarte, Höhenlinien, Orthofoto, Gelände- und Oberflächenmodell.
 
-Jeder Kachelsatz ist als TileJSON und XYZ-Kacheln über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Stilen](https://docs.mapx.at/de/api/styles.md) enthalten. Die Daten stehen unter CC BY 4.0 (Ausnahme: Sentinel-2), siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+Jedas Tileset ist als TileJSON und XYZ-Kacheln über die [Tiles API](https://docs.mapx.at/de/api/tiles.md) verfügbar und in den [Stilen](https://docs.mapx.at/de/api/styles.md) enthalten. Die Daten stehen unter CC BY 4.0 (Ausnahme: Sentinel-2), siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
-| Kachelsatz | Typ | Zoom | Stand |
+| Tileset | Typ | Zoom | Stand |
 |---|---|---|---|
 | [`streets`](https://docs.mapx.at/de/tilesets/streets.md) | Vektor | z0–16 | 01.04.2026 |
 | [`contours`](https://docs.mapx.at/de/tilesets/contours.md) | Vektor | z10–16 | 15.09.2025 |
@@ -24,9 +24,9 @@ Jeder Kachelsatz ist als TileJSON und XYZ-Kacheln über die [Tiles API](https://
 | [`sentinel2-ndwi`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
 | [`sentinel2-ndsi`](https://docs.mapx.at/de/tilesets/sentinel2.md) | raster | z5–z13 | täglich |
 
-Die Sentinel-2-Kachelsätze ([Sentinel-2 aktuell](https://docs.mapx.at/de/tilesets/sentinel2.md) und vier Auswertungen) werden täglich ersetzt statt versioniert, daher steht bei ihnen „täglich“ statt eines Stichtags.
+Die Sentinel-2-Tilesets ([Sentinel-2 aktuell](https://docs.mapx.at/de/tilesets/sentinel2.md) und vier Auswertungen) werden täglich ersetzt statt versioniert, daher steht bei ihnen „täglich“ statt eines Stichtags.
 
-Ein Kachelsatz per Namen verwenden:
+Ein Tileset per Namen verwenden:
 
 ```js
 map.addSource("contours", { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" });

@@ -1,14 +1,14 @@
-# GIP-Punkte-Kachelsatz (Park & Ride, Bahnübergänge)
+# GIP-Punkte-Tileset (Park & Ride, Bahnübergänge)
 
 Source: https://docs.mapx.at/de/tilesets/gip-poi/
 
-> Park & Ride, Bike & Ride, Bahnübergänge, Poller, Schranken, Tore und Schutzwege in Österreich aus GIP.at als Vektorkacheln (Kachelsatz gip-poi).
+> Park & Ride, Bike & Ride, Bahnübergänge, Poller, Schranken, Tore und Schutzwege in Österreich aus GIP.at als Vektorkacheln (Tileset gip-poi).
 
 Punkte aus der Graphenintegrationsplattform (GIP.at, GIPOGD): Park & Ride, Bike & Ride, Bahnübergänge, Poller, Schranken und Tore sowie Schutzwege. Die Art steht in `kind`, Park & Ride und Bike & Ride erscheinen ab z12, alle anderen Arten ab z15.
 
 ## Kennwerte
 
-**Kachelsatz `gip-poi`**
+**Tileset `gip-poi`**
 
 | Kennwert | Wert |
 |---|---|
@@ -79,7 +79,7 @@ Geometrie: **Punkt**, Zoom: **z12–15**, Ebene: `gip_poi`. Punktobjekte aus der
 | | |
 |---|---|
 | Stil | Gruppe `gip_poi` in `streets`, standardmäßig aus |
-| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `gip-poi` als Kachelsatz |
+| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `gip-poi` als Tileset |
 
 ## Quellenangabe
 

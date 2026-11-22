@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/guides/overlay-contours/
 
 **Voraussetzungen:** ein Browser, ein statischer Webserver und ein kostenloser öffentlicher Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)). Die Beschriftung nutzt die Schriften von mapx, siehe [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md#beschriftung-und-schriften).
 
-Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat eine Ebene `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `min_zoom` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
+Das Tileset [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat eine Ebene `contour_l` mit den Feldern `ele` (Höhe in m), `index` (1 = Indexlinie) und `min_zoom` (Generalisierungsstufe 10, 12, 14, 16). Es gibt Linien ab z10.
 
 1. **Seite mit Hintergrund.** Das Orthofoto als Basis, die Höhenlinien als Vektorquelle:
 
@@ -29,7 +29,7 @@ Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat 
      };
    ```
 
-2. **Linien zeichnen.** Je nach Zoom liefert der Kachelsatz eine Stufe (`min_zoom`) mit eigenem Linienabstand:
+2. **Linien zeichnen.** Je nach Zoom liefert das Tileset eine Stufe (`min_zoom`) mit eigenem Linienabstand:
 
    | Zoom | `min_zoom` | Abstand | Indexlinie |
    |---|---|---|---|

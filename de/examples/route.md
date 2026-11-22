@@ -134,5 +134,5 @@ map.on('click', async (e) => {
 
 ## Verwendete APIs
 
-- [Routing](https://docs.mapx.at/de/api/directions.md#routing) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
+- [Directions](https://docs.mapx.at/de/api/directions.md) `GET api.mapx.at/v1/directions/{profile}/{coordinates}`
 - [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)

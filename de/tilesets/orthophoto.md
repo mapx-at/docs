@@ -1,10 +1,10 @@
-# Orthofoto-Kachelsatz: Luftbild Österreich
+# Orthofoto-Tileset: Luftbild Österreich
 
 Source: https://docs.mapx.at/de/tilesets/orthophoto/
 
 > Luftbild Österreich des BEV als WebP-Kacheln, z5 bis z18, 20 cm, mit eindeutiger Flugblock-Auswahl je Pixel.
 
-Das Orthofoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt der Kachelsatz [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
+Das Orthofoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native Auflösung der Quelle). Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
 
 **Nutzungen**
 
@@ -15,7 +15,7 @@ Das Orthofoto des BEV, neu gekachelt in Web-Mercator bis z18 (20 cm, die native 
 
 ## Kennwerte
 
-**Kachelsatz `orthophoto`**
+**Tileset `orthophoto`**
 
 | Kennwert | Wert |
 |---|---|
@@ -77,7 +77,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.
 ## Quelle und Aktualität
 
 - Quelle: BEV **Digitales Orthofoto (DOP) RGB**, 20 cm, Aufnahmen 2022 bis 2025.
-- **Ein Flug je Pixel:** Wo sich Befliegungen überlappen, gewinnt die mit dem späteren Ende des Flugzeitraums. Welcher Flug ein Pixel liefert, zeigt der Kachelsatz [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
+- **Ein Flug je Pixel:** Wo sich Befliegungen überlappen, gewinnt die mit dem späteren Ende des Flugzeitraums. Welcher Flug ein Pixel liefert, zeigt das Tileset [Flugblöcke](https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks.md).
 
 ## Hinweise
 

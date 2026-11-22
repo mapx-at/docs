@@ -1,4 +1,4 @@
-# Orthofoto-Flugblöcke (Kachelsatz)
+# Orthofoto-Flugblöcke (Tileset)
 
 Source: https://docs.mapx.at/de/tilesets/orthophoto-flight-blocks/
 
@@ -15,7 +15,7 @@ Zu jedem Pixel des [Orthofotos](https://docs.mapx.at/de/tilesets/orthophoto.md) 
 
 ## Kennwerte
 
-**Kachelsatz `orthophoto-flight-blocks`**
+**Tileset `orthophoto-flight-blocks`**
 
 | Kennwert | Wert |
 |---|---|

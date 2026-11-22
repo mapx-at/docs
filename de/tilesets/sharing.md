@@ -1,8 +1,8 @@
-# Kachelsatz Sharing-Standorte (ÖBB)
+# Tileset Sharing-Standorte (ÖBB)
 
 Source: https://docs.mapx.at/de/tilesets/sharing/
 
-> Sharing-Standorte (Lastenräder, Fahrräder) der ÖBB als Vektorkacheln (Kachelsatz sharing) und als Suchkategorie vehicle_sharing in der mapx-Such-API.
+> Sharing-Standorte (Lastenräder, Fahrräder) der ÖBB als Vektorkacheln (Tileset sharing) und als Suchkategorie vehicle_sharing in der mapx-Such-API.
 
 Standorte von Sharing-Stationen aus dem Datensatz „Shared-Mobility Standorte 2026“ der ÖBB-Personenverkehr AG. Der Datensatz enthält nur Standorte, die die ÖBB selbst betreibt und besitzt; derzeit sieben Stationen in Korneuburg und Leoben.
 
@@ -12,7 +12,7 @@ Standorte von Sharing-Stationen aus dem Datensatz „Shared-Mobility Standorte 2
 
 ## Kennwerte
 
-**Kachelsatz `sharing`**
+**Tileset `sharing`**
 
 | Kennwert | Wert |
 |---|---|
@@ -85,7 +85,7 @@ Geometrie: **Punkt**, Zoom: **z8–14**, Ebene: `sharing_p`. Sharing-Standorte d
 |---|---|
 | Stil | Gruppe `sharing`, standardmäßig aus: Punkt ab z10, Name ab z14 |
 | Suche | Kategorie `vehicle_sharing` in [Search Box](https://docs.mapx.at/de/api/search-box.md) und Geocoding |
-| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `sharing` als Kachelsatz |
+| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `sharing` als Tileset |
 
 ## Quellenangabe
 

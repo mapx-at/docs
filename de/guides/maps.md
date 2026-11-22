@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/guides/maps/
 
-> Eine mapx-Vektorkarte in MapLibre GL JS anzeigen, Stile wechseln, Kachelsätze und Overlays hinzufügen, auch Wetter- und Verkehrsebenen.
+> Eine mapx-Vektorkarte in MapLibre GL JS anzeigen, Stile wechseln, Tilesets und Overlays hinzufügen, auch Wetter- und Verkehrsebenen.
 
-mapx liefert Karten als fertige Stile und als Kacheln. Ein Stil ergibt eine vollständige Karte in einer Zeile; Kachelsätze kommen zum Einsatz, wenn ein eigener Stil entsteht.
+mapx liefert Karten als fertige Stile und als Kacheln. Ein Stil ergibt eine vollständige Karte in einer Zeile; Tilesets kommen zum Einsatz, wenn ein eigener Stil entsteht.
 
 **Voraussetzung:** eine Seite mit MapLibre GL JS, siehe [Erste Karte](https://docs.mapx.at/de/start/first-map.md). Ein kostenloser Token ist nötig ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Codebeispiele zeigen `DEIN_TOKEN` nur dort, wo es darauf ankommt. Das Stil-Beispiel zeigt die Übergabe mit `transformRequest`, die späteren Ausschnitte setzen sie voraus.
 
@@ -80,11 +80,11 @@ map.once("load", () => map.getContainer().querySelector(".maplibregl-compact-sho
 
 Ein Stilwechsel zur Laufzeit ersetzt Ebenen und Quellen: `map.setStyle(url)` aufrufen. Eigene Quellen und Ebenen danach neu hinzufügen (zum Beispiel im Ereignis `style.load`). Siehe [Basiskarte wechseln](https://docs.mapx.at/de/examples/switch-basemap.md).
 
-## Kachelsätze zum eigenen Stil hinzufügen
+## Tilesets zum eigenen Stil hinzufügen
 
-Jeder Kachelsatz hat eine TileJSON-Adresse `https://tiles.mapx.at/v1/tiles/{tileset}.json`. MapLibre liest daraus Zoombereich, Grenzen und Quellenangabe.
+Jedas Tileset hat eine TileJSON-Adresse `https://tiles.mapx.at/v1/tiles/{tileset}.json`. MapLibre liest daraus Zoombereich, Grenzen und Quellenangabe.
 
-| Kachelsatz | Typ | Inhalt |
+| Tileset | Typ | Inhalt |
 |---|---|---|
 | `streets` | vector | Straßen, Bahn, Gewässer, Grenzen, Orte, Gebäude |
 | `contours` | vector | Höhenlinien |
@@ -99,7 +99,7 @@ map.on("load", () => {
 });
 ```
 
-Die mapx-Stile belegen die Quellennamen `streets`, `contours`, `terrain-rgb`, `dsm`, `orthophoto`, `traffic` und weitere. Wer eine Quelle zu einem mapx-Stil hinzufügt, wählt einen eigenen Namen (hier `mx-contours`); `outdoors` zeigt Höhenlinien ohnehin schon. Ebenennamen und Felder: [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md). Eigene Daten lassen sich genauso mit einer `geojson`-Quelle hinzufügen, ein vollständiges Beispiel zeigt [GeoJSON-Overlay](https://docs.mapx.at/de/examples/geojson-overlay.md).
+Die mapx-Stile belegen die Quellennamen `streets`, `contours`, `terrain-rgb`, `dsm`, `orthophoto`, `traffic` und weitere. Wer eine Quelle zu einem mapx-Stil hinzufügt, wählt einen eigenen Namen (hier `mx-contours`); `outdoors` zeigt Höhenlinien ohnehin schon. Ebenennamen und Felder: [Tilesets](https://docs.mapx.at/de/tilesets/index.md). Eigene Daten lassen sich genauso mit einer `geojson`-Quelle hinzufügen, ein vollständiges Beispiel zeigt [GeoJSON-Overlay](https://docs.mapx.at/de/examples/geojson-overlay.md).
 
 ## Wetter- und Verkehrs-Overlays
 
@@ -122,12 +122,12 @@ https://api.mapx.at/v1/styles/streets/tiles/512/{z}/{x}/{y}?access_token=DEIN_TO
 
 ## Offline und Massennutzung
 
-Kacheln und Kachelsätze gibt es nur über die API: Stil, TileJSON oder `{z}/{x}/{y}`. Ganze Dateien zum Herunterladen bietet mapx nicht an. Für viele Anfragen die Kacheln im Client cachen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
+Kacheln und Tilesets gibt es nur über die API: Stil, TileJSON oder `{z}/{x}/{y}`. Ganze Dateien zum Herunterladen bietet mapx nicht an. Für viele Anfragen die Kacheln im Client cachen, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md).
 
 > Die Datenquelle auf der Karte anzeigen. MapLibre macht das automatisch, wenn ein Stil oder TileJSON geladen wird, mit `mapx.at` (Link) als erstem Eintrag; bitte nicht entfernen; der Code oben klappt sie hinter den Knopf „i“ ein, siehe [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Nächste Schritte
 
 - [Basiskarte gestalten](https://docs.mapx.at/de/guides/style-the-basemap.md)
-- [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md)
+- [Tilesets](https://docs.mapx.at/de/tilesets/index.md)
 - [Styles API](https://docs.mapx.at/de/api/styles.md) und [Tiles API](https://docs.mapx.at/de/api/tiles.md)

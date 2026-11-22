@@ -450,7 +450,7 @@ Die Limits je IP-Adresse und Zone und das Minutenlimit je Token stehen unter [Zu
 
 | Header | Wert |
 |---|---|
-| `Cache-Control` | `private` für jede Antwort auf eine Anfrage mit Token (nur Browser-Cache, keine gemeinsamen Caches), mit `max-age=3600` (tiles.mapx.at, TileJSON, Höhe), `max-age=86400` (Kacheln über api.mapx.at), `max-age=60` (Search-Box-Vorschläge, Verkehr), `max-age=30` (Abfahrten), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Kachelsatz-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen); `/health` `no-store` |
+| `Cache-Control` | `private` für jede Antwort auf eine Anfrage mit Token (nur Browser-Cache, keine gemeinsamen Caches), mit `max-age=3600` (tiles.mapx.at, TileJSON, Höhe), `max-age=86400` (Kacheln über api.mapx.at), `max-age=60` (Search-Box-Vorschläge, Verkehr), `max-age=30` (Abfahrten), `max-age=300` (Geocoding, Reverse, Autofill-Vorschläge, Address Validation per GET, Tileset-Liste), `max-age=0` (Routing, Matrix, Isochrone, POST-Anfragen); `/health` `no-store` |
 | `ETag` | bei jeder `GET`-Antwort; mit `If-None-Match` → `304` ohne Inhalt. Kacheln, Stile, TileJSON und OpenAPI: Dateistand (dazu `Last-Modified`, `If-Modified-Since`), alle übrigen: Prüfsumme des Inhalts |
 | `Server-Timing` | `router`, `search`, `render`, `total` in Millisekunden |
 | `RateLimit-Policy` | Zone und Limit des Endpunkts (vom Gateway gesetzt) |

@@ -1,4 +1,4 @@
-# Höhenlinien-Kachelsatz für Österreich
+# Höhenlinien-Tileset für Österreich
 
 Source: https://docs.mapx.at/de/tilesets/contours/
 
@@ -16,7 +16,7 @@ Höhenlinien für ganz Österreich als Vektorkacheln, abgeleitet aus dem [DTM](h
 
 ## Kennwerte
 
-**Kachelsatz `contours`**
+**Tileset `contours`**
 
 | Kennwert | Wert |
 |---|---|

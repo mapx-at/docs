@@ -58,7 +58,7 @@ console.log(`Anstieg ${Math.round(p.ascent)} m, Abstieg ${Math.round(p.descent)}
 // p.distances[i] (m ab Start) und p.elevations[i] (m) ergeben das Diagramm
 ```
 
-Das Höhenmodell ist das amtliche DTM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md), dazu das [Live-Beispiel](https://docs.mapx.at/de/examples/elevation-profile.md).
+Das Höhenmodell ist das DTM des BEV. Ein fertiges Diagramm zeigt [Höhenprofil](https://docs.mapx.at/de/guides/elevation-profile.md), dazu das [Live-Beispiel](https://docs.mapx.at/de/examples/elevation-profile.md).
 
 ## Erreichbarkeit für die Region
 

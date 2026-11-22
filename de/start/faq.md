@@ -22,11 +22,11 @@ Ja, mit Konto und Token. Die Rate Limits gelten je IP-Adresse und Zone, dazu je 
 
 ## Ist kommerzielle Nutzung erlaubt?
 
-Ja. Die amtlichen Daten stehen unter [CC BY 4.0](https://docs.mapx.at/de/reference/attribution.md): die Quelle nennen. Für die Sentinel-2-Kacheln gelten die Copernicus-Bedingungen; Einzelheiten stehen unter [Quellen und Lizenzen](https://docs.mapx.at/de/reference/attribution.md) und in den [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
+Ja. Die offenen Verwaltungsdaten stehen unter [CC BY 4.0](https://docs.mapx.at/de/reference/attribution.md): die Quelle nennen. Für die Sentinel-2-Kacheln gelten die Copernicus-Bedingungen; Einzelheiten stehen unter [Quellen und Lizenzen](https://docs.mapx.at/de/reference/attribution.md) und in den [Nutzungsbedingungen](https://mapx.at/nutzungsbedingungen/).
 
 ## Wie aktuell sind die Daten?
 
-Jeder Kachelsatz hat ein Quelldatum. Es steht auf seiner Seite unter [Kachelsätze](https://docs.mapx.at/de/tilesets/index.md) und im Feld `stand` von `GET /v1/tiles`.
+Jedas Tileset hat ein Quelldatum. Es steht auf seiner Seite unter [Tilesets](https://docs.mapx.at/de/tilesets/index.md) und im Feld `stand` von `GET /v1/tiles`.
 
 ## Ändert sich eine URL bei neuen Daten?
 
@@ -34,7 +34,7 @@ API-URLs (`/v1/tiles/streets/...`, TileJSON) bleiben gleich. Über Stil und Tile
 
 ## Kann ich die Kacheln herunterladen?
 
-Nein. mapx liefert Karten und Kacheln über die API: Stil, TileJSON oder `{z}/{x}/{y}`, siehe [Karten](https://docs.mapx.at/de/guides/maps.md) und [QGIS](https://docs.mapx.at/de/guides/qgis.md). Ganze Kachelsatz-Dateien zum Selbsthosten gibt es nicht.
+Nein. mapx liefert Karten und Kacheln über die API: Stil, TileJSON oder `{z}/{x}/{y}`, siehe [Karten](https://docs.mapx.at/de/guides/maps.md) und [QGIS](https://docs.mapx.at/de/guides/qgis.md). Ganze Tileset-Dateien zum Selbsthosten gibt es nicht.
 
 ## Gibt es Daten außerhalb Österreichs?
 
@@ -46,7 +46,7 @@ Das DTM ist der nackte Boden, das DSM enthält Bäume und Gebäude. Das DTM für
 
 ## Warum kommt 404 für eine Kachel?
 
-Der Zoom liegt außerhalb des Bereichs des Kachelsatzes, die Endung passt nicht zum Typ (`pbf` Vektor, `webp` Raster) oder der Name des Kachelsatzes ist falsch. Kacheln innerhalb des Zoombereichs, aber außerhalb Österreichs kommen als `204` ohne Inhalt.
+Der Zoom liegt außerhalb des Bereichs des Tilesets, die Endung passt nicht zum Typ (`pbf` Vektor, `webp` Raster) oder der Name des Tilesets ist falsch. Kacheln innerhalb des Zoombereichs, aber außerhalb Österreichs kommen als `204` ohne Inhalt.
 
 ## Warum kommt 429?
 

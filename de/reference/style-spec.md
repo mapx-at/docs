@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/reference/style-spec/
 
-> Alle Ebenen des mapx-Vektor-Kachelsatzes streets mit Feldern und Werten sowie die fertigen Stil-IDs. Referenz für eigene MapLibre-Stile.
+> Alle Ebenen des mapx-Vektor-Tilesets streets mit Feldern und Werten sowie die fertigen Stil-IDs. Referenz für eigene MapLibre-Stile.
 
 ## Stil-IDs
 

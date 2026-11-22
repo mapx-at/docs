@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/guides/mcp/
 
 > Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 22 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 22 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
+The mapx MCP server gives an AI assistant 22 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from open government data, and every answer names its source.
 
 | Property | Value |
 |---|---|
@@ -159,7 +159,7 @@ The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `ge
 |---|---|---|---|
 | Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `proximity`, `types`, `limit` |
 | Search | `reverse_geocode` | Nearest address or place for a coordinate | `lng`, `lat`, `radius`, `types` |
-| Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
+| Search | `validate_address` | Check an address against the BEV address register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
 | Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
 | Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `points` (2 to 25), `exclude`, `truck` |
@@ -175,7 +175,7 @@ The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `ge
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
 | Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lng`, `lat`, `kind`, `hours` |
-| Weather | `weather_warnings` | Official weather warnings | `at`, `bbox`, `type`, `min_level`, `active_now` |
+| Weather | `weather_warnings` | Weather warnings from GeoSphere Austria | `at`, `bbox`, `type`, `min_level`, `active_now` |
 | Weather | `climate` | Long-term climate facts, solar potential | `lng`, `lat`, `sections` |
 | Weather | `air_quality` | Air quality index and pollutants | `lng`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
@@ -206,7 +206,7 @@ The assistant receives the error as text and can react to it. Error codes and ca
 
 ## Limitations
 
-- Austria only; data comes from official open data, and each answer names the source.
+- Austria only; data comes from open government data, and each answer names the source.
 - All tools only read; nothing is changed or stored.
 - Public transport answers come from the scheduled timetable, from the scheduled timetable.
 - Climate, weather, warnings and air quality come from GeoSphere Austria, traffic reports from ASFINAG and EVIS.AT.

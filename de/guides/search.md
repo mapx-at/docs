@@ -15,7 +15,7 @@ Den Endpunkt nach der Aktion der Nutzer wählen.
 | Die Adresse an einem Punkt finden | [`/v1/reverse`](https://docs.mapx.at/de/api/geocoding.md) |
 | Orte einer Art zeigen (Tankstelle, Bahnhof) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/de/api/search-box.md) |
 
-Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind amtlich: Adressregister, Ortsnamen, Verwaltungsgrenzen vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
+Alle Endpunkte brauchen einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen. Alle Daten sind offene Verwaltungsdaten: Adressregister, Ortsnamen, Verwaltungsgrenzen vom BEV. Anfragen liegen in der Zone `search`, 10 pro Sekunde.
 
 ## Eine Adresse geocodieren
 

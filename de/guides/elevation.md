@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/de/guides/elevation/
 
-> Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Kachelsätze für Österreich.
+> Höhen an Punkten und Höhenprofile abfragen, Geländemodelle nutzen und 3D-Gelände in der Karte zeigen: Höhen-API und Gelände-Tilesets für Österreich.
 
 mapx hat zwei Höhenmodelle mit 1 m Auflösung (BEV, Laserscanning): das Geländemodell `dtm` (nackter Boden) und das Oberflächenmodell `dsm` (mit Bäumen und Gebäuden). `dtm` eignet sich für Steigungen, Profile und Wege, `dsm` für Sichtbarkeit und Gebäudehöhen. Jede Anfrage braucht einen Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)); die Beispiele senden ihn im Header `Authorization`, den auch Browser senden dürfen.
 
@@ -49,7 +49,7 @@ console.log(prof.properties.ascent);
 
 ## 3D-Gelände in der Karte
 
-Der Kachelsatz `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)):
+Das Tileset `terrain-rgb` als `raster-dem`-Source hinzufügen und das Gelände einschalten (Token-Übergabe für Karten: [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)):
 
 ```js
 map.on("load", () => {
@@ -71,5 +71,5 @@ Die Kacheln verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 +
 ## Nächste Schritte
 
 - [Elevation API](https://docs.mapx.at/de/api/elevation.md)
-- [Kachelsätze](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Datenblatt des Geländemodells
+- [Tilesets](https://docs.mapx.at/de/tilesets/terrain-rgb.md): Datenblatt des Geländemodells
 - [Höhenlinien überlagern](https://docs.mapx.at/de/guides/overlay-contours.md)

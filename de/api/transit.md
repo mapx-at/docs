@@ -8,7 +8,7 @@ Verbindungen mit öffentlichem Verkehr (zu Fuß oder mit dem Rad zur Haltestelle
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10/s) · Guide: [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md)
 
-## Öffentlicher Verkehr: zu Fuß und mit Öffis (GTFS-Fahrplan, RAPTOR) {#public-transit-walking-plus-transit-gtfs-timetable-raptor}
+## ÖV: zu Fuß und mit ÖV (GTFS-Fahrplan, RAPTOR) {#public-transit-walking-plus-transit-gtfs-timetable-raptor}
 
 `GET /v1/directions/transit/{coordinates}`
 
@@ -115,14 +115,14 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `422` | Anfrage gültig, aber nicht beantwortbar (z. B. keine Route) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `502` | Vorgelagerter Dienst nicht erreichbar |
 
-## Mit dem Rad zur Haltestelle, dann Öffentlicher Verkehr {#bike-to-the-stop-plus-transit}
+## Mit dem Rad zur Haltestelle, dann ÖV {#bike-to-the-stop-plus-transit}
 
 `GET /v1/directions/bike_transit/{coordinates}`
 
@@ -227,7 +227,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `422` | Anfrage gültig, aber nicht beantwortbar (z. B. keine Route) |
@@ -339,7 +339,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -420,7 +420,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |

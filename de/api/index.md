@@ -21,9 +21,13 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 - [Geocoding](https://docs.mapx.at/de/api/geocoding.md): Forward, Reverse und Batch.
 - [Search Box](https://docs.mapx.at/de/api/search-box.md): Vorschläge, Retrieve, Kategorien.
 - [Address](https://docs.mapx.at/de/api/address.md): Autofill und Validierung.
-- [Directions](https://docs.mapx.at/de/api/directions.md): Routen, Isochrone, Matrix, Matching.
+- [Directions](https://docs.mapx.at/de/api/directions.md): Routen für Auto, Lkw, Rad und Fuß, Korridorgraph.
+- [Isochrone](https://docs.mapx.at/de/api/isochrone.md): Erreichbare Gebiete nach Zeit oder Distanz.
+- [Matrix](https://docs.mapx.at/de/api/matrix.md): Fahrzeiten und Distanzen zwischen vielen Punkten.
+- [Map Matching](https://docs.mapx.at/de/api/map-matching.md): GPS-Spuren auf dem Straßengraphen.
+- [Tempolimits](https://docs.mapx.at/de/api/speed-limits.md): Gesetzliche Limits im Rechteck oder Korridor.
 - [Optimization](https://docs.mapx.at/de/api/optimization.md): Optimierte Touren und Tourenplanung.
-- [Transit](https://docs.mapx.at/de/api/transit.md): Verbindungen, Haltestellen, Abfahrten.
+- [ÖV](https://docs.mapx.at/de/api/transit.md): Verbindungen, Haltestellen, Abfahrten.
 - [Static Images](https://docs.mapx.at/de/api/static-images.md): Kartenbilder mit Overlays.
 - [Tilequery](https://docs.mapx.at/de/api/tilequery.md): Features der Vektorkacheln an einem Punkt.
 - [Elevation](https://docs.mapx.at/de/api/elevation.md): Höhen und Profile.

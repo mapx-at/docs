@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/guides/qgis/
 
 **Voraussetzungen:** QGIS 3.x.
 
-In QGIS laden kannst du die Kachelsätze (Orthofoto, Höhenmodelle, Vektorkacheln), die fertigen mapx-Stile aber nicht: Sie lesen PMTiles-Dateien (`pmtiles://`). Die Quellenangabe zeigt QGIS nicht von selbst; trage sie im Druck-Layout und in Berichten von Hand ein, siehe [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).
+In QGIS laden kannst du die Tilesets (Orthofoto, Höhenmodelle, Vektorkacheln), die fertigen mapx-Stile aber nicht: Sie lesen PMTiles-Dateien (`pmtiles://`). Die Quellenangabe zeigt QGIS nicht von selbst; trage sie im Druck-Layout und in Berichten von Hand ein, siehe [Quellenangabe](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Orthofoto als XYZ-Layer
 
@@ -52,7 +52,7 @@ https://tiles.mapx.at/v1/tiles/terrain-rgb/{z}/{x}/{y}.webp?access_token=DEIN_TO
 3. **Min. Zoom** 0, **Max. Zoom** 16 eintragen, OK.
 4. Verbindung in die Karte ziehen. QGIS zeigt zunächst einen Standardstil; das Aussehen lässt sich im Layer-Stileditor oder mit einem eigenen Stil ändern.
 
-Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Kachelsätze: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
+Dieselbe Vorgehensweise gilt für `contours` (Max. 16, Min. 10), `orthophoto-flight-blocks` (Zoom 6 bis 17). Alle Tilesets: [Kacheln](https://docs.mapx.at/de/api/tiles.md).
 
 ## Nächste Schritte
 

@@ -1,4 +1,4 @@
-# Sentinel-2-Satellitenbild-Kachelsatz
+# Sentinel-2-Satellitenbild-Tileset
 
 Source: https://docs.mapx.at/de/tilesets/sentinel2/
 
@@ -52,7 +52,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" https://tiles.mapx.at/v1/tiles/sen
 curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.at/v1/tiles/sentinel2/13/4444/2839.webp
 ```
 
-> Der Kachelsatz wird täglich ersetzt (fester Kachelsatz `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:reference_date` (jüngste eingepflegte Szene) (Cache 5 Minuten).
+> Das Tileset wird täglich ersetzt (festes Tileset `sentinel2`, kein versionierter Dateiname). Die TileJSON nennt den Stand im Feld `mapx:reference_date` (jüngste eingepflegte Szene) (Cache 5 Minuten).
 
 ## TileJSON, Zoom und Aktualisierung
 
@@ -75,9 +75,9 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.webp https://tiles.mapx.
 
 ## Index- und Datumsebenen
 
-Aus demselben Composite entstehen vier weitere feste Kachelsätze. Wo kein Wert vorliegt, sind sie durchsichtig und eignen sich als Überlagerung auf `sentinel2`, einem Luftbild oder einer Karte. Alle: WebP, 512 px, z5 bis z13, gleiche Quellenangabe, täglich gemeinsam mit `sentinel2` ersetzt. In `/v1/tiles` erscheinen sie erst, wenn die Datei existiert. Das TileJSON enthält Wertebereich und Farbrampe in `mapx:legend`.
+Aus demselben Composite entstehen vier weitere feste Tilesets. Wo kein Wert vorliegt, sind sie durchsichtig und eignen sich als Überlagerung auf `sentinel2`, einem Luftbild oder einer Karte. Alle: WebP, 512 px, z5 bis z13, gleiche Quellenangabe, täglich gemeinsam mit `sentinel2` ersetzt. In `/v1/tiles` erscheinen sie erst, wenn die Datei existiert. Das TileJSON enthält Wertebereich und Farbrampe in `mapx:legend`.
 
-| Kachelsatz | Zeigt | Wert und Farbe |
+| Tileset | Zeigt | Wert und Farbe |
 |---|---|---|
 | `sentinel2-date` | Aufnahmedatum je Pixel | Alter in Tagen vor `mapx:reference_date`: 0 grün, 20 gelb, 45 orange, 90 rot, 180 dunkelrot |
 | `sentinel2-ndvi` | Vegetation, (NIR - Rot) / (NIR + Rot) | -0,1 grau, 0,05 kahl, 0,2 sandfarben, 0,4 hellgrün, 0,85 dunkelgrün |

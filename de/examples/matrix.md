@@ -121,5 +121,5 @@ document.getElementById('los').addEventListener('click', async () => {
 
 ## Verwendete APIs
 
-- [Routing](https://docs.mapx.at/de/api/directions.md#travel-time--distance-matrix) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
+- [Matrix](https://docs.mapx.at/de/api/matrix.md) `GET api.mapx.at/v1/matrix/{profile}/{coordinates}`
 - [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)

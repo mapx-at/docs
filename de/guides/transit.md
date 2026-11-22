@@ -77,7 +77,7 @@ Ohne `depart_at` beginnt die Isochrone jetzt (Wiener Ortszeit); mit `depart_at` 
 
 ### Zugang mit Rad oder Auto (Bike & Ride, Park & Ride)
 
-Mit `access=bike` oder `access=car` wird der erste Abschnitt nicht gegangen, sondern mit dem Rad oder Auto zu einer Haltestelle zurückgelegt. Das Rad wird an **jeder** Haltestelle abgesperrt (+2 min), das Auto parkt an Haltestellen mit Bahn-, U-Bahn- oder Tramverkehr (+3 min, höchstens 25 min Fahrt); der Algorithmus nimmt die schnellste Kombination, der Bahnhof im eigenen Ort gewinnt also gegen die Weiterfahrt in die nächste Stadt, wenn der Zug früher fährt. Offizielle P+R-Anlagen der GIP kommen fürs Auto dazu (+2 min, dann Fußweg zur Haltestelle). Der Fußweg vom Start gilt weiter, es zählt das Minimum. Der Abgang am Ziel ist immer zu Fuß.
+Mit `access=bike` oder `access=car` wird der erste Abschnitt nicht gegangen, sondern mit dem Rad oder Auto zu einer Haltestelle zurückgelegt. Das Rad wird an **jeder** Haltestelle abgesperrt (+2 min), das Auto parkt an Haltestellen mit Bahn-, U-Bahn- oder Tramverkehr (+3 min, höchstens 25 min Fahrt); der Algorithmus nimmt die schnellste Kombination, der Bahnhof im eigenen Ort gewinnt also gegen die Weiterfahrt in die nächste Stadt, wenn der Zug früher fährt. Ausgewiesene P+R-Anlagen der GIP kommen fürs Auto dazu (+2 min, dann Fußweg zur Haltestelle). Der Fußweg vom Start gilt weiter, es zählt das Minimum. Der Abgang am Ziel ist immer zu Fuß.
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/isochrone/transit/15.16,48.207?contours_minutes=45&access=car" | jq '.metadata | {access, access_stops_improved, sites: .access_sites[:3]}'
@@ -86,10 +86,10 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/isochrone/
 | Parameter | Werte | Bedeutung |
 |---|---|---|
 | `access` | `foot` (Standard), `bike`, `car` | Verkehrsmittel zur ersten Haltestelle |
-| `park` | `any` (Standard), `official` | `official`: Rad nur an Haltestellen im Umkreis von 200 m einer B+R-Anlage, Auto nur an offiziellen P+R-Anlagen |
+| `park` | `any` (Standard), `official` | `official`: Rad nur an Haltestellen im Umkreis von 200 m einer B+R-Anlage, Auto nur an ausgewiesenen P+R-Anlagen |
 | `sites` | 1 bis 50 (Standard 10) | Einträge in `metadata.access_sites` |
 
-`metadata.access_sites` nennt die Zugänge, die den Fußweg schlagen, sortiert nach Fahrzeit: `source` (`site` = offizielle P+R-Anlage, `stop` = Parken an der Haltestelle), `kind`, `name`, `lon`, `lat`, `arrive_min` (Fahrzeit), `ready_min` (bereit zum Einsteigen inkl. Parken und Fußweg) und `stops_won`. Rad im Zug (`egress=bike`) gibt es nicht: die Fahrplandaten enthalten keine Fahrradmitnahme-Information.
+`metadata.access_sites` nennt die Zugänge, die den Fußweg schlagen, sortiert nach Fahrzeit: `source` (`site` = ausgewiesene P+R-Anlage, `stop` = Parken an der Haltestelle), `kind`, `name`, `lon`, `lat`, `arrive_min` (Fahrzeit), `ready_min` (bereit zum Einsteigen inkl. Parken und Fußweg) und `stops_won`. Rad im Zug (`egress=bike`) gibt es nicht: die Fahrplandaten enthalten keine Fahrradmitnahme-Information.
 
 ## Abfahrten in einer App zeigen
 

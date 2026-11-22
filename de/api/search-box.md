@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/searchbox/suggest`
 
-Suche beim Tippen über Adressen, Straßen, Orte und amtliche POIs. FeatureCollection im selben Format wie geocode (Schema `Place`, mit Punktgeometrie); POIs tragen zusätzlich `category` und `maki`, Haltestellen `stop_id` und `modes`. `/retrieve/{id}` liefert einen einzelnen Treffer über seine `id`.
+Suche beim Tippen über Adressen, Straßen, Orte und POIs aus offenen Verwaltungsdaten. FeatureCollection im selben Format wie geocode (Schema `Place`, mit Punktgeometrie); POIs tragen zusätzlich `category` und `maki`, Haltestellen `stop_id` und `modes`. `/retrieve/{id}` liefert einen einzelnen Treffer über seine `id`.
 
 **Parameter**
 
@@ -99,7 +99,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
@@ -197,7 +197,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Nicht gefunden (Name, Pfad oder Position) |
@@ -291,7 +291,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
@@ -351,7 +351,7 @@ data = res.json()
 
 | Status | Bedeutung |
 |---|---|
-| `400` | Parameter fehlt oder ist ungültig |
+| `400` | Parameter fehlt, ist ungültig oder unbekannt (`unknown-parameter`) |
 | `401` | Token fehlt oder ungültig (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token nicht erlaubt (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |

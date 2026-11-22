@@ -8,13 +8,14 @@ Jeder Guide zeigt die häufigen Aufgaben eines Produkts mit Code, der unverände
 
 ## Produkte
 
-- [Karten](https://docs.mapx.at/de/guides/maps.md): Stile, Kachelsätze, Overlays, Gelände.
+- [Karten](https://docs.mapx.at/de/guides/maps.md): Stile, Tilesets, Overlays, Gelände.
 - [Suche](https://docs.mapx.at/de/guides/search.md): Geocoding, Type-ahead, Adressformulare.
 - [Navigation](https://docs.mapx.at/de/guides/navigation.md): Auto, Lkw, Rad, zu Fuß; Maut; Isochronen.
 - [Verkehr](https://docs.mapx.at/de/guides/traffic.md): Störungen, Tempolimits, Verkehrsebene.
 - [ÖV-Abfahrten](https://docs.mapx.at/de/guides/transit.md): Verbindungen, Haltestellen, Abfahrtstafeln.
 - [Statische Kartenbilder](https://docs.mapx.at/de/guides/static-images.md): Kartenbilder für Berichte und Webseiten.
 - [Höhen und Gelände](https://docs.mapx.at/de/guides/elevation.md): Höhen, Profile, 3D-Gelände.
+- [Wetter und Umwelt](https://docs.mapx.at/de/guides/weather.md): Messwerte, Vorhersage, Warnungen, Luftqualität, Klima.
 - [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): mapx aus KI-Assistenten nutzen.
 
 ## Anwendungsfälle

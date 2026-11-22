@@ -21,9 +21,13 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - [Geocoding](https://docs.mapx.at/api/geocoding.md): Forward, reverse and batch.
 - [Search Box](https://docs.mapx.at/api/search-box.md): Suggestions, retrieve, categories.
 - [Address](https://docs.mapx.at/api/address.md): Autofill and validation.
-- [Directions](https://docs.mapx.at/api/directions.md): Routes, isochrone, matrix, matching, speed limits, corridor graph.
+- [Directions](https://docs.mapx.at/api/directions.md): Routes for car, truck, bike and foot, corridor graph.
+- [Isochrone](https://docs.mapx.at/api/isochrone.md): Reachable areas by time or distance.
+- [Matrix](https://docs.mapx.at/api/matrix.md): Travel times and distances between many points.
+- [Map Matching](https://docs.mapx.at/api/map-matching.md): GPS traces onto the road graph.
+- [Speed limits](https://docs.mapx.at/api/speed-limits.md): Statutory limits in a box or corridor.
 - [Optimization](https://docs.mapx.at/api/optimization.md): Optimized trips and tour planning.
-- [Transit](https://docs.mapx.at/api/transit.md): Journeys, stops, departures.
+- [Public transport](https://docs.mapx.at/api/transit.md): Journeys, stops, departures.
 - [Static Images](https://docs.mapx.at/api/static-images.md): Map images with overlays.
 - [Tilequery](https://docs.mapx.at/api/tilequery.md): Vector tile features at a point.
 - [Elevation](https://docs.mapx.at/api/elevation.md): Heights and profiles.

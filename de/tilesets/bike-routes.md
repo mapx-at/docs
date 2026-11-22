@@ -1,14 +1,14 @@
-# Radrouten-Kachelsatz (GIP.at)
+# Radrouten-Tileset (GIP.at)
 
 Source: https://docs.mapx.at/de/tilesets/bike-routes/
 
-> Beschilderte Radrouten und MTB-Strecken in Österreich aus GIP.at, inklusive EuroVelo, als Vektorkacheln (Kachelsatz bike-routes) für MapLibre.
+> Beschilderte Radrouten und MTB-Strecken in Österreich aus GIP.at, inklusive EuroVelo, als Vektorkacheln (Tileset bike-routes) für MapLibre.
 
 Radrouten und Mountainbike-Strecken aus dem offenen Datensatz der Graphenintegrationsplattform (GIP.at, GIPOGD), inklusive der EuroVelo-Routen. Im Stil `streets` stecken sie in der Ebenengruppe `bike_routes` (standardmäßig aus); siehe [Tourismus](https://docs.mapx.at/de/use-cases/tourism.md).
 
 ## Kennwerte
 
-**Kachelsatz `bike-routes`**
+**Tileset `bike-routes`**
 
 | Kennwert | Wert |
 |---|---|
@@ -82,7 +82,7 @@ Geometrie: **Linie**, Zoom: **z5–14**, Ebene: `bike_routes`. Beschilderte Radr
 | | |
 |---|---|
 | Stil | Gruppe `bike_routes` in `streets`, standardmäßig aus |
-| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `bike-routes` als Kachelsatz |
+| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `bike-routes` als Tileset |
 
 ## Quellenangabe
 

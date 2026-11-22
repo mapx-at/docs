@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/api/address/
 
-> Address autofill for forms and address validation against the official Austrian address register: endpoints, parameters and examples.
+> Address autofill for forms and address validation against the Austrian address register (BEV): endpoints, parameters and examples.
 
-Autofill completes a postal address while the user types. Validation checks an address against the official register.
+Autofill completes a postal address while the user types. Validation checks an address against the BEV address register.
 
 Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Search](https://docs.mapx.at/guides/search.md)
 
@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place. FeatureCollection of addresses in the same format as geocode (schema `Place`, separate fields in `properties.address`, with `distance` for `proximity`). A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
+BEV address register only. Completes street, house number, postcode and place. FeatureCollection of addresses in the same format as geocode (schema `Place`, separate fields in `properties.address`, with `distance` for `proximity`). A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
 
 **Parameters**
 
@@ -98,7 +98,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
@@ -197,7 +197,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `404` | Not found (name, path or position) |
@@ -207,7 +207,7 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1, 0 with `not_found`), `deviations[]` per field (kind: spelling | wrong | added | unknown), `coordinates`, `id` and `address_code`.
+Checks an address against the BEV address register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1, 0 with `not_found`), `deviations[]` per field (kind: spelling | wrong | added | unknown), `coordinates`, `id` and `address_code`.
 
 Understands Str./Straße, abbreviations, umlauts and ß; a house number range (`1-3`) is not the number 13. A given place or postcode takes precedence: candidates elsewhere only count if none lies there. A different house number is never a correction: if the number does not exist in the street, `status` is `not_found`, `deviations` holds `{"field": "housenumber", "kind": "unknown"}` and `candidates[]` lists the nearest numbers of that street (up to 5), e.g. `street=Rathausplatz&housenumber=999&postcode=3100`. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Hauptplatz 3` (without place): `{"status": "ambiguous", "address": null, "id": null, "candidates": [{"id": "address-5111737", "full_address": "Hauptplatz 3, 6511 Zams", ...}, {"id": "address-6067644", "full_address": "Hauptplatz 3, 9170 Ferlach", ...}]}`. With `match` and `corrected`, `candidates` is empty.
 
@@ -308,7 +308,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
@@ -437,7 +437,7 @@ data = res.json()
 
 | Status | Meaning |
 |---|---|
-| `400` | A parameter is missing or invalid |
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |

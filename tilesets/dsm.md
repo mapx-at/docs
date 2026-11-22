@@ -89,7 +89,7 @@ The DSM is derived from the BEV ALS-DOM 1 m (airborne laser scanning, surface). 
 ## Notes
 
 - Quantization 0.1 m. The finest level is z16 (about 0.8 m per pixel at 48° N); beyond that the client scales up.
-- Accuracy corresponds to the official BEV source.
+- Accuracy corresponds to the BEV source.
 - Buildings and vegetation reflect the time of the survey flight, not the reference date.
 - Outside the data the value is a smooth continuation, not a measurement (as with the DTM).
 - Building and vegetation height (nDSM = DSM − DTM) can be computed in the client from both tile sets.

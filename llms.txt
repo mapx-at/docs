@@ -1,8 +1,8 @@
 # mapx Docs
 
-> Maps, search, navigation, elevation, transit, traffic and static images for Austria, from official open data. Free API token.
+> Maps, search, navigation, elevation, transit, traffic and static images for Austria, from open government data. Free API token.
 
-mapx provides maps and location APIs for Austria, built only on official open data (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others). Every page is also available as Markdown: the same address with `.md` at the end instead of the trailing slash (for example https://docs.mapx.at/start/first-map.md). All text in one file: https://docs.mapx.at/llms-full.txt. German version: https://docs.mapx.at/de/llms.txt.
+mapx provides maps and location APIs for Austria, built only on open government data (BEV, GIP.at, ASFINAG, GeoSphere Austria, ÖBB and others). Every page is also available as Markdown: the same address with `.md` at the end instead of the trailing slash (for example https://docs.mapx.at/start/first-map.md). All text in one file: https://docs.mapx.at/llms-full.txt. German version: https://docs.mapx.at/de/llms.txt.
 
 ## Facts for using the API
 
@@ -18,12 +18,11 @@ mapx provides maps and location APIs for Austria, built only on official open da
 ## Get started
 
 - [Get started with mapx](https://docs.mapx.at/start/index.md): Start with the mapx maps and location APIs for Austria: get a free API token, then copy working code for a map, a search and a route.
-- [What is mapx? Maps API for Austria](https://docs.mapx.at/start/what-is-mapx.md): mapx is a set of maps and location APIs for Austria built only on official open data: tiles, geocoding, routing, elevation, transit and more.
+- [What is mapx? Maps API for Austria](https://docs.mapx.at/start/what-is-mapx.md): mapx is a set of maps and location APIs for Austria built only on open government data: tiles, geocoding, routing, elevation, transit and more.
 - [API token, access and rate limits](https://docs.mapx.at/start/access-and-limits.md): Get a free mapx API token, learn the difference between public and secret tokens, how to send them, rate limits per zone, CORS and caching.
 - [First map with MapLibre in 5 minutes](https://docs.mapx.at/start/first-map.md): Build your first mapx web map: a complete HTML file with MapLibre GL JS and a public token. Copy, save and open it in a browser.
 - [First search: geocoding request](https://docs.mapx.at/start/first-search.md): Find an address or place in Austria with one geocoding request (curl, JavaScript, Python), then show the result as a marker on a map.
 - [First route: routing request](https://docs.mapx.at/start/first-route.md): Request a driving route from Vienna to Melk with the mapx routing API (curl, JavaScript, Python) and draw the result as a line on a map.
-- [Glossary of mapx and GIS terms](https://docs.mapx.at/start/glossary.md): Glossary of terms used in the mapx documentation: annotations, contours, isochrones, PMTiles, Terrain-RGB and more.
 - [FAQ: token, license, data freshness](https://docs.mapx.at/start/faq.md): Answers on mapx: free with an account and token, commercial use under CC BY 4.0, data freshness, tiles, data outside Austria, errors 401 and 403.
 
 ## Guides
@@ -36,6 +35,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [Transit guide: public transport departures](https://docs.mapx.at/guides/transit.md): Query public transport journeys, stops and departure boards in Austria from the scheduled timetable with the mapx transit API.
 - [Static images guide: map as image](https://docs.mapx.at/guides/static-images.md): Render map images as PNG or WebP with pins, paths and GeoJSON for reports, e-mails and web pages, using the mapx static images API.
 - [Elevation guide: height profile and terrain](https://docs.mapx.at/guides/elevation.md): Get heights at points and elevation profiles, use terrain models and show 3D terrain in the map: elevation API and terrain tilesets for Austria.
+- [Weather guide: observations, forecast, warnings](https://docs.mapx.at/guides/weather.md): Weather and environment data for a point in Austria: station observations, hourly forecast, precipitation nowcast, warnings, weather tiles, air quality and climate.
 - [MCP server for Austrian geodata](https://docs.mapx.at/guides/mcp.md): Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 22 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 - [Custom map style from the basemap](https://docs.mapx.at/guides/style-the-basemap.md): Write your own MapLibre style for the mapx vector basemap of Austria: style land use, water, roads, buildings and boundaries layer by layer.
 - [Contour lines over orthophoto](https://docs.mapx.at/guides/overlay-contours.md): Place contour lines (Höhenlinien) with index lines and elevation labels over the orthophoto or the basemap in MapLibre GL JS.
@@ -48,22 +48,26 @@ mapx provides maps and location APIs for Austria, built only on official open da
 ## API reference
 
 - [API reference: all endpoints](https://docs.mapx.at/api/index.md): Reference of all mapx APIs for Austria with endpoints, parameters, examples and a live playground, generated from the OpenAPI description.
-- [Tiles API: TileJSON and XYZ tiles](https://docs.mapx.at/api/tiles.md): Tiles API for Austria: tileset list, TileJSON and XYZ tiles as vector, raster and elevation (Terrain-RGB), with parameters and examples.
-- [Map styles API: MapLibre styles](https://docs.mapx.at/api/styles.md): Styles API: ready-made MapLibre styles, glyphs (fonts), sprites and rendered raster tiles (Static Tiles) for Austria, with parameters and examples.
-- [Geocoding API for Austria](https://docs.mapx.at/api/geocoding.md): Geocoding API for Austria: forward, reverse and batch geocoding of addresses, streets, places, postcodes, with parameters and examples.
-- [Search Box API: type-ahead search](https://docs.mapx.at/api/search-box.md): Search Box API for autocomplete: suggestions while the user types, details of a result and places by category, with parameters and examples.
-- [Address autofill and validation API](https://docs.mapx.at/api/address.md): Address autofill for forms and address validation against the official Austrian address register: endpoints, parameters and examples.
-- [Routing API: directions, isochrones, matrix](https://docs.mapx.at/api/directions.md): Routing API for Austria: routes for car, truck, bike and foot, isochrones, travel-time matrices and map matching, with parameters and examples.
-- [Route optimization API](https://docs.mapx.at/api/optimization.md): Route optimization API: best order for up to 25 stops and tour planning for several vehicles, with parameters and example requests.
-- [Transit API: public transport Austria](https://docs.mapx.at/api/transit.md): Transit API for public transport in Austria: journeys, stops and departure boards from the timetable data, with parameters and examples.
-- [Static images API: map as PNG or WebP](https://docs.mapx.at/api/static-images.md): Static images API: render map images as PNG or WebP with pins, paths and GeoJSON overlays for reports, e-mails and listings, with examples.
-- [Tilequery API](https://docs.mapx.at/api/tilequery.md): Tilequery API: features around a point from any vector tileset, with parameters and examples.
-- [Elevation API: height and profile](https://docs.mapx.at/api/elevation.md): Elevation API for Austria: terrain height and surface height for points and elevation profiles along a line, with parameters and example requests.
-- [Weather API: forecast and nowcast](https://docs.mapx.at/api/weather.md): Weather API for Austria: current observations, hourly forecast, precipitation nowcast, warnings and weather tiles from GeoSphere Austria.
+- [Errors, status codes and rate limits](https://docs.mapx.at/api/errors.md): Error codes (problem+json), HTTP status codes, rate limits per zone and caching rules of all mapx APIs, with Retry-After on 429.
+- [Address autofill and validation API](https://docs.mapx.at/api/address.md): Address autofill for forms and address validation against the Austrian address register (BEV): endpoints, parameters and examples.
 - [Air quality API for Austria](https://docs.mapx.at/api/air-quality.md): Air quality index, pollutants and Saharan dust for a point in Austria from GeoSphere Austria: endpoints, parameters and example requests.
 - [Climate API: solar, snow, heat days](https://docs.mapx.at/api/climate.md): Climate API for a point in Austria: solar potential, climate normals, heat days, snow and drought from GeoSphere Austria, with parameters and examples.
+- [Directions API: routes for car, truck, bike and foot](https://docs.mapx.at/api/directions.md): Directions API for Austria: routes for car, truck, bike and foot on the GIP.at road graph, plus the corridor graph for offline rerouting, with parameters and examples.
+- [Elevation API: height and profile](https://docs.mapx.at/api/elevation.md): Elevation API for Austria: terrain height and surface height for points and elevation profiles along a line, with parameters and example requests.
+- [Geocoding API for Austria](https://docs.mapx.at/api/geocoding.md): Geocoding API for Austria: forward, reverse and batch geocoding of addresses, streets, places, postcodes, with parameters and examples.
+- [Isochrone API: reachable areas](https://docs.mapx.at/api/isochrone.md): Isochrone API for Austria: areas reachable within given minutes or meters by car, truck, bike, foot or public transport, with parameters and examples.
+- [Map Matching API: GPS traces on the road graph](https://docs.mapx.at/api/map-matching.md): Map Matching API for Austria: snaps a GPS trace to the GIP.at road graph and returns the matched route, with parameters and examples.
+- [Map styles API: MapLibre styles](https://docs.mapx.at/api/styles.md): Styles API: ready-made MapLibre styles, glyphs (fonts), sprites and rendered raster tiles (Static Tiles) for Austria, with parameters and examples.
+- [Matrix API: travel times and distances](https://docs.mapx.at/api/matrix.md): Matrix API for Austria: travel times and distances between many origins and destinations in one request, with parameters and examples.
+- [Route optimization API](https://docs.mapx.at/api/optimization.md): Route optimization API: best order for up to 25 stops and tour planning for several vehicles, with parameters and example requests.
+- [Search Box API: type-ahead search](https://docs.mapx.at/api/search-box.md): Search Box API for autocomplete: suggestions while the user types, details of a result and places by category, with parameters and examples.
+- [Speed limits API: statutory limits from GIP.at](https://docs.mapx.at/api/speed-limits.md): Speed limits API for Austria: statutory speed limits of the road network in a bounding box or along a route corridor, with parameters and examples.
+- [Static images API: map as PNG or WebP](https://docs.mapx.at/api/static-images.md): Static images API: render map images as PNG or WebP with pins, paths and GeoJSON overlays for reports, e-mails and listings, with examples.
+- [Tilequery API](https://docs.mapx.at/api/tilequery.md): Tilequery API: features around a point from any vector tileset, with parameters and examples.
+- [Tiles API: TileJSON and XYZ tiles](https://docs.mapx.at/api/tiles.md): Tiles API for Austria: tileset list, TileJSON and XYZ tiles as vector, raster and elevation (Terrain-RGB), with parameters and examples.
 - [Traffic API: incidents and speed limits](https://docs.mapx.at/api/traffic.md): Traffic API for Austria: traffic incidents, motorway speed limits, signs and traffic tiles, with parameters and example requests.
-- [Errors, status codes and rate limits](https://docs.mapx.at/api/errors.md): Error codes (problem+json), HTTP status codes, rate limits per zone and caching rules of all mapx APIs, with Retry-After on 429.
+- [Transit API: public transport Austria](https://docs.mapx.at/api/transit.md): Transit API for public transport in Austria: journeys, stops and departure boards from the timetable data, with parameters and examples.
+- [Weather API: forecast and nowcast](https://docs.mapx.at/api/weather.md): Weather API for Austria: current observations, hourly forecast, precipitation nowcast, warnings and weather tiles from GeoSphere Austria.
 
 ## Tilesets
 
@@ -83,11 +87,13 @@ mapx provides maps and location APIs for Austria, built only on official open da
 ## Reference
 
 - [Reference: tiles, styles, attribution](https://docs.mapx.at/reference/index.md): Reference pages for the mapx APIs: attribution and license, coordinates, tile scheme, Terrain-RGB encoding and style specification.
+- [Glossary of mapx and GIS terms](https://docs.mapx.at/reference/glossary.md): Glossary of terms used in the mapx documentation: annotations, contours, isochrones, PMTiles, Terrain-RGB and more.
 - [Basemap layers and style specification](https://docs.mapx.at/reference/style-spec.md): All layers of the mapx streets vector tileset with fields and values, plus the ready-made style IDs. Reference for custom MapLibre styles.
 - [Terrain-RGB elevation encoding](https://docs.mapx.at/reference/terrain-rgb.md): How mapx encodes elevation as color in Terrain-RGB tiles (Mapbox encoding, 0.1 m): value range, rounding and decoding functions.
 - [Tile scheme: Web Mercator, z/x/y](https://docs.mapx.at/reference/tile-scheme.md): Tile scheme of the mapx tiles: Web Mercator, z/x/y addressing, 512-pixel tiles, resolution per zoom level and overzoom.
-- [Coordinates: lon,lat, WGS84, Web Mercator](https://docs.mapx.at/reference/coordinates.md): Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and official Austrian sources in MGI and ETRS89.
+- [Coordinates: lon,lat, WGS84, Web Mercator](https://docs.mapx.at/reference/coordinates.md): Coordinate order lon,lat in all mapx APIs, WGS84 versus Web Mercator (EPSG:3857) and Austrian government data in MGI and ETRS89.
 - [Attribution and license (CC BY 4.0)](https://docs.mapx.at/reference/attribution.md): Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
+- [Naming rules and units](https://docs.mapx.at/reference/conventions.md): How mapx names fields and parameters: units without and with suffix, time zones (UTC except timetables), points as [lng, lat], English snake_case, errors and paging.
 
 ## Optional
 
@@ -108,7 +114,7 @@ mapx provides maps and location APIs for Austria, built only on official open da
 - [3D buildings example](https://docs.mapx.at/examples/buildings-3d.md): Extruded 3D buildings with BEV heights on the mapx vector basemap, camera tilted, in MapLibre GL JS. Runnable code you can copy.
 - [Search Box example with suggestions](https://docs.mapx.at/examples/search-box.md): Suggestions while typing, position after the click and a type filter: type-ahead search with the mapx Search Box API, runnable code.
 - [Address autofill example for forms](https://docs.mapx.at/examples/autofill.md): Type a street, pick a suggestion and the form fields fill themselves: address autofill for Austrian addresses with the mapx autofill API. Runnable code.
-- [Address validation example](https://docs.mapx.at/examples/address-validation.md): Check an address against the official Austrian address register with the address validation API and show the corrected result. Runnable code.
+- [Address validation example](https://docs.mapx.at/examples/address-validation.md): Check an address against the Austrian address register (BEV) with the address validation API and show the corrected result. Runnable code.
 - [Reverse geocoding example](https://docs.mapx.at/examples/reverse-geocode.md): Click the map and get the nearest address: reverse geocoding with the mapx geocoding API for Austria, runnable code with MapLibre GL JS.
 - [Truck route example with options](https://docs.mapx.at/examples/truck-route.md): Truck routing with vehicle size, avoiding tolls and motorways, and alternatives: a runnable example for the mapx routing API.
 - [Tour planning example: best stop order](https://docs.mapx.at/examples/optimization.md): Click stops on the map and get the best order from the depot and back with the mapx route optimization API: runnable tour planning example.

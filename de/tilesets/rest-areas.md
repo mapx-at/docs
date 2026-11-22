@@ -1,8 +1,8 @@
-# Rastanlagen-Kachelsatz (ASFINAG)
+# Rastanlagen-Tileset (ASFINAG)
 
 Source: https://docs.mapx.at/de/tilesets/rest-areas/
 
-> Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Kachelsatz rest-areas) und als Suchkategorie rest_area in der mapx-Suche.
+> Rastanlagen und Lkw-Parkplätze der ASFINAG als Vektorkacheln (Tileset rest-areas) und als Suchkategorie rest_area in der mapx-Suche.
 
 Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Verkehrsdaten der ASFINAG, 314 Standorte.
 
@@ -12,7 +12,7 @@ Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Ve
 
 ## Kennwerte
 
-**Kachelsatz `rest-areas`**
+**Tileset `rest-areas`**
 
 | Kennwert | Wert |
 |---|---|
@@ -89,7 +89,7 @@ Geometrie: **Punkt**, Zoom: **z7–14**, Ebene: `rest_area_p`. Rast-, Pendler- u
 |---|---|
 | Stil | Gruppe `rest_areas`, standardmäßig aus: Punkt, ab z12 Name; Anlagen mit Lkw-Plätzen dunkler |
 | Suche | Kategorie `rest_area` in [Search Box](https://docs.mapx.at/de/api/search-box.md) und Geocoding |
-| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `rest-areas` als Kachelsatz |
+| Abfrage | [Tilequery](https://docs.mapx.at/de/api/tilequery.md) mit `rest-areas` als Tileset |
 
 ## Quellenangabe
 

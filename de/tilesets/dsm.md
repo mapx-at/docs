@@ -1,4 +1,4 @@
-# DSM-Oberflächenmodell (Kachelsatz)
+# DSM-Oberflächenmodell (Tileset)
 
 Source: https://docs.mapx.at/de/tilesets/dsm/
 
@@ -16,7 +16,7 @@ Das DSM ist das Gegenstück zum [DTM](https://docs.mapx.at/de/tilesets/terrain-r
 
 ## Kennwerte
 
-**Kachelsatz `dsm`**
+**Tileset `dsm`**
 
 | Kennwert | Wert |
 |---|---|
@@ -89,7 +89,7 @@ Das DSM entsteht aus dem ALS-DOM 1 m des BEV (Airborne Laserscanning, Oberfläch
 ## Hinweise
 
 - Quantisierung 0,1 m, maximal z16 (≈ 0,8 m pro Pixel bei 48° N), darüber zoomt der Client auf.
-- Die Genauigkeit entspricht der amtlichen Quelle des BEV.
+- Die Genauigkeit entspricht der Quelle des BEV.
 - Gebäude und Bewuchs entsprechen dem Zeitpunkt der Befliegung, nicht dem Stichtag.
 - Außerhalb der Daten ist der Wert eine glatte Fortsetzung, keine Messung (wie beim DTM).
 - Gebäude- und Bewuchshöhe (nDSM) ergeben sich im Client aus DSM minus DTM.

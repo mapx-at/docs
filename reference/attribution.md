@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/reference/attribution/
 
 > Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 
-The official data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
+The open government data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
 
 ## mapx.at first
 

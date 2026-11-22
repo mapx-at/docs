@@ -99,7 +99,7 @@ Vignette roads remain allowed with `exclude=toll`. Toll source: ASFINAG, CC BY 4
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving/14.2,48.27;14.45,48.30?overview=false" | jq '.routes[0].closures_avoided'
 ```
 
-Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/directions.md#travel-time--distance-matrix) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, `binding_count` of them binding, `binding` true if any) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/directions.md#isochrones) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `closures` (top level, as with matrix and directions) has the same fields, `closures_avoided` lists the closures at which the largest contour stops. `category` of a closure is the same English enum as `kind` in the [traffic reports](https://docs.mapx.at/api/traffic.md) (`road_closure`, `winter_closure`, `roadworks`, …).
+Matrix and isochrone use the same closures for the same profiles. A [matrix](https://docs.mapx.at/api/matrix.md) entry has the same duration and distance as a route between the same two points, also when that route runs through a closure as a last resort; `closures` tells whether closures were applied (`applied`), how many (`count`, `binding_count` of them binding, `binding` true if any) and the time of the reports (`fetched`). An [isochrone](https://docs.mapx.at/api/isochrone.md) does not extend across any full closure, not even one without a binding flag, because without a destination there is no last resort; `closures` (top level, as with matrix and directions) has the same fields, `closures_avoided` lists the closures at which the largest contour stops. `category` of a closure is the same English enum as `kind` in the [traffic reports](https://docs.mapx.at/api/traffic.md) (`road_closure`, `winter_closure`, `roadworks`, …).
 
 ## Voice and banner instructions
 
@@ -149,6 +149,6 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -X POST https://api.mapx.at/v1/opt
 
 ## Next
 
-- [Directions API](https://docs.mapx.at/api/directions.md), [Optimization API](https://docs.mapx.at/api/optimization.md)
+- [Directions API](https://docs.mapx.at/api/directions.md), [Isochrone API](https://docs.mapx.at/api/isochrone.md), [Matrix API](https://docs.mapx.at/api/matrix.md), [Map Matching API](https://docs.mapx.at/api/map-matching.md), [Optimization API](https://docs.mapx.at/api/optimization.md)
 - [Traffic](https://docs.mapx.at/guides/traffic.md): incidents along a route
 - [Route example](https://docs.mapx.at/examples/route.md)

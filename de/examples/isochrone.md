@@ -130,5 +130,5 @@ async function abfragen(ort) {
 
 ## Verwendete APIs
 
-- [Routing](https://docs.mapx.at/de/api/directions.md#isochrones) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
+- [Isochrone](https://docs.mapx.at/de/api/isochrone.md) `GET api.mapx.at/v1/isochrone/{profile}/{coordinate}`
 - [Static Tiles](https://docs.mapx.at/de/api/styles.md) `GET api.mapx.at/v1/styles/{id}/tiles/512/{z}/{x}/{y}` (OpenLayers, Leaflet)

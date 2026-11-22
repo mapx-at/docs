@@ -15,7 +15,7 @@ Pick the endpoint by what the user does.
 | Find the address at a point | [`/v1/reverse`](https://docs.mapx.at/api/geocoding.md) |
 | Show places of a kind (fuel station, station) | [`/v1/searchbox/category/{category}`](https://docs.mapx.at/api/search-box.md) |
 
-All data is official: the address register, place names, administrative boundaries from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
+All data is open government data: the address register, place names, administrative boundaries from BEV. Requests are in the `search` zone, 10 per second and need a token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)); the samples send it in the `Authorization` header, which browsers may send too.
 
 ## Geocode an address
 

@@ -2,7 +2,7 @@
 
 Source: https://docs.mapx.at/examples/address-validation/
 
-> Check an address against the official Austrian address register with the address validation API and show the corrected result. Runnable code.
+> Check an address against the Austrian address register (BEV) with the address validation API and show the corrected result. Runnable code.
 
 Validation compares the four address parts with the BEV address register. The result has a `status` (`match`, `corrected`, `ambiguous`, `not_found`), the list of `deviations` and either the matching `address` with coordinates or a list of `candidates`. The pre-filled address has a typo on purpose.
 
@@ -13,7 +13,7 @@ Validation compares the four address parts with the BEV address register. The re
 ````js
 import * as maplibregl from "https://unpkg.com/maplibre-gl@6.19.0/dist/maplibre-gl.mjs";
 
-// Address validation: check a typed address against the official register (BEV) and show the corrected result.
+// Address validation: check a typed address against the BEV address register and show the corrected result.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 // Adds the token to every request MapLibre makes to mapx.at (style, tiles, fonts, sprites), never to other hosts.
 const transformRequest = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) ? url + (url.includes('?') ? '&' : '?') + 'access_token=' + TOKEN : url });
@@ -52,7 +52,7 @@ document.getElementById('pruefen').addEventListener('click', async () => {
 ```
 
 ````js
-// Address validation: check a typed address against the official register (BEV) and show the corrected result.
+// Address validation: check a typed address against the BEV address register and show the corrected result.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts
@@ -88,7 +88,7 @@ document.getElementById('pruefen').addEventListener('click', async () => {
 ```
 
 ````js
-// Address validation: check a typed address against the official register (BEV) and show the corrected result.
+// Address validation: check a typed address against the BEV address register and show the corrected result.
 const TOKEN = 'YOUR_TOKEN'; // your public token (mx_pk_…) from https://account.mapx.at
 const AUTH = { headers: { Authorization: 'Bearer ' + TOKEN } };
 const de = document.documentElement.lang.startsWith('de'); // page language: German or English texts

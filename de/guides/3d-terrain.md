@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/de/guides/3d-terrain/
 
 **Voraussetzungen:** ein Browser, ein beliebiger statischer Webserver (zum Beispiel `npx serve`). Ein kostenloser API-Token ([Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md)).
 
-Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Höhe, Typ `raster-dem`) und das [Orthofoto](https://docs.mapx.at/de/tilesets/orthophoto.md) (Bild, Typ `raster`). Beide Kachelsätze lassen sich über [TileJSON](https://docs.mapx.at/de/api/tiles.md) einbinden, ohne einen Dateinamen zu kennen.
+Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Höhe, Typ `raster-dem`) und das [Orthofoto](https://docs.mapx.at/de/tilesets/orthophoto.md) (Bild, Typ `raster`). Beide Tilesets lassen sich über [TileJSON](https://docs.mapx.at/de/api/tiles.md) einbinden, ohne einen Dateinamen zu kennen.
 
 1. **Seite anlegen.** Datei `index.html` mit MapLibre GL JS und einem Kartencontainer:
 
