@@ -24,7 +24,7 @@ Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat 
      // Token an alle Anfragen an mapx.at hängen (TileJSON, Kacheln, Schriften)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const quellen = {
-       ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
+       orthophoto: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        linien: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
      };
    ```
@@ -81,7 +81,7 @@ Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat 
          version: 8,
          glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: quellen,
-         layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
+         layers: [{ id: "orthophoto", type: "raster", source: "orthophoto" }, ...linienEbenen, beschriftung]
        }
      });
      map.addControl(new maplibregl.AttributionControl({ compact: true }));

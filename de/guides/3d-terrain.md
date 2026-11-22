@@ -30,7 +30,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    const quellen = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
      "dem-hillshade": { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
-     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
+     orthophoto: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
    };
    ```
 
@@ -38,7 +38,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
 
    ```js
    const ebenen = [
-     { id: "ortho", type: "raster", source: "ortho" },
+     { id: "orthophoto", type: "raster", source: "orthophoto" },
      { id: "schummerung", type: "hillshade", source: "dem-hillshade",
        paint: { "hillshade-exaggeration": 0.4, "hillshade-shadow-color": "#000000" } }
    ];

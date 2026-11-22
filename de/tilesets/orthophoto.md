@@ -39,8 +39,8 @@ const map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
-    layers: [{ id: "ortho", type: "raster", source: "ortho" }]
+    sources: { orthophoto: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
+    layers: [{ id: "orthophoto", type: "raster", source: "orthophoto" }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));

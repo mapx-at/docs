@@ -23,8 +23,8 @@ const map = new maplibregl.Map({
   center: [15.334, 48.227], zoom: 11,
   style: {
     version: 8,
-    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
-    layers: [{ id: "s2", type: "raster", source: "s2" }]
+    sources: { sentinel2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+    layers: [{ id: "sentinel2", type: "raster", source: "sentinel2" }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));

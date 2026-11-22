@@ -24,7 +24,7 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
      // adds the token to every request to mapx.at (TileJSON, tiles, fonts)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const sources = {
-       ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
+       orthophoto: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        contours: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
      };
    ```
@@ -81,7 +81,7 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
          version: 8,
          glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: sources,
-         layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...lineLayers, labels]
+         layers: [{ id: "orthophoto", type: "raster", source: "orthophoto" }, ...lineLayers, labels]
        }
      });
      map.addControl(new maplibregl.AttributionControl({ compact: true }));

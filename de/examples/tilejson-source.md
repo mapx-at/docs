@@ -27,11 +27,11 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: {
-      ortho: { type: 'raster', url: 'https://api.mapx.at/v1/tiles/orthophoto.json', tileSize: 512 },
+      orthophoto: { type: 'raster', url: 'https://api.mapx.at/v1/tiles/orthophoto.json', tileSize: 512 },
       linien: { type: 'vector', url: 'https://api.mapx.at/v1/tiles/contours.json' },
     },
     layers: [
-      { id: 'ortho', type: 'raster', source: 'ortho' },
+      { id: 'orthophoto', type: 'raster', source: 'orthophoto' },
       { id: 'linien', type: 'line', source: 'linien', 'source-layer': 'contour_l', paint: { 'line-color': '#ffd24a', 'line-width': 0.8, 'line-opacity': 0.9 } },
     ],
   },

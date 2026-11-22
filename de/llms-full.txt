@@ -1655,7 +1655,7 @@ Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat 
      // Token an alle Anfragen an mapx.at hängen (TileJSON, Kacheln, Schriften)
      const withToken = (url) => ({ url: /^https:\/\/([\w-]+\.)?mapx\.at\//.test(url) && !url.includes("access_token=") ? url + (url.includes("?") ? "&" : "?") + "access_token=" + TOKEN : url });
      const quellen = {
-       ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
+       orthophoto: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 },
        linien: { type: "vector", url: "https://tiles.mapx.at/v1/tiles/contours.json" }
      };
    ```
@@ -1712,7 +1712,7 @@ Der Kachelsatz [Höhenlinien](https://docs.mapx.at/de/tilesets/contours.md) hat 
          version: 8,
          glyphs: "https://api.mapx.at/v1/fonts/{fontstack}/{range}.pbf",
          sources: quellen,
-         layers: [{ id: "ortho", type: "raster", source: "ortho" }, ...linienEbenen, beschriftung]
+         layers: [{ id: "orthophoto", type: "raster", source: "orthophoto" }, ...linienEbenen, beschriftung]
        }
      });
      map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -1768,7 +1768,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
    const quellen = {
      dem:   { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
      "dem-hillshade": { type: "raster-dem", url: "https://tiles.mapx.at/v1/tiles/terrain-rgb.json", encoding: "mapbox" },
-     ortho: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
+     orthophoto: { type: "raster",     url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 }
    };
    ```
 
@@ -1776,7 +1776,7 @@ Verwendet werden das [DTM](https://docs.mapx.at/de/tilesets/terrain-rgb.md) (Hö
 
    ```js
    const ebenen = [
-     { id: "ortho", type: "raster", source: "ortho" },
+     { id: "orthophoto", type: "raster", source: "orthophoto" },
      { id: "schummerung", type: "hillshade", source: "dem-hillshade",
        paint: { "hillshade-exaggeration": 0.4, "hillshade-shadow-color": "#000000" } }
    ];
@@ -8510,8 +8510,8 @@ const map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: { ortho: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
-    layers: [{ id: "ortho", type: "raster", source: "ortho" }]
+    sources: { orthophoto: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/orthophoto.json", tileSize: 512 } },
+    layers: [{ id: "orthophoto", type: "raster", source: "orthophoto" }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -8594,8 +8594,8 @@ const map = new maplibregl.Map({
   center: [15.334, 48.227], zoom: 11,
   style: {
     version: 8,
-    sources: { s2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
-    layers: [{ id: "s2", type: "raster", source: "s2" }]
+    sources: { sentinel2: { type: "raster", url: "https://tiles.mapx.at/v1/tiles/sentinel2.json", tileSize: 512 } },
+    layers: [{ id: "sentinel2", type: "raster", source: "sentinel2" }]
   }
 });
 map.addControl(new maplibregl.AttributionControl({ compact: true }));
@@ -11261,11 +11261,11 @@ const map = new maplibregl.Map({
   style: {
     version: 8,
     sources: {
-      ortho: { type: 'raster', url: 'https://api.mapx.at/v1/tiles/orthophoto.json', tileSize: 512 },
+      orthophoto: { type: 'raster', url: 'https://api.mapx.at/v1/tiles/orthophoto.json', tileSize: 512 },
       linien: { type: 'vector', url: 'https://api.mapx.at/v1/tiles/contours.json' },
     },
     layers: [
-      { id: 'ortho', type: 'raster', source: 'ortho' },
+      { id: 'orthophoto', type: 'raster', source: 'orthophoto' },
       { id: 'linien', type: 'line', source: 'linien', 'source-layer': 'contour_l', paint: { 'line-color': '#ffd24a', 'line-width': 0.8, 'line-opacity': 0.9 } },
     ],
   },
