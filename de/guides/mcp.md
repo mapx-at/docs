@@ -219,7 +219,8 @@ Deine Fragen und die Ergebnisse laufen über den Anbieter deines Assistenten. ma
 
 | Symptom | Ursache und Abhilfe |
 |---|---|
-| `401` | Kein oder ungültiger Token. Bei Anmeldung über das Konto startet der Assistent damit die Anmeldung; nach dem Trennen oder Sperren meldet er `401` und fragt neu. Beim Weg mit Token prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist. |
+| `401` | Kein oder ungültiger Token. Bei Anmeldung über das Konto startet der Assistent damit die Anmeldung; nach dem Trennen oder Sperren meldet er `401` und fragt neu. Beim Weg mit Token prüfe den Header `Authorization: Bearer` und ob der Token gelöscht wurde oder abgelaufen ist; der MCP-Server nimmt den Token nur in diesem Header, nicht als `access_token` in der URL. |
+| Werkzeuge fehlen, oder der Assistent ruft ein Werkzeug auf, das es nicht mehr gibt (`Unknown tool`) | Clients merken sich die Werkzeugliste vom Zeitpunkt der Verbindung. Nach Änderungen an den mapx-Werkzeugen den mapx-Connector im Client trennen und neu verbinden (in claude.ai unter Einstellungen → Konnektoren), dann einen neuen Chat beginnen. |
 | Fehlerseite „Anwendung nicht zugelassen“ | Die Anwendung steht nicht auf der Liste der freigegebenen Anwendungen. Nimm den Weg mit Token oder schreibe an support@mapx.at. |
 | `403` `mcp-token-required` | Am MCP-Server wurde ein öffentlicher (`mx_pk_`) oder geheimer (`mx_sk_`) Token verwendet. Lege einen Token vom Typ „KI-Assistent (MCP)“ an. |
 | `403` `mcp-token-only` | Ein `mx_mcp_`-Token wurde für einen direkten API-Aufruf verwendet. Nimm dort einen geheimen Token (`mx_sk_`). |

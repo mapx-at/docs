@@ -9,7 +9,7 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 | Aufgabe | Endpunkt |
 |---|---|
 | Störungen, Baustellen und Sperren auflisten | [`/v1/traffic/incidents`](https://docs.mapx.at/de/api/traffic.md) |
-| Tempolimits auf Wechselverkehrszeichen (`bbox` ist Pflicht) | [`/v1/traffic/flow`](https://docs.mapx.at/de/api/traffic.md) |
+| Tempolimits, die Wechselverkehrszeichen auf Autobahnen anzeigen (keine Staulage) | [`/v1/traffic/sign-limits`](https://docs.mapx.at/de/api/traffic.md) |
 | Positionen der Zeichen | [`/v1/traffic/signs`](https://docs.mapx.at/de/api/traffic.md) |
 | Verkehr auf einer Karte zeichnen | `/v1/traffic/tiles.json` |
 | Prüfen, ob die Daten aktuell sind | `/v1/traffic/status` |
@@ -23,13 +23,15 @@ const { features, total, next_cursor } = await (await fetch(url, { headers: { Au
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
-Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße), `road_class` (`motorway`, `expressway`, `federal`, `state`, kommagetrennt, für A-, S-, B- und L-Straßen), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (UTC). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
+Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße; Rampen und Äste wie `road_section` `A13.33.4` gehören zur `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, kommagetrennt, für A-, S-, B- und L-Straßen), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (Datum oder Zeitpunkt mit `Z` oder Offset wie `2026-12-01T10:00:00+01:00`; `to` vor `from` ergibt `400`). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
 
-Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
+Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. Bei `POST` gibt es nur `next_cursor`: denselben Body mit `cursor` erneut senden. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
 ```
+
+Jede Meldung hat `type` und `impact` (`critical` für Pkw gesperrt, `major` verbindlich, Fahrstreifensperre oder Unfall, `minor` sonst ungeplant, `low` sonst geplant), `kind` (Kategorie der Quelle, deutsch, z. B. `Straßensperre`, `Bauarbeiten`), `road` (Straßennummer, `null` bei Gemeindestraßen) sowie aus EVIS `road_name`, `direction` (Richtung als Text), `regions` (Bundesländer), `creator` und `transport_modes`. `closed: true` heißt für Pkw gesperrt; ein `road_closure` mit `closed: false` gilt nur für andere Verkehrsarten (z. B. Fußgänger, Fahrräder) oder der Verkehr läuft über die Gegenfahrbahn.
 
 ## Fahrstreifen auf Autobahnen
 
@@ -59,9 +61,9 @@ curl -s -X POST -H "Authorization: Bearer DEIN_TOKEN" -H "Content-Type: applicat
 ```js
 map.on("load", () => {
   map.addSource("mx-traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
-  // Ebene "traffic": Tempolimits der Wechselverkehrszeichen auf Autobahnabschnitten
-  map.addLayer({ id: "mx-traffic", type: "line", source: "mx-traffic", "source-layer": "traffic",
-                 paint: { "line-width": 4, "line-color": "#e11d48" } });
+  // Ebene "sign_limits": angezeigte Tempolimits der Wechselverkehrszeichen je Autobahnabschnitt und Richtung
+  map.addLayer({ id: "mx-sign-limits", type: "line", source: "mx-traffic", "source-layer": "sign_limits",
+                 paint: { "line-width": 4, "line-color": "#3a5fcd" } });
   // Ebene "incidents": Meldungen und Sperren (Strecken und Punkte)
   map.addLayer({ id: "mx-incidents-lines", type: "line", source: "mx-traffic", "source-layer": "incidents",
                  filter: ["!=", ["geometry-type"], "Point"],
@@ -72,7 +74,7 @@ map.on("load", () => {
 });
 ```
 
-Die Vektorquelle hat zwei Ebenen: `traffic` (Tempolimits der Wechselverkehrszeichen) und `incidents` (Meldungen und Sperren). Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Die mapx-Stile (zum Beispiel `streets`) belegen den Quellennamen `traffic` schon, deshalb heißt die Quelle hier `mx-traffic`. Die Stile `traffic-day` und `traffic-night` (Nachtkarte mit für dunklen Grund aufgehellten Farben) zeichnen beide Ebenen fertig. Die Kacheln liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
+Die Vektorquelle hat zwei Ebenen: `sign_limits` (angezeigte Tempolimits der Wechselverkehrszeichen mit `speed_limit`, `normal_speed` und `reduction` in km/h; das ist keine Verkehrslage) und `incidents` (Meldungen und Sperren mit `id`, `type`, `impact`, `start`, `end`). Der Token wird wie bei jeder Karte per `transformRequest` übergeben, siehe [Zugang und Limits](https://docs.mapx.at/de/start/access-and-limits.md). Die mapx-Stile (zum Beispiel `streets`) belegen den Quellennamen `traffic` schon, deshalb heißt die Quelle hier `mx-traffic`. Die Stile `traffic-day` und `traffic-night` (Nachtkarte mit für dunklen Grund aufgehellten Farben) zeichnen beide Ebenen fertig, die Tempolimits in einer neutralen Farbe. Die Kacheln liegen in der Zone `static` (5 pro Sekunde); der Client sollte sie cachen.
 
 ## Route um Sperren
 

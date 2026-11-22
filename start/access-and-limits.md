@@ -78,16 +78,20 @@ Without a valid token the API answers `401` (`missing-token`, `invalid-token`, `
 
 ## Rate limits
 
-The zones below apply per IP address (per token over MCP). On top of that, each token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted too. Every API response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30). The PMTiles requests of the styles (`https://tiles.mapx.at/…pmtiles`) do not carry it; they count in the `tiles` zone. Exceeding a limit returns `429` with `Retry-After`. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
+The zones below apply per IP address (per token over MCP). On top of that, each token may make 6000 requests per minute by default; rejected requests with `rate-limited` are counted too. Every API response carries a `RateLimit-Policy` header, for example `"search";q=10;w=1;burst=30` (10 requests per second plus a burst of 30); the gateway sets it from the same table as its limits, so it always names the zone that actually applies. The PMTiles requests of the styles (`https://tiles.mapx.at/…pmtiles`) do not carry it; they count in the `tiles` zone. Exceeding a limit returns `429` with `Retry-After`. A daily and a monthly limit per account are also planned (all tokens together, UTC; when exceeded: `429` `quota-exceeded` with `Retry-After` until the next day or month); currently both are unlimited. Your account shows the current state under Usage.
 
 | Zone | Requests | Used by |
 |---|---|---|
-| `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs, sprites, PMTiles requests of the styles (burst 500 on `tiles.mapx.at`) |
-| `search` | 10/s, burst 30 | geocoding, Search Box, autofill, tilequery, departures, weather values, traffic reports |
-| `route` | 5/s, burst 20 | directions, transit journeys |
+| `tiles` | 100/s, burst 200 | tiles, TileJSON, glyphs and sprites (burst 100), PMTiles requests of the styles (burst 500 on `tiles.mapx.at`) |
+| `search` | 10/s, burst 30 | styles and the lists `/v1/styles`, `/v1/tiles`, geocoding, Search Box, autofill, address validation, tilequery, departures, stops, weather values, traffic reports |
+| `route` | 5/s, burst 20 | directions, transit journeys, speed limits (corridor graph: burst 10) |
 | `elevation` | 10/s, burst 20 | elevation and profile |
-| `static` | 5/s, burst 60 | Static Tiles, traffic and weather tiles |
-| `heavy` | 30/min, burst 5 | static images, isochrone, matrix, matching, optimization, batch geocoding |
+| `static` | 5/s, burst 60 | Static Tiles, traffic tiles |
+| `weather` | 20/s, burst 200 | weather tiles (a radar animation loads 70 to 150 tiles at once) |
+| `heavy` | 30/min, burst 5 | static images, isochrone, matrix, matching, optimized trips, optimization (burst 3) |
+| `batch` | 2/min, burst 2 | batch geocoding (up to 1000 addresses per request, one request at a time) |
+
+Expensive groups (rendered tiles and static images, routing, search, batch geocoding) also have an overall limit for all clients together, so that a single client cannot use up the server. It answers `429` with `Retry-After` as well.
 
 **Over MCP.** Every tool call of the [MCP server](https://docs.mapx.at/guides/mcp.md) counts like an API call (some tools make several) and shows up as MCP in the usage view. The per-minute limit of the token and the zone limits above apply, per token instead of per IP address. The MCP endpoint itself accepts 10 requests per second per IP address (burst 40) and request bodies up to 256 KB.
 
@@ -95,7 +99,9 @@ For many tiles: cache responses in the client (tiles change only with a new rele
 
 ## CORS and caching
 
-CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. Responses without a token in the URL may be stored by shared caches; styles requested with `access_token` are `private`.
+CORS allows every origin, so you can call the APIs straight from the browser. The preflight answer allows the `Authorization` header, so `fetch` calls from the browser can send the token in the header; image and tile URLs take it as `access_token`. If a request carries both a `Bearer` token and `access_token`, the `Bearer` token counts; another `Authorization` scheme (for example `Basic` of a proxy) does not hide `access_token`.
+
+All responses to requests with a token are `Cache-Control: private`: the browser may cache them, shared caches (proxies, CDNs) must not, so no one else gets your response without a token. Every `GET` response carries an `ETag`; send it back as `If-None-Match` and you get `304 Not Modified` without a body (tiles, styles and TileJSON use the file version, all other responses the content, for example traffic reports polled every minute).
 
 ## Attribution
 

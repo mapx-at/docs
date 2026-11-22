@@ -9,7 +9,7 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 | Task | Endpoint |
 |---|---|
 | List incidents, roadworks and closures | [`/v1/traffic/incidents`](https://docs.mapx.at/api/traffic.md) |
-| Speed limits on variable message signs (`bbox` is required) | [`/v1/traffic/flow`](https://docs.mapx.at/api/traffic.md) |
+| Speed limits shown by variable message signs on motorways (no congestion data) | [`/v1/traffic/sign-limits`](https://docs.mapx.at/api/traffic.md) |
 | Positions of the signs | [`/v1/traffic/signs`](https://docs.mapx.at/api/traffic.md) |
 | Draw traffic on a map | `/v1/traffic/tiles.json` |
 | Check whether the data is fresh | `/v1/traffic/status` |
@@ -23,13 +23,15 @@ const { features, total, next_cursor } = await (await fetch(url, { headers: { Au
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
-Filters: `bbox`, `road` (`A1`, `A 1` and `A01` are the same road), `road_class` (`motorway`, `expressway`, `federal`, `state`, comma-separated, for A, S, B and L roads), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false`, and a time window with `from` and `to` (UTC). By default only active reports are returned; `active=false` adds ended and future ones. A report with `mandatory: true` is binding; show its text unchanged.
+Filters: `bbox`, `road` (`A1`, `A 1` and `A01` are the same road; ramps and branches such as `road_section` `A13.33.4` belong to `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, comma-separated, for A, S, B and L roads), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false`, and a time window with `from` and `to` (a date, or a date-time with `Z` or an offset such as `2026-12-01T10:00:00+01:00`; `to` before `from` returns `400`). By default only active reports are returned; `active=false` adds ended and future ones. A report with `mandatory: true` is binding; show its text unchanged.
 
-Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000) and `cursor`: pass `next_cursor` from the response, or follow `next`, until `next` is `null`. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
+Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000) and `cursor`: pass `next_cursor` from the response, or follow `next`, until `next` is `null`. With `POST` there is only `next_cursor`: send the same body again with `cursor`. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
 ```
+
+Every report has `type` and `impact` (`critical` closed for cars, `major` binding, lane restriction or accident, `minor` other unplanned, `low` other planned), `kind` (category of the source, in German, e.g. `Straßensperre`, `Bauarbeiten`), `road` (road number, `null` for municipal streets) and from EVIS `road_name`, `direction` (direction as text), `regions` (federal states), `creator` and `transport_modes`. `closed: true` means closed for cars; a `road_closure` with `closed: false` applies to other modes only (e.g. pedestrians, cycles) or traffic is led over the opposite carriageway.
 
 ## Lane details on motorways
 
@@ -59,9 +61,9 @@ curl -s -X POST -H "Authorization: Bearer YOUR_TOKEN" -H "Content-Type: applicat
 ```js
 map.on("load", () => {
   map.addSource("mx-traffic", { type: "vector", url: "https://api.mapx.at/v1/traffic/tiles.json" });
-  // layer "traffic": speed limits of the variable message signs on motorway sections
-  map.addLayer({ id: "mx-traffic", type: "line", source: "mx-traffic", "source-layer": "traffic",
-                 paint: { "line-width": 4, "line-color": "#e11d48" } });
+  // layer "sign_limits": speed limits shown by variable message signs, per motorway section and direction
+  map.addLayer({ id: "mx-sign-limits", type: "line", source: "mx-traffic", "source-layer": "sign_limits",
+                 paint: { "line-width": 4, "line-color": "#3a5fcd" } });
   // layer "incidents": reports and closures (lines and points)
   map.addLayer({ id: "mx-incidents-lines", type: "line", source: "mx-traffic", "source-layer": "incidents",
                  filter: ["!=", ["geometry-type"], "Point"],
@@ -72,7 +74,7 @@ map.on("load", () => {
 });
 ```
 
-The vector source has two layers: `traffic` (speed limits of the variable message signs) and `incidents` (reports and closures). The token is passed with `transformRequest` like on every map, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). The mapx styles (for example `streets`) already use the source name `traffic`, so the source is called `mx-traffic` here. The styles `traffic-day` and `traffic-night` (night map with colors brightened for a dark background) draw both layers ready-made. Tiles are in the `static` zone (5 per second); let the client cache them.
+The vector source has two layers: `sign_limits` (speed limits shown by variable message signs, with `speed_limit`, `normal_speed` and `reduction` in km/h; this is not a traffic state) and `incidents` (reports and closures with `id`, `type`, `impact`, `start`, `end`). The token is passed with `transformRequest` like on every map, see [Access and limits](https://docs.mapx.at/start/access-and-limits.md). The mapx styles (for example `streets`) already use the source name `traffic`, so the source is called `mx-traffic` here. The styles `traffic-day` and `traffic-night` (night map with colors brightened for a dark background) draw both layers ready-made, the speed limits in a neutral color. Tiles are in the `static` zone (5 per second); let the client cache them.
 
 ## Route around closures
 

@@ -14,7 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `search` (10/
 
 Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times, `platform` at `from`, `to` and `stops[]` where known, otherwise null). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time; invalid dates or times such as `T25:00` or `2026-02-31` answer 400.
 
-`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -53,7 +53,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
@@ -165,7 +165,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
@@ -240,7 +240,7 @@ data = res.json()
 
 Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included; times are exact on the days clocks change (GTFS times count from noon minus 12 h).
 
-Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, mode, route_type), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: OeBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitaetsverbuende Oesterreich OG, data.mobilitaetsverbuende.at.
+Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, mode, route_type), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -280,7 +280,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "departures": [
     {
       "destination": {
@@ -392,7 +392,7 @@ data = res.json()
 
 ```json
 {
-  "attribution": "mapx.at; Fahrplandaten: OeBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at; Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; Wegenetz: GIP.at (CC BY 4.0)",
   "stops": [
     {
       "distance": 219,

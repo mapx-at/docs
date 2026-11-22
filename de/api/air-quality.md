@@ -56,7 +56,7 @@ data = res.json()
     "lat": 48.21
   },
   "model": "GeoSphere chemical weather forecast",
-  "reference_time": "2026-11-08T00:00Z",
+  "reference_time": "2026-11-08T00:00:00Z",
   "index_scale": {
     "1": "good",
     "2": "fair",
@@ -74,7 +74,7 @@ data = res.json()
   ],
   "hourly": [
     {
-      "time": "2026-11-08T12:00Z",
+      "time": "2026-11-08T12:00:00Z",
       "index": 2,
       "category": "fair",
       "no2_ugm3": 18.2,

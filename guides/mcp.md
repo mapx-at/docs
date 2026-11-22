@@ -219,7 +219,8 @@ Your questions and the results pass through the provider of your assistant. mapx
 
 | Symptom | Cause and fix |
 |---|---|
-| `401` | No or invalid token. With sign-in through your account, this makes the assistant start the sign-in; after you disconnect or block the connection it reports `401` and asks again. With the token way, check the `Authorization: Bearer` header and that the token was not deleted or expired. |
+| `401` | No or invalid token. With sign-in through your account, this makes the assistant start the sign-in; after you disconnect or block the connection it reports `401` and asks again. With the token way, check the `Authorization: Bearer` header and that the token was not deleted or expired; the MCP server takes the token only in this header, not as `access_token` in the URL. |
+| Tools are missing, or the assistant calls a tool that no longer exists (`Unknown tool`) | Clients keep the tool list from when the connection was made. After mapx changes its tools, disconnect the mapx connector in your client and connect it again (in claude.ai under Settings → Connectors), then start a new chat. |
 | Error page "Application not allowed" | The application is not on the list of approved applications. Use the token way or write to support@mapx.at. |
 | `403` `mcp-token-required` | A public (`mx_pk_`) or secret (`mx_sk_`) token was used at the MCP server. Create a token of type "AI assistant (MCP)". |
 | `403` `mcp-token-only` | An `mx_mcp_` token was used for a direct API call. Use a secret token (`mx_sk_`) there. |

@@ -49,7 +49,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 
 ## Language
 
-`title` and `detail` are English by default; a few `detail` texts from routing and public transport are currently German. Send `Accept-Language: de` to get German texts, except for authentication errors and the other gateway errors (`405`, `413`, `414`, `429`, `5xx`), which are always English (`unknown-path` is available in German); `type`, `code`, `param` and `allowed` stay identical. Responses carry `Content-Language` and `Vary: Accept-Language`. German `detail` is the generic description of the code; the English `detail` is the most specific.
+`detail` is always English and names the exact limit or value (for example `limit: 1 to 10`). With `Accept-Language: de` the `title` is German, `detail` stays the same, so nothing gets lost; authentication errors and the other gateway errors (`405`, `413`, `414`, `429`, `5xx`) are always English (`unknown-path` is available in German). `type`, `code`, `param` and `allowed` never depend on the language. Responses carry `Content-Language` and `Vary: Accept-Language`.
 
 ## Catalog
 
@@ -79,7 +79,8 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-style`](#unknown-style) | 404 | Unknown style |
 | [`unknown-tileset`](#unknown-tileset) | 404 | Unknown tileset |
 | [`unknown-font`](#unknown-font) | 404 | Unknown font |
-| [`unknown-parameter`](#unknown-parameter) | 404 | Unknown parameter |
+| [`unknown-parameter`](#unknown-parameter) | 400 | Unknown parameter |
+| [`unknown-layer`](#unknown-layer) | 404 | Unknown layer |
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
 | [`outside-coverage`](#outside-coverage) | 404 | Outside coverage |
@@ -292,9 +293,17 @@ What to do: List fonts with `/v1/fonts`.
 
 ### unknown-parameter
 
-**404** · Unknown parameter
+**400** · Unknown parameter
 
-A weather parameter name is not known.
+The endpoint does not know a query parameter or a field of the JSON body (often a typo, e.g. `limt` instead of `limit`). `param` names it, `detail` lists the known parameters of the endpoint. `access_token` is accepted everywhere.
+
+What to do: Fix the name or drop the parameter; the parameters of each endpoint are in the [OpenAPI description](https://api.mapx.at/v1/openapi.json).
+
+### unknown-layer
+
+**404** · Unknown layer
+
+A weather or air-quality layer (path of `/v1/weather/tiles/…`, `/v1/air-quality/tiles/…`) is not known.
 
 What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast (list: `/v1/weather/tiles/<param>.json`).
 
@@ -360,7 +369,9 @@ What to do: Change the points or the time; read `detail`.
 
 Too many requests. `429` has two causes: the limit per IP address and zone (endpoint group) or the per-minute limit of the token. Both answer with `title` `Rate limit exceeded`, a `detail` and `Retry-After`. See [rate limits](https://docs.mapx.at/api/errors.md#rate-limits).
 
-What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response shows the zone.
+Expensive groups also have an overall limit for all clients together; reaching it answers the same way.
+
+What to do: Wait `Retry-After` seconds, then retry with growing back-off. The `RateLimit-Policy` header of every response (set by the gateway from its zone table) shows the zone.
 
 ### quota-exceeded
 
@@ -428,10 +439,10 @@ Limits per IP address and zone and the per-minute limit per token are listed und
 
 | Header | Value |
 |---|---|
-| `Cache-Control` | `public, max-age=3600` (tiles.mapx.at, TileJSON, elevation), `max-age=86400` (tiles via api.mapx.at), `max-age=60` (Search Box suggestions), `max-age=30` (departures), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests) |
-| `ETag`, `Last-Modified` | version; with `If-None-Match` / `If-Modified-Since` → `304` (tiles, styles, TileJSON, OpenAPI) |
+| `Cache-Control` | `private` for every response to a request with a token (browser cache only, no shared caches), with `max-age=3600` (tiles.mapx.at, TileJSON, elevation), `max-age=86400` (tiles via api.mapx.at), `max-age=60` (Search Box suggestions, traffic), `max-age=30` (departures), `max-age=300` (geocoding, reverse, autofill suggestions, address validation via GET, tileset list), `max-age=0` (routing, matrix, isochrone, POST requests); `/health` `no-store` |
+| `ETag` | on every `GET` response; with `If-None-Match` → `304` without body. Tiles, styles, TileJSON and OpenAPI: version of the file (plus `Last-Modified`, `If-Modified-Since`), all others: hash of the content |
 | `Server-Timing` | `router`, `search`, `render`, `total` in milliseconds |
-| `RateLimit-Policy` | zone and limit of the endpoint |
+| `RateLimit-Policy` | zone and limit of the endpoint (set by the gateway) |
 
 PMTiles files carry the release date in their name and never change; they may be cached indefinitely.
 

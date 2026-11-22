@@ -75,7 +75,7 @@ data = res.json()
         "state": "Wien",
         "altitude_m": 198,
         "distance_m": 4600,
-        "time": "2026-11-08T11:50Z",
+        "time": "2026-11-08T11:50:00Z",
         "temperature_c": 9.4,
         "humidity_pct": 71,
         "wind_speed_ms": 3.1,
@@ -87,7 +87,7 @@ data = res.json()
       }
     }
   ],
-  "time": "2026-11-08T11:50Z",
+  "time": "2026-11-08T11:50:00Z",
   "attribution": "mapx.at; Datenquelle: GeoSphere Austria, CC BY 4.0 (https://data.hub.geosphere.at)"
 }
 ```
@@ -157,13 +157,13 @@ data = res.json()
     "grid_elevation_m": 178.9
   },
   "model": "GeoSphere AROME nwp-v2-1h-1km",
-  "reference_time": "2026-11-08T06:00Z",
+  "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
-  "valid_until": "2026-11-08T12:00Z",
+  "valid_until": "2026-11-08T12:00:00Z",
   "ensemble": {
     "model": "GeoSphere ensemble-v2-1h-1km",
-    "reference_time": "2026-11-08T03:00Z",
-    "valid_until": "2026-11-09T09:00Z",
+    "reference_time": "2026-11-08T03:00:00Z",
+    "valid_until": "2026-11-09T09:00:00Z",
     "percentiles": [
       10,
       50,
@@ -173,7 +173,7 @@ data = res.json()
   },
   "hours": [
     {
-      "time": "2026-11-08T12:00Z",
+      "time": "2026-11-08T12:00:00Z",
       "temperature_c": 10.1,
       "precipitation_mm": 0,
       "wind_speed_ms": 3.4,
@@ -276,15 +276,15 @@ data = res.json()
     "grid_elevation_m": 175.2
   },
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
-  "reference_time": "2026-11-08T10:45Z",
+  "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
-  "valid_until": "2026-11-08T13:45Z",
+  "valid_until": "2026-11-08T13:45:00Z",
   "precipitation_now": false,
   "precipitation_starts_in_min": 30,
   "precipitation_ends_in_min": null,
   "steps": [
     {
-      "time": "2026-11-08T11:15Z",
+      "time": "2026-11-08T11:15:00Z",
       "minutes_from_now": 5,
       "precipitation_mm": 0,
       "precipitation_rate_mm_h": 0,
@@ -361,13 +361,13 @@ data = res.json()
   "minzoom": 0,
   "maxzoom": 12,
   "mapx:time": {
-    "reference_time": "2026-11-08T06:00Z",
+    "reference_time": "2026-11-08T06:00:00Z",
     "default": "now",
     "times": [
-      "2026-11-08T10:00Z",
-      "2026-11-08T11:00Z"
+      "2026-11-08T10:00:00Z",
+      "2026-11-08T11:00:00Z"
     ],
-    "template": "https://api.mapx.at/v1/weather/tiles/temperature/{time}/{z}/{x}/{y}.png?run=2026-11-08T06:00Z"
+    "template": "https://api.mapx.at/v1/weather/tiles/temperature/{time}/{z}/{x}/{y}.png?run=2026-11-08T06:00:00Z"
   },
   "mapx:legend": {
     "unit": "°C",
@@ -395,7 +395,7 @@ data = res.json()
 
 `GET /v1/weather/tiles/{param}/{time}/{z}/{x}/{y}.png`
 
-Color ramp per parameter (see legend in the TileJSON). time: `now` or a time such as `2026-11-07T20:00Z` (a UTC offset such as `+01:00` is allowed, URL-encode `+` as `%2B`); it snaps to the nearest step within 30 minutes, the step actually used is in the header `X-Weather-Time`.
+Color ramp per parameter (see legend in the TileJSON). time: `now` or a time such as `2026-11-07T20:00:00Z` (a UTC offset such as `+01:00` is allowed, URL-encode `+` as `%2B`); it snaps to the nearest step within 30 minutes, the step actually used is in the header `X-Weather-Time`.
 
 Cache: `max-age=86400` for a fixed time with the current `run`, otherwise 300 s (120 s for the nowcast), because the content of a fixed time changes with the next model run. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
@@ -404,7 +404,7 @@ Cache: `max-age=86400` for a fixed time with the current `run`, otherwise 300 s 
 | Name | In | Type | Required | Default | Description |
 |---|---|---|---|---|---|
 | `param` | path | string | yes | – | temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast |
-| `time` | path | string | yes | – | now or 2026-11-07T20:00Z (nowcast: 15 min steps such as 2026-11-07T20:15Z) |
+| `time` | path | string | yes | – | now or 2026-11-07T20:00:00Z (nowcast: 15 min steps such as 2026-11-07T20:15:00Z) |
 | `z` | path | integer | yes | – | 0 to 14 (TileJSON maxzoom 12) |
 | `x` | path | integer | yes | – | Column |
 | `y` | path | string | yes | – | Row, with .png |
@@ -495,7 +495,7 @@ data = res.json()
 ```json
 {
   "type": "FeatureCollection",
-  "updated": "2026-11-08T08:00Z",
+  "updated": "2026-11-08T08:00:00Z",
   "attribution": "mapx.at; Warnungen: GeoSphere Austria, CC BY 4.0 (https://warnungen.zamg.at)",
   "features": [
     {
@@ -523,8 +523,8 @@ data = res.json()
         "type_id": 1,
         "level": 2,
         "level_name": "orange",
-        "onset": "2026-11-08T12:00Z",
-        "expires": "2026-11-09T04:00Z",
+        "onset": "2026-11-08T12:00:00Z",
+        "expires": "2026-11-09T04:00:00Z",
         "municipalities": 1,
         "municipality_ids": [
           "70101"
