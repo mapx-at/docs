@@ -1201,7 +1201,7 @@ Bis zu 1024 Samples entlang einer Linie mit 2 bis 512 Stützpunkten. Anstieg und
 Eine Routengeometrie geht mit `POST /v1/elevation/profile` direkt ins Profil (GeoJSON-LineString, ein Feature oder `{"coordinates": [...]}`, bis 20000 Stützpunkte):
 
 ```js
-const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7303,47.0792?geometries=geojson&overview=full", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).routes[0];
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7509,47.0742?geometries=geojson&overview=full", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).routes[0];
 const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?samples=200", {
   method: "POST",
   headers: { Authorization: "Bearer DEIN_TOKEN", "Content-Type": "application/json" },

@@ -36,7 +36,7 @@ Up to 1024 samples along a line of 2 to 512 vertices. Ascent and descent are cou
 A route geometry goes straight into the profile with `POST /v1/elevation/profile` (GeoJSON LineString, a Feature or `{"coordinates": [...]}`, up to 20000 vertices):
 
 ```js
-const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7303,47.0792?geometries=geojson&overview=full", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).routes[0];
+const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/12.8418,47.0378;12.7509,47.0742?geometries=geojson&overview=full", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).routes[0];
 const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?samples=200", {
   method: "POST",
   headers: { Authorization: "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
