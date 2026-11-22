@@ -64,14 +64,14 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ## Ebenen-Referenz
 
-| `lvl` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß-σ) | Mindestlänge |
+| `min_zoom` | Zoom | Abstand | Indexlinie | Raster | Glättung (Gauß-σ) | Mindestlänge |
 |---|---|---|---|---|---|---|
 | 10 | 10–11 | 100 m | 500 m | 20 m | 60 m | 600 m |
 | 12 | 12–13 | 50 m | 200 m | 10 m | 25 m | 250 m |
 | 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
 | 16 | ab 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
 
-Unter z10 gibt es keine Linien. Jede Kachel enthält genau eine Stufe (`lvl`), ein Filter nach `lvl` ist nicht nötig.
+Unter z10 gibt es keine Linien. Jede Kachel enthält genau eine Stufe (`min_zoom`), ein Filter nach `min_zoom` ist nicht nötig.
 
 ```js
 { id: "hl", type: "line", source: "v", "source-layer": "contour_l",
@@ -89,7 +89,7 @@ Geometrie: **Linie**, Zoom: **z10–16**, Ebene: `contour_l`. Höhenlinien (Isol
 |---|---|---|
 | `ele` | `number` | Höhe der Linie in Metern über Adria. |
 | `index` | `number` | 1 bei Hauptlinien (Zählkurven), sonst 0. Werte: `0` = Normale Höhenlinie; `1` = Hauptlinie (Zählkurve, meist beschriftet) |
-| `lvl` | `number` | Detailstufe der Höhenlinie; entspricht der Kartenzoomstufe, ab der sie gezeigt wird (Äquidistanz 100 m, 50 m, 20 m, 10 m). Werte: `10` = Zoom 10–11, Äquidistanz 100 m (Hauptlinie alle 500 m); `12` = Zoom 12–13, Äquidistanz 50 m (Hauptlinie alle 200 m); `14` = Zoom 14–15, Äquidistanz 20 m (Hauptlinie alle 100 m); `16` = Zoom 16, Äquidistanz 10 m (Hauptlinie alle 50 m) |
+| `min_zoom` | `number` | Detailstufe der Höhenlinie; entspricht der Kartenzoomstufe, ab der sie gezeigt wird (Äquidistanz 100 m, 50 m, 20 m, 10 m). Werte: `10` = Zoom 10–11, Äquidistanz 100 m (Hauptlinie alle 500 m); `12` = Zoom 12–13, Äquidistanz 50 m (Hauptlinie alle 200 m); `14` = Zoom 14–15, Äquidistanz 20 m (Hauptlinie alle 100 m); `16` = Zoom 16, Äquidistanz 10 m (Hauptlinie alle 50 m) |
 
 ## Quelle und Aktualität
 

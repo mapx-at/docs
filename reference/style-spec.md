@@ -50,7 +50,7 @@ Geometry: **Polygon**, Zoom: **z12–16**, Layer: `building_a`. Building footpri
 |---|---|---|
 | `has_parts` | `boolean` | true when the building's body is in building_part_a (Vienna, from z15); 3D displays then extrude only the parts. |
 | `height` | `number` | Building height in metres above ground. From the BEV building model (DLM structures); where it has none, from the elevation models (surface model minus terrain model, median within the footprint). At z12 to z14 (merged buildings) the area-weighted mean of the buildings in the area, in whole metres. |
-| `kind` | `string` | Building type; ordinary buildings are plain, notable buildings are marked separately. Values: `building` = Building (general); `church` = Church; `chapel` = Chapel; `castle` = Castle, palace; `fire_station` = Fire station; `hospital` = Hospital; `pharmacy` = Pharmacy; `police` = Police; `power` = Power plant, substation; `school` = School; `station` = Station building; `townhall` = Town hall or district office; `hut` = Mountain hut |
+| `kind` | `string` | Building type; ordinary buildings are plain, notable buildings are marked separately. Values: `building` = Building (general); `church` = Church; `chapel` = Chapel; `castle` = Castle, palace; `fire_station` = Fire station; `hospital` = Hospital; `pharmacy` = Pharmacy; `police` = Police; `power` = Power plant, substation; `school` = School; `railway_station` = Station building; `town_hall` = Town hall or district office; `alpine_hut` = Mountain hut |
 | `max_height` | `number` | Maximum height of the building in metres (towers, churches), only when clearly above the building height; from z15. |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 
@@ -82,7 +82,7 @@ Geometry: **Line**, Zoom: **z6–16**, Layer: `road_l`. Roads and paths (lines).
 | Field | Type | Description |
 |---|---|---|
 | `kind` | `string` | Road class. Values: `highway` = Motorway, expressway; `major_road` = Main road; `minor_road` = Minor road, pedestrian street; `service` = Service road; `track` = Track; `path` = Path, footway, cycleway, steps |
-| `kind_detail` | `string` | Detailed road type. Values: `motorway` = Motorway, expressway (with kind `highway`); `motorway_link` = Slip road (with kind `highway`); `motorway_construction` = Motorway under construction (with kind `highway`); `primary` = Primary road (with kind `major_road`); `primary_construction` = Primary road under construction (with kind `major_road`); `secondary` = Secondary road (with kind `major_road`); `minor` = Minor road (with kind `minor_road`); `pedestrian` = Pedestrian zone (with kind `minor_road`); `service` = Service road (with kind `service`); `track` = Track (with kind `track`); `path` = Footpath (with kind `path`); `cycleway` = Cycleway (with kind `path`); `steps` = Steps (with kind `path`); `trail` = Hiking trail (with kind `path`) |
+| `kind_detail` | `string` | Detailed road type. Values: `motorway` = Motorway, expressway (with kind `highway`); `motorway_link` = Slip road (with kind `highway`); `motorway_construction` = Motorway under construction (with kind `highway`); `primary` = Primary road (with kind `major_road`); `primary_construction` = Primary road under construction (with kind `major_road`); `secondary` = Secondary road (with kind `major_road`); `tertiary` = Provincial road (L) of minor function (GIP FRC 6–8) (with kind `minor_road`); `unclassified` = Minor road (with kind `minor_road`); `pedestrian` = Pedestrian zone (with kind `minor_road`); `service` = Service road (with kind `service`); `track` = Track (with kind `track`); `path` = Footpath (with kind `path`); `cycleway` = Cycleway (with kind `path`); `steps` = Steps (with kind `path`); `trail` = Hiking trail (with kind `path`) |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `name` | `string` | Name of the feature. |
 | `oneway` | `boolean` | true for one-way roads (in digitised direction). |
@@ -94,15 +94,24 @@ The mapx styles show `ref` as the road number in bold type with a narrow outline
 
 ### rail_l
 
-Geometry: **Line**, Zoom: **z6–16**, Layer: `rail_l`. Railways and ferry lines (lines).
+Geometry: **Line**, Zoom: **z6–16**, Layer: `rail_l`. Railways (lines).
 
 | Field | Type | Description |
 |---|---|---|
 | `construction` | `boolean` | true if the line is still under construction. |
-| `kind` | `string` | Rail type. Values: `rail` = Standard-gauge railway; `narrow_gauge` = Narrow-gauge railway; `rack` = Rack railway; `subway` = Subway; `tram` = Tram; `funicular` = Funicular; `ferry` = Ferry line |
+| `kind` | `string` | Rail type. Values: `rail` = Standard-gauge railway; `narrow_gauge` = Narrow-gauge railway; `rack` = Rack railway; `subway` = Subway; `tram` = Tram; `funicular` = Funicular |
 | `kind_detail` | `string` | Importance of the line (standard-gauge, narrow-gauge and rack railways). Values: `main` = Main line; `branch` = Branch line; `siding` = Siding or spur |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `structure` | `string` | Structure type: bridge or tunnel. Absent for at-grade segments. Values: `bridge` = Bridge; `tunnel` = Tunnel |
+
+### ferry_l
+
+Geometry: **Line**, Zoom: **z11–16**, Layer: `ferry_l`. Ferries and boat lines (lines, GIP).
+
+| Field | Type | Description |
+|---|---|---|
+| `kind` | `string` | Line type. Values: `ferry` = Ferry line |
+| `min_zoom` | `number` | Zoom level from which the feature is shown. |
 
 ### aerialway_l
 
@@ -120,7 +129,7 @@ Geometry: **Point**, Zoom: **z10–16**, Layer: `transit_p`. Railway stations, s
 
 | Field | Type | Description |
 |---|---|---|
-| `kind` | `string` | Type of station. Values: `train_station` = Railway station; `halt` = Halt; `aerialway_station` = Cable-car station |
+| `kind` | `string` | Type of station. Values: `railway_station` = Railway station; `halt` = Halt; `aerialway_station` = Cable-car station |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `name` | `string` | Name of the feature. |
 
@@ -219,7 +228,7 @@ Geometry: **Point**, Zoom: **z0–16**, Layer: `place_p`. Places and settlements
 | Field | Type | Description |
 |---|---|---|
 | `capital` | `string` | Capital role of the place; only set where applicable. Values: `country` = National capital; `state` = State capital; `district` = District seat |
-| `kind` | `string` | Place category. Values: `city` = City; `town` = Market town; `village` = Village; `hamlet` = Hamlet; `suburb` = Suburb; `locality` = Isolated dwelling, farmstead |
+| `kind` | `string` | Place category. Values: `city` = City; `town` = Market town; `village` = Village; `hamlet` = Hamlet; `suburb` = Suburb; `isolated_dwelling` = Isolated dwelling, farmstead |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `name` | `string` | Name of the feature. |
 | `name_alt` | `string` | Alternative name, if available. |
@@ -227,25 +236,25 @@ Geometry: **Point**, Zoom: **z0–16**, Layer: `place_p`. Places and settlements
 
 ### natural_p
 
-Geometry: **Point**, Zoom: **z8–16**, Layer: `natural_p`. Terrain names, peaks, passes, glaciers and named castles, palaces and small monuments.
+Geometry: **Point**, Zoom: **z8–16**, Layer: `natural_p`. Terrain names: peaks, passes, valleys, glaciers, mountain ranges, regions and field names.
 
 | Field | Type | Description |
 |---|---|---|
 | `ele` | `number` | Elevation in metres. |
-| `kind` | `string` | Type of feature. Values: `peak` = Peak; `saddle` = Pass, saddle; `ridge` = Mountain part, ridge; `valley` = Valley; `glacier` = Glacier; `mountain_range` = Mountain range; `area` = Area, region; `field_name` = Field name; `castle` = Castle; `palace` = Palace; `ruins` = Ruins; `tower` = Tower; `minor_monument` = Minor monument (wayside shrine, cross); `monument` = Monument; `other` = Other named feature |
-| `kind_detail` | `string` | Additional display information. Values: `summit_label` = Mountain part, pass or valley shown like a peak; `other` = Other feature |
+| `kind` | `string` | Type of feature. Values: `peak` = Peak; `saddle` = Pass, saddle; `ridge` = Mountain part, ridge; `valley` = Valley; `glacier` = Glacier; `mountain_range` = Mountain range; `region` = Area, region; `locality` = Field name |
+| `kind_detail` | `string` | Additional display information. Values: `summit_label` = Mountain part, pass or valley shown like a peak |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `name` | `string` | Name of the feature. |
 | `sort_rank` | `number` | Display rank; lower number = more important or drawn further below. |
 
 ### poi_p
 
-Geometry: **Point**, Zoom: **z13–16**, Layer: `poi_p`. Facilities and points of interest (points).
+Geometry: **Point**, Zoom: **z13–16**, Layer: `poi_p`. Facilities and points of interest (points), plus churches, summit crosses and named structures (castles, palaces, towers, monuments).
 
 | Field | Type | Description |
 |---|---|---|
 | `ele` | `number` | Elevation in metres. |
-| `kind` | `string` | Type of facility. Values: `bivouac` = Bivouac shelter; `alpine_hut` = Mountain hut; `inn` = Inn; `mine` = Mine; `cave` = Cave; `camp_site` = Camp site; `pharmacy` = Pharmacy; `police` = Police; `fire_station` = Fire station; `hospital` = Hospital; `clinic` = Clinic; `ambulance_station` = Ambulance station; `school` = School; `music_school` = Music school; `kindergarten` = Kindergarten; `university` = University; `survey_office` = Survey office; `district_office` = District office, city authority; `forestry` = Forestry; `townhall` = Town hall; `customs` = Customs; `swimming_pool` = Swimming pool; `swimming_area` = Beach, swimming area; `golf_course` = Golf course; `pitch` = Sports pitch; `stadium` = Stadium; `sports_centre` = Sports centre; `park` = Park; `zoo` = Zoo; `open_air_museum` = Open-air museum; `archaeological_site` = Archaeological site; `theatre` = Open-air theatre; `attraction` = Attraction, exhibition ground; `cemetery` = Cemetery; `visitor_centre` = Visitor centre; `ferry_terminal` = Ferry or ship terminal; `fuel` = Fuel station; `parking` = Parking; `rest_area` = Rest area; `toll_booth` = Toll booth; `helipad` = Helipad; `church` = Church; `chapel` = Chapel; `monastery` = Monastery, abbey; `summit_cross` = Summit cross; `place_of_worship` = Other place of worship; `museum` = Museum; `library` = Library; `drinking_water` = Drinking water; `toilets` = Public toilets; `playground` = Playground; `charging_station` = EV charging station; `defibrillator` = Defibrillator; `doctor` = Doctor; `lodging` = Lodging; `viewpoint` = Viewpoint; `market` = Market |
+| `kind` | `string` | Type of facility. Values: `bivouac` = Bivouac shelter; `alpine_hut` = Mountain hut; `inn` = Inn; `mine` = Mine; `cave` = Cave; `camp_site` = Camp site; `pharmacy` = Pharmacy; `police` = Police; `fire_station` = Fire station; `hospital` = Hospital; `clinic` = Clinic; `ambulance_station` = Ambulance station; `school` = School; `music_school` = Music school; `kindergarten` = Kindergarten; `university` = University; `survey_office` = Survey office; `district_office` = District office, city authority; `forestry` = Forestry; `town_hall` = Town hall; `customs` = Customs; `swimming_pool` = Swimming pool; `swimming_area` = Beach, swimming area; `golf_course` = Golf course; `pitch` = Sports pitch; `stadium` = Stadium; `sports_centre` = Sports centre; `park` = Park; `zoo` = Zoo; `open_air_museum` = Open-air museum; `archaeological_site` = Archaeological site; `theatre` = Open-air theatre; `attraction` = Attraction, exhibition ground; `cemetery` = Cemetery; `visitor_centre` = Visitor centre; `ferry_terminal` = Ferry or ship terminal; `fuel` = Fuel station; `parking` = Parking; `rest_area` = Rest area; `toll_booth` = Toll booth; `helipad` = Helipad; `church` = Church; `chapel` = Chapel; `monastery` = Monastery, abbey; `summit_cross` = Summit cross; `castle` = Castle; `palace` = Palace; `ruins` = Ruins; `tower` = Tower; `minor_monument` = Minor monument (wayside shrine, cross); `monument` = Monument; `other` = Other named feature; `place_of_worship` = Other place of worship; `museum` = Museum; `library` = Library; `drinking_water` = Drinking water; `toilets` = Public toilets; `playground` = Playground; `charging_station` = EV charging station; `defibrillator` = Defibrillator; `doctor` = Doctor; `lodging` = Lodging; `viewpoint` = Viewpoint; `market` = Market |
 | `kind_detail` | `string` | Finer subdivision; only set for some facility types. Values: `public` = Public pharmacy (with kind `pharmacy`); `branch` = Branch pharmacy (with kind `pharmacy`); `hospital` = Hospital pharmacy (with kind `pharmacy`); `inspection` = Police station (with kind `police`); `motorway` = Motorway police (with kind `police`); `border` = Border police (with kind `police`); `traffic` = Traffic police (with kind `police`); `district_command` = District police command (with kind `police`); `city_command` = City police command (with kind `police`); `state_directorate` = State police directorate (with kind `police`); `volunteer` = Volunteer fire brigade (with kind `fire_station`); `professional` = Professional fire brigade (with kind `fire_station`); `company` = Company fire brigade (with kind `fire_station`); `district_command` = District fire command (with kind `fire_station`); `state_association` = State fire association (with kind `fire_station`); `acute` = Acute-care hospital (with kind `hospital`); `other` = Other hospital (with kind `hospital`); `outpatient` = Outpatient clinic (with kind `clinic`); `primary` = Primary school (with kind `school`); `secondary` = Secondary school (with kind `school`); `academic_secondary` = Academic secondary school (with kind `school`); `general` = Other general school (with kind `school`); `prevocational` = Prevocational school (with kind `school`); `special` = Special-needs school (with kind `school`); `vocational` = Vocational school (with kind `school`); `commercial` = Commercial school (with kind `school`); `technical` = Technical school (with kind `school`); `hospitality` = Hospitality and business school (with kind `school`); `social` = Social-care school (with kind `school`); `health` = Health and nursing school (with kind `school`); `agricultural` = Agricultural school (with kind `school`); `teacher_training` = Teacher training (with kind `school`); `other` = Other educational institution (with kind `school`); `district` = District administration (with kind `district_office`); `city` = City authority (with kind `district_office`); `forest_house` = Forest house (with kind `forestry`); `office` = Forestry office (with kind `forestry`); `hunting_lodge` = Hunting lodge (with kind `forestry`); `indoor` = Indoor pool (with kind `swimming_pool`); `indoor_outdoor` = Indoor and outdoor pool (with kind `swimming_pool`); `outdoor` = Outdoor pool (with kind `swimming_pool`); `beach` = Beach bath (with kind `swimming_area`); `tennis` = Tennis court (with kind `pitch`); `soccer` = Football pitch (with kind `pitch`); `ball_sports` = Ball sports facility (with kind `sports_centre`); `multi_sport` = Multi-sport facility (with kind `sports_centre`); `motor_sport` = Motor sports facility (with kind `sports_centre`); `winter_sport` = Winter sports facility (with kind `sports_centre`); `exhibition_ground` = Exhibition ground (with kind `attraction`); `zoo` = Zoo (with kind `zoo`); `wildlife_park` = Wildlife park (with kind `zoo`); `open_air` = Open-air theatre (with kind `theatre`); `forest` = Forest cemetery (with kind `cemetery`); `historic` = Historic cemetery (with kind `cemetery`); `pet` = Pet cemetery (with kind `cemetery`); `national_park` = National park visitor centre (with kind `visitor_centre`); `ferry` = Ferry (with kind `ferry_terminal`); `ship_station` = Ship station (with kind `ferry_terminal`); `picnic` = Picnic area (with kind `rest_area`); `service_area` = Service area (with kind `rest_area`); `single_tower` = Church with one tower (with kind `church`); `multi_tower` = Church with several towers (with kind `church`); `single_tower` = Monastery with one tower (with kind `monastery`); `multi_tower` = Monastery with several towers (with kind `monastery`); `fountain` = Drinking fountain (with kind `drinking_water`); `hydrant` = Drinking hydrant (with kind `drinking_water`); `garage` = Car park (with kind `parking`); `park_and_ride` = Park and ride (with kind `parking`); `synagogue` = Synagogue (with kind `place_of_worship`); `christian` = Christian congregation (with kind `place_of_worship`); `muslim` = Muslim congregation (with kind `place_of_worship`); `buddhist` = Buddhist congregation (with kind `place_of_worship`); `other` = Other congregation (with kind `place_of_worship`); `hotel` = Hotel (with kind `lodging`); `pension` = Guesthouse (with kind `lodging`) |
 | `min_zoom` | `number` | Zoom level from which the feature is shown. |
 | `name` | `string` | Name of the feature. |

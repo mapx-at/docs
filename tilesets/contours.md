@@ -64,14 +64,14 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" -o kachel.pbf https://tiles.mapx.a
 
 ## Layer reference
 
-| `lvl` | Zoom | Interval | Index line | Grid | Smoothing (Gaussian σ) | Minimum length |
+| `min_zoom` | Zoom | Interval | Index line | Grid | Smoothing (Gaussian σ) | Minimum length |
 |---|---|---|---|---|---|---|
 | 10 | 10–11 | 100 m | 500 m | 20 m | 60 m | 600 m |
 | 12 | 12–13 | 50 m | 200 m | 10 m | 25 m | 250 m |
 | 14 | 14–15 | 20 m | 100 m | 4 m | 10 m | 100 m |
 | 16 | from 16 | 10 m | 50 m | 2 m | 4 m | 40 m |
 
-There are no lines below z10. Each tile contains exactly one level (`lvl`), so filtering by `lvl` is not needed.
+There are no lines below z10. Each tile contains exactly one level (`min_zoom`), so filtering by `min_zoom` is not needed.
 
 ```js
 { id: "hl", type: "line", source: "v", "source-layer": "contour_l",
@@ -89,7 +89,7 @@ Geometry: **Line**, Zoom: **z10–16**, Layer: `contour_l`. Elevation contours i
 |---|---|---|
 | `ele` | `number` | Elevation of the line in metres above sea level. |
 | `index` | `number` | 1 for index contours (major lines), otherwise 0. Values: `0` = Regular contour; `1` = Index contour (major line, usually labelled) |
-| `lvl` | `number` | Detail level of the contour; equals the map zoom level from which it is shown (interval 100 m, 50 m, 20 m, 10 m). Values: `10` = Zoom 10–11, 100 m interval (index every 500 m); `12` = Zoom 12–13, 50 m interval (index every 200 m); `14` = Zoom 14–15, 20 m interval (index every 100 m); `16` = Zoom 16, 10 m interval (index every 50 m) |
+| `min_zoom` | `number` | Detail level of the contour; equals the map zoom level from which it is shown (interval 100 m, 50 m, 20 m, 10 m). Values: `10` = Zoom 10–11, 100 m interval (index every 500 m); `12` = Zoom 12–13, 50 m interval (index every 200 m); `14` = Zoom 14–15, 20 m interval (index every 100 m); `16` = Zoom 16, 10 m interval (index every 50 m) |
 
 ## Source and currency
 

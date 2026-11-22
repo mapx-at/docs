@@ -95,7 +95,7 @@ Geometrie: **Fläche**, Zoom: **z6–17**, Ebene: `flight_block_a`. Befliegungsb
 Pflicht nach CC BY 4.0. Das TileJSON nennt nur `mapx.at`, die Quelle selbst ergänzen (wie im MapLibre-Beispiel oben):
 
 ```html
-mapx.at; BEV, CC BY 4.0
+mapx.at; Orthophoto: BEV (CC BY 4.0)
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

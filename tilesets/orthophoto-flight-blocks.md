@@ -96,7 +96,7 @@ Geometry: **Polygon**, Zoom: **z6–17**, Layer: `flight_block_a`. Orthophoto fl
 Required under CC BY 4.0. The TileJSON only names `mapx.at`; add the source yourself (as in the MapLibre example above):
 
 ```html
-mapx.at; BEV, CC BY 4.0
+mapx.at; Orthophoto: BEV (CC BY 4.0)
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

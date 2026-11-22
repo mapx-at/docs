@@ -53,7 +53,7 @@ POIs tragen eine Kategorie (`properties.category`, zum Beispiel `place_of_worshi
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/searchbox/category/fuel?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` liefert alle Kategorie-IDs mit lokalisierten Namen (`language=de` oder `en`).

@@ -184,7 +184,7 @@ data = res.json()
         },
         "zoom": 15,
         "class": "station",
-        "category": "train_station",
+        "category": "railway_station",
         "maki": "rail",
         "stop_id": "at:49:1320",
         "modes": [

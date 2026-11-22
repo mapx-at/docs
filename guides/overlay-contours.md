@@ -8,7 +8,7 @@ Source: https://docs.mapx.at/guides/overlay-contours/
 
 **Prerequisites:** a browser, a static web server and a free public token ([Access and limits](https://docs.mapx.at/start/access-and-limits.md)). Labels use the mapx fonts, see [Style the basemap](https://docs.mapx.at/guides/style-the-basemap.md#labels-and-fonts).
 
-The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `lvl` (generalisation level 10, 12, 14, 16). Lines exist from z10.
+The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a layer `contour_l` with the fields `ele` (elevation in m), `index` (1 = index line) and `min_zoom` (generalisation level 10, 12, 14, 16). Lines exist from z10.
 
 1. **Page with background.** The orthophoto as base, the contours as a vector source:
 
@@ -29,16 +29,16 @@ The [contour lines](https://docs.mapx.at/tilesets/contours.md) tileset has a lay
      };
    ```
 
-2. **Draw the lines.** Depending on the zoom the tileset delivers one level (`lvl`) with its own line interval:
+2. **Draw the lines.** Depending on the zoom the tileset delivers one level (`min_zoom`) with its own line interval:
 
-   | Zoom | `lvl` | Interval | Index line |
+   | Zoom | `min_zoom` | Interval | Index line |
    |---|---|---|---|
    | 10–11 | 10 | 100 m | 500 m |
    | 12–13 | 12 | 50 m | 200 m |
    | 14–15 | 14 | 20 m | 100 m |
    | from 16 | 16 | 10 m | 50 m |
 
-   Each tile holds only the level that matches its zoom, so the interval changes by itself and no filter on `lvl` is needed. Two layers are enough, lines and index lines:
+   Each tile holds only the level that matches its zoom, so the interval changes by itself and no filter on `min_zoom` is needed. Two layers are enough, lines and index lines:
 
    ```js
    const lineLayers = [

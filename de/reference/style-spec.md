@@ -50,7 +50,7 @@ Geometrie: **Fläche**, Zoom: **z12–16**, Ebene: `building_a`. Gebäudegrundri
 |---|---|---|
 | `has_parts` | `boolean` | true, wenn der Körper des Gebäudes in building_part_a steht (Wien, ab z15); 3D-Darstellungen extrudieren dann nur die Teile. |
 | `height` | `number` | Gebäudehöhe in Metern über Grund. Aus dem BEV-Gebäudemodell (DLM Bauwerke); fehlt sie dort, aus den Höhenmodellen (Oberflächenmodell minus Geländemodell, Median im Grundriss). In z12 bis z14 (zusammengefasste Gebäude) flächengewichteter Mittelwert der Gebäude der Fläche, auf ganze Meter. |
-| `kind` | `string` | Gebäudeart; Standard ist ein gewöhnliches Gebäude, markante Gebäude sind gesondert gekennzeichnet. Werte: `building` = Gebäude (allgemein); `church` = Kirche; `chapel` = Kapelle; `castle` = Burg, Schloss; `fire_station` = Feuerwehr; `hospital` = Krankenhaus; `pharmacy` = Apotheke; `police` = Polizei; `power` = Kraftwerk, Umspannwerk; `school` = Schule; `station` = Bahnhofsgebäude; `townhall` = Gemeinde- oder Bezirksamt; `hut` = Schutzhütte |
+| `kind` | `string` | Gebäudeart; Standard ist ein gewöhnliches Gebäude, markante Gebäude sind gesondert gekennzeichnet. Werte: `building` = Gebäude (allgemein); `church` = Kirche; `chapel` = Kapelle; `castle` = Burg, Schloss; `fire_station` = Feuerwehr; `hospital` = Krankenhaus; `pharmacy` = Apotheke; `police` = Polizei; `power` = Kraftwerk, Umspannwerk; `school` = Schule; `railway_station` = Bahnhofsgebäude; `town_hall` = Gemeinde- oder Bezirksamt; `alpine_hut` = Schutzhütte |
 | `max_height` | `number` | Größte Höhe des Gebäudes in Metern (Türme, Kirchen), nur wenn deutlich über der Gebäudehöhe; ab z15. |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 
@@ -82,7 +82,7 @@ Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `road_l`. Straßen und Wege (Lin
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `kind` | `string` | Straßenklasse. Werte: `highway` = Autobahn, Schnellstraße; `major_road` = Hauptstraße, Landesstraße; `minor_road` = Gemeinde- und Nebenstraße, Fußgängerzone; `service` = Zufahrt, Parkplatz- und Betriebsweg; `track` = Wirtschafts-, Forst- und Feldweg; `path` = Fuß-, Rad- und Wanderweg, Stiege |
-| `kind_detail` | `string` | Genauere Straßenart. Werte: `motorway` = Autobahn, Schnellstraße (bei kind `highway`); `motorway_link` = Auf- oder Abfahrt (bei kind `highway`); `motorway_construction` = Autobahn im Bau (bei kind `highway`); `primary` = Hauptstraße (B-Straße) (bei kind `major_road`); `primary_construction` = Hauptstraße im Bau (bei kind `major_road`); `secondary` = Landesstraße (bei kind `major_road`); `minor` = Gemeinde- oder Nebenstraße (bei kind `minor_road`); `pedestrian` = Fußgängerzone (bei kind `minor_road`); `service` = Zufahrt, Betriebsweg (bei kind `service`); `track` = Wirtschafts-, Forst- oder Feldweg (bei kind `track`); `path` = Fußweg, Geh- und Radweg (bei kind `path`); `cycleway` = Radweg (bei kind `path`); `steps` = Stiege, Treppe (bei kind `path`); `trail` = Wanderweg, Steig (bei kind `path`) |
+| `kind_detail` | `string` | Genauere Straßenart. Werte: `motorway` = Autobahn, Schnellstraße (bei kind `highway`); `motorway_link` = Auf- oder Abfahrt (bei kind `highway`); `motorway_construction` = Autobahn im Bau (bei kind `highway`); `primary` = Hauptstraße (B-Straße) (bei kind `major_road`); `primary_construction` = Hauptstraße im Bau (bei kind `major_road`); `secondary` = Landesstraße (bei kind `major_road`); `tertiary` = L-Straße mit untergeordneter Funktion (GIP FRC 6–8) (bei kind `minor_road`); `unclassified` = Gemeinde- oder Nebenstraße (bei kind `minor_road`); `pedestrian` = Fußgängerzone (bei kind `minor_road`); `service` = Zufahrt, Betriebsweg (bei kind `service`); `track` = Wirtschafts-, Forst- oder Feldweg (bei kind `track`); `path` = Fußweg, Geh- und Radweg (bei kind `path`); `cycleway` = Radweg (bei kind `path`); `steps` = Stiege, Treppe (bei kind `path`); `trail` = Wanderweg, Steig (bei kind `path`) |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `name` | `string` | Name des Objekts. |
 | `oneway` | `boolean` | true bei Einbahnstraßen (in Digitalisierungsrichtung). |
@@ -94,15 +94,24 @@ Die mapx-Stile zeigen `ref` als Straßennummer in fetter Schrift mit schmalem Sa
 
 ### rail_l
 
-Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `rail_l`. Bahnstrecken und Schifffahrtslinien (Linien).
+Geometrie: **Linie**, Zoom: **z6–16**, Ebene: `rail_l`. Bahnstrecken (Linien).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `construction` | `boolean` | true, wenn die Strecke noch im Bau ist. |
-| `kind` | `string` | Bahnart. Werte: `rail` = Normalspurbahn; `narrow_gauge` = Schmalspurbahn; `rack` = Zahnradbahn; `subway` = U-Bahn; `tram` = Straßenbahn; `funicular` = Standseilbahn; `ferry` = Fähre, Schifffahrtslinie |
+| `kind` | `string` | Bahnart. Werte: `rail` = Normalspurbahn; `narrow_gauge` = Schmalspurbahn; `rack` = Zahnradbahn; `subway` = U-Bahn; `tram` = Straßenbahn; `funicular` = Standseilbahn |
 | `kind_detail` | `string` | Rang der Strecke (bei Normalspur-, Schmalspur- und Zahnradbahn). Werte: `main` = Hochrangige Strecke; `branch` = Nebenstrecke; `siding` = Anschluss- oder Nebengleis |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `structure` | `string` | Bauwerksart: Brücke oder Tunnel. Fehlt bei Strecken am Boden. Werte: `bridge` = Brücke; `tunnel` = Tunnel |
+
+### ferry_l
+
+Geometrie: **Linie**, Zoom: **z11–16**, Ebene: `ferry_l`. Fähren und Schifffahrtslinien (Linien, GIP).
+
+| Feld | Typ | Beschreibung |
+|---|---|---|
+| `kind` | `string` | Art der Linie. Werte: `ferry` = Fähre, Schifffahrtslinie |
+| `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 
 ### aerialway_l
 
@@ -120,7 +129,7 @@ Geometrie: **Punkt**, Zoom: **z10–16**, Ebene: `transit_p`. Bahnhöfe, Haltest
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `kind` | `string` | Art der Station. Werte: `train_station` = Bahnhof; `halt` = Haltestelle; `aerialway_station` = Seilbahnstation |
+| `kind` | `string` | Art der Station. Werte: `railway_station` = Bahnhof; `halt` = Haltestelle; `aerialway_station` = Seilbahnstation |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `name` | `string` | Name des Objekts. |
 
@@ -219,7 +228,7 @@ Geometrie: **Punkt**, Zoom: **z0–16**, Ebene: `place_p`. Orte und Siedlungen.
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `capital` | `string` | Hauptstadtfunktion des Ortes; nur gesetzt, wenn zutreffend. Werte: `country` = Hauptstadt des Staates; `state` = Landeshauptstadt; `district` = Bezirkshauptort |
-| `kind` | `string` | Ortskategorie. Werte: `city` = Stadt; `town` = Marktgemeinde, Kleinstadt; `village` = Dorf; `hamlet` = Weiler, kleines Dorf; `suburb` = Stadtteil; `locality` = Einzelhaus, Gehöft |
+| `kind` | `string` | Ortskategorie. Werte: `city` = Stadt; `town` = Marktgemeinde, Kleinstadt; `village` = Dorf; `hamlet` = Weiler, kleines Dorf; `suburb` = Stadtteil; `isolated_dwelling` = Einzelhaus, Gehöft |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `name` | `string` | Name des Objekts. |
 | `name_alt` | `string` | Alternativer Name, falls vorhanden. |
@@ -227,25 +236,25 @@ Geometrie: **Punkt**, Zoom: **z0–16**, Ebene: `place_p`. Orte und Siedlungen.
 
 ### natural_p
 
-Geometrie: **Punkt**, Zoom: **z8–16**, Ebene: `natural_p`. Geländenamen, Gipfel, Pässe, Gletscher sowie benannte Burgen, Schlösser und Kleindenkmäler.
+Geometrie: **Punkt**, Zoom: **z8–16**, Ebene: `natural_p`. Geländenamen: Gipfel, Pässe, Täler, Gletscher, Gebirge, Landschaften und Flurnamen.
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `ele` | `number` | Seehöhe in Metern. |
-| `kind` | `string` | Art des Objekts. Werte: `peak` = Gipfel; `saddle` = Pass, Sattel; `ridge` = Bergteil, Grat, Rücken; `valley` = Tal; `glacier` = Gletscher; `mountain_range` = Gebirge; `area` = Gebiet, Landschaft; `field_name` = Flurname, Riedname; `castle` = Burg; `palace` = Schloss; `ruins` = Ruine; `tower` = Turm, Warte; `minor_monument` = Kleindenkmal (Bildstock, Wegkreuz); `monument` = Denkmal; `other` = Sonstiges benanntes Objekt |
-| `kind_detail` | `string` | Zusatzinfo zur Darstellung. Werte: `summit_label` = Als Gipfel dargestellter Bergteil, Pass oder Tal; `other` = Sonstiges Objekt |
+| `kind` | `string` | Art des Objekts. Werte: `peak` = Gipfel; `saddle` = Pass, Sattel; `ridge` = Bergteil, Grat, Rücken; `valley` = Tal; `glacier` = Gletscher; `mountain_range` = Gebirge; `region` = Gebiet, Landschaft; `locality` = Flurname, Riedname |
+| `kind_detail` | `string` | Zusatzinfo zur Darstellung. Werte: `summit_label` = Als Gipfel dargestellter Bergteil, Pass oder Tal |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `name` | `string` | Name des Objekts. |
 | `sort_rank` | `number` | Darstellungsrang; kleinere Zahl = wichtiger bzw. weiter unten gezeichnet. |
 
 ### poi_p
 
-Geometrie: **Punkt**, Zoom: **z13–16**, Ebene: `poi_p`. Einrichtungen und Orte von Interesse (Punkte).
+Geometrie: **Punkt**, Zoom: **z13–16**, Ebene: `poi_p`. Einrichtungen und Orte von Interesse (Punkte), dazu Kirchen, Gipfelkreuze und benannte Bauwerke (Burgen, Schlösser, Türme, Denkmäler).
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
 | `ele` | `number` | Seehöhe in Metern. |
-| `kind` | `string` | Art der Einrichtung. Werte: `bivouac` = Biwakschachtel; `alpine_hut` = Schutzhütte; `inn` = Ausflugsgasthof; `mine` = Bergwerk; `cave` = Höhle; `camp_site` = Campingplatz; `pharmacy` = Apotheke; `police` = Polizei; `fire_station` = Feuerwehr; `hospital` = Krankenhaus; `clinic` = Ambulatorium, Klinik; `ambulance_station` = Rettungsstelle; `school` = Schule; `music_school` = Musikschule; `kindergarten` = Kindergarten; `university` = Universität; `survey_office` = Vermessungsamt; `district_office` = Bezirkshauptmannschaft, Magistrat; `forestry` = Forstbetrieb; `townhall` = Gemeindeamt; `customs` = Zoll; `swimming_pool` = Schwimmbad; `swimming_area` = Strandbad, Badestelle; `golf_course` = Golfplatz; `pitch` = Sportplatz; `stadium` = Stadion; `sports_centre` = Sportanlage; `park` = Park; `zoo` = Tierpark; `open_air_museum` = Freilichtmuseum; `archaeological_site` = Archäologische Ausgrabung; `theatre` = Freilichtbühne; `attraction` = Sehenswürdigkeit, Ausstellungsgelände; `cemetery` = Friedhof; `visitor_centre` = Besucherzentrum; `ferry_terminal` = Fähr- oder Schiffsstation; `fuel` = Tankstelle; `parking` = Parkplatz, Parkgarage; `rest_area` = Rastplatz, Raststation; `toll_booth` = Mautstelle; `helipad` = Hubschrauberlandeplatz; `church` = Kirche; `chapel` = Kapelle; `monastery` = Kloster, Stift; `summit_cross` = Gipfelkreuz; `place_of_worship` = Sonstiger Kultort; `museum` = Museum; `library` = Bücherei; `drinking_water` = Trinkwasserstelle; `toilets` = öffentliche Toilette; `playground` = Spielplatz; `charging_station` = Ladestation für Elektrofahrzeuge; `defibrillator` = Defibrillator; `doctor` = Arzt; `lodging` = Unterkunft; `viewpoint` = Aussichtspunkt; `market` = Markt |
+| `kind` | `string` | Art der Einrichtung. Werte: `bivouac` = Biwakschachtel; `alpine_hut` = Schutzhütte; `inn` = Ausflugsgasthof; `mine` = Bergwerk; `cave` = Höhle; `camp_site` = Campingplatz; `pharmacy` = Apotheke; `police` = Polizei; `fire_station` = Feuerwehr; `hospital` = Krankenhaus; `clinic` = Ambulatorium, Klinik; `ambulance_station` = Rettungsstelle; `school` = Schule; `music_school` = Musikschule; `kindergarten` = Kindergarten; `university` = Universität; `survey_office` = Vermessungsamt; `district_office` = Bezirkshauptmannschaft, Magistrat; `forestry` = Forstbetrieb; `town_hall` = Gemeindeamt; `customs` = Zoll; `swimming_pool` = Schwimmbad; `swimming_area` = Strandbad, Badestelle; `golf_course` = Golfplatz; `pitch` = Sportplatz; `stadium` = Stadion; `sports_centre` = Sportanlage; `park` = Park; `zoo` = Tierpark; `open_air_museum` = Freilichtmuseum; `archaeological_site` = Archäologische Ausgrabung; `theatre` = Freilichtbühne; `attraction` = Sehenswürdigkeit, Ausstellungsgelände; `cemetery` = Friedhof; `visitor_centre` = Besucherzentrum; `ferry_terminal` = Fähr- oder Schiffsstation; `fuel` = Tankstelle; `parking` = Parkplatz, Parkgarage; `rest_area` = Rastplatz, Raststation; `toll_booth` = Mautstelle; `helipad` = Hubschrauberlandeplatz; `church` = Kirche; `chapel` = Kapelle; `monastery` = Kloster, Stift; `summit_cross` = Gipfelkreuz; `castle` = Burg; `palace` = Schloss; `ruins` = Ruine; `tower` = Turm, Warte; `minor_monument` = Kleindenkmal (Bildstock, Wegkreuz); `monument` = Denkmal; `other` = Sonstiges benanntes Objekt; `place_of_worship` = Sonstiger Kultort; `museum` = Museum; `library` = Bücherei; `drinking_water` = Trinkwasserstelle; `toilets` = öffentliche Toilette; `playground` = Spielplatz; `charging_station` = Ladestation für Elektrofahrzeuge; `defibrillator` = Defibrillator; `doctor` = Arzt; `lodging` = Unterkunft; `viewpoint` = Aussichtspunkt; `market` = Markt |
 | `kind_detail` | `string` | Genauere Unterteilung; nur bei einem Teil der Einrichtungsarten gesetzt. Werte: `public` = öffentliche Apotheke (bei kind `pharmacy`); `branch` = Filialapotheke (bei kind `pharmacy`); `hospital` = Krankenhausapotheke (bei kind `pharmacy`); `inspection` = Polizeiinspektion (bei kind `police`); `motorway` = Autobahnpolizei (bei kind `police`); `border` = Grenzpolizei (bei kind `police`); `traffic` = Verkehrsinspektion (bei kind `police`); `district_command` = Bezirkspolizeikommando (bei kind `police`); `city_command` = Stadtpolizeikommando (bei kind `police`); `state_directorate` = Landespolizeidirektion (bei kind `police`); `volunteer` = Freiwillige Feuerwehr (bei kind `fire_station`); `professional` = Berufsfeuerwehr (bei kind `fire_station`); `company` = Betriebsfeuerwehr (bei kind `fire_station`); `district_command` = Bezirksfeuerwehrkommando (bei kind `fire_station`); `state_association` = Landesfeuerwehrverband (bei kind `fire_station`); `acute` = Akutkrankenhaus (bei kind `hospital`); `other` = Sonstiges Krankenhaus (bei kind `hospital`); `outpatient` = Ambulatorium (bei kind `clinic`); `primary` = Volksschule (bei kind `school`); `secondary` = Mittelschule (bei kind `school`); `academic_secondary` = Allgemein bildende höhere Schule (AHS) (bei kind `school`); `general` = Sonstige allgemein bildende Schule (bei kind `school`); `prevocational` = Polytechnische Schule (bei kind `school`); `special` = Sonderschule (bei kind `school`); `vocational` = Berufsschule (bei kind `school`); `commercial` = Kaufmännische Schule (bei kind `school`); `technical` = Technische oder gewerbliche Schule (bei kind `school`); `hospitality` = Wirtschaftsberufliche Schule (Tourismus, Wirtschaft) (bei kind `school`); `social` = Sozialberufliche Schule (bei kind `school`); `health` = Gesundheits- und Krankenpflegeschule (bei kind `school`); `agricultural` = Land- und forstwirtschaftliche Schule (bei kind `school`); `teacher_training` = Pädagogische Schule, Lehrerbildung (bei kind `school`); `other` = Sonstige Bildungseinrichtung (bei kind `school`); `district` = Bezirkshauptmannschaft (bei kind `district_office`); `city` = Magistrat (bei kind `district_office`); `forest_house` = Forsthaus (bei kind `forestry`); `office` = Forstverwaltung (bei kind `forestry`); `hunting_lodge` = Jagdhütte (bei kind `forestry`); `indoor` = Hallenbad (bei kind `swimming_pool`); `indoor_outdoor` = Hallen- und Freibad (bei kind `swimming_pool`); `outdoor` = Freibad (bei kind `swimming_pool`); `beach` = Strandbad (bei kind `swimming_area`); `tennis` = Tennisplatz (bei kind `pitch`); `soccer` = Fußballplatz (bei kind `pitch`); `ball_sports` = Ballsportanlage (bei kind `sports_centre`); `multi_sport` = Mehrzwecksportanlage (bei kind `sports_centre`); `motor_sport` = Motorsportanlage (bei kind `sports_centre`); `winter_sport` = Wintersportanlage (bei kind `sports_centre`); `exhibition_ground` = Ausstellungsgelände (bei kind `attraction`); `zoo` = Tierpark (bei kind `zoo`); `wildlife_park` = Wildpark (bei kind `zoo`); `open_air` = Freilichtbühne (bei kind `theatre`); `forest` = Waldfriedhof (bei kind `cemetery`); `historic` = Historischer Friedhof (bei kind `cemetery`); `pet` = Tierfriedhof (bei kind `cemetery`); `national_park` = Nationalpark-Besucherzentrum (bei kind `visitor_centre`); `ferry` = Fähre (bei kind `ferry_terminal`); `ship_station` = Schiffsstation (bei kind `ferry_terminal`); `picnic` = Rastplatz (bei kind `rest_area`); `service_area` = Raststation (bei kind `rest_area`); `single_tower` = Kirche mit einem Turm (bei kind `church`); `multi_tower` = Kirche mit mehreren Türmen (bei kind `church`); `single_tower` = Kloster mit einem Turm (bei kind `monastery`); `multi_tower` = Kloster mit mehreren Türmen (bei kind `monastery`); `fountain` = Trinkbrunnen (bei kind `drinking_water`); `hydrant` = Trinkhydrant (bei kind `drinking_water`); `garage` = Parkgarage (bei kind `parking`); `park_and_ride` = Park-and-Ride (bei kind `parking`); `synagogue` = Synagoge (bei kind `place_of_worship`); `christian` = Christliche Gemeinschaft (bei kind `place_of_worship`); `muslim` = Islamische Gemeinschaft (bei kind `place_of_worship`); `buddhist` = Buddhistische Gemeinschaft (bei kind `place_of_worship`); `other` = Sonstige Gemeinschaft (bei kind `place_of_worship`); `hotel` = Hotel (bei kind `lodging`); `pension` = Pension (bei kind `lodging`) |
 | `min_zoom` | `number` | Zoomstufe, ab der das Objekt dargestellt wird. |
 | `name` | `string` | Name des Objekts. |

@@ -53,7 +53,7 @@ Points of interest carry a category (`properties.category`, for example `place_o
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/list/category?language=en" | jq ".listItems[0:3]"
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=5"
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/fuel?proximity=16.3725,48.2085&limit=5"
 ```
 
 `list/category` returns all category IDs with localized names (`language=de` or `en`).

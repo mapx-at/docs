@@ -22,7 +22,7 @@ Search as you type over addresses, streets, places and official points of intere
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
 | `proximity` | query | string |  | – | lon,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category have no effect) |
-| `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
+| `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `fuel`), see `/v1/searchbox/list/category` |
 | `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
@@ -207,7 +207,7 @@ data = res.json()
 
 `GET /v1/searchbox/category/{category}`
 
-Places of the category (several comma-separated), nearest first with `proximity` (then with `properties.distance`). Ids as in `/v1/searchbox/list/category` (e.g. `gas_station`, `train_station`). Same format as suggest (schema `Place`).
+Places of the category (several comma-separated), nearest first with `proximity` (then with `properties.distance`). Ids as in `/v1/searchbox/list/category` (e.g. `fuel`, `railway_station`). Same format as suggest (schema `Place`).
 
 **Parameters**
 
@@ -223,13 +223,13 @@ Places of the category (several comma-separated), nearest first with `proximity`
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/searchbox/category/fuel?proximity=16.3725,48.2085&limit=3" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/searchbox/category/fuel?proximity=16.3725,48.2085&limit=3", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -238,7 +238,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/searchbox/category/gas_station?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/searchbox/category/fuel?proximity=16.3725,48.2085&limit=3", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -271,7 +271,7 @@ data = res.json()
         },
         "distance": 412,
         "zoom": 16,
-        "category": "gas_station",
+        "category": "fuel",
         "maki": "fuel"
       }
     }
@@ -339,7 +339,7 @@ data = res.json()
 {
   "listItems": [
     {
-      "canonical_id": "gas_station",
+      "canonical_id": "fuel",
       "icon": "fuel",
       "name": "Tankstelle"
     }
