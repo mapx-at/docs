@@ -120,7 +120,7 @@ Alle Felder und Werte jeder Ebene: [Basiskarte: Ebenen-Referenz](https://docs.ma
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-mapx.at; Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
+mapx.at | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

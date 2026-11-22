@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/reference/glossary/
 
 **Annotation.** Extra values per route segment, for example speed or elevation. Requested with `annotations`.
 
-**Attribution.** Required credit for the data sources (CC BY 4.0). Every JSON response carries it in the `attribution` field, shaped `mapx.at; <source> (<license>); …`. See [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+**Attribution.** Required credit for the data sources (CC BY 4.0). Every JSON response carries it in the `attribution` field, shaped `mapx.at | <source> (<license>); …`. See [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 **Closures.** Active full closures from the traffic reports (EVIS/ASFINAG) that directions, matrix, isochrone and optimization avoid automatically. The `closures` block (`applied`, `count`, `binding`, `binding_count`, `fetched`) tells which closures applied. See [Navigation](https://docs.mapx.at/guides/navigation.md).
 

@@ -107,7 +107,7 @@ Geometrie: **Linie**, Zoom: **z10–16**, Ebene: `contour_l`. Höhenlinien (Isol
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-mapx.at; Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at | Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

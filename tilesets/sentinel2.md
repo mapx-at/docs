@@ -39,7 +39,7 @@ TileJSON provides zoom range, bounds and attribution. Send the token with every 
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-  attribution: "mapx.at; Contains modified Copernicus Sentinel data 2026"
+  attribution: "mapx.at | Contains modified Copernicus Sentinel data 2026"
 }).addTo(map);
 ```
 
@@ -101,7 +101,7 @@ In the mapx viewer they are the overlays "Acquisition date", "Vegetation (NDVI)"
 Required under the Copernicus terms of use (free, full and open) for modified data:
 
 ```html
-mapx.at; Contains modified Copernicus Sentinel data 2026
+mapx.at | Contains modified Copernicus Sentinel data 2026
 ```
 
 The year is the year of acquisition; MapLibre picks up the text from TileJSON or PMTiles. More: [License](https://docs.mapx.at/reference/attribution.md).

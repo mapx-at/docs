@@ -37,7 +37,7 @@ const map = new maplibregl.Map({
   container: "map",
   style: {
     version: 8,
-    sources: { v: { type: "vector", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf"], minzoom: 6, maxzoom: 17, attribution: "mapx.at; BEV, CC BY 4.0" } },
+    sources: { v: { type: "vector", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto-flight-blocks/{z}/{x}/{y}.pbf"], minzoom: 6, maxzoom: 17, attribution: "mapx.at | BEV, CC BY 4.0" } },
     layers: [{ id: "orthophoto-flight-blocks", type: "line", source: "v", "source-layer": "flight_block_a", paint: { "line-color": "#b5651d" } }]
   }
 });
@@ -96,7 +96,7 @@ Geometry: **Polygon**, Zoom: **z6–17**, Layer: `flight_block_a`. Orthophoto fl
 Required under CC BY 4.0. The TileJSON only names `mapx.at`; add the source yourself (as in the MapLibre example above):
 
 ```html
-mapx.at; Orthophoto: BEV (CC BY 4.0)
+mapx.at | Orthophoto: BEV (CC BY 4.0)
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

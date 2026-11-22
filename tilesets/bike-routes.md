@@ -89,7 +89,7 @@ Geometry: **Line**, Zoom: **z5–14**, Layer: `bike_routes`. Signed cycle routes
 Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-mapx.at; Datenquelle: <a href="https://www.gip.gv.at" target="_blank" rel="noopener">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
+mapx.at | Datenquelle: <a href="https://www.gip.gv.at" target="_blank" rel="noopener">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

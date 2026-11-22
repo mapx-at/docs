@@ -84,7 +84,7 @@ data = res.json()
       "saharan_dust_load_mgm2": 0
     }
   ],
-  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
+  "attribution": "mapx.at | GeoSphere Austria (CC BY 4.0)"
 }
 ```
 

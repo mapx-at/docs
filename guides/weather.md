@@ -56,7 +56,7 @@ Air quality follows the European Air Quality Index (1 good to 6 extremely poor),
 
 ## Attribution
 
-Show `mapx.at; GeoSphere Austria (CC BY 4.0)` (the `attribution` field of the response) wherever the data appear, see [Attribution and license](https://docs.mapx.at/reference/attribution.md).
+Show `mapx.at | GeoSphere Austria (CC BY 4.0)` (the `attribution` field of the response) wherever the data appear, see [Attribution and license](https://docs.mapx.at/reference/attribution.md).
 
 ## Related
 

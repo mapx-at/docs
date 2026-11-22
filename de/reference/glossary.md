@@ -6,7 +6,7 @@ Source: https://docs.mapx.at/de/reference/glossary/
 
 **Annotation.** Zusätzliche Werte je Routensegment, zum Beispiel Geschwindigkeit oder Höhe. Angefordert mit `annotations`.
 
-**Attribution.** Pflichtangabe der Datenquellen (CC BY 4.0). Jede JSON-Antwort trägt sie im Feld `attribution`, Form `mapx.at; <Quelle> (<Lizenz>); …`. Siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+**Attribution.** Pflichtangabe der Datenquellen (CC BY 4.0). Jede JSON-Antwort trägt sie im Feld `attribution`, Form `mapx.at | <Quelle> (<Lizenz>); …`. Siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
 **Closures (Sperren).** Aktive Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG), die Directions, Matrix, Isochrone und Optimierung automatisch umfahren. Der Block `closures` (`applied`, `count`, `binding`, `binding_count`, `fetched`) sagt, welche Sperren galten. Siehe [Navigation](https://docs.mapx.at/de/guides/navigation.md).
 

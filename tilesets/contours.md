@@ -107,7 +107,7 @@ Geometry: **Line**, Zoom: **z10–16**, Layer: `contour_l`. Elevation contours i
 Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-mapx.at; Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at | Höhenlinien: mapx.at, Datenquelle <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

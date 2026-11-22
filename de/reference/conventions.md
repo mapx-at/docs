@@ -42,4 +42,4 @@ Vertauschte Werte (`lat,lng`) lehnt die API mit `400` `invalid-coordinates` ab. 
 - Erfolgreiche Antworten haben kein `code`; `code` steht nur in Fehlern ([Problem Details](https://docs.mapx.at/de/api/errors.md), `detail` immer englisch).
 - Unbekannte Query-Parameter und unbekannte Felder im JSON-Körper beantwortet die API mit `400` `unknown-parameter` und `param`.
 - Seitenweise Listen liefern `next`: die vollständige URL der nächsten Seite oder `null` auf der letzten.
-- Jede JSON-Antwort hat ein Feld `attribution`: `mapx.at; <Quelle> (<Lizenz>); …` ([Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md)).
+- Jede JSON-Antwort hat ein Feld `attribution`: `mapx.at | <Quelle> (<Lizenz>); …` ([Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md)).

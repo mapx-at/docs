@@ -120,7 +120,7 @@ Every field and value of each layer: [Basemap: layer reference](https://docs.map
 Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-mapx.at; Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
+mapx.at | Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

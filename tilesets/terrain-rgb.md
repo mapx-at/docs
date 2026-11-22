@@ -161,13 +161,13 @@ The DTM is derived from the BEV ALS-DTM 1 m (airborne laser scanning, terrain on
 Required under CC BY 4.0. Text:
 
 ```
-mapx.at; Relief: BEV – ALS-DTM 1 m (reference date 15 Sep 2025), CC BY 4.0
+mapx.at | Relief: BEV – ALS-DTM 1 m (reference date 15 Sep 2025), CC BY 4.0
 ```
 
 HTML (as in the TileJSON; MapLibre picks it up automatically from the TileJSON):
 
 ```html
-mapx.at; Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
+mapx.at | Relief: <a href="https://data.bev.gv.at/geonetwork/srv/ger/catalog.search#/metadata/5ce253fc-b7c5-4362-97af-6556c18a45d9">BEV – ALS-DTM 1 m</a> (Stichtag 15.09.2025), CC BY 4.0
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

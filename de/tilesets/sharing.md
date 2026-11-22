@@ -8,7 +8,7 @@ Standorte von Sharing-Stationen aus dem Datensatz „Shared-Mobility Standorte 2
 
 > **Achtung:** **Quellenangabe**
 > 
-> mapx.at; Datenquelle: ÖBB-Personenverkehr AG, Shared-Mobility Standorte, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de).
+> mapx.at | Datenquelle: ÖBB-Personenverkehr AG, Shared-Mobility Standorte, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de).
 
 ## Kennwerte
 
@@ -92,7 +92,7 @@ Geometrie: **Punkt**, Zoom: **z8–14**, Ebene: `sharing_p`. Sharing-Standorte d
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-mapx.at; <a href="https://data.oebb.at/de/datensaetze~shared-mobility-standorte~" target="_blank" rel="noopener">ÖBB-Personenverkehr AG – Shared-Mobility Standorte</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
+mapx.at | <a href="https://data.oebb.at/de/datensaetze~shared-mobility-standorte~" target="_blank" rel="noopener">ÖBB-Personenverkehr AG – Shared-Mobility Standorte</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

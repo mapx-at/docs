@@ -42,4 +42,4 @@ Swapped values (`lat,lng`) are rejected with `400` `invalid-coordinates`. More i
 - Successful responses carry no `code`; `code` only appears in errors ([Problem Details](https://docs.mapx.at/api/errors.md), `detail` always English).
 - Unknown query parameters and unknown fields in a JSON body answer `400` `unknown-parameter` with `param`.
 - Paged lists return `next`: the full URL of the next page, or `null` on the last page.
-- Every JSON response has an `attribution` field: `mapx.at; <source> (<license>); …` ([Attribution and license](https://docs.mapx.at/reference/attribution.md)).
+- Every JSON response has an `attribution` field: `mapx.at | <source> (<license>); …` ([Attribution and license](https://docs.mapx.at/reference/attribution.md)).

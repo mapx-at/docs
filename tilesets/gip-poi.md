@@ -86,7 +86,7 @@ Geometry: **Point**, Zoom: **z12–15**, Layer: `gip_poi`. Point features from G
 Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-mapx.at; Datenquelle: <a href="https://www.gip.gv.at" target="_blank" rel="noopener">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
+mapx.at | Datenquelle: <a href="https://www.gip.gv.at" target="_blank" rel="noopener">GIP.at</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

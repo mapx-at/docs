@@ -86,7 +86,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
+  "attribution": "mapx.at | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0); © Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026"
 }
 ```
 
@@ -184,7 +184,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
+  "attribution": "mapx.at | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0); © Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026"
 }
 ```
 
@@ -278,7 +278,7 @@ data = res.json()
       }
     }
   ],
-  "attribution": "mapx.at; BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0)"
+  "attribution": "mapx.at | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0); © Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026"
 }
 ```
 

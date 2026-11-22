@@ -8,7 +8,7 @@ Rast-, Pendler- und Lkw-Parkplätze an Autobahnen und Schnellstraßen aus den Ve
 
 > **Achtung:** **Quellenangabe**
 > 
-> mapx.at; Datenquelle: ASFINAG, Rast-, Pendler- und Lkw-Parkplätze, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Bearbeitung: Auswahl und Umformung der Felder.
+> mapx.at | Datenquelle: ASFINAG, Rast-, Pendler- und Lkw-Parkplätze, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de). Bearbeitung: Auswahl und Umformung der Felder.
 
 ## Kennwerte
 
@@ -96,7 +96,7 @@ Geometrie: **Punkt**, Zoom: **z7–14**, Ebene: `rest_area_p`. Rast-, Pendler- u
 Pflicht nach CC BY 4.0. MapLibre übernimmt den Text automatisch aus dem TileJSON:
 
 ```html
-mapx.at; <a href="https://www.asfinag.at" target="_blank" rel="noopener">ASFINAG</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
+mapx.at | <a href="https://www.asfinag.at" target="_blank" rel="noopener">ASFINAG</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
 ```
 
 Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).

@@ -8,7 +8,7 @@ Rest, commuter and truck parking sites along motorways and expressways from the 
 
 > **Warning:** **Attribution**
 > 
-> mapx.at; Data source: ASFINAG, rest, commuter and truck parking, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: selection and reshaping of fields.
+> mapx.at | Data source: ASFINAG, rest, commuter and truck parking, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: selection and reshaping of fields.
 
 ## Specifications
 
@@ -96,7 +96,7 @@ Geometry: **Point**, Zoom: **z7–14**, Layer: `rest_area_p`. Rest, commuter and
 Required under CC BY 4.0. MapLibre picks up the text automatically from the TileJSON:
 
 ```html
-mapx.at; <a href="https://www.asfinag.at" target="_blank" rel="noopener">ASFINAG</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
+mapx.at | <a href="https://www.asfinag.at" target="_blank" rel="noopener">ASFINAG</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a>
 ```
 
 More: [License](https://docs.mapx.at/reference/attribution.md).

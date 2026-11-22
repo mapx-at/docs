@@ -54,7 +54,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "legal_only": true,
-  "attribution": "mapx.at; GIP.at (CC BY 4.0)",
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",

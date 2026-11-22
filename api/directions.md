@@ -173,7 +173,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -297,7 +297,7 @@ data = res.json()
       "distance": 6.1
     }
   ],
-  "attribution": "mapx.at; GIP.at (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 

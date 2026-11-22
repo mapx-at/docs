@@ -56,7 +56,7 @@ Die Luftqualität folgt dem Europäischen Luftqualitätsindex (1 gut bis 6 sehr 
 
 ## Quellenangabe
 
-`mapx.at; GeoSphere Austria (CC BY 4.0)` (Feld `attribution` der Antwort) überall anzeigen, wo die Daten erscheinen, siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
+`mapx.at | GeoSphere Austria (CC BY 4.0)` (Feld `attribution` der Antwort) überall anzeigen, wo die Daten erscheinen, siehe [Quellenangabe und Lizenz](https://docs.mapx.at/de/reference/attribution.md).
 
 ## Weiter
 

@@ -88,7 +88,7 @@ data = res.json()
     }
   ],
   "time": "2026-11-08T11:50:00Z",
-  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)"
+  "attribution": "mapx.at | GeoSphere Austria (CC BY 4.0)"
 }
 ```
 
@@ -500,7 +500,7 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "updated": "2026-11-08T08:00:00Z",
-  "attribution": "mapx.at; GeoSphere Austria (CC BY 4.0)",
+  "attribution": "mapx.at | GeoSphere Austria (CC BY 4.0)",
   "features": [
     {
       "type": "Feature",

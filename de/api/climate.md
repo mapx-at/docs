@@ -108,7 +108,7 @@ data = res.json()
       "date": "2026-11-06"
     }
   },
-  "attribution": "mapx.at; GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0)"
+  "attribution": "mapx.at | GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0)"
 }
 ```
 

@@ -4,11 +4,11 @@ Source: https://docs.mapx.at/reference/attribution/
 
 > Which source to credit under CC BY 4.0 when you show mapx maps or data: ready-made attribution text per tileset and API, for MapLibre, print and images.
 
-The open government data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
+The open government data in mapx is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en). The Sentinel-2 tiles are the exception: they contain modified Copernicus Sentinel data and follow the Copernicus terms; the credit is in the TileJSON. You may use it commercially. You must name the source and the license and must not present modifications as official. **Indication of changes (CC BY 4.0, section 3(a)(1)(B)):** mapx has processed and modified the data (converted, merged, generalized, interpolated, coloured, prepared as tiles and routing graphs); the results are not the original data of the data providers. Users must be able to reach the credit on the map itself, for example as text in the corner or behind an "i" info button on the map, not only in an imprint.
 
 ## mapx.at first
 
-Every mapx attribution starts with `mapx.at`, followed by the data sources. The styles under `/v1/styles` carry `mapx.at` with a link to https://mapx.at as their first entry (own source `mapx` with the layer `mapx-attribution`); please do not remove it. If you add tilesets directly you get the link through the TileJSON (`attribution` starts with `<a href="https://mapx.at" …>mapx.at</a>`), the JSON responses of the API through their `attribution` field (`mapx.at; …`). MapLibre orders the entries by length, shortest first: your own sources with a very short attribution (under 68 characters) appear before it. With Leaflet, OpenLayers and static images put `mapx.at` in front yourself, as in the examples.
+Every mapx attribution starts with `mapx.at` (linked to https://mapx.at), then a vertical bar `|`, then the data sources, separated by `; `: `mapx.at | <source> (<license>); …`. The bar visibly separates the provider from the data sources and matches the separator MapLibre puts between sources; the semicolon between sources stays because source names contain commas. The styles under `/v1/styles` carry `mapx.at` with a link to https://mapx.at as their first entry (own source `mapx` with the layer `mapx-attribution`); please do not remove it. If you add tilesets directly you get the link through the TileJSON (`attribution` starts with `<a href="https://mapx.at" …>mapx.at</a> | `), the JSON responses of the API through their `attribution` field (`mapx.at | …`). MapLibre orders the entries by length, shortest first: your own sources with a very short attribution (under 68 characters) appear before it. With Leaflet, OpenLayers and static images put `mapx.at` in front yourself, as in the examples.
 
 ## In a MapLibre map
 
@@ -16,41 +16,41 @@ MapLibre shows the attribution automatically when you load a style or a TileJSON
 
 ```js
 { type: "raster", tiles: ["https://tiles.mapx.at/v1/tiles/orthophoto/{z}/{x}/{y}.webp?access_token=YOUR_TOKEN"], tileSize: 512,
-  maxzoom: 18, attribution: "mapx.at; BEV Orthophoto (CC BY 4.0)" }
+  maxzoom: 18, attribution: "mapx.at | BEV Orthophoto (CC BY 4.0)" }
 ```
 
 ## In print, reports and static images
 
-Put a visible line next to the image, in readable size, for example `Source: mapx.at; BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. With several sources list them all, separated by semicolons.
+Put a visible line next to the image, in readable size, for example `Source: mapx.at | BEV – ALS-DTM 1 m (2025-09-15), CC BY 4.0`. With several sources list them all, separated by semicolons.
 
 ## Text per tileset
 
 | Tileset | Text |
 |---|---|
-| `streets` | mapx.at; Datenquellen: BEV (DKM, Verwaltungsgrenzen, Adressregister, Geographische Namen), GIP.at, BMLUK (GGN), Umweltbundesamt, Stadt Wien – data.wien.gv.at; CC BY 4.0 |
-| `contours` | mapx.at; Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `terrain-rgb` | mapx.at; Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `dsm` | mapx.at; Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
-| `orthophoto` | mapx.at; Orthophoto: BEV (CC BY 4.0) |
-| `orthophoto-flight-blocks` | The TileJSON only names `mapx.at`; credit `mapx.at; BEV, CC BY 4.0`, since the flight blocks are metadata of the BEV orthophoto. |
-| `bike-routes` | mapx.at; Datenquelle: GIP.at, CC BY 4.0 |
-| `gip-poi` | mapx.at; Datenquelle: GIP.at, CC BY 4.0 |
-| `rest-areas` | mapx.at; ASFINAG, CC BY 4.0 |
-| `sharing` | mapx.at; ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
-| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | mapx.at; Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
+| `streets` | mapx.at \| BEV (cadastre, administrative boundaries, address register, geographic names), GIP.at, BMLUK (GGN), Umweltbundesamt, City of Vienna (data.wien.gv.at), Statistik Austria (CC BY 4.0); Datenquelle: [basemap.at](https://basemap.at) (CC BY 4.0); © Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026 |
+| `contours` | mapx.at \| Höhenlinien: mapx.at, Datenquelle BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `terrain-rgb` | mapx.at \| Relief: BEV – ALS-DTM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `dsm` | mapx.at \| Relief: BEV – ALS-DOM 1 m (Stichtag 15.09.2025), CC BY 4.0 |
+| `orthophoto` | mapx.at \| Orthophoto: BEV (CC BY 4.0) |
+| `orthophoto-flight-blocks` | The TileJSON only names `mapx.at`; credit `mapx.at \| BEV, CC BY 4.0`, since the flight blocks are metadata of the BEV orthophoto. |
+| `bike-routes` | mapx.at \| Datenquelle: GIP.at, CC BY 4.0 |
+| `gip-poi` | mapx.at \| Datenquelle: GIP.at, CC BY 4.0 |
+| `rest-areas` | mapx.at \| ASFINAG, CC BY 4.0 |
+| `sharing` | mapx.at \| ÖBB-Personenverkehr AG – Shared-Mobility Standorte, CC BY 4.0 |
+| `sentinel2`, `sentinel2-date`, `sentinel2-ndvi`, `sentinel2-ndwi`, `sentinel2-ndsi` | mapx.at \| Contains modified Copernicus Sentinel data 2026 (year of the images; stated in the TileJSON) |
 
 ## Text per API
 
-JSON responses with data carry a top-level `attribution` field; it always starts with `mapx.at; ` before the source from the table. Show it when you display or pass on the data.
+JSON responses with data carry a top-level `attribution` field; it always starts with `mapx.at | ` before the source from the table. Show it when you display or pass on the data.
 
-Format: `mapx.at; <source> (<license>); …`, English and without prefix words such as "Data source:"; the same text for every `Accept-Language`.
+Format: `mapx.at | <source> (<license>); …`, English and without prefix words such as "Data source:"; the same text for every `Accept-Language`. The exception are wordings prescribed by a data provider: they stay unchanged after the bar (Mobilitätsverbünde, basemap.at, the BEV address register notice, see below).
 
 | API | Source |
 |---|---|
-| Geocoding, Search Box, Address | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0) |
+| Geocoding, Search Box, Address | BEV Address Register, Geographical Names, Administrative Boundaries, DKM (CC BY 4.0); © Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026 |
 | Directions, Isochrone, Matrix, Matching | GIP.at (CC BY 4.0) |
 | Tolls, Traffic | ASFINAG / EVIS.AT (CC BY 4.0); GIP.at (CC BY 4.0) (tolls: ASFINAG (CC BY 4.0)) |
-| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0) |
+| Public transport | ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at; GIP.at (CC BY 4.0) |
 | Weather | GeoSphere Austria (CC BY 4.0) |
 | Climate | GeoSphere Austria APOLIS, SPARTACUS, SNOWGRID-CL, WINFORE (CC BY 4.0) |
 | Air quality | GeoSphere Austria (CC BY 4.0) |
@@ -58,3 +58,13 @@ Format: `mapx.at; <source> (<license>); …`, English and without prefix words s
 | Elevation | BEV ALS-DTM 1 m (CC BY 4.0); BEV ALS-DOM 1 m (CC BY 4.0) |
 
 The credit is also stored in the TileJSON.
+
+## Prescribed wordings
+
+These stay in German, word for word:
+
+- **Mobilitätsverbünde Österreich (timetables of the transport associations):** "Datenquelle: Mobilitätsverbünde Österreich OG – data.mobilitaetsverbuende.at". License: [Datenlizenz Mobilitätsverbünde Österreich](https://data.mobilitaetsverbuende.at). mapx has modified the timetable data (merged, linked with the ÖBB timetable and the GIP.at network, prepared for journey planning). Mobilitätsverbünde Österreich OG accept no liability for the correctness, completeness and timeliness of the data or for consequences of their use; the disclaimer of the data license applies.
+- **basemap.at (selection of peak and place names):** "Datenquelle: basemap.at" with a link to https://basemap.at, CC BY 4.0.
+- **BEV address register (geocoding, search, house numbers in `streets`):** "© Österreichisches Adressregister, Stichtagsdaten vom DD.MM.YYYY", currently "© Österreichisches Adressregister, Stichtagsdaten vom 01.10.2026".
+- **Copernicus (Sentinel-2):** "Contains modified Copernicus Sentinel data [year]" with the year of the images.
+- **Statistik Austria:** the population figures (CC BY 4.0) set the classes of the place names in `streets`.

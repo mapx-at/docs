@@ -39,7 +39,7 @@ TileJSON liefert Zoombereich, Grenzen und die Quellenangabe. Der fertige Stil `s
 ```js
 L.tileLayer("https://tiles.mapx.at/v1/tiles/sentinel2/{z}/{x}/{y}.webp", {
   tileSize: 512, zoomOffset: -1, minZoom: 5, maxNativeZoom: 13, maxZoom: 18, crossOrigin: true,
-  attribution: "mapx.at; Contains modified Copernicus Sentinel data 2026"
+  attribution: "mapx.at | Contains modified Copernicus Sentinel data 2026"
 }).addTo(map);
 ```
 
@@ -101,7 +101,7 @@ Im mapx-Viewer sind sie die Überlagerungen „Aufnahmedatum“, „Vegetation (
 Pflicht nach den Copernicus-Nutzungsbedingungen (frei, vollständig und offen) für bearbeitete Daten:
 
 ```html
-mapx.at; Contains modified Copernicus Sentinel data 2026
+mapx.at | Contains modified Copernicus Sentinel data 2026
 ```
 
 Die Jahreszahl nennt das Jahr der Aufnahmen; MapLibre übernimmt den Text aus TileJSON oder PMTiles. Mehr: [Lizenz](https://docs.mapx.at/de/reference/attribution.md).
