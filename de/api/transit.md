@@ -14,7 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `route` (5/s), `search` (10
 
 Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten (Linie, Haltestellen, Zeiten, `platform` bei `from`, `to` und `stops[]`, wenn bekannt, sonst null). Zeit über `depart_at` (Standard jetzt) oder `arrive_by`, ISO 8601 in Wiener Ortszeit; ungültige Daten oder Uhrzeiten wie `T25:00` oder `2026-02-31` ergeben 400.
 
-`line.name` ist der Linienname für Fahrgäste wie in `/v1/departures` (`U3`, `S50`, `R52`, Fernzüge mit Zugnummer wie `RJ 754`), `trip_short_name` die Zugnummer. Umsteigen an derselben Station dauert mindestens 2 Minuten, nach einem Fußweg bleibt mindestens 1 Minute bis zur Abfahrt. Höchstens `routes` Verbindungen, sortiert nach Ankunft (`depart_at`) bzw. nach Abfahrt, späteste zuerst (`arrive_by`); Verbindungen, die nicht besser als eine andere sind (nicht früher, nicht schneller, nicht weniger Fahrten), und Flügelzüge mit gleichen Zeiten erscheinen nur einmal. Ein direkter Fußweg steht vorne, wenn er nicht langsamer als die beste Fahrt ist. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`); außerhalb davon und wenn keine Haltestelle erreichbar ist oder keine Verbindung gefunden wird 422. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+`line.name` ist der Linienname für Fahrgäste wie in `/v1/departures` (`U3`, `S50`, `R52`, Fernzüge mit Zugnummer wie `RJ 754`), `trip_short_name` die Zugnummer. Fahrten tragen das Verkehrsmittel in `mode` und `line.mode` (rail, subway, tram, bus, ferry, cable, other; dieselben Werte wie in `/v1/stops` und `/v1/departures`), Fußwege `walking` bzw. `cycling`. `modes` beschränkt die Fahrten auf diese Verkehrsmittel (Fußwege bleiben). Umsteigen an derselben Station dauert mindestens 2 Minuten, nach einem Fußweg bleibt mindestens 1 Minute bis zur Abfahrt. Höchstens `routes` Verbindungen, sortiert nach Ankunft (`depart_at`) bzw. nach Abfahrt, späteste zuerst (`arrive_by`); Verbindungen, die nicht besser als eine andere sind (nicht früher, nicht schneller, nicht weniger Fahrten), und Flügelzüge mit gleichen Zeiten erscheinen nur einmal. Ein direkter Fußweg steht vorne, wenn er nicht langsamer als die beste Fahrt ist. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`); außerhalb davon und wenn keine Haltestelle erreichbar ist oder keine Verbindung gefunden wird 422. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
@@ -24,6 +24,7 @@ Genau Start und Ziel. Verbindungen mit Fußwegen auf dem GIP.at-Netz und Fahrten
 | `depart_at` | query | string |  | – | Früheste Abfahrt, z. B. 2026-11-09T08:00 |
 | `arrive_by` | query | string |  | – | Späteste Ankunft, statt depart_at |
 | `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
+| `modes` | query | string |  | `all` | Nur Fahrten mit diesen Verkehrsmitteln, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle. Fußwege und der Radweg bleiben |
 
 **Beispiel**
 
@@ -136,6 +137,7 @@ Wie transit, aber der erste Abschnitt mit dem Rad (Modus `cycling`, bis 15 min).
 | `depart_at` | query | string |  | – | Früheste Abfahrt |
 | `arrive_by` | query | string |  | – | Späteste Ankunft |
 | `routes` | query | string |  | `3` | 1 bis 5, Standard 3 |
+| `modes` | query | string |  | `all` | Nur Fahrten mit diesen Verkehrsmitteln, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle. Fußwege und der Radweg bleiben |
 
 **Beispiel**
 
@@ -240,7 +242,7 @@ data = res.json()
 
 Nächste Abfahrten an einer Haltestelle (Id aus `/v1/stops`, z. B. `at:43:7226`) oder an allen Haltestellen um eine Koordinate. Die Betriebstage folgen Kalender und Gültigkeitszeitraum des Fahrplans, Fahrten über Mitternacht sind enthalten; an den Tagen der Zeitumstellung stimmen die Zeiten (GTFS-Zeiten zählen ab Mittag minus 12 Stunden).
 
-Je Abfahrt: Zeit, Linie (`name` wie bei transit: `U1`, `R52`, `RJ 754`; dazu `short_name`, `trip_short_name`, Verkehrsmittel, route_type), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle. Die Zeiten stammen aus dem Soll-Fahrplan: `realtime` ist immer false. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`, alle Fahrplanjahre zusammen). Außerhalb davon 422, unbekannte Haltestelle 404, ungültige Zeit 400. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+Je Abfahrt: Zeit, Linie (`name` wie bei transit: `U1`, `R52`, `RJ 754`; dazu `short_name`, `trip_short_name`, Verkehrsmittel `mode`, `route_type`), Fahrtziel (headsign), Ziel, Bahnsteig (null, wenn unbekannt), Betreiber, Haltestelle. Die Zeiten stammen aus dem Soll-Fahrplan: `realtime` ist immer false. `timetable` nennt den Zeitraum des geladenen Fahrplans (`valid_from`, `valid_to`, alle Fahrplanjahre zusammen). Außerhalb davon 422, unbekannte Haltestelle 404, ungültige Zeit 400. Fahrplandaten: ÖBB-Personenverkehr AG (CC BY 4.0); Datenquelle: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameter**
 
@@ -251,6 +253,7 @@ Je Abfahrt: Zeit, Linie (`name` wie bei transit: `U1`, `R52`, `RJ 754`; dazu `sh
 | `limit` | query | string |  | `20` | 1 bis 100, Standard 20 |
 | `radius` | query | string |  | `300` | Nur mit lon,lat: Meter, 1 bis 2000, Standard 300 |
 | `horizon` | query | string |  | `14400` | Zeitfenster in Sekunden, 60 bis 86400, Standard 14400 |
+| `modes` | query | string |  | `all` | Nur Abfahrten dieser Verkehrsmittel, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle. Bei lon,lat nur Haltestellen, an denen eines davon hält; `stops[]` nennt nur diese Verkehrsmittel und Linien |
 
 **Beispiel**
 
@@ -351,9 +354,9 @@ data = res.json()
 
 `GET /v1/stops`
 
-Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) und `lines` (Liniennamen wie in `/v1/departures`, Fernzüge als Gattung wie `RJ`, `RJX`, `IC`).
+Haltestellen in einem Rechteck (`bbox`, nach Zahl der Fahrtmuster absteigend) oder um einen Punkt (`near`, die nächste zuerst, mit `distance` in Metern). Je Haltestelle `id`, `name`, `location` [lon,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) und `lines` (Liniennamen wie in `/v1/departures`, Fernzüge als Gattung wie `RJ`, `RJX`, `IC`).
 
-Als lat,lon angegebene Koordinaten ergeben 400.
+Mit `modes` nur Haltestellen, an denen eines dieser Verkehrsmittel hält, `modes` und `lines` nennen dann nur diese. Als lat,lon angegebene Koordinaten ergeben 400.
 
 **Parameter**
 
@@ -363,6 +366,7 @@ Als lat,lon angegebene Koordinaten ergeben 400.
 | `near` | query | string |  | – | lon,lat, statt bbox |
 | `radius` | query | string |  | `500` | Nur mit near: Meter, 1 bis 5000, Standard 500 |
 | `limit` | query | string |  | `50` | 1 bis 500, Standard 50 |
+| `modes` | query | string |  | `all` | Nur Haltestellen, an denen eines dieser Verkehrsmittel hält, durch Komma getrennt: rail (Fern-, Regional- und S-Bahn-Züge), subway, tram, bus (inkl. Obus), ferry, cable (Seil-, Standseil-, Kabinenbahn), other; Standard alle |
 
 **Beispiel**
 

@@ -14,7 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `route` (5/s), `search` (10/
 
 Exactly origin and destination. Connections with walks on the GIP.at network and rides (line, stops, times, `platform` at `from`, `to` and `stops[]` where known, otherwise null). Time via `depart_at` (default now) or `arrive_by`, ISO 8601 in Vienna local time; invalid dates or times such as `T25:00` or `2026-02-31` answer 400.
 
-`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+`line.name` is the public line name as in `/v1/departures` (`U3`, `S50`, `R52`, long-distance trains by train number such as `RJ 754`), `trip_short_name` the train number. Rides carry the mode of transport in `mode` and `line.mode` (rail, subway, tram, bus, ferry, cable, other; the same values as in `/v1/stops` and `/v1/departures`), walks `walking` or `cycling`. `modes` restricts the rides to these modes (walks stay). Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. At most `routes` connections, sorted by arrival (`depart_at`) or by departure, latest first (`arrive_by`); connections that are no better than another (not earlier, not faster, not fewer rides) and coupled trains with identical times appear once. A direct walk comes first when it is not slower than the best ride. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`); outside it, and when no stop is within reach or no connection is found, 422. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -24,6 +24,7 @@ Exactly origin and destination. Connections with walks on the GIP.at network and
 | `depart_at` | query | string |  | – | Earliest departure, e.g. 2026-11-09T08:00 |
 | `arrive_by` | query | string |  | – | Latest arrival, instead of depart_at |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
+| `modes` | query | string |  | `all` | Only rides with these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. Walks and the bike leg stay |
 
 **Example**
 
@@ -136,6 +137,7 @@ Like transit, but the first leg by bike (mode `cycling`, up to 15 min). The bike
 | `depart_at` | query | string |  | – | Earliest departure |
 | `arrive_by` | query | string |  | – | Latest arrival |
 | `routes` | query | string |  | `3` | 1 to 5, default 3 |
+| `modes` | query | string |  | `all` | Only rides with these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. Walks and the bike leg stay |
 
 **Example**
 
@@ -240,7 +242,7 @@ data = res.json()
 
 Next departures at a station (id from `/v1/stops`, e.g. `at:43:7226`) or at all stations around a coordinate. Service days follow calendar and feed period, trips past midnight included; times are exact on the days clocks change (GTFS times count from noon minus 12 h).
 
-Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, mode, route_type), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
+Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `short_name`, `trip_short_name`, `mode`, `route_type`), headsign, destination, platform (null if unknown), operator, stop. Times come from the scheduled timetable: `realtime` is always false. `timetable` gives the loaded timetable period (`valid_from`, `valid_to`, all timetable years combined). Outside it 422, unknown station 404, invalid time 400. Timetable data: ÖBB-Personenverkehr AG (CC BY 4.0); data source: Mobilitätsverbünde Österreich OG, data.mobilitaetsverbuende.at.
 
 **Parameters**
 
@@ -251,6 +253,7 @@ Per departure: time, line (`name` as in transit: `U1`, `R52`, `RJ 754`; plus `sh
 | `limit` | query | string |  | `20` | 1 to 100, default 20 |
 | `radius` | query | string |  | `300` | With lon,lat only: meters, 1 to 2000, default 300 |
 | `horizon` | query | string |  | `14400` | Window in seconds, 60 to 86400, default 14400 |
+| `modes` | query | string |  | `all` | Only departures of these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all. With lon,lat only stations served by one of them; `stops[]` lists only these modes and lines |
 
 **Example**
 
@@ -351,9 +354,9 @@ data = res.json()
 
 `GET /v1/stops`
 
-Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, bus, tram, subway, ...) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
+Stations in a box (`bbox`, by number of trip patterns descending) or around a point (`near`, nearest first, with `distance` in meters). Per station `id`, `name`, `location` [lon,lat], `modes` (rail, subway, tram, bus, ferry, cable, other) and `lines` (public line names as in `/v1/departures`, long-distance trains by category such as `RJ`, `RJX`, `IC`).
 
-Coordinates given as lat,lon answer 400.
+With `modes` only stations served by one of these modes, and `modes`/`lines` list only them. Coordinates given as lat,lon answer 400.
 
 **Parameters**
 
@@ -363,6 +366,7 @@ Coordinates given as lat,lon answer 400.
 | `near` | query | string |  | – | lon,lat, instead of bbox |
 | `radius` | query | string |  | `500` | With near only: meters, 1 to 5000, default 500 |
 | `limit` | query | string |  | `50` | 1 to 500, default 50 |
+| `modes` | query | string |  | `all` | Only stations served by these modes of transport, comma-separated: rail (long-distance, regional and S-Bahn trains), subway, tram, bus (incl. trolleybus), ferry, cable (cable car, funicular, gondola), other; default all |
 
 **Example**
 

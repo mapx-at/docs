@@ -42,6 +42,29 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions
 
 Genau einen Start und ein Ziel übergeben. `depart_at` (früheste Abfahrt) oder `arrive_by` (späteste Ankunft) verwenden, jeweils im Format `JJJJ-MM-TTThh:mm` in Wiener Ortszeit; Standard ist jetzt. Die Antwort enthält mehrere Verbindungen in `routes[]` (Anzahl wählbar mit `routes`, siehe [ÖV-API](https://docs.mapx.at/de/api/transit.md)), dazu Fußwege auf dem Straßennetz und Fahrten mit Linie, Haltestellen, Zeiten und Steig (`from.platform`, `to.platform`, `stops[].platform`, `null`, wenn unbekannt). Umsteigen an derselben Station dauert mindestens 2 Minuten, nach einem Fußweg bleibt mindestens 1 Minute bis zur Abfahrt. Mit `bike_transit` ist der erste Abschnitt mit dem Rad; das Rad bleibt an der Haltestelle, Umstiege und der letzte Abschnitt sind zu Fuß. Keine Haltestelle in Reichweite oder keine Verbindung: `422`.
 
+## Nach Verkehrsmittel filtern
+
+`/v1/stops`, `/v1/departures` und beide Verbindungsprofile nehmen `modes`, eine durch Komma getrennte Liste von Verkehrsmitteln. Ohne `modes` gelten alle. Dieselben Werte stehen in den Antworten: `stops[].modes`, `departures[].line.mode` sowie `mode` und `line.mode` jeder Fahrt einer Verbindung (Fußwege sind `walking` bzw. `cycling`).
+
+| Wert | Umfasst (GTFS `route_type`) |
+|---|---|
+| `rail` | Fern-, Regional- und S-Bahn-Züge (2, 100–199, 300–399) |
+| `subway` | U-Bahn, Metro (1, 400–404) |
+| `tram` | Straßenbahn (0, 900–999) |
+| `bus` | Bus inkl. Obus, Fernbus und Rufbus (3, 11, 200–299, 700–899, 1500–1599) |
+| `ferry` | Schiff, Fähre (4, 1000–1099, 1200–1299) |
+| `cable` | Seil- und Kabinenbahn, Sessellift, Standseilbahn (5–7, 1300–1499) |
+| `other` | Alles andere (in den aktuellen Fahrplandaten nicht vorhanden) |
+
+```bash
+# nur die U-Bahn am Stephansplatz
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&modes=subway&limit=8" | jq '.departures[] | {time, line: .line.name, mode: .line.mode}'
+# Wien Hauptbahnhof nach St. Pölten nur mit dem Bus (ohne Bahn)
+curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3772,48.1852;15.6256,48.2049?modes=bus&routes=1" | jq '.routes[0].legs[] | {mode, line: .line.name}'
+```
+
+`stops` liefert dann nur Haltestellen, an denen eines dieser Verkehrsmittel hält, `modes` und `lines` nennen nur diese; mit einer Koordinate sucht `departures` nur solche Haltestellen. Verbindungen nutzen nur Fahrten mit diesen Verkehrsmitteln, Fußwege und der Radabschnitt bleiben. Eine Verbindung hat höchstens 8 Fahrten, über weite Strecken findet sich daher mit `bus` allein womöglich keine Verbindung (`422`). Ein unbekannter Wert ergibt `400` mit `param: "modes"` und den erlaubten Werten in `allowed`.
+
 ## Erreichbarkeit mit ÖV
 
 Zu Fuß plus öffentlicher Verkehr als Isochronen: Profil `transit` der Isochronen-API. Die Suche geht zu den Haltestellen rund um den Start, fährt ab `depart_at` nach Soll-Fahrplan und geht von jeder erreichten Haltestelle wieder zu Fuß weiter.

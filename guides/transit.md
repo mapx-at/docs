@@ -42,6 +42,29 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 
 Pass exactly an origin and a destination. Use `depart_at` (earliest departure) or `arrive_by` (latest arrival), each in the format `YYYY-MM-DDThh:mm` in Vienna local time; the default is now. The response contains several journeys in `routes[]` (the number can be set with `routes`, see the [transit API](https://docs.mapx.at/api/transit.md)), with walking sections on the road network and rides with line, stops, times and platform (`from.platform`, `to.platform`, `stops[].platform`, `null` if unknown). Changing at the same station takes at least 2 minutes, after a walk at least 1 minute remains before the departure. With `bike_transit` the first leg is cycled; the bike stays at the stop, changes and the last leg are walked. No stop within reach or no connection: `422`.
 
+## Filter by mode of transport
+
+`/v1/stops`, `/v1/departures` and both journey profiles take `modes`, a comma-separated list of modes of transport. Without `modes` all are included. The same values appear in the responses: `stops[].modes`, `departures[].line.mode` and `mode` and `line.mode` of every ride in a journey (walks are `walking` or `cycling`).
+
+| Value | Covers (GTFS `route_type`) |
+|---|---|
+| `rail` | Long-distance, regional and S-Bahn trains (2, 100–199, 300–399) |
+| `subway` | U-Bahn, metro (1, 400–404) |
+| `tram` | Tram (0, 900–999) |
+| `bus` | Bus incl. trolleybus, coach and on-demand bus (3, 11, 200–299, 700–899, 1500–1599) |
+| `ferry` | Boat, ferry (4, 1000–1099, 1200–1299) |
+| `cable` | Cable car, gondola, chair lift, funicular (5–7, 1300–1499) |
+| `other` | Everything else (not in the current timetable data) |
+
+```bash
+# only the U-Bahn at Stephansplatz
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/departures?stop=at:49:1320&modes=subway&limit=8" | jq '.departures[] | {time, line: .line.name, mode: .line.mode}'
+# Wien Hauptbahnhof to St. Pölten by bus only (no train)
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/transit/16.3772,48.1852;15.6256,48.2049?modes=bus&routes=1" | jq '.routes[0].legs[] | {mode, line: .line.name}'
+```
+
+`stops` then returns only stations where one of these modes stops, and `modes` and `lines` list only them; with a coordinate, `departures` searches only such stations. In journeys only rides with these modes are used; walks and the bike leg stay. A journey has at most 8 rides, so long distances with only `bus` may find no connection (`422`). An unknown value answers `400` with `param: "modes"` and the `allowed` values.
+
 ## Reachability by transit
 
 Walking plus public transport as isochrones: profile `transit` of the isochrone API. The search walks to the stops around the start, rides the scheduled timetable from `depart_at` and walks on from every stop reached.
