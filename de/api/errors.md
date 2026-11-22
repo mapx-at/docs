@@ -27,7 +27,7 @@ Jeder Fehler ist ein Dokument `application/problem+json` ([RFC 9457](https://www
 | `status` | HTTP-Status |
 | `detail` | Erklärung zu dieser Anfrage; standardmäßig englisch |
 | `code` | Stabiler maschinenlesbarer Code, entspricht dem Anker |
-| `param` | Betroffener Parameter (wo sinnvoll) |
+| `param` | Betroffener Parameter (wo sinnvoll); bei Pfadteilen ihr Name in der OpenAPI-Beschreibung (`coordinates`, `coordinate`, `category`), bei Feldern eines JSON-Körpers der Feldpfad (`vehicles[0].start`) |
 | `allowed` | Erlaubte Werte bei Aufzählungen (wo sinnvoll) |
 
 ## Anmeldefehler
@@ -82,6 +82,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-parameter`](#unknown-parameter) | 400 | Unbekannter Parameter |
 | [`unknown-layer`](#unknown-layer) | 404 | Unbekannte Ebene |
 | [`unknown-id`](#unknown-id) | 404 | Unbekannte Id |
+| [`no-road-nearby`](#no-road-nearby) | 404 | Keine Straße in der Nähe |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Kachel außerhalb des Bereichs |
 | [`outside-coverage`](#outside-coverage) | 404 | Außerhalb des Datengebiets |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Methode nicht erlaubt |
@@ -111,7 +112,7 @@ Was tun: `detail` lesen und die Anfrage korrigieren.
 
 **400** · Parameter fehlt
 
-Ein Pflichtparameter fehlt. `param` nennt ihn.
+Ein Pflichtparameter fehlt. `param` nennt ihn. Ist einer von zwei Parametern Pflicht (`bbox` oder `near` bei `/v1/stops`, `bbox` oder `corridor` bei `/v1/speedlimits`) und fehlen beide, nennt `param` den ersten; sind beide gesetzt, kommt `invalid-parameter` mit dem zweiten.
 
 Was tun: Den in `param` genannten Parameter ergänzen.
 
@@ -313,7 +314,15 @@ Was tun: Einen von temperature, precipitation, wind, humidity, cloud, pressure, 
 
 Eine Vorschlags-, Adress- oder Orts-Id ist nicht bekannt (oder nach einem Datenupdate abgelaufen).
 
-Was tun: Neu suchen und die Id aus der frischen Antwort verwenden.
+Was tun: Neu suchen und die Id aus der frischen Antwort verwenden. Bei `/v1/departures` mit unbekannter Stations-Id nennt `param` den Parameter `stop`.
+
+### no-road-nearby
+
+**404** · Keine Straße in der Nähe
+
+Im Suchradius um einen Punkt liegt keine für das Profil befahrbare Straße (Routing, Isochrone, Matrix: Standard 1000 m, je Punkt über `radiuses`), bzw. entlang der Linie von `/v1/speedlimits` (`corridor`) und `/v1/corridor-graph` (`polyline`) liegt im Puffer keine. `param` nennt den Parameter (`coordinates`, `coordinate`, `corridor`, `polyline`), `detail` den Punkt (`start`, `destination`) und den Radius.
+
+Was tun: Den Punkt näher an eine Straße legen oder den Radius (`radiuses`, `buffer`) vergrößern; Koordinaten in der Reihenfolge `lon,lat` prüfen.
 
 ### tile-out-of-range
 
@@ -359,7 +368,7 @@ Was tun: Weniger Werte je Anfrage senden oder, wo der Endpunkt es anbietet, POST
 
 **422** · Anfrage nicht verarbeitbar
 
-Die Anfrage ist formal gültig, kann aber nicht beantwortet werden, etwa keine Route zwischen den Punkten oder ein Datum außerhalb der Fahrplanperiode.
+Die Anfrage ist formal gültig, kann aber nicht beantwortet werden, etwa keine Route zwischen den Punkten, kein Map Matching, keine Reihenfolge bei der Optimierung, keine Haltestelle in Reichweite oder ein Datum außerhalb der Fahrplanperiode.
 
 Was tun: Punkte oder Zeit ändern; `detail` lesen.
 

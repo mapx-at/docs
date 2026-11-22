@@ -170,7 +170,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
 | `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 |
+| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
@@ -294,7 +294,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
 | `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 |
+| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |

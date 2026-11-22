@@ -4094,7 +4094,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
 | `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 |
+| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
@@ -4218,7 +4218,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `language` | query | string |  | – | de (default) or en for instructions and announcements; other values 400 |
 | `alternatives` | query | string |  | – | true (up to 2), false or 0 to 3; only with exactly 2 coordinates. Alternatives are built via laterally offset waypoints and appear as additional `routes[]` |
 | `annotations` | query | string |  | – | duration, distance, speed, maxspeed, elevation, weather_warnings (comma-separated; `weather_warnings` adds `routes[].weather_warnings`, the official warnings whose area the route crosses, without geometry): `legs[].annotation` per geometry segment; speed in m/s, maxspeed `[{speed, unit: km/h, legal} \| {unknown: true}]` (driving only; `legal` is true for a statutory limit and false for a modeled speed such as 53 or 84 that must not be shown as a limit), elevation = mean segment height in m |
-| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 |
+| `radiuses` | query | string |  | – | Search radius per coordinate in meters, semicolon-separated, or `unlimited` (20 km); each coordinate snaps within its own radius, otherwise 404 `no-road-nearby` |
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
@@ -4672,6 +4672,7 @@ data = res.json()
 | `400` | A parameter is missing or invalid |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `404` | Not found (name, path or position) |
 | `422` | Valid request that cannot be answered (for example no route) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
@@ -4807,6 +4808,7 @@ data = res.json()
 | `400` | A parameter is missing or invalid |
 | `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `404` | Not found (name, path or position) |
 | `405` | Method not allowed |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
@@ -7346,7 +7348,7 @@ Every error is an `application/problem+json` document ([RFC 9457](https://www.rf
 | `status` | HTTP status |
 | `detail` | Explanation for this request; English by default |
 | `code` | Stable machine-readable code, equals the anchor |
-| `param` | Offending parameter (where applicable) |
+| `param` | Offending parameter (where applicable); for path segments their name in the OpenAPI description (`coordinates`, `coordinate`, `category`), for fields of a JSON body the field path (`vehicles[0].start`) |
 | `allowed` | Accepted values for enumerations (where applicable) |
 
 ## Authentication errors
@@ -7401,6 +7403,7 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-parameter`](#unknown-parameter) | 400 | Unknown parameter |
 | [`unknown-layer`](#unknown-layer) | 404 | Unknown layer |
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
+| [`no-road-nearby`](#no-road-nearby) | 404 | No road nearby |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
 | [`outside-coverage`](#outside-coverage) | 404 | Outside coverage |
 | [`method-not-allowed`](#method-not-allowed) | 405 | Method not allowed |
@@ -7430,7 +7433,7 @@ What to do: Read `detail` and fix the request.
 
 **400** · Missing parameter
 
-A required parameter is missing. `param` names it.
+A required parameter is missing. `param` names it. Where one of two parameters is required (`bbox` or `near` on `/v1/stops`, `bbox` or `corridor` on `/v1/speedlimits`) and both are missing, `param` names the first; if both are set, the answer is `invalid-parameter` with the second.
 
 What to do: Add the parameter named in `param`.
 
@@ -7632,7 +7635,15 @@ What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressu
 
 A suggestion, address or place id is not known (or expired after a data update).
 
-What to do: Search again and use the id from the fresh response.
+What to do: Search again and use the id from the fresh response. For `/v1/departures` with an unknown station id `param` names `stop`.
+
+### no-road-nearby
+
+**404** · No road nearby
+
+No road usable by the profile lies within the search radius around a point (routing, isochrone, matrix: 1000 m by default, per point via `radiuses`), or within the buffer along the line of `/v1/speedlimits` (`corridor`) and `/v1/corridor-graph` (`polyline`). `param` names the parameter (`coordinates`, `coordinate`, `corridor`, `polyline`), `detail` the point (`start`, `destination`) and the radius.
+
+What to do: Move the point closer to a road or enlarge the radius (`radiuses`, `buffer`); check the coordinate order `lon,lat`.
 
 ### tile-out-of-range
 
@@ -7678,7 +7689,7 @@ What to do: Send fewer values per request or, where the endpoint offers it, use 
 
 **422** · Unprocessable request
 
-The request is well-formed but cannot be answered, e.g. no route between the points or a date outside the timetable period.
+The request is well-formed but cannot be answered, e.g. no route between the points, no map match, no order for an optimization, no stop within reach or a date outside the timetable period.
 
 What to do: Change the points or the time; read `detail`.
 
