@@ -413,7 +413,7 @@ Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://a
 
 ## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
 
-Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 21 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
+Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 22 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
 
 ## Ist mapx kostenlos?
 
@@ -799,7 +799,7 @@ Der Router meidet Straßen, die für das Fahrzeug gesperrt sind: Gewichtsklassen
 
 ## Maut
 
-Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road` und `toll_road_m` zählen nur Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_m`. `toll.vignette_m` zählt die Routenmeter auf Autobahnen und Schnellstraßen des Straßengraphen, ohne Rastplätze, Sondermautstrecken und die vignettenfreien Abschnitte der ASFINAG-Daten. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
+Autorouten enthalten `toll_road_distance` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road_distance` zählt nur die Meter auf Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_distance`. `toll.vignette_distance` zählt die Routenmeter auf Autobahnen und Schnellstraßen des Straßengraphen, ohne Rastplätze, Sondermautstrecken und die vignettenfreien Abschnitte der ASFINAG-Daten. Lkw-Routen melden die mautpflichtigen Meter der GO-Maut in `routes[].toll.truck_go_distance`. Maut oder Autobahnen vermeiden:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -904,13 +904,13 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
+const { features, total, next } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
 Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße; Rampen und Äste wie `road_section` `A13.33.4` gehören zur `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, kommagetrennt, für A-, S-, B- und L-Straßen), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (Datum oder Zeitpunkt mit `Z` oder Offset wie `2026-12-01T10:00:00+01:00`; `to` vor `from` ergibt `400`). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
 
-Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. Bei `POST` gibt es nur `next_cursor`: denselben Body mit `cursor` erneut senden. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
+Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) blättern: `next` ist die vollständige URL der nächsten Seite (mit `cursor`); aufrufen, bis `next` den Wert `null` hat. Bei `POST` enthält `next` nur den `cursor`: denselben Body an diese URL senden. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
@@ -1192,7 +1192,7 @@ Höhen sind in Metern mit Schritten von 0,1 m. Außerhalb des Datengebiets ist d
 ```js
 const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
 const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
+console.log(p.ascent, p.descent, p.min_elevation, p.max_elevation);
 // p.distances[i] (m ab Start) und p.elevations[i] (m) sind bereit für ein Diagramm
 ```
 
@@ -1207,7 +1207,7 @@ const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?sample
   headers: { Authorization: "Bearer DEIN_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify(route.geometry),
 })).json();
-console.log(prof.properties.ascent_m);
+console.log(prof.properties.ascent);
 ```
 
  Beispiel mit Diagramm: [Höhenprofil](https://docs.mapx.at/de/examples/elevation-profile.md). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.
@@ -1245,9 +1245,9 @@ Die Kacheln verwenden die Terrain-RGB-Kodierung: `height = -10000 + (R * 65536 +
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 21 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 22 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 21 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 22 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
 | Eigenschaft | Wert |
 |---|---|
@@ -1401,28 +1401,29 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | Gruppe | Werkzeug | Zweck | Wichtigste Eingaben |
 |---|---|---|---|
 | Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI oder Straßenkilometer | `query`, `near`, `types`, `limit` |
-| Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius_m`, `types` |
+| Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius`, `types` |
 | Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
-| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
+| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Suche | `list_place_categories` | Kategorie-Ids für `search_places` | keine |
-| Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `waypoints` (2 bis 25), `exclude`, `truck` |
+| Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `points` (2 bis 25), `exclude`, `truck` |
 | Routing | `isochrone` | Gebiet, das in gegebenen Minuten oder Metern erreichbar ist | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Fahrzeiten zwischen 2 bis 25 Punkten | `profile`, `points`, `sources`, `destinations` |
-| Routing | `optimize_stops` | Schnellste Reihenfolge von 2 bis 25 Stopps | `profile`, `stops`, `roundtrip`, `start`, `end` |
-| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `from`, `to`, `depart_at`, `arrive_by`, `access`, `connections` |
-| ÖV | `departures` | Nächste planmäßige Abfahrten an einer Haltestelle oder um einen Punkt | `stop_id` oder `near`, `time`, `limit` |
-| ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
+| Routing | `optimize_stops` | Schnellste Reihenfolge von 2 bis 25 Stopps | `profile`, `points`, `roundtrip`, `start`, `end` |
+| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `points` (2), `depart_at`, `arrive_by`, `access`, `connections` |
+| ÖV | `departures` | Nächste planmäßige Abfahrten an einer Haltestelle oder um einen Punkt | `stop` oder `near`, `time`, `limit` |
+| ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit ihrer `id` | `near`, `radius`, `bbox`, `limit` |
 | Höhe | `elevation` | Höhe über dem Meer (Gelände- oder Oberflächenmodell) | `points`, `model` |
-| Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `path` (2 bis 200 Punkte), `samples`, `model` |
+| Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `points` (2 bis 200 Punkte), `samples`, `model` |
 | Verkehr | `traffic_incidents` | Unfälle, Stau, Baustellen und Sperren | `bbox`, `road`, `road_class`, `types`, `planned` |
-| Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `path`, `buffer_m` |
+| Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `points`, `buffer` |
+| Verkehr | `sign_limits` | Aktuell von Wechselverkehrszeichen auf Autobahnen angezeigte Tempolimits | `at`, `bbox`, `limit` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lon`, `lat`, `kind`, `hours` |
 | Wetter | `weather_warnings` | Amtliche Wetterwarnungen | `at`, `bbox`, `type`, `min_level`, `active_now` |
 | Wetter | `climate` | Langfristige Klimadaten, Solarpotenzial | `lon`, `lat`, `sections` |
 | Wetter | `air_quality` | Luftgüteindex und Schadstoffe | `lon`, `lat`, `hours` |
 | Karte | `static_map` | Kartenbild mit Markern und Linie | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
-`search_places` mit Freitext und `near` sucht nur im Umkreis `radius_m` (500 bis 100000 Meter, Standard 25000), sortiert nach Entfernung und sagt ausdrücklich, wenn es auf weiter entfernte Treffer ausweichen muss. Die Kategoriesuche liefert immer die nächsten zuerst und ignoriert `radius_m`. Statt der Koordinate `near` kannst du mit `near_place` einen Ortsnamen oder eine Adresse angeben (zum Beispiel „Melk“); der Server löst ihn mit einem zusätzlichen API-Aufruf auf, nimmt den ersten Treffer und nennt im Ergebnis, um welchen Ort er gesucht hat und welche weiteren Treffer es gab. Die Ortssuche liefert Name, Art, Koordinaten und Entfernung, aber keine Öffnungszeiten, Telefonnummern oder Bewertungen.
+`search_places` mit Freitext und `near` sucht nur im Umkreis `radius` (500 bis 100000 Meter, Standard 25000), sortiert nach Entfernung und sagt ausdrücklich, wenn es auf weiter entfernte Treffer ausweichen muss. Die Kategoriesuche liefert immer die nächsten zuerst und ignoriert `radius`. Statt der Koordinate `near` kannst du mit `near_place` einen Ortsnamen oder eine Adresse angeben (zum Beispiel „Melk“); der Server löst ihn mit einem zusätzlichen API-Aufruf auf, nimmt den ersten Treffer und nennt im Ergebnis, um welchen Ort er gesucht hat und welche weiteren Treffer es gab. Die Ortssuche liefert Name, Art, Koordinaten und Entfernung, aber keine Öffnungszeiten, Telefonnummern oder Bewertungen.
 
 Zeitangaben im Antworttext sind österreichische Ortszeit mit Versatz, zum Beispiel `2026-11-18T08:00+01:00`; das gilt für Wetter, Warnungen, Luftqualität und Verkehrsmeldungen. ÖV-Zeiten sind ebenfalls Ortszeit. Der strukturierte Teil des Ergebnisses (`structuredContent`) behält die Zeitstempel der API.
 
@@ -1843,7 +1844,7 @@ Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert
    curl -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
-   Die Antwort ist eine GeoJSON-`FeatureCollection`, je Messpunkt ein Feature mit `elevation` (m) und `distance_m` (Strecke vom Anfang).
+   Die Antwort ist eine GeoJSON-`FeatureCollection`, je Messpunkt ein Feature mit `elevation` (m) und `distance` (Strecke vom Anfang).
 
 2. **Seite anlegen.** Eine Datei `profil.html` mit einem leeren SVG:
 
@@ -1864,7 +1865,7 @@ Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert
 
      // Messpunkte ohne Höhe (außerhalb der Daten) auslassen
      const pts = daten.features
-       .map(f => ({ d: f.properties.distance_m, h: f.properties.elevation }))
+       .map(f => ({ d: f.properties.distance, h: f.properties.elevation }))
        .filter(p => p.h !== null);
 
      const B = 600, H = 240, R = { l: 50, r: 10, t: 10, b: 30 };
@@ -2482,7 +2483,26 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
+**Beispielantwort**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2676,7 +2696,22 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Liste
+**Beispielantwort**
+
+```json
+[
+  {
+    "id": "sprite",
+    "url": "https://api.mapx.at/v1/sprites/sprite",
+    "files": [
+      "https://api.mapx.at/v1/sprites/sprite.json",
+      "https://api.mapx.at/v1/sprites/sprite.png",
+      "https://api.mapx.at/v1/sprites/sprite@2x.json",
+      "https://api.mapx.at/v1/sprites/sprite@2x.png"
+    ]
+  }
+]
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -2689,6 +2724,10 @@ data = res.json()
 ## Sprite-Datei ohne Style {#sprite-file-without-style}
 
 `GET /v1/sprites/{file}`
+
+Die gemeinsamen Sprites aller Stile direkt über den Dateinamen (dieselben Dateien wie `/v1/styles/{id}/{file}`): `sprite[@2x].json` ist der Index (Name -&gt; Lage und Größe im Atlas, `pixelRatio`), `sprite[@2x].png` der Atlas; `sprite-sdf` enthält die umfärbbaren SDF-Symbole.
+
+`@2x` für Bildschirme mit hoher Pixeldichte.
 
 **Parameter**
 
@@ -2720,7 +2759,26 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
+**Beispielantwort**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -4177,7 +4235,7 @@ open("result.bin", "wb").write(res.content)
 
 Lkw (`driving-truck`, über 3,5 t): Fahrzeugmaße über `weight`, `height`, `width`, `length`, `truck_type`; Straßen werden je Fahrzeug gesperrt (Gewichtsklassen-, Sattel- und Anhängerverbote, Höhen-, Breiten-, Gewichts- und Längenbeschränkungen). Lkw-Geschwindigkeiten: höchstens 80 km/h auf Autobahnen, 70 auf Freilandstraßen, 50 im Ortsgebiet.
 
-Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_km` (Kilometer mit GO-Maut; je Schritt `truck_go_m`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road`, `toll_road_m` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving`, `driving-traffic` und `driving-truck` umfahren die aktiven Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Verbindliche Sperren (EVIS-Vermerk mandatory, Verkehrsregelungen) werden nie befahren; Vollsperren ohne diesen Vermerk, etwa Wintersperren von Passstraßen, nur als letzter Ausweg, wenn Start oder Ziel an oder hinter der Sperre liegt. `routes[].closures_avoided` listet die Sperren, über die die Route ohne Sperren geführt hätte (`binding` unterscheidet beide Arten), `routes[].closures_unavoidable` jene, durch die die Route trotzdem führt. Zeitlich bedingte Regelungen (Wochentage oder Uhrzeiten nur im Text) werden nur gemieden, und nur von `driving-traffic`. Rad- und Fußprofile beachten die Sperren nicht (die Meldungen betreffen den Kfz-Verkehr). `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/sign-limits`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
+Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_distance` (Meter mit GO-Maut; je Schritt `truck_go_distance`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road_distance` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent`, `descent` (Meter) und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` nennt die zwei längsten Straßen (String wie `legs[].summary`, mit `steps=true`), `routes[].elevation_summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving`, `driving-traffic` und `driving-truck` umfahren die aktiven Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Verbindliche Sperren (EVIS-Vermerk mandatory, Verkehrsregelungen) werden nie befahren; Vollsperren ohne diesen Vermerk, etwa Wintersperren von Passstraßen, nur als letzter Ausweg, wenn Start oder Ziel an oder hinter der Sperre liegt. `routes[].closures_avoided` listet die Sperren, über die die Route ohne Sperren geführt hätte (`binding` unterscheidet beide Arten), `routes[].closures_unavoidable` jene, durch die die Route trotzdem führt. Zeitlich bedingte Regelungen (Wochentage oder Uhrzeiten nur im Text) werden nur gemieden, und nur von `driving-traffic`. Rad- und Fußprofile beachten die Sperren nicht (die Meldungen betreffen den Kfz-Verkehr). `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/sign-limits`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
 
 **Parameter**
 
@@ -4195,7 +4253,7 @@ Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betro
 | `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
-| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_distance` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
 | `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
@@ -4233,7 +4291,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -4258,9 +4315,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -4319,7 +4377,7 @@ Gleiche Antwort wie `/v1/directions/{profile}/{coordinates}` (bevorzugt); alle Q
 | `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
-| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_distance` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
 | `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
@@ -4357,7 +4415,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -4382,9 +4439,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -4425,7 +4483,7 @@ data = res.json()
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at`, `transit_stops` und `attribution`.
+Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at` (Ortszeit mit Offset) und `transit_stops`.
 
 `access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400). Sperren: driving, driving-traffic und driving-truck reichen nicht über aktive Vollsperren aus den Verkehrsmeldungen hinaus (dieselben, die Directions umfährt, siehe `/v1/traffic/incidents` mit `closed: true`), auch nicht über Sperren ohne Verbindlichkeitsvermerk wie Wintersperren von Passstraßen: Eine Isochrone hat kein Ziel hinter der Sperre, einen letzten Ausweg gibt es daher nicht; die Straße, auf der der Startpunkt einrastet, bleibt befahrbar. `closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` listet die Sperren, an denen die größte Stufe endet (`id`, `text`, `road`, `category`, `binding`), beide auf oberster Ebene wie bei Directions und Matrix.
 
@@ -4570,7 +4628,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "durations": [
     [
       0,
@@ -4685,7 +4742,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "matchings": [],
   "tracepoints": []
 }
@@ -4766,7 +4822,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "trips": [],
   "waypoints": []
 }
@@ -4981,7 +5036,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -5094,7 +5148,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -5228,7 +5281,6 @@ data = res.json()
       "operator": "OEBB Personenverkehr AG Kundenservice",
       "platform": "2",
       "realtime": false,
-      "scheduled": "2026-11-23T08:00:00+01:00",
       "stop": {
         "id": "at:43:7226",
         "name": "Melk Bahnhof"
@@ -5656,7 +5708,7 @@ data = res.json()
       },
       "properties": {
         "elevation": 171.3,
-        "resolution_m": 1,
+        "resolution": 1,
         "model": "dtm",
         "reference_date": "2025-09-15"
       }
@@ -5678,7 +5730,7 @@ data = res.json()
 
 `GET /v1/elevation/{coordinate}`
 
-Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution_m`, `reference_date`.
+Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution` (Meter), `reference_date`.
 
 **Parameter**
 
@@ -5725,7 +5777,7 @@ data = res.json()
   "properties": {
     "dtm": 171.3,
     "dsm": 171.9,
-    "resolution_m": 1,
+    "resolution": 1,
     "reference_date": "2025-09-15"
   }
 }
@@ -5744,7 +5796,7 @@ data = res.json()
 
 `GET /v1/elevation/profile`
 
-Eine GeoJSON-Linie; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `ascent_threshold_m`, `min_m`, `max_m`. Anstieg und Abstieg werden mit Hysterese gezählt: eine Steigung oder ein Gefälle zählt erst, wenn sich die Höhe um mindestens `ascent_threshold_m` (3 m) vom letzten Wendepunkt entfernt hat.
+Eine GeoJSON-Linie; properties: `distance`, `distances`, `elevations`, `ascent`, `descent`, `ascent_threshold`, `min_elevation`, `max_elevation` (alle in Metern), `resolution`, `model`, `reference_date`. Anstieg und Abstieg werden mit Hysterese gezählt: eine Steigung oder ein Gefälle zählt erst, wenn sich die Höhe um mindestens `ascent_threshold` (3 m) vom letzten Wendepunkt entfernt hat.
 
 Die Summen hängen dadurch kaum von `samples` ab, und Geländerauschen wird nicht aufsummiert (flaches Marchfeld, 9,6 km: 0 m statt 46 m ungefiltert; Großglockner-Hochalpenstraße ab Heiligenblut: rund 1150 m). Mit `model=dsm` zählen Gebäude und Bewuchs als Gelände, der Anstieg fällt höher aus. Die Linie hat z-Koordinaten, wenn jeder Abtastpunkt eine Höhe hat; sonst sind alle Positionen 2D und die Lücken stehen als `null` in `elevations`. Für eine Routengeometrie die POST-Form verwenden.
 
@@ -5809,11 +5861,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -5954,11 +6006,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -5990,7 +6042,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/weather/current`
 
-Messnetz der GeoSphere Austria, 10-Minuten-Werte (Temperatur, Feuchte, Wind, Böe, Niederschlag, Luftdruck). Nächste Station zuerst; `altitude_m` der Station mit `location.elevation_m` des Punkts vergleichen (Geländehöhe aus dem mapx-DGM, 1 m). Die Werte kommen aus einem lokalen Zwischenspeicher, nie je Anfrage von der Quelle.
+Messnetz der GeoSphere Austria, 10-Minuten-Werte (Temperatur, Feuchte, Wind, Böe, Niederschlag, Luftdruck). Nächste Station zuerst; `altitude` der Station mit `elevation` des Punkts vergleichen (Geländehöhe aus dem mapx-DGM, 1 m). Die Werte kommen aus einem lokalen Zwischenspeicher, nie je Anfrage von der Quelle.
 
 Punkte außerhalb Österreichs und der Umgebung: 404 `outside-coverage`. Datenquelle: GeoSphere Austria, CC BY 4.0 (Namensnennung erforderlich).
 
@@ -6036,7 +6088,7 @@ data = res.json()
     16.3725,
     48.2085
   ],
-  "elevation_m": 171.4,
+  "elevation": 171.4,
   "features": [
     {
       "type": "Feature",
@@ -6051,14 +6103,14 @@ data = res.json()
         "station_id": "11035",
         "name": "Wien/Hohe Warte",
         "state": "Wien",
-        "altitude_m": 198,
-        "distance_m": 4600,
+        "altitude": 198,
+        "distance": 4600,
         "time": "2026-11-08T11:50:00Z",
         "temperature_c": 9.4,
         "humidity_pct": 71,
         "wind_speed_ms": 3.1,
         "wind_gust_ms": 5.8,
-        "wind_direction_deg": 290,
+        "wind_direction": 290,
         "precipitation_mm_10min": 0,
         "pressure_hpa": 1002.1,
         "pressure_msl_hpa": 1018.6
@@ -6134,8 +6186,8 @@ data = res.json()
     16.3717,
     48.213
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 178.9,
+  "elevation": 171.4,
+  "grid_elevation": 178.9,
   "model": "GeoSphere AROME nwp-v2-1h-1km",
   "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
@@ -6151,14 +6203,14 @@ data = res.json()
     ],
     "status": "current"
   },
-  "hours": [
+  "hourly": [
     {
       "time": "2026-11-08T12:00:00Z",
       "temperature_c": 10.1,
       "precipitation_mm": 0,
       "wind_speed_ms": 3.4,
       "wind_gust_ms": 7.2,
-      "wind_direction_deg": 285,
+      "wind_direction": 285,
       "humidity_pct": 68,
       "cloud_cover_pct": 40,
       "pressure_msl_hpa": 1008.3,
@@ -6167,7 +6219,7 @@ data = res.json()
         "text": "Partly cloudy",
         "icon": "partly-cloudy"
       },
-      "snow_limit_m": 1200,
+      "snow_limit": 1200,
       "sunshine_min": 31.5,
       "radiation_wm2": 180.2,
       "cape_jkg": 0,
@@ -6255,8 +6307,8 @@ data = res.json()
     16.37303,
     48.20932
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 175.2,
+  "elevation": 171.4,
+  "grid_elevation": 175.2,
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
@@ -6264,7 +6316,7 @@ data = res.json()
   "precipitation_now": false,
   "precipitation_starts_in_min": 30,
   "precipitation_ends_in_min": null,
-  "steps": [
+  "minutely": [
     {
       "time": "2026-11-08T11:15:00Z",
       "minutes_from_now": 5,
@@ -6276,7 +6328,7 @@ data = res.json()
       "humidity_pct": 71,
       "wind_speed_ms": 3.2,
       "wind_gust_ms": 6.1,
-      "wind_direction_deg": 290
+      "wind_direction": 290
     }
   ]
 }
@@ -6727,7 +6779,7 @@ data = res.json()
       "dataset": "apolis-v2-1d-100m",
       "name": "APOLIS solar radiation",
       "license": "CC BY 4.0",
-      "resolution_m": 100,
+      "resolution": 100,
       "cell_center": [
         15.33149,
         48.22776
@@ -6735,6 +6787,14 @@ data = res.json()
       "data_until": "2025-12-31"
     },
     "retrieved_at": "2026-11-08T07:31:55Z"
+  },
+  "sunshine": {
+    "hours_year": {
+      "normal": 1890.2,
+      "normal_period": "1991-2020",
+      "recent": 2041.7,
+      "recent_period": "2016-2025"
+    }
   },
   "snow": {
     "snow_days_per_winter": {
@@ -6760,7 +6820,8 @@ data = res.json()
 | `status` | string | `partial`: einige Abschnitte werden noch geladen |
 | `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
 | `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
-| `precipitation` | object,null | Niederschlag und Sonnenschein (SPARTACUS, 1 km) |
+| `precipitation` | object,null | Niederschlag (SPARTACUS, 1 km) |
+| `sunshine` | object,null | Gemessene Sonnenscheindauer (stationsbasiertes SPARTACUS-Raster, 1 km); weicht vom modellierten APOLIS-Wert in `solar` ab |
 | `temperature_extremes` | object,null | Hitze-, Sommer-, Frost- und Eistage pro Jahr, Tropennächte (SPARTACUS-Tagesdaten, 1 km); Normalperiode 1991-2020 und letzte 10 vollständige Jahre |
 | `snow` | object,null | Schneedecke (Modell SNOWGRID-CL, 1 km) |
 | `drought` | object,null | Dürreindex SPEI (WINFORE, 1 km), letzter Wert |
@@ -6881,9 +6942,9 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Typ und Zeitfenster. Sortiert nach Bedeutung (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit` und `cursor` (`total`, `next` als relative URL oder `null` auf der letzten Seite; `next_cursor` und `next_offset` nur, wenn es eine weitere Seite gibt).
+Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Typ und Zeitfenster. Sortiert nach Bedeutung (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit`: `next` ist die vollständige URL der nächsten Seite (mit `cursor`) oder `null` auf der letzten Seite, `total` die Zahl der passenden Meldungen.
 
-Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Felder: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) und `impact` (critical: für Pkw gesperrt; major: verbindlich, Fahrstreifensperre oder Unfall; minor: sonst ungeplant; low: sonst geplant) leitet mapx ab. `kind` ist die Kategorie der Quelle auf Deutsch (z. B. Straßensperre, Bauarbeiten, Belagsarbeiten, Instandhaltung), `management` ihr englisches Gegenstück oder die DATEX-II-Maßnahme. `closed` ist nur true, wenn die Straße für Pkw gesperrt ist; ein `road_closure` mit `closed: false` ist nur für andere Verkehrsarten gesperrt (siehe `transport_modes`, z. B. Fußgänger, Fahrräder) oder der Verkehr wird über die Gegenfahrbahn geführt. `road` ist die Straßennummer (A1, S33, B17, L347; aus dem Straßengraphen abgeleitet, wenn die Quelle keine nennt, null bei Gemeindestraßen), `road_section` die Kennung der Quelle für Rampe oder Ast (A13.33.4). `road_name`, `direction` (Text), `regions` (Bundesländer) und `creator` stammen aus EVIS. Zeiten in UTC. Texte sind reiner Text; spitze Klammern der Quelle werden entfernt. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
+Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Felder: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) und `impact` (critical: für Pkw gesperrt; major: verbindlich, Fahrstreifensperre oder Unfall; minor: sonst ungeplant; low: sonst geplant) leitet mapx ab. `kind` ist die genaue Kategorie (Enum `IncidentKind`, aus der Kategorie der Quelle abgebildet), `management` die englische DATEX-II-Maßnahme. `closed` ist nur true, wenn die Straße für Pkw gesperrt ist; ein `road_closure` mit `closed: false` ist nur für andere Verkehrsarten gesperrt (siehe `transport_modes`, z. B. Fußgänger, Fahrräder) oder der Verkehr wird über die Gegenfahrbahn geführt. `road` ist die Straßennummer (A1, S33, B17, L347; aus dem Straßengraphen abgeleitet, wenn die Quelle keine nennt, null bei Gemeindestraßen), `road_section` die Kennung der Quelle für Rampe oder Ast (A13.33.4). `road_name`, `direction` (Text), `regions` (Bundesländer) und `creator` stammen aus EVIS. Zeiten in UTC. Texte sind reiner Text; spitze Klammern der Quelle werden entfernt. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
@@ -6902,8 +6963,7 @@ Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASF
 | `buffer` | query | string |  | `25` | Halbe Korridorbreite in Metern, 1 bis 1000, Standard 25 |
 | `sort` | query | string |  | – | importance: Sperren und verbindliche Meldungen zuerst, dann Straßenklasse A, S, B, L, dann Beginn (gilt ohne sort); route: Position auf der Route (gilt ohne sort, wenn route angegeben ist) |
 | `limit` | query | string |  | `500` | Höchstens so viele Objekte, 0 bis 1000, Standard 500 |
-| `cursor` | query | string |  | – | Seitenmarke: next_cursor der vorigen Antwort |
-| `offset` | query | string |  | – | Objekte überspringen (Alternative zu cursor) |
+| `cursor` | query | string |  | – | Seitenmarke; die `next`-URL der vorigen Antwort enthält sie |
 
 **Beispiel**
 
@@ -7017,7 +7077,13 @@ Body: dieselben Parameter als JSON-Objekt; `route` als Polyline-String oder GeoJ
 
 Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
-Seiten: die Antwort enthält `next_cursor` (keine `next`-URL); denselben Body mit `cursor` auf diesen Wert erneut senden.
+Seiten: `next` ist die URL der nächsten Seite mit nur `cursor` in der Abfrage (oder `null`); denselben Body an diese URL senden.
+
+**Parameter**
+
+| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|---|
+| `cursor` | query | string |  | – | Seitenmarke aus `next` |
 
 **Request-Body (JSON)**
 
@@ -7037,7 +7103,6 @@ Seiten: die Antwort enthält `next_cursor` (keine `next`-URL); denselben Body mi
 | `sort` |  | Wie der Query-Parameter `sort` |
 | `limit` |  | Wie der Query-Parameter `limit` |
 | `cursor` |  | Wie der Query-Parameter `cursor` |
-| `offset` |  | Wie der Query-Parameter `offset` |
 
 **Beispiel**
 
@@ -7275,7 +7340,7 @@ data = res.json()
 
 `GET /v1/traffic/tiles.json`
 
-Vektorkacheln mit den Layern `sign_limits` (von Wechselverkehrszeichen angezeigte Tempolimits, keine Verkehrslage: id, speed_limit, normal_speed, reduction, stale; wie in /v1/traffic/sign-limits) und `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; wie in /v1/traffic/incidents).
+Vektorkacheln mit den Layern `sign_limits` (von Wechselverkehrszeichen angezeigte Tempolimits, keine Verkehrslage: id, speed_limit_kmh, normal_speed_kmh, reduction_kmh, stale; wie in /v1/traffic/sign-limits) und `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; wie in /v1/traffic/incidents).
 
 **Beispiel**
 
@@ -7375,6 +7440,10 @@ open("result.pbf", "wb").write(res.content)
 ## Stand der Verkehrsdaten {#state-of-the-traffic-data}
 
 `GET /v1/traffic/status`
+
+Zustand und Aktualität der Verkehrsdaten hinter Meldungen, Tempolimits der Wechselverkehrszeichen, Verkehrskacheln und `driving-traffic`: wann die Quellen (EVIS.AT, ASFINAG) zuletzt abgerufen und das Routing-Overlay gebaut wurde (beides UTC, etwa minütlich erneuert), dazu Zählwerte.
+
+`available: false` heißt, es konnten noch keine Daten geladen werden; die Verkehrsendpunkte antworten dann mit 503.
 
 **Beispiel**
 
@@ -12029,7 +12098,7 @@ async function route() {
     const { routes } = await res.json();
     map.getSource('routes').setData({ type: 'FeatureCollection', features: routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 ? 1 : 0 }, geometry: r.geometry })).reverse() });
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12080,7 +12149,7 @@ async function route() {
     routes.clear();
     routes.addFeatures(list.map((r, i) => { const f = geojson.readFeature(r.geometry); f.set('main', i === 0 ? 1 : 0); return f; }));
     const r = list[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12126,7 +12195,7 @@ async function route() {
     // alternatives first, the main route last so it is drawn on top
     lines.addData(routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 }, geometry: r.geometry })).reverse());
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12996,10 +13065,10 @@ Das Profil `driving-truck` nimmt die Fahrzeugmaße und meidet Straßen mit passe
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
-  | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
+  | jq '.routes[0] | {distance, duration, truck, truck_go_distance: .toll.truck_go_distance}'
 ```
 
-`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
+`routes[0].toll.truck_go_distance` ist die GO-mautpflichtige Länge; je Schritt `truck_go_distance`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
 
 In JavaScript:
 
@@ -13081,7 +13150,7 @@ curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions
 
 ```js
 const r = await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?steps=true&alternatives=true&annotations=elevation", { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, Anstieg ${x.summary?.ascent_m} m`));
+console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, Anstieg ${x.elevation_summary?.ascent} m`));
 ```
 
 ## Radrouten anzeigen
@@ -13116,7 +13185,7 @@ const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.
 // overview=simplified (Standard) hält die Linie unter dem Limit von 512 Punkten
 const line = route.geometry.coordinates.map((c) => c.join(",")).join(";");
 const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120`, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json()).properties;
-console.log(`Anstieg ${Math.round(p.ascent_m)} m, Abstieg ${Math.round(p.descent_m)} m, ${Math.round(p.min_m)}-${Math.round(p.max_m)} m`);
+console.log(`Anstieg ${Math.round(p.ascent)} m, Abstieg ${Math.round(p.descent)} m, ${Math.round(p.min_elevation)}-${Math.round(p.max_elevation)} m`);
 // p.distances[i] (m ab Start) und p.elevations[i] (m) ergeben das Diagramm
 ```
 

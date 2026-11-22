@@ -413,7 +413,7 @@ Yes, a free account and API token. Sign in at [account.mapx.at](https://account.
 
 ## Can I use mapx with Claude, ChatGPT or Cursor?
 
-Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 21 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
+Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 22 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
 
 ## Is mapx free?
 
@@ -799,7 +799,7 @@ The router avoids roads closed to the vehicle: weight-class and trailer bans, he
 
 ## Tolls
 
-Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. `toll.vignette_m` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
+Car routes include `toll_road_distance` and `toll` with vignette products and special toll sections. `toll_road_distance` counts only the meters on special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_distance`. `toll.vignette_distance` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the meters subject to the GO toll in `routes[].toll.truck_go_distance`. Avoid tolls or motorways:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
@@ -904,13 +904,13 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
+const { features, total, next } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
 Filters: `bbox`, `road` (`A1`, `A 1` and `A01` are the same road; ramps and branches such as `road_section` `A13.33.4` belong to `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, comma-separated, for A, S, B and L roads), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false`, and a time window with `from` and `to` (a date, or a date-time with `Z` or an offset such as `2026-12-01T10:00:00+01:00`; `to` before `from` returns `400`). By default only active reports are returned; `active=false` adds ended and future ones. A report with `mandatory: true` is binding; show its text unchanged.
 
-Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000) and `cursor`: pass `next_cursor` from the response, or follow `next`, until `next` is `null`. With `POST` there is only `next_cursor`: send the same body again with `cursor`. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
+Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000): `next` is the full URL of the next page (with `cursor`); follow it until `next` is `null`. With `POST`, `next` carries only the `cursor`: send the same body to that URL. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'
@@ -1192,7 +1192,7 @@ Heights are in meters with 0.1 m steps. Outside the data area the value is `null
 ```js
 const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
 const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
+console.log(p.ascent, p.descent, p.min_elevation, p.max_elevation);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
 
@@ -1207,7 +1207,7 @@ const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?sample
   headers: { Authorization: "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify(route.geometry),
 })).json();
-console.log(prof.properties.ascent_m);
+console.log(prof.properties.ascent);
 ```
 
  Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.
@@ -1245,9 +1245,9 @@ The tiles use the Terrain-RGB encoding: `height = -10000 + (R * 65536 + G * 256 
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 21 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 22 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 21 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
+The mapx MCP server gives an AI assistant 22 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from official open data, and every answer names its source.
 
 | Property | Value |
 |---|---|
@@ -1401,28 +1401,29 @@ The assistant picks the tools itself. Coordinates are `{lon, lat}` in WGS84; `ge
 | Group | Tool | Purpose | Main inputs |
 |---|---|---|---|
 | Search | `geocode` | Coordinates for an address, street, place, postcode, POI or road kilometer | `query`, `near`, `types`, `limit` |
-| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius_m`, `types` |
+| Search | `reverse_geocode` | Nearest address or place for a coordinate | `lon`, `lat`, `radius`, `types` |
 | Search | `validate_address` | Check an address against the official register and normalize it | `address` or `street`, `housenumber`, `postcode`, `place` |
-| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
+| Search | `search_places` | Points of interest by category or name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Search | `list_place_categories` | Category ids usable in `search_places` | none |
-| Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `waypoints` (2 to 25), `exclude`, `truck` |
+| Routing | `route` | Route by car, truck, bike or on foot with distance, time and instructions | `profile`, `points` (2 to 25), `exclude`, `truck` |
 | Routing | `isochrone` | Area reachable within given minutes or meters | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Travel times between 2 to 25 points | `profile`, `points`, `sources`, `destinations` |
-| Routing | `optimize_stops` | Fastest order of 2 to 25 stops | `profile`, `stops`, `roundtrip`, `start`, `end` |
-| Public transport | `transit_route` | Connections between two points from the scheduled timetable | `from`, `to`, `depart_at`, `arrive_by`, `access`, `connections` |
-| Public transport | `departures` | Next scheduled departures at a stop or around a point | `stop_id` or `near`, `time`, `limit` |
-| Public transport | `find_stops` | Stops near a point or in a box, with `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
+| Routing | `optimize_stops` | Fastest order of 2 to 25 stops | `profile`, `points`, `roundtrip`, `start`, `end` |
+| Public transport | `transit_route` | Connections between two points from the scheduled timetable | `points` (2), `depart_at`, `arrive_by`, `access`, `connections` |
+| Public transport | `departures` | Next scheduled departures at a stop or around a point | `stop` or `near`, `time`, `limit` |
+| Public transport | `find_stops` | Stops near a point or in a box, with their `id` | `near`, `radius`, `bbox`, `limit` |
 | Elevation | `elevation` | Height above sea level (terrain or surface model) | `points`, `model` |
-| Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `path` (2 to 200 points), `samples`, `model` |
+| Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `points` (2 to 200 points), `samples`, `model` |
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
-| Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `path`, `buffer_m` |
+| Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
+| Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lon`, `lat`, `kind`, `hours` |
 | Weather | `weather_warnings` | Official weather warnings | `at`, `bbox`, `type`, `min_level`, `active_now` |
 | Weather | `climate` | Long-term climate facts, solar potential | `lon`, `lat`, `sections` |
 | Weather | `air_quality` | Air quality index and pollutants | `lon`, `lat`, `hours` |
 | Map | `static_map` | Map image with pins and a line | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
-`search_places` with free text and `near` searches only within `radius_m` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius_m`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.
+`search_places` with free text and `near` searches only within `radius` (500 to 100000 meters, default 25000), sorts by distance and says so explicitly when it has to fall back to matches farther away. A category search always returns the nearest first and ignores `radius`. Instead of the coordinate `near` you can pass a place name or address as `near_place` (for example "Melk"); the server resolves it with one additional API call, takes the first match and states in the result which place it searched around and which other matches there were. The place search returns name, type, coordinates and distance, but no opening hours, phone numbers or reviews.
 
 Times in the answer text are Austrian local time with the offset, for example `2026-11-18T08:00+01:00`; this applies to weather, warnings, air quality and traffic reports. Public transport times are local time as well. The structured part of the result (`structuredContent`) keeps the timestamps of the API.
 
@@ -1843,7 +1844,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    curl -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
-   The response is a GeoJSON `FeatureCollection`, one feature per sample with `elevation` (m) and `distance_m` (distance from the start).
+   The response is a GeoJSON `FeatureCollection`, one feature per sample with `elevation` (m) and `distance` (distance from the start).
 
 2. **Create the page.** A file `profile.html` with an empty SVG:
 
@@ -1864,7 +1865,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
 
      // skip samples without elevation (outside the data)
      const pts = data.features
-       .map(f => ({ d: f.properties.distance_m, h: f.properties.elevation }))
+       .map(f => ({ d: f.properties.distance, h: f.properties.elevation }))
        .filter(p => p.h !== null);
 
      const W = 600, H = 240, M = { l: 50, r: 10, t: 10, b: 30 };
@@ -2482,7 +2483,26 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Example response**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -2676,7 +2696,22 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite list
+**Example response**
+
+```json
+[
+  {
+    "id": "sprite",
+    "url": "https://api.mapx.at/v1/sprites/sprite",
+    "files": [
+      "https://api.mapx.at/v1/sprites/sprite.json",
+      "https://api.mapx.at/v1/sprites/sprite.png",
+      "https://api.mapx.at/v1/sprites/sprite@2x.json",
+      "https://api.mapx.at/v1/sprites/sprite@2x.png"
+    ]
+  }
+]
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -2689,6 +2724,10 @@ data = res.json()
 ## Sprite file without style
 
 `GET /v1/sprites/{file}`
+
+The sprites shared by all styles, directly by file name (same files as `/v1/styles/{id}/{file}`): `sprite[@2x].json` is the index (name -&gt; position and size in the atlas, `pixelRatio`), `sprite[@2x].png` the atlas; `sprite-sdf` holds the recolorable SDF icons.
+
+`@2x` for high-density screens.
 
 **Parameters**
 
@@ -2720,7 +2759,26 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Example response**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -4177,7 +4235,7 @@ open("result.bin", "wb").write(res.content)
 
 Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving`, `driving-traffic` and `driving-truck` avoid the active full closures from the traffic reports (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Binding closures (EVIS compliance option mandatory, traffic regulations) are never driven; full closures without that flag, such as winter closures of passes, are driven only as a last resort, when start or destination lies on or behind them. `routes[].closures_avoided` lists the closures the route without closures would have used (`binding` tells the two apart), `routes[].closures_unavoidable` those the route still runs through. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, and only by `driving-traffic`. Cycling and walking ignore the closures (the reports concern motor traffic). `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/sign-limits`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_distance` (meters subject to the GO toll; per step `truck_go_distance`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road_distance` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent`, `descent` (meters) and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` names the two longest roads (string like `legs[].summary`, with `steps=true`), `routes[].elevation_summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving`, `driving-traffic` and `driving-truck` avoid the active full closures from the traffic reports (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Binding closures (EVIS compliance option mandatory, traffic regulations) are never driven; full closures without that flag, such as winter closures of passes, are driven only as a last resort, when start or destination lies on or behind them. `routes[].closures_avoided` lists the closures the route without closures would have used (`binding` tells the two apart), `routes[].closures_unavoidable` those the route still runs through. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, and only by `driving-traffic`. Cycling and walking ignore the closures (the reports concern motor traffic). `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/sign-limits`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
 
 **Parameters**
 
@@ -4195,7 +4253,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
+| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_distance` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
@@ -4233,7 +4291,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -4258,9 +4315,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -4319,7 +4377,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
+| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_distance` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
@@ -4357,7 +4415,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -4382,9 +4439,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -4425,7 +4483,7 @@ data = res.json()
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
+Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at` (local time with offset) and `transit_stops`.
 
 `access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
@@ -4570,7 +4628,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "durations": [
     [
       0,
@@ -4685,7 +4742,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "matchings": [],
   "tracepoints": []
 }
@@ -4766,7 +4822,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "trips": [],
   "waypoints": []
 }
@@ -4981,7 +5036,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -5094,7 +5148,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -5228,7 +5281,6 @@ data = res.json()
       "operator": "OEBB Personenverkehr AG Kundenservice",
       "platform": "2",
       "realtime": false,
-      "scheduled": "2026-11-23T08:00:00+01:00",
       "stop": {
         "id": "at:43:7226",
         "name": "Melk Bahnhof"
@@ -5656,7 +5708,7 @@ data = res.json()
       },
       "properties": {
         "elevation": 171.3,
-        "resolution_m": 1,
+        "resolution": 1,
         "model": "dtm",
         "reference_date": "2025-09-15"
       }
@@ -5678,7 +5730,7 @@ data = res.json()
 
 `GET /v1/elevation/{coordinate}`
 
-One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date`.
+One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution` (meters), `reference_date`.
 
 **Parameters**
 
@@ -5725,7 +5777,7 @@ data = res.json()
   "properties": {
     "dtm": 171.3,
     "dsm": 171.9,
-    "resolution_m": 1,
+    "resolution": 1,
     "reference_date": "2025-09-15"
   }
 }
@@ -5744,7 +5796,7 @@ data = res.json()
 
 `GET /v1/elevation/profile`
 
-One GeoJSON line; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `ascent_threshold_m`, `min_m`, `max_m`. Ascent and descent are counted with hysteresis: a rise or fall counts only once the elevation has moved at least `ascent_threshold_m` (3 m) from the last turning point, so the totals hardly depend on `samples` and terrain noise is not summed up (flat Marchfeld, 9.6 km: 0 m instead of 46 m unfiltered; Grossglockner High Alpine Road up from Heiligenblut: about 1150 m).
+One GeoJSON line; properties: `distance`, `distances`, `elevations`, `ascent`, `descent`, `ascent_threshold`, `min_elevation`, `max_elevation` (all in meters), `resolution`, `model`, `reference_date`. Ascent and descent are counted with hysteresis: a rise or fall counts only once the elevation has moved at least `ascent_threshold` (3 m) from the last turning point, so the totals hardly depend on `samples` and terrain noise is not summed up (flat Marchfeld, 9.6 km: 0 m instead of 46 m unfiltered; Grossglockner High Alpine Road up from Heiligenblut: about 1150 m).
 
 With `model=dsm` buildings and vegetation count as terrain, so ascent is higher. The line has z coordinates when every sample has an elevation; otherwise all positions are 2D and the gaps are `null` in `elevations`. For a route geometry use the POST form.
 
@@ -5809,11 +5861,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -5954,11 +6006,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -5990,7 +6042,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [M
 
 `GET /v1/weather/current`
 
-GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first; compare `altitude_m` of the station with `location.elevation_m` of the point (terrain height, mapx 1 m DTM). Values come from a local cache, never fetched per request.
+GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first; compare `altitude` of the station with `elevation` of the point (terrain height, mapx 1 m DTM). Values come from a local cache, never fetched per request.
 
 Points outside Austria and surroundings: 404 `outside-coverage`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
@@ -6036,7 +6088,7 @@ data = res.json()
     16.3725,
     48.2085
   ],
-  "elevation_m": 171.4,
+  "elevation": 171.4,
   "features": [
     {
       "type": "Feature",
@@ -6051,14 +6103,14 @@ data = res.json()
         "station_id": "11035",
         "name": "Wien/Hohe Warte",
         "state": "Wien",
-        "altitude_m": 198,
-        "distance_m": 4600,
+        "altitude": 198,
+        "distance": 4600,
         "time": "2026-11-08T11:50:00Z",
         "temperature_c": 9.4,
         "humidity_pct": 71,
         "wind_speed_ms": 3.1,
         "wind_gust_ms": 5.8,
-        "wind_direction_deg": 290,
+        "wind_direction": 290,
         "precipitation_mm_10min": 0,
         "pressure_hpa": 1002.1,
         "pressure_msl_hpa": 1018.6
@@ -6134,8 +6186,8 @@ data = res.json()
     16.3717,
     48.213
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 178.9,
+  "elevation": 171.4,
+  "grid_elevation": 178.9,
   "model": "GeoSphere AROME nwp-v2-1h-1km",
   "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
@@ -6151,14 +6203,14 @@ data = res.json()
     ],
     "status": "current"
   },
-  "hours": [
+  "hourly": [
     {
       "time": "2026-11-08T12:00:00Z",
       "temperature_c": 10.1,
       "precipitation_mm": 0,
       "wind_speed_ms": 3.4,
       "wind_gust_ms": 7.2,
-      "wind_direction_deg": 285,
+      "wind_direction": 285,
       "humidity_pct": 68,
       "cloud_cover_pct": 40,
       "pressure_msl_hpa": 1008.3,
@@ -6167,7 +6219,7 @@ data = res.json()
         "text": "Partly cloudy",
         "icon": "partly-cloudy"
       },
-      "snow_limit_m": 1200,
+      "snow_limit": 1200,
       "sunshine_min": 31.5,
       "radiation_wm2": 180.2,
       "cape_jkg": 0,
@@ -6255,8 +6307,8 @@ data = res.json()
     16.37303,
     48.20932
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 175.2,
+  "elevation": 171.4,
+  "grid_elevation": 175.2,
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
@@ -6264,7 +6316,7 @@ data = res.json()
   "precipitation_now": false,
   "precipitation_starts_in_min": 30,
   "precipitation_ends_in_min": null,
-  "steps": [
+  "minutely": [
     {
       "time": "2026-11-08T11:15:00Z",
       "minutes_from_now": 5,
@@ -6276,7 +6328,7 @@ data = res.json()
       "humidity_pct": 71,
       "wind_speed_ms": 3.2,
       "wind_gust_ms": 6.1,
-      "wind_direction_deg": 290
+      "wind_direction": 290
     }
   ]
 }
@@ -6727,7 +6779,7 @@ data = res.json()
       "dataset": "apolis-v2-1d-100m",
       "name": "APOLIS solar radiation",
       "license": "CC BY 4.0",
-      "resolution_m": 100,
+      "resolution": 100,
       "cell_center": [
         15.33149,
         48.22776
@@ -6735,6 +6787,14 @@ data = res.json()
       "data_until": "2025-12-31"
     },
     "retrieved_at": "2026-11-08T07:31:55Z"
+  },
+  "sunshine": {
+    "hours_year": {
+      "normal": 1890.2,
+      "normal_period": "1991-2020",
+      "recent": 2041.7,
+      "recent_period": "2016-2025"
+    }
   },
   "snow": {
     "snow_days_per_winter": {
@@ -6760,7 +6820,8 @@ data = res.json()
 | `status` | string | `partial`: some sections are still being loaded |
 | `solar` | object,null | Solar potential: yearly sums, mean of the last 3 complete years (APOLIS, 100 m) |
 | `temperature` | object,null | Air temperature (SPARTACUS, 1 km) |
-| `precipitation` | object,null | Precipitation and sunshine (SPARTACUS, 1 km) |
+| `precipitation` | object,null | Precipitation (SPARTACUS, 1 km) |
+| `sunshine` | object,null | Measured sunshine duration (station-based SPARTACUS grid, 1 km); differs from the modelled APOLIS value in `solar` |
 | `temperature_extremes` | object,null | Hot, summer, frost and ice days per year, tropical nights (SPARTACUS daily data, 1 km); normal period 1991-2020 and last 10 complete years |
 | `snow` | object,null | Snow cover (SNOWGRID-CL model, 1 km) |
 | `drought` | object,null | Drought index SPEI (WINFORE, 1 km), latest value |
@@ -6881,9 +6942,9 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next` as relative URL or `null` on the last page; `next_cursor` and `next_offset` only when there is a further page).
+Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit`: `next` is the full URL of the next page (with `cursor`) or `null` on the last page, `total` the number of matching reports.
 
-Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Fields: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) and `impact` (critical: closed for cars; major: binding, lane restriction or accident; minor: other unplanned; low: other planned) are derived by mapx. `kind` is the category of the source in German (e.g. Straßensperre, Bauarbeiten, Belagsarbeiten, Instandhaltung), `management` its English counterpart or the DATEX II measure. `closed` is true only when the road is closed for cars; a `road_closure` with `closed: false` is closed for other modes only (see `transport_modes`, e.g. pedestrians, cycles) or traffic is led through on the opposite carriageway. `road` is the road number (A1, S33, B17, L347; derived from the road graph if the source has none, null for municipal streets), `road_section` the source id of a ramp or branch (A13.33.4). `road_name`, `direction` (text), `regions` (federal states) and `creator` come from EVIS. Times are UTC. Texts are plain text; angle brackets from the source are removed. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Fields: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) and `impact` (critical: closed for cars; major: binding, lane restriction or accident; minor: other unplanned; low: other planned) are derived by mapx. `kind` is the detailed category (enum `IncidentKind`, mapped from the source category), `management` the English DATEX II measure. `closed` is true only when the road is closed for cars; a `road_closure` with `closed: false` is closed for other modes only (see `transport_modes`, e.g. pedestrians, cycles) or traffic is led through on the opposite carriageway. `road` is the road number (A1, S33, B17, L347; derived from the road graph if the source has none, null for municipal streets), `road_section` the source id of a ramp or branch (A13.33.4). `road_name`, `direction` (text), `regions` (federal states) and `creator` come from EVIS. Times are UTC. Texts are plain text; angle brackets from the source are removed. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
 **Parameters**
 
@@ -6902,8 +6963,7 @@ Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`)
 | `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
 | `sort` | query | string |  | – | importance: closures and binding reports first, then road class A, S, B, L, then start (used when sort is not given); route: position on the route (used when sort is not given and route is set) |
 | `limit` | query | string |  | `500` | At most this many features, 0 to 1000, default 500 |
-| `cursor` | query | string |  | – | Page marker: next_cursor of the previous response |
-| `offset` | query | string |  | – | Skip features (alternative to cursor) |
+| `cursor` | query | string |  | – | Page marker; use the `next` URL of the previous response, which carries it |
 
 **Example**
 
@@ -7017,7 +7077,13 @@ Body: the same parameters as a JSON object; `route` as polyline string or GeoJSO
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
-Paging: the response has `next_cursor` (no `next` URL); send the same body again with `cursor` set to it.
+Paging: `next` is the URL of the next page with only `cursor` in the query (or `null`); send the same body to it.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `cursor` | query | string |  | – | Page marker from `next` |
 
 **Request body (JSON)**
 
@@ -7037,7 +7103,6 @@ Paging: the response has `next_cursor` (no `next` URL); send the same body again
 | `sort` |  | Like the query parameter `sort` |
 | `limit` |  | Like the query parameter `limit` |
 | `cursor` |  | Like the query parameter `cursor` |
-| `offset` |  | Like the query parameter `offset` |
 
 **Example**
 
@@ -7275,7 +7340,7 @@ data = res.json()
 
 `GET /v1/traffic/tiles.json`
 
-Vector tiles with layers `sign_limits` (speed limits shown by variable message signs, not a traffic state: id, speed_limit, normal_speed, reduction, stale; as in /v1/traffic/sign-limits) and `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; as in /v1/traffic/incidents).
+Vector tiles with layers `sign_limits` (speed limits shown by variable message signs, not a traffic state: id, speed_limit_kmh, normal_speed_kmh, reduction_kmh, stale; as in /v1/traffic/sign-limits) and `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; as in /v1/traffic/incidents).
 
 **Example**
 
@@ -7375,6 +7440,8 @@ open("result.pbf", "wb").write(res.content)
 ## State of the traffic data
 
 `GET /v1/traffic/status`
+
+Health and freshness of the traffic data behind incidents, sign limits, traffic tiles and `driving-traffic`: when the sources (EVIS.AT, ASFINAG) were last fetched and the routing overlay was built (both UTC, refreshed about every minute), plus counts. `available: false` means no data could be loaded yet; the traffic endpoints then answer 503.
 
 **Example**
 
@@ -12030,7 +12097,7 @@ async function route() {
     const { routes } = await res.json();
     map.getSource('routes').setData({ type: 'FeatureCollection', features: routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 ? 1 : 0 }, geometry: r.geometry })).reverse() });
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12081,7 +12148,7 @@ async function route() {
     routes.clear();
     routes.addFeatures(list.map((r, i) => { const f = geojson.readFeature(r.geometry); f.set('main', i === 0 ? 1 : 0); return f; }));
     const r = list[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12127,7 +12194,7 @@ async function route() {
     // alternatives first, the main route last so it is drawn on top
     lines.addData(routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 }, geometry: r.geometry })).reverse());
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -12997,10 +13064,10 @@ The profile `driving-truck` takes the vehicle size and avoids roads with matchin
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
-  | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
+  | jq '.routes[0] | {distance, duration, truck, truck_go_distance: .toll.truck_go_distance}'
 ```
 
-`routes[0].toll.truck_go_km` is the length subject to the GO toll; per step it is `truck_go_m`. Speeds follow truck limits (80 km/h on motorways). District-wide bans from free-text ordinances are not routed: affected roads come as `steps[].notices[]` with `type: "truck_restriction"`; show them to the dispatcher. For cars, `exclude=toll` and `exclude=motorway` avoid toll sections and motorways (profiles `driving`, `driving-traffic` and `driving-truck`); `exclude=ferry` works for every profile except `driving-traffic`.
+`routes[0].toll.truck_go_distance` is the length subject to the GO toll; per step it is `truck_go_distance`. Speeds follow truck limits (80 km/h on motorways). District-wide bans from free-text ordinances are not routed: affected roads come as `steps[].notices[]` with `type: "truck_restriction"`; show them to the dispatcher. For cars, `exclude=toll` and `exclude=motorway` avoid toll sections and motorways (profiles `driving`, `driving-traffic` and `driving-truck`); `exclude=ferry` works for every profile except `driving-traffic`.
 
 In JavaScript:
 
@@ -13082,7 +13149,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 
 ```js
 const r = await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?steps=true&alternatives=true&annotations=elevation", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.summary?.ascent_m} m`));
+console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.elevation_summary?.ascent} m`));
 ```
 
 ## Show the cycle routes
@@ -13117,7 +13184,7 @@ const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.
 // the default overview=simplified keeps the line below the 512-point limit
 const line = route.geometry.coordinates.map((c) => c.join(",")).join(";");
 const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).properties;
-console.log(`up ${Math.round(p.ascent_m)} m, down ${Math.round(p.descent_m)} m, ${Math.round(p.min_m)}-${Math.round(p.max_m)} m`);
+console.log(`up ${Math.round(p.ascent)} m, down ${Math.round(p.descent)} m, ${Math.round(p.min_elevation)}-${Math.round(p.max_elevation)} m`);
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
 

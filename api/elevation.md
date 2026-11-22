@@ -66,7 +66,7 @@ data = res.json()
       },
       "properties": {
         "elevation": 171.3,
-        "resolution_m": 1,
+        "resolution": 1,
         "model": "dtm",
         "reference_date": "2025-09-15"
       }
@@ -88,7 +88,7 @@ data = res.json()
 
 `GET /v1/elevation/{coordinate}`
 
-One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution_m`, `reference_date`.
+One point feature; properties: `dtm` (terrain), `dsm` (surface, null if unavailable), `resolution` (meters), `reference_date`.
 
 **Parameters**
 
@@ -135,7 +135,7 @@ data = res.json()
   "properties": {
     "dtm": 171.3,
     "dsm": 171.9,
-    "resolution_m": 1,
+    "resolution": 1,
     "reference_date": "2025-09-15"
   }
 }
@@ -154,7 +154,7 @@ data = res.json()
 
 `GET /v1/elevation/profile`
 
-One GeoJSON line; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `ascent_threshold_m`, `min_m`, `max_m`. Ascent and descent are counted with hysteresis: a rise or fall counts only once the elevation has moved at least `ascent_threshold_m` (3 m) from the last turning point, so the totals hardly depend on `samples` and terrain noise is not summed up (flat Marchfeld, 9.6 km: 0 m instead of 46 m unfiltered; Grossglockner High Alpine Road up from Heiligenblut: about 1150 m).
+One GeoJSON line; properties: `distance`, `distances`, `elevations`, `ascent`, `descent`, `ascent_threshold`, `min_elevation`, `max_elevation` (all in meters), `resolution`, `model`, `reference_date`. Ascent and descent are counted with hysteresis: a rise or fall counts only once the elevation has moved at least `ascent_threshold` (3 m) from the last turning point, so the totals hardly depend on `samples` and terrain noise is not summed up (flat Marchfeld, 9.6 km: 0 m instead of 46 m unfiltered; Grossglockner High Alpine Road up from Heiligenblut: about 1150 m).
 
 With `model=dsm` buildings and vegetation count as terrain, so ascent is higher. The line has z coordinates when every sample has an elevation; otherwise all positions are 2D and the gaps are `null` in `elevations`. For a route geometry use the POST form.
 
@@ -219,11 +219,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -364,11 +364,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```

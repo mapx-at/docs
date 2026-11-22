@@ -19,13 +19,13 @@ Die Verkehrsdaten decken das Autobahn- und Schnellstraßennetz (ASFINAG, EVIS.AT
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
+const { features, total, next } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
 Filter: `bbox`, `road` (`A1`, `A 1` und `A01` sind dieselbe Straße; Rampen und Äste wie `road_section` `A13.33.4` gehören zur `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, kommagetrennt, für A-, S-, B- und L-Straßen), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false` und ein Zeitfenster mit `from` und `to` (Datum oder Zeitpunkt mit `Z` oder Offset wie `2026-12-01T10:00:00+01:00`; `to` vor `from` ergibt `400`). Standardmäßig kommen nur aktive Meldungen zurück; `active=false` ergänzt beendete und künftige. Eine Meldung mit `mandatory: true` ist verbindlich; ihr Text ist unverändert anzuzeigen.
 
-Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) und `cursor` blättern: `next_cursor` aus der Antwort übergeben oder `next` aufrufen, bis `next` den Wert `null` hat. Bei `POST` gibt es nur `next_cursor`: denselben Body mit `cursor` erneut senden. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
+Die Ergebnisse sind nach Bedeutung sortiert: zuerst Sperren und verbindliche Meldungen, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann nach Beginn. Mit `limit` (Standard 500, höchstens 1000) blättern: `next` ist die vollständige URL der nächsten Seite (mit `cursor`); aufrufen, bis `next` den Wert `null` hat. Bei `POST` enthält `next` nur den `cursor`: denselben Body an diese URL senden. `total` ist die Zahl der Treffer. Ungültige Werte für `road`, `road_class`, `type` oder `cursor` ergeben eine `400`-Problemantwort.
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'

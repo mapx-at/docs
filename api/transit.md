@@ -55,7 +55,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -168,7 +167,6 @@ data = res.json()
 ```json
 {
   "attribution": "mapx.at; ÖBB-Personenverkehr AG (CC BY 4.0); Mobilitätsverbünde Österreich OG (data.mobilitaetsverbuende.at); GIP.at (CC BY 4.0)",
-  "code": "Ok",
   "query": {
     "depart_at": "2026-11-23T08:00:00+01:00",
     "profile": "transit"
@@ -302,7 +300,6 @@ data = res.json()
       "operator": "OEBB Personenverkehr AG Kundenservice",
       "platform": "2",
       "realtime": false,
-      "scheduled": "2026-11-23T08:00:00+01:00",
       "stop": {
         "id": "at:43:7226",
         "name": "Melk Bahnhof"

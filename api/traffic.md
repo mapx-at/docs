@@ -99,9 +99,9 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit` and `cursor` (`total`, `next` as relative URL or `null` on the last page; `next_cursor` and `next_offset` only when there is a further page).
+Active reports (`active=false`: also ended and future), filterable by area, road (`road`, `road_class`), route, type and time window. Sorted by importance (closures and binding reports first, then motorways, expressways, federal and state roads, then start), paged with `limit`: `next` is the full URL of the next page (with `cursor`) or `null` on the last page, `total` the number of matching reports.
 
-Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Fields: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) and `impact` (critical: closed for cars; major: binding, lane restriction or accident; minor: other unplanned; low: other planned) are derived by mapx. `kind` is the category of the source in German (e.g. Straßensperre, Bauarbeiten, Belagsarbeiten, Instandhaltung), `management` its English counterpart or the DATEX II measure. `closed` is true only when the road is closed for cars; a `road_closure` with `closed: false` is closed for other modes only (see `transport_modes`, e.g. pedestrians, cycles) or traffic is led through on the opposite carriageway. `road` is the road number (A1, S33, B17, L347; derived from the road graph if the source has none, null for municipal streets), `road_section` the source id of a ramp or branch (A13.33.4). `road_name`, `direction` (text), `regions` (federal states) and `creator` come from EVIS. Times are UTC. Texts are plain text; angle brackets from the source are removed. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
+Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`). `mandatory=true`: binding (router: closure), show the text unchanged. Geometry along GIP edges. Fields: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) and `impact` (critical: closed for cars; major: binding, lane restriction or accident; minor: other unplanned; low: other planned) are derived by mapx. `kind` is the detailed category (enum `IncidentKind`, mapped from the source category), `management` the English DATEX II measure. `closed` is true only when the road is closed for cars; a `road_closure` with `closed: false` is closed for other modes only (see `transport_modes`, e.g. pedestrians, cycles) or traffic is led through on the opposite carriageway. `road` is the road number (A1, S33, B17, L347; derived from the road graph if the source has none, null for municipal streets), `road_section` the source id of a ramp or branch (A13.33.4). `road_name`, `direction` (text), `regions` (federal states) and `creator` come from EVIS. Times are UTC. Texts are plain text; angle brackets from the source are removed. Data source: ASFINAG / EVIS.AT (CC BY 4.0), road network GIP.at (CC BY 4.0); attribution required.
 
 **Parameters**
 
@@ -120,8 +120,7 @@ Roadworks on motorways and expressways carry lane details from ASFINAG (`lanes`)
 | `buffer` | query | string |  | `25` | Corridor half-width in meters, 1 to 1000, default 25 |
 | `sort` | query | string |  | – | importance: closures and binding reports first, then road class A, S, B, L, then start (used when sort is not given); route: position on the route (used when sort is not given and route is set) |
 | `limit` | query | string |  | `500` | At most this many features, 0 to 1000, default 500 |
-| `cursor` | query | string |  | – | Page marker: next_cursor of the previous response |
-| `offset` | query | string |  | – | Skip features (alternative to cursor) |
+| `cursor` | query | string |  | – | Page marker; use the `next` URL of the previous response, which carries it |
 
 **Example**
 
@@ -235,7 +234,13 @@ Body: the same parameters as a JSON object; `route` as polyline string or GeoJSO
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
-Paging: the response has `next_cursor` (no `next` URL); send the same body again with `cursor` set to it.
+Paging: `next` is the URL of the next page with only `cursor` in the query (or `null`); send the same body to it.
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `cursor` | query | string |  | – | Page marker from `next` |
 
 **Request body (JSON)**
 
@@ -255,7 +260,6 @@ Paging: the response has `next_cursor` (no `next` URL); send the same body again
 | `sort` |  | Like the query parameter `sort` |
 | `limit` |  | Like the query parameter `limit` |
 | `cursor` |  | Like the query parameter `cursor` |
-| `offset` |  | Like the query parameter `offset` |
 
 **Example**
 
@@ -493,7 +497,7 @@ data = res.json()
 
 `GET /v1/traffic/tiles.json`
 
-Vector tiles with layers `sign_limits` (speed limits shown by variable message signs, not a traffic state: id, speed_limit, normal_speed, reduction, stale; as in /v1/traffic/sign-limits) and `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; as in /v1/traffic/incidents).
+Vector tiles with layers `sign_limits` (speed limits shown by variable message signs, not a traffic state: id, speed_limit_kmh, normal_speed_kmh, reduction_kmh, stale; as in /v1/traffic/sign-limits) and `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; as in /v1/traffic/incidents).
 
 **Example**
 
@@ -593,6 +597,8 @@ open("result.pbf", "wb").write(res.content)
 ## State of the traffic data
 
 `GET /v1/traffic/status`
+
+Health and freshness of the traffic data behind incidents, sign limits, traffic tiles and `driving-traffic`: when the sources (EVIS.AT, ASFINAG) were last fetched and the routing overlay was built (both UTC, refreshed about every minute), plus counts. `available: false` means no data could be loaded yet; the traffic endpoints then answer 503.
 
 **Example**
 

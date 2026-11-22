@@ -19,13 +19,13 @@ Traffic data covers the motorway and expressway network (ASFINAG, EVIS.AT) and p
 
 ```js
 const url = "https://api.mapx.at/v1/traffic/incidents?bbox=16.0,48.0,16.8,48.5&type=road_closure,construction&limit=20";
-const { features, total, next_cursor } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
+const { features, total, next } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
 for (const f of features) console.log(f.properties.road, f.properties.type, f.properties.text);
 ```
 
 Filters: `bbox`, `road` (`A1`, `A 1` and `A01` are the same road; ramps and branches such as `road_section` `A13.33.4` belong to `A13`), `road_class` (`motorway`, `expressway`, `federal`, `state`, comma-separated, for A, S, B and L roads), `type` (`accident`, `congestion`, `construction`, `lane_restriction`, `road_closure`, `road_hazard`, `miscellaneous`), `planned=true|false`, and a time window with `from` and `to` (a date, or a date-time with `Z` or an offset such as `2026-12-01T10:00:00+01:00`; `to` before `from` returns `400`). By default only active reports are returned; `active=false` adds ended and future ones. A report with `mandatory: true` is binding; show its text unchanged.
 
-Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000) and `cursor`: pass `next_cursor` from the response, or follow `next`, until `next` is `null`. With `POST` there is only `next_cursor`: send the same body again with `cursor`. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
+Results are sorted by importance: closures and binding reports first, then motorways, expressways, federal and state roads, then by start. Page with `limit` (default 500, maximum 1000): `next` is the full URL of the next page (with `cursor`); follow it until `next` is `null`. With `POST`, `next` carries only the `cursor`: send the same body to that URL. `total` is the number of matches. Bad values for `road`, `road_class`, `type` or `cursor` return a `400` problem response.
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/traffic/incidents?road=A1&road_class=motorway&limit=100" | jq '.total, .next'

@@ -14,10 +14,10 @@ Das Profil `driving-truck` nimmt die Fahrzeugmaße und meidet Straßen mit passe
 
 ```bash
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
-  | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
+  | jq '.routes[0] | {distance, duration, truck, truck_go_distance: .toll.truck_go_distance}'
 ```
 
-`routes[0].toll.truck_go_km` ist die GO-mautpflichtige Länge; je Schritt `truck_go_m`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
+`routes[0].toll.truck_go_distance` ist die GO-mautpflichtige Länge; je Schritt `truck_go_distance`. Die Geschwindigkeiten folgen den Lkw-Limits (80 km/h auf Autobahnen). Bezirksweite Verbote aus Freitext-Verordnungen werden nicht geroutet: betroffene Straßen kommen als `steps[].notices[]` mit `type: "truck_restriction"`; der Disposition anzeigen. `exclude=toll` und `exclude=motorway` meiden Mautabschnitte und Autobahnen (Profile `driving`, `driving-traffic` und `driving-truck`); `exclude=ferry` gilt für alle Profile außer `driving-traffic`.
 
 In JavaScript:
 

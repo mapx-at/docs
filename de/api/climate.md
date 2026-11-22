@@ -77,7 +77,7 @@ data = res.json()
       "dataset": "apolis-v2-1d-100m",
       "name": "APOLIS solar radiation",
       "license": "CC BY 4.0",
-      "resolution_m": 100,
+      "resolution": 100,
       "cell_center": [
         15.33149,
         48.22776
@@ -85,6 +85,14 @@ data = res.json()
       "data_until": "2025-12-31"
     },
     "retrieved_at": "2026-11-08T07:31:55Z"
+  },
+  "sunshine": {
+    "hours_year": {
+      "normal": 1890.2,
+      "normal_period": "1991-2020",
+      "recent": 2041.7,
+      "recent_period": "2016-2025"
+    }
   },
   "snow": {
     "snow_days_per_winter": {
@@ -110,7 +118,8 @@ data = res.json()
 | `status` | string | `partial`: einige Abschnitte werden noch geladen |
 | `solar` | object,null | Sonnenpotenzial: Jahressummen, Mittel der letzten 3 vollständigen Jahre (APOLIS, 100 m) |
 | `temperature` | object,null | Lufttemperatur (SPARTACUS, 1 km) |
-| `precipitation` | object,null | Niederschlag und Sonnenschein (SPARTACUS, 1 km) |
+| `precipitation` | object,null | Niederschlag (SPARTACUS, 1 km) |
+| `sunshine` | object,null | Gemessene Sonnenscheindauer (stationsbasiertes SPARTACUS-Raster, 1 km); weicht vom modellierten APOLIS-Wert in `solar` ab |
 | `temperature_extremes` | object,null | Hitze-, Sommer-, Frost- und Eistage pro Jahr, Tropennächte (SPARTACUS-Tagesdaten, 1 km); Normalperiode 1991-2020 und letzte 10 vollständige Jahre |
 | `snow` | object,null | Schneedecke (Modell SNOWGRID-CL, 1 km) |
 | `drought` | object,null | Dürreindex SPEI (WINFORE, 1 km), letzter Wert |

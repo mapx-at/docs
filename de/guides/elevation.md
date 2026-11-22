@@ -27,7 +27,7 @@ Höhen sind in Metern mit Schritten von 0,1 m. Außerhalb des Datengebiets ist d
 ```js
 const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
 const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer DEIN_TOKEN" } })).json();
-console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
+console.log(p.ascent, p.descent, p.min_elevation, p.max_elevation);
 // p.distances[i] (m ab Start) und p.elevations[i] (m) sind bereit für ein Diagramm
 ```
 
@@ -42,7 +42,7 @@ const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?sample
   headers: { Authorization: "Bearer DEIN_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify(route.geometry),
 })).json();
-console.log(prof.properties.ascent_m);
+console.log(prof.properties.ascent);
 ```
 
  Beispiel mit Diagramm: [Höhenprofil](https://docs.mapx.at/de/examples/elevation-profile.md). Routen tragen Anstieg und Abstieg bereits in `routes[].summary`; mit `annotations=elevation` kommt eine Höhe je Segment.

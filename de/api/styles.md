@@ -151,7 +151,26 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
+**Beispielantwort**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -345,7 +364,22 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Liste
+**Beispielantwort**
+
+```json
+[
+  {
+    "id": "sprite",
+    "url": "https://api.mapx.at/v1/sprites/sprite",
+    "files": [
+      "https://api.mapx.at/v1/sprites/sprite.json",
+      "https://api.mapx.at/v1/sprites/sprite.png",
+      "https://api.mapx.at/v1/sprites/sprite@2x.json",
+      "https://api.mapx.at/v1/sprites/sprite@2x.png"
+    ]
+  }
+]
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 
@@ -358,6 +392,10 @@ data = res.json()
 ## Sprite-Datei ohne Style {#sprite-file-without-style}
 
 `GET /v1/sprites/{file}`
+
+Die gemeinsamen Sprites aller Stile direkt über den Dateinamen (dieselben Dateien wie `/v1/styles/{id}/{file}`): `sprite[@2x].json` ist der Index (Name -&gt; Lage und Größe im Atlas, `pixelRatio`), `sprite[@2x].png` der Atlas; `sprite-sdf` enthält die umfärbbaren SDF-Symbole.
+
+`@2x` für Bildschirme mit hoher Pixeldichte.
 
 **Parameter**
 
@@ -389,7 +427,26 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-**Beispielantwort**: `application/json` · Sprite-Index (JSON) oder Atlas (PNG)
+**Beispielantwort**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
 

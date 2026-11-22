@@ -52,7 +52,7 @@ async function route() {
     const { routes } = await res.json();
     map.getSource('routes').setData({ type: 'FeatureCollection', features: routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 ? 1 : 0 }, geometry: r.geometry })).reverse() });
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -103,7 +103,7 @@ async function route() {
     routes.clear();
     routes.addFeatures(list.map((r, i) => { const f = geojson.readFeature(r.geometry); f.set('main', i === 0 ? 1 : 0); return f; }));
     const r = list[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (list.length > 1 ? `, ${list.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````
@@ -149,7 +149,7 @@ async function route() {
     // alternatives first, the main route last so it is drawn on top
     lines.addData(routes.map((r, i) => ({ type: 'Feature', properties: { main: i === 0 }, geometry: r.geometry })).reverse());
     const r = routes[0];
-    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_km != null ? `, ${r.toll.truck_go_km.toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
+    $('info').textContent = `${(r.distance / 1000).toFixed(1)} km, ${Math.round(r.duration / 60)} min` + (r.toll?.truck_go_distance != null ? `, ${(r.toll.truck_go_distance / 1000).toFixed(1)} km ${de ? 'GO-mautpflichtig' : 'subject to GO toll'}` : '') + (routes.length > 1 ? `, ${routes.length - 1} ${de ? 'Alternative(n)' : 'alternative(s)'}` : '');
   } catch (err) { $('info').textContent = (de ? 'Fehler: ' : 'Error: ') + err.message; }
 }
 ````

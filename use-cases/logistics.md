@@ -14,10 +14,10 @@ The profile `driving-truck` takes the vehicle size and avoids roads with matchin
 
 ```bash
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions/driving-truck/15.6256,48.2049;15.3294,48.2272?weight=40&height=4&width=2.55&length=16.5&truck_type=semi&overview=false" \
-  | jq '.routes[0] | {distance, duration, truck, toll_go_km: .toll.truck_go_km}'
+  | jq '.routes[0] | {distance, duration, truck, truck_go_distance: .toll.truck_go_distance}'
 ```
 
-`routes[0].toll.truck_go_km` is the length subject to the GO toll; per step it is `truck_go_m`. Speeds follow truck limits (80 km/h on motorways). District-wide bans from free-text ordinances are not routed: affected roads come as `steps[].notices[]` with `type: "truck_restriction"`; show them to the dispatcher. For cars, `exclude=toll` and `exclude=motorway` avoid toll sections and motorways (profiles `driving`, `driving-traffic` and `driving-truck`); `exclude=ferry` works for every profile except `driving-traffic`.
+`routes[0].toll.truck_go_distance` is the length subject to the GO toll; per step it is `truck_go_distance`. Speeds follow truck limits (80 km/h on motorways). District-wide bans from free-text ordinances are not routed: affected roads come as `steps[].notices[]` with `type: "truck_restriction"`; show them to the dispatcher. For cars, `exclude=toll` and `exclude=motorway` avoid toll sections and motorways (profiles `driving`, `driving-traffic` and `driving-truck`); `exclude=ferry` works for every profile except `driving-traffic`.
 
 In JavaScript:
 

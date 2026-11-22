@@ -27,7 +27,7 @@ Heights are in meters with 0.1 m steps. Outside the data area the value is `null
 ```js
 const url = "https://api.mapx.at/v1/elevation/profile?coordinates=12.69,47.07;12.72,47.09&samples=50";
 const { properties: p } = await (await fetch(url, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-console.log(p.ascent_m, p.descent_m, p.min_m, p.max_m);
+console.log(p.ascent, p.descent, p.min_elevation, p.max_elevation);
 // p.distances[i] (m from the start) and p.elevations[i] (m) are ready for a chart
 ```
 
@@ -42,7 +42,7 @@ const prof = await (await fetch("https://api.mapx.at/v1/elevation/profile?sample
   headers: { Authorization: "Bearer YOUR_TOKEN", "Content-Type": "application/json" },
   body: JSON.stringify(route.geometry),
 })).json();
-console.log(prof.properties.ascent_m);
+console.log(prof.properties.ascent);
 ```
 
  Example with a chart: [Elevation profile](https://docs.mapx.at/examples/elevation-profile.md). Routes already carry ascent and descent in `routes[].summary`; use `annotations=elevation` for a height per segment.

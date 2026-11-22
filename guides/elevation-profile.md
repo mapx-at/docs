@@ -16,7 +16,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
    curl -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
-   The response is a GeoJSON `FeatureCollection`, one feature per sample with `elevation` (m) and `distance_m` (distance from the start).
+   The response is a GeoJSON `FeatureCollection`, one feature per sample with `elevation` (m) and `distance` (distance from the start).
 
 2. **Create the page.** A file `profile.html` with an empty SVG:
 
@@ -37,7 +37,7 @@ With `path` and `samples`, the [`/v1/elevation`](https://docs.mapx.at/api/elevat
 
      // skip samples without elevation (outside the data)
      const pts = data.features
-       .map(f => ({ d: f.properties.distance_m, h: f.properties.elevation }))
+       .map(f => ({ d: f.properties.distance, h: f.properties.elevation }))
        .filter(p => p.h !== null);
 
      const W = 600, H = 240, M = { l: 50, r: 10, t: 10, b: 30 };

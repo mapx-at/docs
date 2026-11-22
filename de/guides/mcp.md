@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 21 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 22 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 21 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 22 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus amtlichen offenen Daten, jede Antwort nennt ihre Quelle.
 
 | Eigenschaft | Wert |
 |---|---|
@@ -158,28 +158,29 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lon, lat}` in WGS8
 | Gruppe | Werkzeug | Zweck | Wichtigste Eingaben |
 |---|---|---|---|
 | Suche | `geocode` | Koordinaten zu Adresse, Straße, Ort, PLZ, POI oder Straßenkilometer | `query`, `near`, `types`, `limit` |
-| Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius_m`, `types` |
+| Suche | `reverse_geocode` | Nächste Adresse oder nächster Ort zu einer Koordinate | `lon`, `lat`, `radius`, `types` |
 | Suche | `validate_address` | Adresse gegen das amtliche Register prüfen und normalisieren | `address` oder `street`, `housenumber`, `postcode`, `place` |
-| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius_m`, `limit` |
+| Suche | `search_places` | Orte (POI) nach Kategorie oder Name | `category`, `query`, `near`, `near_place`, `radius`, `limit` |
 | Suche | `list_place_categories` | Kategorie-Ids für `search_places` | keine |
-| Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `waypoints` (2 bis 25), `exclude`, `truck` |
+| Routing | `route` | Route mit Auto, Lkw, Rad oder zu Fuß mit Distanz, Zeit und Anweisungen | `profile`, `points` (2 bis 25), `exclude`, `truck` |
 | Routing | `isochrone` | Gebiet, das in gegebenen Minuten oder Metern erreichbar ist | `profile`, `lon`, `lat`, `minutes`, `meters`, `depart_at` |
 | Routing | `travel_matrix` | Fahrzeiten zwischen 2 bis 25 Punkten | `profile`, `points`, `sources`, `destinations` |
-| Routing | `optimize_stops` | Schnellste Reihenfolge von 2 bis 25 Stopps | `profile`, `stops`, `roundtrip`, `start`, `end` |
-| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `from`, `to`, `depart_at`, `arrive_by`, `access`, `connections` |
-| ÖV | `departures` | Nächste planmäßige Abfahrten an einer Haltestelle oder um einen Punkt | `stop_id` oder `near`, `time`, `limit` |
-| ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit `stop_id` | `near`, `radius_m`, `bbox`, `limit` |
+| Routing | `optimize_stops` | Schnellste Reihenfolge von 2 bis 25 Stopps | `profile`, `points`, `roundtrip`, `start`, `end` |
+| ÖV | `transit_route` | Verbindungen zwischen zwei Punkten aus dem Fahrplan | `points` (2), `depart_at`, `arrive_by`, `access`, `connections` |
+| ÖV | `departures` | Nächste planmäßige Abfahrten an einer Haltestelle oder um einen Punkt | `stop` oder `near`, `time`, `limit` |
+| ÖV | `find_stops` | Haltestellen nahe einem Punkt oder in einem Rechteck, mit ihrer `id` | `near`, `radius`, `bbox`, `limit` |
 | Höhe | `elevation` | Höhe über dem Meer (Gelände- oder Oberflächenmodell) | `points`, `model` |
-| Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `path` (2 bis 200 Punkte), `samples`, `model` |
+| Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `points` (2 bis 200 Punkte), `samples`, `model` |
 | Verkehr | `traffic_incidents` | Unfälle, Stau, Baustellen und Sperren | `bbox`, `road`, `road_class`, `types`, `planned` |
-| Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `path`, `buffer_m` |
+| Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `points`, `buffer` |
+| Verkehr | `sign_limits` | Aktuell von Wechselverkehrszeichen auf Autobahnen angezeigte Tempolimits | `at`, `bbox`, `limit` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lon`, `lat`, `kind`, `hours` |
 | Wetter | `weather_warnings` | Amtliche Wetterwarnungen | `at`, `bbox`, `type`, `min_level`, `active_now` |
 | Wetter | `climate` | Langfristige Klimadaten, Solarpotenzial | `lon`, `lat`, `sections` |
 | Wetter | `air_quality` | Luftgüteindex und Schadstoffe | `lon`, `lat`, `hours` |
 | Karte | `static_map` | Kartenbild mit Markern und Linie | `center`, `zoom`, `pins`, `line`, `style`, `width`, `height` |
 
-`search_places` mit Freitext und `near` sucht nur im Umkreis `radius_m` (500 bis 100000 Meter, Standard 25000), sortiert nach Entfernung und sagt ausdrücklich, wenn es auf weiter entfernte Treffer ausweichen muss. Die Kategoriesuche liefert immer die nächsten zuerst und ignoriert `radius_m`. Statt der Koordinate `near` kannst du mit `near_place` einen Ortsnamen oder eine Adresse angeben (zum Beispiel „Melk“); der Server löst ihn mit einem zusätzlichen API-Aufruf auf, nimmt den ersten Treffer und nennt im Ergebnis, um welchen Ort er gesucht hat und welche weiteren Treffer es gab. Die Ortssuche liefert Name, Art, Koordinaten und Entfernung, aber keine Öffnungszeiten, Telefonnummern oder Bewertungen.
+`search_places` mit Freitext und `near` sucht nur im Umkreis `radius` (500 bis 100000 Meter, Standard 25000), sortiert nach Entfernung und sagt ausdrücklich, wenn es auf weiter entfernte Treffer ausweichen muss. Die Kategoriesuche liefert immer die nächsten zuerst und ignoriert `radius`. Statt der Koordinate `near` kannst du mit `near_place` einen Ortsnamen oder eine Adresse angeben (zum Beispiel „Melk“); der Server löst ihn mit einem zusätzlichen API-Aufruf auf, nimmt den ersten Treffer und nennt im Ergebnis, um welchen Ort er gesucht hat und welche weiteren Treffer es gab. Die Ortssuche liefert Name, Art, Koordinaten und Entfernung, aber keine Öffnungszeiten, Telefonnummern oder Bewertungen.
 
 Zeitangaben im Antworttext sind österreichische Ortszeit mit Versatz, zum Beispiel `2026-11-18T08:00+01:00`; das gilt für Wetter, Warnungen, Luftqualität und Verkehrsmeldungen. ÖV-Zeiten sind ebenfalls Ortszeit. Der strukturierte Teil des Ergebnisses (`structuredContent`) behält die Zeitstempel der API.
 

@@ -16,7 +16,7 @@ Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert
    curl -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/elevation?path=12.69,47.07;12.70,47.08&samples=50"
    ```
 
-   Die Antwort ist eine GeoJSON-`FeatureCollection`, je Messpunkt ein Feature mit `elevation` (m) und `distance_m` (Strecke vom Anfang).
+   Die Antwort ist eine GeoJSON-`FeatureCollection`, je Messpunkt ein Feature mit `elevation` (m) und `distance` (Strecke vom Anfang).
 
 2. **Seite anlegen.** Eine Datei `profil.html` mit einem leeren SVG:
 
@@ -37,7 +37,7 @@ Der Endpunkt [`/v1/elevation`](https://docs.mapx.at/de/api/elevation.md) liefert
 
      // Messpunkte ohne Höhe (außerhalb der Daten) auslassen
      const pts = daten.features
-       .map(f => ({ d: f.properties.distance_m, h: f.properties.elevation }))
+       .map(f => ({ d: f.properties.distance, h: f.properties.elevation }))
        .filter(p => p.h !== null);
 
      const B = 600, H = 240, R = { l: 50, r: 10, t: 10, b: 30 };

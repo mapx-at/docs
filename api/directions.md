@@ -156,7 +156,7 @@ open("result.bin", "wb").write(res.content)
 
 Trucks (`driving-truck`, over 3.5 t): vehicle size via `weight`, `height`, `width`, `length`, `truck_type`; roads are blocked per vehicle (weight-class, semi and trailer bans, height/width/weight/length limits). Truck speeds: at most 80 km/h on motorways, 70 on rural roads, 50 in built-up areas.
 
-District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_km` (kilometers subject to the GO toll; per step `truck_go_m`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road`, `toll_road_m` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving`, `driving-traffic` and `driving-truck` avoid the active full closures from the traffic reports (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Binding closures (EVIS compliance option mandatory, traffic regulations) are never driven; full closures without that flag, such as winter closures of passes, are driven only as a last resort, when start or destination lies on or behind them. `routes[].closures_avoided` lists the closures the route without closures would have used (`binding` tells the two apart), `routes[].closures_unavoidable` those the route still runs through. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, and only by `driving-traffic`. Cycling and walking ignore the closures (the reports concern motor traffic). `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/sign-limits`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
+District-wide bans (free-text ordinances) are not routed; affected roads appear as `steps[].notices[]` (`type: truck_restriction`). Responses add `routes[].truck` (the vehicle used) and `routes[].toll.truck_go_distance` (meters subject to the GO toll; per step `truck_go_distance`). 2 to 25 coordinates; legs are computed individually. Car routes (`driving`) contain `routes[].toll` (vignette and special-toll data), `toll_road_distance` and `steps[].intersections[].classes`; toll source ASFINAG, CC BY 4.0. From the GIP, steps additionally carry `ref`, `destinations`, `milestone`, `maxspeed`, `ascent`, `descent` (meters) and (cycling/walking) `grade_pct`, for cycling and cycling-mtb also `bike_infrastructure` (cycleway, lane, shared, none) and `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` names the two longest roads (string like `legs[].summary`, with `steps=true`), `routes[].elevation_summary` has ascent, descent, max grade and elevation range. The default `overview=simplified` returns a simplified geometry, `steps=true` adds step geometry and intersections. Closures: `driving`, `driving-traffic` and `driving-truck` avoid the active full closures from the traffic reports (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Binding closures (EVIS compliance option mandatory, traffic regulations) are never driven; full closures without that flag, such as winter closures of passes, are driven only as a last resort, when start or destination lies on or behind them. `routes[].closures_avoided` lists the closures the route without closures would have used (`binding` tells the two apart), `routes[].closures_unavoidable` those the route still runs through. Time-conditional regulations (weekdays or hours only in the text) are only discouraged, and only by `driving-traffic`. Cycling and walking ignore the closures (the reports concern motor traffic). `driving-traffic` additionally slows motorway sections where ASFINAG variable message signs show a limit below free-flow speed (see `/v1/traffic/sign-limits`); there is no area-wide live traffic state. Navigation: `steps=true` with `voice_instructions=true` and/or `banner_instructions=true` adds Mapbox-style voice and banner instructions (all road profiles, texts in `language`). Speed limits: `maxspeed` (step and annotation) is `{speed, unit, legal}`; `legal: true` marks a statutory limit (5, 10, 20 ... 130 km/h), `legal: false` a modeled GIP speed (e.g. 53, 84) that is not a limit; `{unknown: true}` without a value (backward compatible: `speed` and `unit` are unchanged). For limits along a corridor see `/v1/speedlimits`.
 
 **Parameters**
 
@@ -174,7 +174,7 @@ District-wide bans (free-text ordinances) are not routed; affected roads appear 
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
+| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_distance` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
@@ -212,7 +212,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -237,9 +236,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -298,7 +298,7 @@ Same response as `/v1/directions/{profile}/{coordinates}` (preferred); all query
 | `approaches` | query | string |  | – | unrestricted or curb per coordinate (validated, not yet used by the router) |
 | `bearings` | query | string |  | – | degrees,tolerance per coordinate (validated, not yet used by the router) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: traffic incidents along the leg as `legs[].incidents`; default true for driving-traffic, otherwise false; cars only |
-| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_m` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
+| `exclude` | query | string |  | – | motorway, toll and/or ferry, comma-separated: `motorway` avoids motorways (category A; driving, driving-traffic, driving-truck); `toll` avoids all toll roads: vignette-required ASFINAG motorways and expressways (categories A and S) and special-toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; same profiles). Simplification: the vignette-free motorway sections (e.g. A1 Walserberg to Salzburg Nord, A12 at Kufstein, A14 Hörbranz to Hohenems) are avoided too, because the road graph (GIP) has no vignette attribute; with toll the route reports `toll.vignette_distance` 0, and if no toll-free route exists the request fails instead of falling back to a toll route; `ferry` closes all ferry links (all profiles except driving-traffic, which returns 400). With `ferry` the route is computed without contraction hierarchies, so it takes some tens of milliseconds longer |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox form with announcement and ssmlAnnouncement, language per `language`); requires steps=true; all road profiles (driving, driving-truck, cycling, cycling-mtb, walking), with shorter announcement distances on foot (100 m, 40 m) and by bike (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox form, primary/secondary with text and components; destination signage and road number); requires steps=true; all road profiles |
 | `cycling_surface` | query | string |  | – | any (default), cycling only; paved (close unpaved sections completely) is currently unavailable and returns 400 |
@@ -336,7 +336,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -361,9 +360,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -404,7 +404,7 @@ data = res.json()
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at`, `transit_stops` and `attribution`.
+Reachable areas, largest first; `properties.contour/color/opacity`. Zone `heavy`. Profile `transit` computes walking plus public transport (GTFS timetable, RAPTOR): walk to stops, ride from `depart_at`, walk on from every stop reached; only `contours_minutes` (default 5,10,15, at most 120 min), the timetable's validity period applies (otherwise 422), `metadata` carries `depart_at` (local time with offset) and `transit_stops`.
 
 `access=foot|bike|car` (default `foot`) chooses how the first stop is reached: `bike` = Bike & Ride (bike to any stop, +2 min for locking), `car` = Park & Ride (drive, at most 25 min, to stops with rail/metro/tram service, +3 min for parking, and to official GIP P+R sites, +2 min and a walk to the stop); the fastest combination wins, exit is always on foot. `park=official` restricts parking to official P+R/B+R sites. `metadata` then adds `access`, `park`, `access_stops_improved` and `access_sites` (top `sites` entries: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Bike carriage on trains is not in the timetable data, so there is no `egress=bike`. The other profiles reject `depart_at`, `access` and `park` (400). Closures: driving, driving-traffic and driving-truck do not extend across active full closures from the traffic reports (the same ones directions avoids, see `/v1/traffic/incidents` with `closed: true`), including closures without a binding note such as winter closures of pass roads: an isochrone has no destination behind the closure, so there is no last resort; the road the start point snaps to stays usable. `closures` reports whether closures were applied (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` lists the closures at which the largest contour stops (`id`, `text`, `road`, `category`, `binding`), both at the top level as with directions and matrix.
 
@@ -549,7 +549,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "durations": [
     [
       0,
@@ -664,7 +663,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "matchings": [],
   "tracepoints": []
 }

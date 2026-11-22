@@ -66,7 +66,7 @@ data = res.json()
       },
       "properties": {
         "elevation": 171.3,
-        "resolution_m": 1,
+        "resolution": 1,
         "model": "dtm",
         "reference_date": "2025-09-15"
       }
@@ -88,7 +88,7 @@ data = res.json()
 
 `GET /v1/elevation/{coordinate}`
 
-Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution_m`, `reference_date`.
+Ein Punktobjekt; properties: `dtm` (Gelände), `dsm` (Oberfläche, null, wenn nicht verfügbar), `resolution` (Meter), `reference_date`.
 
 **Parameter**
 
@@ -135,7 +135,7 @@ data = res.json()
   "properties": {
     "dtm": 171.3,
     "dsm": 171.9,
-    "resolution_m": 1,
+    "resolution": 1,
     "reference_date": "2025-09-15"
   }
 }
@@ -154,7 +154,7 @@ data = res.json()
 
 `GET /v1/elevation/profile`
 
-Eine GeoJSON-Linie; properties: `distances`, `elevations`, `ascent_m`, `descent_m`, `ascent_threshold_m`, `min_m`, `max_m`. Anstieg und Abstieg werden mit Hysterese gezählt: eine Steigung oder ein Gefälle zählt erst, wenn sich die Höhe um mindestens `ascent_threshold_m` (3 m) vom letzten Wendepunkt entfernt hat.
+Eine GeoJSON-Linie; properties: `distance`, `distances`, `elevations`, `ascent`, `descent`, `ascent_threshold`, `min_elevation`, `max_elevation` (alle in Metern), `resolution`, `model`, `reference_date`. Anstieg und Abstieg werden mit Hysterese gezählt: eine Steigung oder ein Gefälle zählt erst, wenn sich die Höhe um mindestens `ascent_threshold` (3 m) vom letzten Wendepunkt entfernt hat.
 
 Die Summen hängen dadurch kaum von `samples` ab, und Geländerauschen wird nicht aufsummiert (flaches Marchfeld, 9,6 km: 0 m statt 46 m ungefiltert; Großglockner-Hochalpenstraße ab Heiligenblut: rund 1150 m). Mit `model=dsm` zählen Gebäude und Bewuchs als Gelände, der Anstieg fällt höher aus. Die Linie hat z-Koordinaten, wenn jeder Abtastpunkt eine Höhe hat; sonst sind alle Positionen 2D und die Lücken stehen als `null` in `elevations`. Für eine Routengeometrie die POST-Form verwenden.
 
@@ -219,11 +219,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```
@@ -364,11 +364,11 @@ data = res.json()
       171,
       180.5
     ],
-    "ascent_m": 9.5,
-    "descent_m": 0,
-    "ascent_threshold_m": 3,
-    "min_m": 171,
-    "max_m": 180.5
+    "ascent": 9.5,
+    "descent": 0,
+    "ascent_threshold": 3,
+    "min_elevation": 171,
+    "max_elevation": 180.5
   }
 }
 ```

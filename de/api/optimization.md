@@ -58,7 +58,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "trips": [],
   "waypoints": []
 }

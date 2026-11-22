@@ -99,9 +99,9 @@ data = res.json()
 
 `GET /v1/traffic/incidents`
 
-Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Typ und Zeitfenster. Sortiert nach Bedeutung (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit` und `cursor` (`total`, `next` als relative URL oder `null` auf der letzten Seite; `next_cursor` und `next_offset` nur, wenn es eine weitere Seite gibt).
+Aktive Meldungen (`active=false`: auch beendete und künftige), filterbar nach Gebiet, Straße (`road`, `road_class`), Route, Typ und Zeitfenster. Sortiert nach Bedeutung (Sperren und verbindliche Meldungen zuerst, dann Autobahnen, Schnellstraßen, Bundes- und Landesstraßen, dann Beginn), seitenweise mit `limit`: `next` ist die vollständige URL der nächsten Seite (mit `cursor`) oder `null` auf der letzten Seite, `total` die Zahl der passenden Meldungen.
 
-Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Felder: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) und `impact` (critical: für Pkw gesperrt; major: verbindlich, Fahrstreifensperre oder Unfall; minor: sonst ungeplant; low: sonst geplant) leitet mapx ab. `kind` ist die Kategorie der Quelle auf Deutsch (z. B. Straßensperre, Bauarbeiten, Belagsarbeiten, Instandhaltung), `management` ihr englisches Gegenstück oder die DATEX-II-Maßnahme. `closed` ist nur true, wenn die Straße für Pkw gesperrt ist; ein `road_closure` mit `closed: false` ist nur für andere Verkehrsarten gesperrt (siehe `transport_modes`, z. B. Fußgänger, Fahrräder) oder der Verkehr wird über die Gegenfahrbahn geführt. `road` ist die Straßennummer (A1, S33, B17, L347; aus dem Straßengraphen abgeleitet, wenn die Quelle keine nennt, null bei Gemeindestraßen), `road_section` die Kennung der Quelle für Rampe oder Ast (A13.33.4). `road_name`, `direction` (Text), `regions` (Bundesländer) und `creator` stammen aus EVIS. Zeiten in UTC. Texte sind reiner Text; spitze Klammern der Quelle werden entfernt. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
+Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASFINAG (`lanes`). `mandatory=true`: verbindlich (Router: Sperre), Text unverändert anzeigen. Geometrie entlang der GIP-Kanten. Felder: `type` (accident, congestion, construction, lane_restriction, road_closure, road_hazard, miscellaneous) und `impact` (critical: für Pkw gesperrt; major: verbindlich, Fahrstreifensperre oder Unfall; minor: sonst ungeplant; low: sonst geplant) leitet mapx ab. `kind` ist die genaue Kategorie (Enum `IncidentKind`, aus der Kategorie der Quelle abgebildet), `management` die englische DATEX-II-Maßnahme. `closed` ist nur true, wenn die Straße für Pkw gesperrt ist; ein `road_closure` mit `closed: false` ist nur für andere Verkehrsarten gesperrt (siehe `transport_modes`, z. B. Fußgänger, Fahrräder) oder der Verkehr wird über die Gegenfahrbahn geführt. `road` ist die Straßennummer (A1, S33, B17, L347; aus dem Straßengraphen abgeleitet, wenn die Quelle keine nennt, null bei Gemeindestraßen), `road_section` die Kennung der Quelle für Rampe oder Ast (A13.33.4). `road_name`, `direction` (Text), `regions` (Bundesländer) und `creator` stammen aus EVIS. Zeiten in UTC. Texte sind reiner Text; spitze Klammern der Quelle werden entfernt. Datenquelle: ASFINAG / EVIS.AT (CC BY 4.0), Straßennetz GIP.at (CC BY 4.0); Quellenangabe erforderlich.
 
 **Parameter**
 
@@ -120,8 +120,7 @@ Baustellen auf Autobahnen und Schnellstraßen haben Fahrstreifen-Details der ASF
 | `buffer` | query | string |  | `25` | Halbe Korridorbreite in Metern, 1 bis 1000, Standard 25 |
 | `sort` | query | string |  | – | importance: Sperren und verbindliche Meldungen zuerst, dann Straßenklasse A, S, B, L, dann Beginn (gilt ohne sort); route: Position auf der Route (gilt ohne sort, wenn route angegeben ist) |
 | `limit` | query | string |  | `500` | Höchstens so viele Objekte, 0 bis 1000, Standard 500 |
-| `cursor` | query | string |  | – | Seitenmarke: next_cursor der vorigen Antwort |
-| `offset` | query | string |  | – | Objekte überspringen (Alternative zu cursor) |
+| `cursor` | query | string |  | – | Seitenmarke; die `next`-URL der vorigen Antwort enthält sie |
 
 **Beispiel**
 
@@ -235,7 +234,13 @@ Body: dieselben Parameter als JSON-Objekt; `route` als Polyline-String oder GeoJ
 
 Braucht einen geheimen Token (`mx_sk_`); öffentliche Tokens erhalten `403 pk-not-allowed`, im Playground daher nicht ausführbar.
 
-Seiten: die Antwort enthält `next_cursor` (keine `next`-URL); denselben Body mit `cursor` auf diesen Wert erneut senden.
+Seiten: `next` ist die URL der nächsten Seite mit nur `cursor` in der Abfrage (oder `null`); denselben Body an diese URL senden.
+
+**Parameter**
+
+| Name | Ort | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|---|
+| `cursor` | query | string |  | – | Seitenmarke aus `next` |
 
 **Request-Body (JSON)**
 
@@ -255,7 +260,6 @@ Seiten: die Antwort enthält `next_cursor` (keine `next`-URL); denselben Body mi
 | `sort` |  | Wie der Query-Parameter `sort` |
 | `limit` |  | Wie der Query-Parameter `limit` |
 | `cursor` |  | Wie der Query-Parameter `cursor` |
-| `offset` |  | Wie der Query-Parameter `offset` |
 
 **Beispiel**
 
@@ -493,7 +497,7 @@ data = res.json()
 
 `GET /v1/traffic/tiles.json`
 
-Vektorkacheln mit den Layern `sign_limits` (von Wechselverkehrszeichen angezeigte Tempolimits, keine Verkehrslage: id, speed_limit, normal_speed, reduction, stale; wie in /v1/traffic/sign-limits) und `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; wie in /v1/traffic/incidents).
+Vektorkacheln mit den Layern `sign_limits` (von Wechselverkehrszeichen angezeigte Tempolimits, keine Verkehrslage: id, speed_limit_kmh, normal_speed_kmh, reduction_kmh, stale; wie in /v1/traffic/sign-limits) und `incidents` (id, type, impact, kind, text, road, start, end, planned, closed, mandatory; wie in /v1/traffic/incidents).
 
 **Beispiel**
 
@@ -593,6 +597,10 @@ open("result.pbf", "wb").write(res.content)
 ## Stand der Verkehrsdaten {#state-of-the-traffic-data}
 
 `GET /v1/traffic/status`
+
+Zustand und Aktualität der Verkehrsdaten hinter Meldungen, Tempolimits der Wechselverkehrszeichen, Verkehrskacheln und `driving-traffic`: wann die Quellen (EVIS.AT, ASFINAG) zuletzt abgerufen und das Routing-Overlay gebaut wurde (beides UTC, etwa minütlich erneuert), dazu Zählwerte.
+
+`available: false` heißt, es konnten noch keine Daten geladen werden; die Verkehrsendpunkte antworten dann mit 503.
 
 **Beispiel**
 

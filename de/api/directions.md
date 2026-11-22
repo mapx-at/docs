@@ -156,7 +156,7 @@ open("result.bin", "wb").write(res.content)
 
 Lkw (`driving-truck`, über 3,5 t): Fahrzeugmaße über `weight`, `height`, `width`, `length`, `truck_type`; Straßen werden je Fahrzeug gesperrt (Gewichtsklassen-, Sattel- und Anhängerverbote, Höhen-, Breiten-, Gewichts- und Längenbeschränkungen). Lkw-Geschwindigkeiten: höchstens 80 km/h auf Autobahnen, 70 auf Freilandstraßen, 50 im Ortsgebiet.
 
-Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_km` (Kilometer mit GO-Maut; je Schritt `truck_go_m`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road`, `toll_road_m` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent_m`, `descent_m` und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving`, `driving-traffic` und `driving-truck` umfahren die aktiven Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Verbindliche Sperren (EVIS-Vermerk mandatory, Verkehrsregelungen) werden nie befahren; Vollsperren ohne diesen Vermerk, etwa Wintersperren von Passstraßen, nur als letzter Ausweg, wenn Start oder Ziel an oder hinter der Sperre liegt. `routes[].closures_avoided` listet die Sperren, über die die Route ohne Sperren geführt hätte (`binding` unterscheidet beide Arten), `routes[].closures_unavoidable` jene, durch die die Route trotzdem führt. Zeitlich bedingte Regelungen (Wochentage oder Uhrzeiten nur im Text) werden nur gemieden, und nur von `driving-traffic`. Rad- und Fußprofile beachten die Sperren nicht (die Meldungen betreffen den Kfz-Verkehr). `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/sign-limits`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
+Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betroffene Straßen erscheinen als `steps[].notices[]` (`type: truck_restriction`). Antworten enthalten zusätzlich `routes[].truck` (das verwendete Fahrzeug) und `routes[].toll.truck_go_distance` (Meter mit GO-Maut; je Schritt `truck_go_distance`). 2 bis 25 Koordinaten; die Teilstrecken werden einzeln berechnet. Pkw-Routen (`driving`) enthalten `routes[].toll` (Vignetten- und Sondermautdaten), `toll_road_distance` und `steps[].intersections[].classes`; Mautquelle ASFINAG, CC BY 4.0. Aus der GIP tragen Schritte zusätzlich `ref`, `destinations`, `milestone`, `maxspeed`, `ascent`, `descent` (Meter) und (Rad/Fuß) `grade_pct`, bei cycling und cycling-mtb auch `bike_infrastructure` (cycleway, lane, shared, none) und `surface` (paved, cobblestone, unpaved, offroad, unknown); `routes[].summary` nennt die zwei längsten Straßen (String wie `legs[].summary`, mit `steps=true`), `routes[].elevation_summary` enthält Anstieg, Abstieg, größte Steigung und Höhenbereich. Der Standard `overview=simplified` liefert eine vereinfachte Geometrie, `steps=true` ergänzt Schrittgeometrie und Kreuzungen. Sperren: `driving`, `driving-traffic` und `driving-truck` umfahren die aktiven Vollsperren aus den Verkehrsmeldungen (EVIS/ASFINAG, `closed: true` in `/v1/traffic/incidents`). Verbindliche Sperren (EVIS-Vermerk mandatory, Verkehrsregelungen) werden nie befahren; Vollsperren ohne diesen Vermerk, etwa Wintersperren von Passstraßen, nur als letzter Ausweg, wenn Start oder Ziel an oder hinter der Sperre liegt. `routes[].closures_avoided` listet die Sperren, über die die Route ohne Sperren geführt hätte (`binding` unterscheidet beide Arten), `routes[].closures_unavoidable` jene, durch die die Route trotzdem führt. Zeitlich bedingte Regelungen (Wochentage oder Uhrzeiten nur im Text) werden nur gemieden, und nur von `driving-traffic`. Rad- und Fußprofile beachten die Sperren nicht (die Meldungen betreffen den Kfz-Verkehr). `driving-traffic` verlangsamt zusätzlich Autobahnabschnitte, auf denen ASFINAG-Anzeigen ein Tempolimit unter der freien Fahrgeschwindigkeit zeigen (siehe `/v1/traffic/sign-limits`); eine flächendeckende Verkehrslage gibt es nicht. Navigation: `steps=true` mit `voice_instructions=true` und/oder `banner_instructions=true` ergänzt Sprach- und Banneranweisungen im Mapbox-Format (alle Straßenprofile, Texte in `language`). Tempolimits: `maxspeed` (Schritt und Annotation) ist `{speed, unit, legal}`; `legal: true` kennzeichnet ein gesetzliches Tempolimit (5, 10, 20 ... 130 km/h), `legal: false` eine modellierte GIP-Geschwindigkeit (z. B. 53, 84), die kein Tempolimit ist; `{unknown: true}` ohne Wert (abwärtskompatibel: `speed` und `unit` bleiben unverändert). Tempolimits entlang eines Korridors: `/v1/speedlimits`.
 
 **Parameter**
 
@@ -174,7 +174,7 @@ Bezirksweite Fahrverbote (Verordnungen im Freitext) werden nicht geroutet; betro
 | `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
-| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_distance` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
 | `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
@@ -212,7 +212,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -237,9 +236,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -298,7 +298,7 @@ Gleiche Antwort wie `/v1/directions/{profile}/{coordinates}` (bevorzugt); alle Q
 | `approaches` | query | string |  | – | unrestricted oder curb je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `bearings` | query | string |  | – | Grad,Toleranz je Koordinate (wird geprüft, vom Router noch nicht verwendet) |
 | `incidents` | query | string |  | `true for driving-traffic` | true/false: Verkehrsmeldungen entlang der Teilstrecke als `legs[].incidents`; Standard true bei driving-traffic, sonst false; nur Pkw |
-| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_m` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
+| `exclude` | query | string |  | – | motorway, toll und/oder ferry, durch Komma getrennt: `motorway` meidet Autobahnen (Kategorie A; driving, driving-traffic, driving-truck); `toll` meidet alle Mautstraßen: vignettenpflichtige ASFINAG-Autobahnen und -Schnellstraßen (Kategorien A und S) und Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg; dieselben Profile). Vereinfachung: Auch die vignettenfreien Autobahnabschnitte (z. B. A1 Walserberg bis Salzburg Nord, A12 bei Kufstein, A14 Hörbranz bis Hohenems) werden gemieden, weil der Straßengraph (GIP) kein Vignettenmerkmal hat; mit toll meldet die Route `toll.vignette_distance` 0, und gibt es keine mautfreie Route, schlägt die Anfrage fehl, statt auf eine Mautroute auszuweichen; `ferry` sperrt alle Fährverbindungen (alle Profile außer driving-traffic, das 400 liefert). Mit `ferry` wird die Route ohne Contraction Hierarchies berechnet und dauert daher einige zehn Millisekunden länger |
 | `voice_instructions` | query | string |  | – | true: `steps[].voiceInstructions` (Mapbox-Format mit announcement und ssmlAnnouncement, Sprache nach `language`); erfordert steps=true; alle Straßenprofile (driving, driving-truck, cycling, cycling-mtb, walking), mit kürzeren Ansageabständen zu Fuß (100 m, 40 m) und mit dem Rad (250 m, 80 m) |
 | `banner_instructions` | query | string |  | – | true: `steps[].bannerInstructions` (Mapbox-Format, primary/secondary mit Text und Komponenten; Wegweiser und Straßennummer); erfordert steps=true; alle Straßenprofile |
 | `cycling_surface` | query | string |  | – | any (Standard), nur cycling; paved (unbefestigte Abschnitte ganz sperren) ist derzeit nicht verfügbar und ergibt 400 |
@@ -336,7 +336,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "routes": [
     {
       "weight_name": "routability",
@@ -361,9 +360,10 @@ data = res.json()
           "distance": 62340.1,
           "duration": 2890.4,
           "weight": 1850.2,
-          "summary": ""
+          "summary": "A1, S33"
         }
-      ]
+      ],
+      "summary": "A1, S33"
     }
   ],
   "waypoints": [
@@ -404,7 +404,7 @@ data = res.json()
 
 `GET /v1/isochrone/{profile}/{coordinate}`
 
-Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at`, `transit_stops` und `attribution`.
+Erreichbare Gebiete, größtes zuerst; `properties.contour/color/opacity`. Zone `heavy`. Das Profil `transit` rechnet zu Fuß und mit öffentlichem Verkehr (GTFS-Fahrplan, RAPTOR): zu Fuß zu den Haltestellen, Fahrt ab `depart_at`, von jeder erreichten Haltestelle zu Fuß weiter; nur `contours_minutes` (Standard 5,10,15, höchstens 120 min), es gilt der Gültigkeitszeitraum des Fahrplans (sonst 422), `metadata` enthält `depart_at` (Ortszeit mit Offset) und `transit_stops`.
 
 `access=foot|bike|car` (Standard `foot`) legt fest, wie die erste Haltestelle erreicht wird: `bike` = Bike & Ride (mit dem Rad zu jeder Haltestelle, +2 min zum Absperren), `car` = Park & Ride (mit dem Auto, höchstens 25 min, zu Haltestellen mit Bahn, U-Bahn oder Straßenbahn, +3 min zum Parken, und zu amtlichen P+R-Anlagen der GIP, +2 min und ein Fußweg zur Haltestelle); die schnellste Kombination gewinnt, weiter geht es immer zu Fuß. `park=official` beschränkt das Parken auf amtliche P+R/B+R-Anlagen. `metadata` enthält dann zusätzlich `access`, `park`, `access_stops_improved` und `access_sites` (die ersten `sites` Einträge: `source` site|stop, `kind`, `name`, `lon`, `lat`, `arrive_min`, `ready_min`, `stops_won`). Die Radmitnahme in Zügen steht nicht in den Fahrplandaten, daher gibt es kein `egress=bike`. Die anderen Profile lehnen `depart_at`, `access` und `park` ab (400). Sperren: driving, driving-traffic und driving-truck reichen nicht über aktive Vollsperren aus den Verkehrsmeldungen hinaus (dieselben, die Directions umfährt, siehe `/v1/traffic/incidents` mit `closed: true`), auch nicht über Sperren ohne Verbindlichkeitsvermerk wie Wintersperren von Passstraßen: Eine Isochrone hat kein Ziel hinter der Sperre, einen letzten Ausweg gibt es daher nicht; die Straße, auf der der Startpunkt einrastet, bleibt befahrbar. `closures` meldet, ob Sperren berücksichtigt wurden (`applied`, `count`, `binding`, `binding_count`, `fetched`), `closures_avoided` listet die Sperren, an denen die größte Stufe endet (`id`, `text`, `road`, `category`, `binding`), beide auf oberster Ebene wie bei Directions und Matrix.
 
@@ -549,7 +549,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "durations": [
     [
       0,
@@ -664,7 +663,6 @@ data = res.json()
 
 ```json
 {
-  "code": "Ok",
   "matchings": [],
   "tracepoints": []
 }

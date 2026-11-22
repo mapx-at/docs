@@ -12,7 +12,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [M
 
 `GET /v1/weather/current`
 
-GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first; compare `altitude_m` of the station with `location.elevation_m` of the point (terrain height, mapx 1 m DTM). Values come from a local cache, never fetched per request.
+GeoSphere Austria station network, 10-minute values (temperature, humidity, wind, gust, precipitation, pressure). Nearest station first; compare `altitude` of the station with `elevation` of the point (terrain height, mapx 1 m DTM). Values come from a local cache, never fetched per request.
 
 Points outside Austria and surroundings: 404 `outside-coverage`. Data source: GeoSphere Austria, CC BY 4.0 (attribution required).
 
@@ -58,7 +58,7 @@ data = res.json()
     16.3725,
     48.2085
   ],
-  "elevation_m": 171.4,
+  "elevation": 171.4,
   "features": [
     {
       "type": "Feature",
@@ -73,14 +73,14 @@ data = res.json()
         "station_id": "11035",
         "name": "Wien/Hohe Warte",
         "state": "Wien",
-        "altitude_m": 198,
-        "distance_m": 4600,
+        "altitude": 198,
+        "distance": 4600,
         "time": "2026-11-08T11:50:00Z",
         "temperature_c": 9.4,
         "humidity_pct": 71,
         "wind_speed_ms": 3.1,
         "wind_gust_ms": 5.8,
-        "wind_direction_deg": 290,
+        "wind_direction": 290,
         "precipitation_mm_10min": 0,
         "pressure_hpa": 1002.1,
         "pressure_msl_hpa": 1018.6
@@ -156,8 +156,8 @@ data = res.json()
     16.3717,
     48.213
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 178.9,
+  "elevation": 171.4,
+  "grid_elevation": 178.9,
   "model": "GeoSphere AROME nwp-v2-1h-1km",
   "reference_time": "2026-11-08T06:00:00Z",
   "interval": "1h",
@@ -173,14 +173,14 @@ data = res.json()
     ],
     "status": "current"
   },
-  "hours": [
+  "hourly": [
     {
       "time": "2026-11-08T12:00:00Z",
       "temperature_c": 10.1,
       "precipitation_mm": 0,
       "wind_speed_ms": 3.4,
       "wind_gust_ms": 7.2,
-      "wind_direction_deg": 285,
+      "wind_direction": 285,
       "humidity_pct": 68,
       "cloud_cover_pct": 40,
       "pressure_msl_hpa": 1008.3,
@@ -189,7 +189,7 @@ data = res.json()
         "text": "Partly cloudy",
         "icon": "partly-cloudy"
       },
-      "snow_limit_m": 1200,
+      "snow_limit": 1200,
       "sunshine_min": 31.5,
       "radiation_wm2": 180.2,
       "cape_jkg": 0,
@@ -277,8 +277,8 @@ data = res.json()
     16.37303,
     48.20932
   ],
-  "elevation_m": 171.4,
-  "grid_elevation_m": 175.2,
+  "elevation": 171.4,
+  "grid_elevation": 175.2,
   "model": "GeoSphere INCA nowcast-v1-15min-1km",
   "reference_time": "2026-11-08T10:45:00Z",
   "interval": "15min",
@@ -286,7 +286,7 @@ data = res.json()
   "precipitation_now": false,
   "precipitation_starts_in_min": 30,
   "precipitation_ends_in_min": null,
-  "steps": [
+  "minutely": [
     {
       "time": "2026-11-08T11:15:00Z",
       "minutes_from_now": 5,
@@ -298,7 +298,7 @@ data = res.json()
       "humidity_pct": 71,
       "wind_speed_ms": 3.2,
       "wind_gust_ms": 6.1,
-      "wind_direction_deg": 290
+      "wind_direction": 290
     }
   ]
 }

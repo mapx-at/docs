@@ -19,7 +19,7 @@ curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/directions
 
 ```js
 const r = await (await fetch("https://api.mapx.at/v1/directions/cycling/15.3294,48.2272;15.6141,48.4097?steps=true&alternatives=true&annotations=elevation", { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json();
-console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.summary?.ascent_m} m`));
+console.log(r.routes.map((x) => `${(x.distance / 1000).toFixed(1)} km, up ${x.elevation_summary?.ascent} m`));
 ```
 
 ## Show the cycle routes
@@ -54,7 +54,7 @@ const route = (await (await fetch("https://api.mapx.at/v1/directions/cycling/15.
 // the default overview=simplified keeps the line below the 512-point limit
 const line = route.geometry.coordinates.map((c) => c.join(",")).join(";");
 const p = (await (await fetch(`https://api.mapx.at/v1/elevation/profile?coordinates=${line}&samples=120`, { headers: { Authorization: "Bearer YOUR_TOKEN" } })).json()).properties;
-console.log(`up ${Math.round(p.ascent_m)} m, down ${Math.round(p.descent_m)} m, ${Math.round(p.min_m)}-${Math.round(p.max_m)} m`);
+console.log(`up ${Math.round(p.ascent)} m, down ${Math.round(p.descent)} m, ${Math.round(p.min_elevation)}-${Math.round(p.max_elevation)} m`);
 // p.distances[i] (m from start) and p.elevations[i] (m) give the chart
 ```
 

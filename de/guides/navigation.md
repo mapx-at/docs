@@ -71,7 +71,7 @@ Der Router meidet Straßen, die für das Fahrzeug gesperrt sind: Gewichtsklassen
 
 ## Maut
 
-Autorouten enthalten `toll_road`, `toll_road_m` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road` und `toll_road_m` zählen nur Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_m`. `toll.vignette_m` zählt die Routenmeter auf Autobahnen und Schnellstraßen des Straßengraphen, ohne Rastplätze, Sondermautstrecken und die vignettenfreien Abschnitte der ASFINAG-Daten. Lkw-Routen melden die mautpflichtigen Kilometer der GO-Maut in `routes[].toll.truck_go_km`. Maut oder Autobahnen vermeiden:
+Autorouten enthalten `toll_road_distance` und `toll` mit Vignetten-Produkten und Sondermautstrecken. `toll_road_distance` zählt nur die Meter auf Sondermautstrecken (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); die Vignettenpflicht steht in `toll.vignette_required` und `toll.vignette_distance`. `toll.vignette_distance` zählt die Routenmeter auf Autobahnen und Schnellstraßen des Straßengraphen, ohne Rastplätze, Sondermautstrecken und die vignettenfreien Abschnitte der ASFINAG-Daten. Lkw-Routen melden die mautpflichtigen Meter der GO-Maut in `routes[].toll.truck_go_distance`. Maut oder Autobahnen vermeiden:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll

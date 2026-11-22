@@ -151,7 +151,26 @@ res = requests.get("https://api.mapx.at/v1/styles/streets/sprite.json", headers=
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Example response**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -345,7 +364,22 @@ res = requests.get("https://api.mapx.at/v1/sprites", headers={"Authorization": "
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite list
+**Example response**
+
+```json
+[
+  {
+    "id": "sprite",
+    "url": "https://api.mapx.at/v1/sprites/sprite",
+    "files": [
+      "https://api.mapx.at/v1/sprites/sprite.json",
+      "https://api.mapx.at/v1/sprites/sprite.png",
+      "https://api.mapx.at/v1/sprites/sprite@2x.json",
+      "https://api.mapx.at/v1/sprites/sprite@2x.png"
+    ]
+  }
+]
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 
@@ -358,6 +392,10 @@ data = res.json()
 ## Sprite file without style
 
 `GET /v1/sprites/{file}`
+
+The sprites shared by all styles, directly by file name (same files as `/v1/styles/{id}/{file}`): `sprite[@2x].json` is the index (name -&gt; position and size in the atlas, `pixelRatio`), `sprite[@2x].png` the atlas; `sprite-sdf` holds the recolorable SDF icons.
+
+`@2x` for high-density screens.
 
 **Parameters**
 
@@ -389,7 +427,26 @@ res = requests.get("https://api.mapx.at/v1/sprites/sprite.json", headers={"Autho
 data = res.json()
 ```
 
-**Example response**: `application/json` · Sprite index (JSON) or atlas (PNG)
+**Example response**
+
+```json
+{
+  "airfield": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 0
+  },
+  "airport": {
+    "height": 17,
+    "pixelRatio": 1,
+    "width": 17,
+    "x": 0,
+    "y": 17
+  }
+}
+```
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
 

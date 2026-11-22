@@ -71,7 +71,7 @@ The router avoids roads closed to the vehicle: weight-class and trailer bans, he
 
 ## Tolls
 
-Car routes include `toll_road`, `toll_road_m` and `toll` with vignette products and special toll sections. `toll_road` and `toll_road_m` count only special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_m`. `toll.vignette_m` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the kilometers subject to the GO toll in `routes[].toll.truck_go_km`. Avoid tolls or motorways:
+Car routes include `toll_road_distance` and `toll` with vignette products and special toll sections. `toll_road_distance` counts only the meters on special toll sections (A9 Gleinalm/Bosruck, A10 Tauern/Katschberg, A11 Karawanken, A13 Brenner, S16 Arlberg); the vignette requirement is in `toll.vignette_required` and `toll.vignette_distance`. `toll.vignette_distance` counts the route meters on motorways and expressways of the road graph, without rest areas, special toll sections and the vignette-free sections of the ASFINAG data. Truck routes report the meters subject to the GO toll in `routes[].toll.truck_go_distance`. Avoid tolls or motorways:
 
 ```
 .../directions/driving/{coordinates}?exclude=toll
