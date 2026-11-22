@@ -660,6 +660,8 @@ const [lon, lat] = features[0].center;
 
 `features` can be empty; check the length before you read `features[0]`. Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
+Postcode, place, street and house number come as separate fields in `properties.address`, no need to split `place_name`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
+
 ## Reverse geocode
 
 ```bash
@@ -704,11 +706,11 @@ Validation checks what the user typed:
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
-`status` is `match`, `corrected`, `ambiguous` (then `candidates[]`) or `not_found`. Abbreviations, umlauts and `ß` are understood. Use POST with JSON for structured input.
+`status` is `match`, `corrected`, `ambiguous` (then `candidates[]`) or `not_found`. If the house number does not exist in the street, the result is `not_found` with the nearest numbers in `candidates[]`. Abbreviations, umlauts and `ß` are understood. Use POST with JSON for structured input.
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute). Batch geocoding needs a secret token (`mx_sk_…`) and therefore belongs on a server; with a public token the API answers `403` `pk-not-allowed`.
+`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute). Batch geocoding needs a secret token (`mx_sk_…`) and therefore belongs on a server; with a public token the API answers `403` `pk-not-allowed`. An invalid item is returned as a problem object (`status` 400, `code`, `param`) at its position; the other items are answered.
 
 ## Next
 
@@ -2714,7 +2716,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s), `heavy` (30
 
 Search over the official address register, streets, places, municipalities, districts, postcodes and points of interest. Road kilometers: `B83 km 329,7`, `A1 km 41` or `L190 km 3.5` (class A, S, B or L, number, the word `km`) return the point on the road at that kilometer as `place_type` `road_ref` with `properties.road_ref` (`ref`, `km`); the index holds a point every 0.1 km on motorways, expressways and federal roads and every 0.5 km on state roads (GIP.at), the nearest one is returned, the same state road number in several states gives several hits.
 
-Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`. Always pass `types` for cheap queries.
+Addresses: when the input names a place or postcode after the house number (`Hauptplatz 12a Graz`, `Rathausplatz 1, 3100`), hits in that place come first; if the number does not exist there, the base number (`12` for `12a`), the street in that place and the nearest numbers follow, never the same number in another place first. House number ranges (`1-3`, `15 - 16`) stay ranges. Common abbreviations are expanded (`Hptpl.`, `Str.`, `Hauptstr.`, `Rathauspl.`, `Pl.`, `G.`, `Bhf`). Coordinates as search text (`16.37,48.21` or `48.21, 16.37`, both with a decimal point; order detected from Austria's range) answer like `/v1/reverse` with `query` [lon, lat]. Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry`, `bbox`; `relevance` is the match score of the search (0 to 1, lower for a fallback to the base number, street or a neighboring number); for addresses and streets `properties.address` holds the separate fields (`street`, `housenumber`, `postcode`, `place`, `locality`, `municipality`, `district`, `state`) and `properties.accuracy` is `rooftop` (point on the building), `parcel` (point on the plot) or `street`. Waters (lakes, rivers, streams from the BEV geographical names) are `place` hits with `properties.class` `see`, `fluss`, `bach` or `gewaesser`. `query` lists the search words without punctuation. Always pass `types` for cheap queries.
 
 **Parameters**
 
@@ -2723,8 +2725,8 @@ Response: FeatureCollection with `place_type`, `place_name`, `center`, `geometry
 | `q` | query | string | yes | – | Search text (also path form `/v1/geocode/{q}.json`) |
 | `limit` | query | integer (1–10) |  | `5` | 1 to 10, default 5 |
 | `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
-| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better; exact place names stay on top; ignored when bbox is set |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
+| `proximity` | query | string |  | – | lon,lat; nearby matches (within about 40 km) rank ahead of distant ones that match only slightly better, matches beyond 40 km without special importance never ahead of nearby ones; exact place names stay on top; a search text naming a category (`Bahnhof`, `Museum`, see `/v1/searchbox/list/category`) also brings the nearest places of that category; ignored when bbox is set |
 
 **Example**
 
@@ -2756,33 +2758,50 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "query": [
-    "herrengasse",
+    "Herrengasse",
     "13"
   ],
   "features": [
     {
+      "id": "address-6792483",
       "type": "Feature",
-      "id": "address-1234567",
       "place_type": [
         "address"
       ],
-      "place_name": "Herrengasse 13, 1010 Wien",
+      "relevance": 0.97,
+      "properties": {
+        "mapx_type": "address",
+        "class": null,
+        "context": "Innere Stadt, 1010 Wien, W",
+        "zoom": 18,
+        "address": {
+          "street": "Herrengasse",
+          "housenumber": "13",
+          "postcode": "1010",
+          "place": "Wien",
+          "locality": "Innere Stadt",
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "accuracy": "parcel"
+      },
       "text": "Herrengasse 13",
+      "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
       "center": [
-        16.3665,
-        48.2096
+        16.365282,
+        48.210154
       ],
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.3665,
-          48.2096
+          16.365282,
+          48.210154
         ]
-      },
-      "properties": {}
+      }
     }
   ],
-  "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
 
@@ -2809,7 +2828,7 @@ Same as `/v1/geocode?q=...`; the search text is the path segment (optionally wit
 | `q` | path | string | yes | – | Search text, URL-encoded |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 | `types` | query | string |  | – | Comma-separated result types: address, street, locality, place, district, region, postcode, poi, road_ref (road kilometer; input such as `B83 km 329,7`, `A1 km 41`, `L190 km 3.5`) |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `proximity` | query | string |  | – | lon,lat |
 
 **Example**
@@ -2836,39 +2855,46 @@ res = requests.get("https://api.mapx.at/v1/geocode/Stephansplatz%20Wien.json?lim
 data = res.json()
 ```
 
-**Example response** (shortened: lists show only their first entries)
+**Example response**
 
 ```json
 {
   "type": "FeatureCollection",
   "query": [
-    "herrengasse",
-    "13"
+    "Stephansplatz",
+    "Wien"
   ],
   "features": [
     {
+      "id": "station-at_49_1320",
       "type": "Feature",
-      "id": "address-1234567",
       "place_type": [
-        "address"
+        "poi"
       ],
-      "place_name": "Herrengasse 13, 1010 Wien",
-      "text": "Herrengasse 13",
+      "relevance": 0.999,
+      "properties": {
+        "mapx_type": "station",
+        "class": "station",
+        "context": "Bahnhof, Wien",
+        "zoom": 15,
+        "category": "train_station"
+      },
+      "text": "Wien Stephansplatz",
+      "place_name": "Wien Stephansplatz, Bahnhof, Wien",
       "center": [
-        16.3665,
-        48.2096
+        16.371607,
+        48.208086
       ],
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.3665,
-          48.2096
+          16.371607,
+          48.208086
         ]
-      },
-      "properties": {}
+      }
     }
   ],
-  "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+  "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
 }
 ```
 
@@ -2886,7 +2912,9 @@ data = res.json()
 
 `GET /v1/reverse`
 
-Nearest features around a point, nearest first. Use `types` to restrict (e.g. `address`).
+Nearest features around a point, nearest first, each with `properties.distance` (meters from the point) and the fields of geocode (`properties.address`, `properties.accuracy`). Use `types` to restrict (e.g. `address`). A coordinate that is not a number or out of range gives 400 `invalid-coordinates` with `param` `lng` or `lat`; `limit` and `radius` are checked separately (400 `invalid-parameter`).
+
+For a point outside Austria the response has no features and a `warning` (often the order was swapped; it is lng, lat).
 
 **Parameters**
 
@@ -2928,12 +2956,12 @@ data = res.json()
 {
   "type": "FeatureCollection",
   "query": [
-    16.3665,
-    48.2096
+    16.3725,
+    48.2085
   ],
   "features": [
     {
-      "id": "address-6792135",
+      "id": "address-6793782",
       "type": "Feature",
       "place_type": [
         "address"
@@ -2943,19 +2971,31 @@ data = res.json()
         "mapx_type": "address",
         "class": null,
         "context": "Innere Stadt, 1010 Wien, W",
-        "zoom": 18
+        "zoom": 18,
+        "address": {
+          "street": "Stephansplatz",
+          "housenumber": "1",
+          "postcode": "1010",
+          "place": "Wien",
+          "locality": "Innere Stadt",
+          "municipality": "Wien",
+          "district": "Wien (Stadt)",
+          "state": "Wien"
+        },
+        "accuracy": "parcel",
+        "distance": 27
       },
-      "text": "Fahnengasse 2",
-      "place_name": "Fahnengasse 2, Innere Stadt, 1010 Wien, W",
+      "text": "Stephansplatz 1",
+      "place_name": "Stephansplatz 1, Innere Stadt, 1010 Wien, W",
       "center": [
-        16.366458,
-        48.209337
+        16.372605,
+        48.208728
       ],
       "geometry": {
         "type": "Point",
         "coordinates": [
-          16.366458,
-          48.209337
+          16.372605,
+          48.208728
         ]
       }
     }
@@ -2978,11 +3018,11 @@ data = res.json()
 
 `POST /v1/geocode/batch`
 
-JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array of FeatureCollections in input order. Items are searched in chunks, at most 4 in parallel; the whole batch counts as one request in the rate limit.
+JSON array; each item has `q` or structured `street`/`housenumber`/`postcode`/`place`, optional `types` (string or list), `limit` (1 to 10), `proximity` [lon,lat], `bbox`. Response: array in input order with one FeatureCollection per item (same fields as geocode, including the place precedence and coordinates as `q`); an invalid item does not fail the batch but is answered at its position with a problem object (RFC 9457: `type`, `title`, `status` 400, `detail`, `code`, `param`).
 
 Needs a secret token (`mx_sk_`); public tokens get `403 pk-not-allowed`, so the playground cannot run it.
 
-At most 512 KB.
+A malformed body (no array, empty, more than 1000 items) still gives 400 for the whole call. `proximity` only orders equally good matches here (no separate nearby search as in geocode). Items are searched in chunks, at most 4 in parallel; the whole batch counts as one request in the rate limit. At most 512 KB.
 
 **Request body (JSON)**
 
@@ -3061,33 +3101,60 @@ data = res.json()
   {
     "type": "FeatureCollection",
     "query": [
-      "herrengasse",
-      "13"
+      "Herrengasse"
     ],
     "features": [
       {
+        "id": "address-6792483",
         "type": "Feature",
-        "id": "address-1234567",
         "place_type": [
           "address"
         ],
-        "place_name": "Herrengasse 13, 1010 Wien",
+        "relevance": 0.97,
+        "properties": {
+          "mapx_type": "address",
+          "class": null,
+          "context": "Innere Stadt, 1010 Wien, W",
+          "zoom": 18,
+          "address": {
+            "street": "Herrengasse",
+            "housenumber": "13",
+            "postcode": "1010",
+            "place": "Wien",
+            "locality": "Innere Stadt",
+            "municipality": "Wien",
+            "district": "Wien (Stadt)",
+            "state": "Wien"
+          },
+          "accuracy": "parcel"
+        },
         "text": "Herrengasse 13",
+        "place_name": "Herrengasse 13, Innere Stadt, 1010 Wien, W",
         "center": [
-          16.3665,
-          48.2096
+          16.365282,
+          48.210154
         ],
         "geometry": {
           "type": "Point",
           "coordinates": [
-            16.3665,
-            48.2096
+            16.365282,
+            48.210154
           ]
-        },
-        "properties": {}
+        }
       }
     ],
-    "attribution": "mapx.at; BEV Adressregister, CC BY 4.0"
+    "attribution": "mapx.at; Daten: BEV – Adressregister, Geonamen, Verwaltungsgrenzen, DKM (CC BY 4.0)"
+  },
+  {
+    "type": "https://docs.mapx.at/api/errors/#invalid-parameter",
+    "title": "Invalid parameter",
+    "status": 400,
+    "detail": "types: unknown value 'parcel' (allowed: address, street, locality, place, district, region, postcode, poi, road_ref)",
+    "code": "invalid-parameter",
+    "param": "types",
+    "allowed": [
+      "address"
+    ]
   }
 ]
 ```
@@ -3129,10 +3196,10 @@ Like geocode, but a suggestion list without coordinates (`mapbox_id` for `/retri
 |---|---|---|---|---|---|
 | `q` | query | string | yes | – | Search text |
 | `session_token` | query | string |  | – | Arbitrary session id (up to 128 characters), no effect |
-| `proximity` | query | string |  | – | lon,lat; same ranking as geocode, also returns the distance |
+| `proximity` | query | string |  | – | lon,lat; same ranking as geocode (including the nearest places of a category named in `q`), also returns the distance |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category have no effect) |
 | `poi_category` | query | string |  | – | Comma-separated category ids (e.g. `gas_station`), see `/v1/searchbox/list/category` |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 to 10, default 5 |
 
 **Example**
@@ -3276,7 +3343,7 @@ Places of the category (several comma-separated), nearest first with `proximity`
 |---|---|---|---|---|---|
 | `category` | path | string | yes | – | Category id(s) |
 | `proximity` | query | string |  | – | lon,lat |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 to 180, lat -90 to 90; otherwise 400 `invalid-parameter`) |
 | `limit` | query | string |  | `10` | 1 to 25, default 10 |
 
 **Example**
@@ -3413,7 +3480,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/autofill/suggest`
 
-Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`.
+Official address register only (BEV). Completes street, house number, postcode and place; fields separated in `suggestions[]`. A complete place or postcode after the house number takes precedence as in geocode (`Hauptplatz 12a Graz` suggests addresses in Graz, nearest numbers first, if 12a does not exist there).
 
 **Parameters**
 
@@ -3583,9 +3650,9 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1), `deviations[]` per field (kind: spelling | wrong | added), `coordinates`, `id` and `address_code`.
+Checks an address against the official register. `status`: match | corrected | ambiguous | not_found. Returns the parsed `input`, the normalized `address`, `confidence` (0 to 1, 0 with `not_found`), `deviations[]` per field (kind: spelling | wrong | added | unknown), `coordinates`, `id` and `address_code`.
 
-Understands Str./Straße, abbreviations, umlauts and ß. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. With `match` and `corrected`, `candidates` is empty.
+Understands Str./Straße, abbreviations, umlauts and ß; a house number range (`1-3`) is not the number 13. A given place or postcode takes precedence: candidates elsewhere only count if none lies there. A different house number is never a correction: if the number does not exist in the street, `status` is `not_found`, `deviations` holds `{"field": "housenumber", "kind": "unknown"}` and `candidates[]` lists the nearest numbers of that street (up to 5), e.g. `street=Rathausplatz&housenumber=999&postcode=3100`. With `ambiguous` the fields `address`, `coordinates`, `id` and `address_code` are `null` and `candidates[]` (up to 5, each shaped like `address`) lists the possible addresses, e.g. `q=Hauptplatz 3` (without place): `{"status": "ambiguous", "address": null, "id": null, "candidates": [{"id": "address-5111737", "full_address": "Hauptplatz 3, 6511 Zams", ...}, {"id": "address-6067644", "full_address": "Hauptplatz 3, 9170 Ferlach", ...}]}`. With `match` and `corrected`, `candidates` is empty.
 
 **Parameters**
 
@@ -3669,15 +3736,15 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
+| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`: no address fits (if only the house number is unknown, `candidates` lists the nearest numbers of the street). |
+| `confidence` | number | 0 to 1; 0 with `not_found`. |
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
+| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
 | `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
+| `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
@@ -3798,15 +3865,15 @@ data = res.json()
 
 | Field | Type | Description |
 |---|---|---|
-| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`. |
-| `confidence` | number | 0 to 1. |
+| `status` | string | `match`: found as given; `corrected`: found after corrections (see `deviations`); `ambiguous`: several addresses fit (see `candidates`); `not_found`: no address fits (if only the house number is unknown, `candidates` lists the nearest numbers of the street). |
+| `confidence` | number | 0 to 1; 0 with `not_found`. |
 | `input` | object | The input as understood: `street`, `housenumber`, `postcode`, `place` (parsed from `q` or taken from the structured fields). |
 | `address` | object,null | The normalized address (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null` unless `match` or `corrected`. |
-| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added). |
+| `deviations` | array | Per corrected field: `field`, `input`, `expected`, `kind` (spelling, wrong or added); with `not_found` for an unknown house number `{field: housenumber, kind: unknown}`. |
 | `coordinates` | array,null | [lon, lat] of the address, `null` unless `match` or `corrected`. |
 | `id` | string,null | Address id `address-<AdrCD>` (as in Autofill and geocoding). |
 | `address_code` | string,null | Address code of the BEV address register. |
-| `candidates` | array | With `ambiguous`: up to 5 possible addresses, each shaped like `address`; otherwise empty. |
+| `candidates` | array | With `ambiguous`: up to 5 possible addresses; with `not_found` for an unknown house number: up to 5 nearest numbers of the street; each shaped like `address`; otherwise empty. |
 | `attribution` | string | Data sources (CC BY 4.0), attribution required. |
 
 **Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))

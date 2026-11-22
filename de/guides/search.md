@@ -27,6 +27,8 @@ const [lon, lat] = features[0].center;
 
 `features` kann leer sein; vor dem Zugriff auf `features[0]` die Länge prüfen. Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
+PLZ, Ort, Straße und Hausnummer stehen getrennt in `properties.address`, ohne `place_name` zu zerlegen. Ein Ort nach der Hausnummer hat Vorrang: `Hauptplatz 12a Graz` liefert Graz (Hauptplatz 12, die Straße, die Nachbarnummern), auch wenn es 12a nur anderswo gibt. Koordinaten wie `48.21, 16.37` als Suchtext werden wie bei Reverse Geocoding beantwortet.
+
 ## Reverse Geocoding
 
 ```bash
@@ -71,11 +73,11 @@ Die Validierung prüft, was der Nutzer eingegeben hat:
 curl -s -H "Authorization: Bearer DEIN_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
-`status` ist `match`, `corrected`, `ambiguous` (dann `candidates[]`) oder `not_found`. Abkürzungen, Umlaute und `ß` werden verstanden. Für strukturierte Eingaben POST mit JSON verwenden.
+`status` ist `match`, `corrected`, `ambiguous` (dann `candidates[]`) oder `not_found`. Gibt es die Hausnummer in der Straße nicht, kommt `not_found` mit den nächsten Nummern in `candidates[]`. Abkürzungen, Umlaute und `ß` werden verstanden. Für strukturierte Eingaben POST mit JSON verwenden.
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute). Batch-Geocoding braucht einen geheimen Token (`mx_sk_…`) und gehört deshalb auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`.
+`POST /v1/geocode/batch` geocodiert bis zu 1000 Anfragen in einem Request (Zone `heavy`, 30 pro Minute). Batch-Geocoding braucht einen geheimen Token (`mx_sk_…`) und gehört deshalb auf den Server; mit einem öffentlichen Token antwortet die API mit `403` `pk-not-allowed`. Ein ungültiger Eintrag steht als Problem-Objekt (`status` 400, `code`, `param`) an seiner Stelle im Ergebnis, die übrigen werden beantwortet.
 
 ## Nächste Schritte
 

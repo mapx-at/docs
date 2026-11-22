@@ -20,10 +20,10 @@ Wie geocode, aber eine Vorschlagsliste ohne Koordinaten (`mapbox_id` für `/retr
 |---|---|---|---|---|---|
 | `q` | query | string | ja | – | Suchtext |
 | `session_token` | query | string |  | – | Beliebige Sitzungs-Id (bis 128 Zeichen), ohne Wirkung |
-| `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode, liefert auch die Entfernung |
+| `proximity` | query | string |  | – | lon,lat; gleiche Reihung wie bei geocode (samt den nächsten Orten einer in `q` genannten Kategorie), liefert auch die Entfernung |
 | `types` | query | string |  | – | region, postcode, district, place, locality, street, address, poi, road_ref (country, neighborhood, category haben keine Wirkung) |
 | `poi_category` | query | string |  | – | Kategorie-Ids, durch Komma getrennt (z. B. `gas_station`), siehe `/v1/searchbox/list/category` |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
 | `limit` | query | string |  | `5` | 1 bis 10, Standard 5 |
 
 **Beispiel**
@@ -167,7 +167,7 @@ Orte der Kategorie (mehrere durch Komma getrennt), mit `proximity` die nächsten
 |---|---|---|---|---|---|
 | `category` | path | string | ja | – | Kategorie-Id(s) |
 | `proximity` | query | string |  | – | lon,lat |
-| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat |
+| `bbox` | query | string |  | – | minlon,minlat,maxlon,maxlat (minlon &lt; maxlon, minlat &lt; maxlat, lon -180 bis 180, lat -90 bis 90; sonst 400 `invalid-parameter`) |
 | `limit` | query | string |  | `10` | 1 bis 25, Standard 10 |
 
 **Beispiel**

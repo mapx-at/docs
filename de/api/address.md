@@ -12,7 +12,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/autofill/suggest`
 
-Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Postleitzahl und Ort; die Felder stehen getrennt in `suggestions[]`.
+Nur das amtliche Adressregister (BEV). Vervollständigt Straße, Hausnummer, Postleitzahl und Ort; die Felder stehen getrennt in `suggestions[]`. Ein vollständiger Ort oder eine PLZ nach der Hausnummer hat Vorrang wie bei geocode (`Hauptplatz 12a Graz` schlägt Adressen in Graz vor, die nächsten Nummern zuerst, wenn es 12a dort nicht gibt).
 
 **Parameter**
 
@@ -182,9 +182,9 @@ data = res.json()
 
 `GET /v1/address/validate`
 
-Prüft eine Adresse gegen das amtliche Register. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1), `deviations[]` je Feld (kind: spelling | wrong | added), `coordinates`, `id` und `address_code`.
+Prüft eine Adresse gegen das amtliche Register. `status`: match | corrected | ambiguous | not_found. Liefert die erkannte Eingabe `input`, die normalisierte Adresse `address`, `confidence` (0 bis 1, bei `not_found` 0), `deviations[]` je Feld (kind: spelling | wrong | added | unknown), `coordinates`, `id` und `address_code`.
 
-Versteht Str./Straße, Abkürzungen, Umlaute und ß. Bei `ambiguous` sind `address`, `coordinates`, `id` und `address_code` `null`, und `candidates[]` (bis zu 5, jeweils aufgebaut wie `address`) listet die möglichen Adressen, z. B. `q=Herrengasse 13, 1010 Wien`: `{"status": "ambiguous", "confidence": 0.5, "address": null, "id": null, "candidates": [{"id": "address-6792483", "full_address": "Herrengasse 13, 1010 Wien", ...}, {"id": "address-6792474", "full_address": "Herrengasse 1 - 3, 1010 Wien", ...}]}`. Bei `match` und `corrected` ist `candidates` leer.
+Versteht Str./Straße, Abkürzungen, Umlaute und ß; ein Hausnummernbereich (`1-3`) ist nicht die Nummer 13. Ein angegebener Ort oder eine angegebene PLZ hat Vorrang: Kandidaten anderswo zählen nur, wenn dort keiner liegt. Eine andere Hausnummer ist nie eine Korrektur: gibt es die Nummer in der Straße nicht, ist `status` `not_found`, `deviations` enthält `{"field": "housenumber", "kind": "unknown"}` und `candidates[]` listet die nächsten Nummern dieser Straße (bis zu 5), z. B. `street=Rathausplatz&housenumber=999&postcode=3100`. Bei `ambiguous` sind `address`, `coordinates`, `id` und `address_code` `null`, und `candidates[]` (bis zu 5, jeweils aufgebaut wie `address`) listet die möglichen Adressen, z. B. `q=Hauptplatz 3` (ohne Ort): `{"status": "ambiguous", "address": null, "id": null, "candidates": [{"id": "address-5111737", "full_address": "Hauptplatz 3, 6511 Zams", ...}, {"id": "address-6067644", "full_address": "Hauptplatz 3, 9170 Ferlach", ...}]}`. Bei `match` und `corrected` ist `candidates` leer.
 
 **Parameter**
 
@@ -268,15 +268,15 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
-| `confidence` | number | 0 bis 1. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: keine Adresse passt (ist nur die Hausnummer unbekannt, listet `candidates` die nächsten Nummern der Straße). |
+| `confidence` | number | 0 bis 1; bei `not_found` 0. |
 | `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
 | `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
-| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added); bei `not_found` wegen unbekannter Hausnummer `{field: housenumber, kind: unknown}`. |
 | `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
 | `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
 | `address_code` | string,null | Adresscode des BEV-Adressregisters. |
-| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen; bei `not_found` wegen unbekannter Hausnummer: bis zu 5 nächste Nummern der Straße; jeweils aufgebaut wie `address`; sonst leer. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))
@@ -397,15 +397,15 @@ data = res.json()
 
 | Feld | Typ | Beschreibung |
 |---|---|---|
-| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: nicht gefunden. |
-| `confidence` | number | 0 bis 1. |
+| `status` | string | `match`: wie angegeben gefunden; `corrected`: nach Korrekturen gefunden (siehe `deviations`); `ambiguous`: mehrere Adressen passen (siehe `candidates`); `not_found`: keine Adresse passt (ist nur die Hausnummer unbekannt, listet `candidates` die nächsten Nummern der Straße). |
+| `confidence` | number | 0 bis 1; bei `not_found` 0. |
 | `input` | object | Die Eingabe, wie sie verstanden wurde: `street`, `housenumber`, `postcode`, `place` (aus `q` zerlegt oder aus den strukturierten Feldern übernommen). |
 | `address` | object,null | Die normalisierte Adresse (`id`, `address_line1`, `street`, `housenumber`, `postcode`, `place`, `municipality`, `state`, `full_address`, `coordinates`); `null`, außer bei `match` oder `corrected`. |
-| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added). |
+| `deviations` | array | Je korrigiertem Feld: `field`, `input`, `expected`, `kind` (spelling, wrong oder added); bei `not_found` wegen unbekannter Hausnummer `{field: housenumber, kind: unknown}`. |
 | `coordinates` | array,null | [lon, lat] der Adresse, `null`, außer bei `match` oder `corrected`. |
 | `id` | string,null | Adress-Id `address-<AdrCD>` (wie bei Autofill und Geocoding). |
 | `address_code` | string,null | Adresscode des BEV-Adressregisters. |
-| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen, jeweils aufgebaut wie `address`; sonst leer. |
+| `candidates` | array | Bei `ambiguous`: bis zu 5 mögliche Adressen; bei `not_found` wegen unbekannter Hausnummer: bis zu 5 nächste Nummern der Straße; jeweils aufgebaut wie `address`; sonst leer. |
 | `attribution` | string | Datenquellen (CC BY 4.0), Quellenangabe erforderlich. |
 
 **Fehler** (Details: [Fehlerkatalog](https://docs.mapx.at/de/api/errors.md))

@@ -27,6 +27,8 @@ const [lon, lat] = features[0].center;
 
 `features` can be empty; check the length before you read `features[0]`. Always pass `types` (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` for road kilometers such as `A1 km 41`). Narrow the result with `bbox=minlon,minlat,maxlon,maxlat` or rank by distance with `proximity=lon,lat`.
 
+Postcode, place, street and house number come as separate fields in `properties.address`, no need to split `place_name`. A place after the house number takes precedence: `Hauptplatz 12a Graz` returns Graz (Hauptplatz 12, the street, the neighboring numbers), even if 12a exists only elsewhere. Coordinates such as `48.21, 16.37` as search text are answered like a reverse geocode.
+
 ## Reverse geocode
 
 ```bash
@@ -71,11 +73,11 @@ Validation checks what the user typed:
 curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/address/validate?q=Haubtplatz%201,%203390%20Melk" | jq '{status, confidence, address}'
 ```
 
-`status` is `match`, `corrected`, `ambiguous` (then `candidates[]`) or `not_found`. Abbreviations, umlauts and `ß` are understood. Use POST with JSON for structured input.
+`status` is `match`, `corrected`, `ambiguous` (then `candidates[]`) or `not_found`. If the house number does not exist in the street, the result is `not_found` with the nearest numbers in `candidates[]`. Abbreviations, umlauts and `ß` are understood. Use POST with JSON for structured input.
 
 ## Batch
 
-`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute). Batch geocoding needs a secret token (`mx_sk_…`) and therefore belongs on a server; with a public token the API answers `403` `pk-not-allowed`.
+`POST /v1/geocode/batch` geocodes up to 1000 queries in one request (zone `heavy`, 30 per minute). Batch geocoding needs a secret token (`mx_sk_…`) and therefore belongs on a server; with a public token the API answers `403` `pk-not-allowed`. An invalid item is returned as a problem object (`status` 400, `code`, `param`) at its position; the other items are answered.
 
 ## Next
 
