@@ -322,9 +322,9 @@ Was tun: Nummer prüfen; `/v1/road-km/roads` listet die Straßen mit Kilometerpu
 
 **404** · Kilometer außerhalb des Bereichs
 
-Die Straße ist bekannt, hat an diesem Kilometer aber keinen Punkt (hinter dem Ende oder in einer Lücke, etwa bei einem Kilometersprung). Das Problem-Objekt hat das Zusatzfeld `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, die zusammenhängenden Bereiche in km.
+Die Straße ist bekannt, hat an diesem Kilometer aber keinen Punkt (hinter dem Ende oder in einer Lücke, etwa bei einem Kilometersprung). Das Problem-Objekt hat das Zusatzfeld `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, die zusammenhängenden Bereiche in km, dazu `before` und `after` (`{"state": "Niederösterreich", "km": 77.2}` bzw. null), das nächste Kilometerzeichen darunter und darüber.
 
-Was tun: Einen Kilometer innerhalb eines Bereichs aus `ranges` wählen.
+Was tun: Einen Kilometer innerhalb eines Bereichs aus `ranges` wählen oder `before`/`after` nehmen.
 
 ### unknown-id
 

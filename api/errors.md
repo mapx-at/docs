@@ -322,9 +322,9 @@ What to do: Check the number; `/v1/road-km/roads` lists the roads with kilometre
 
 **404** · Kilometer out of range
 
-The road is known but has no point at this kilometre (beyond its end or inside a gap such as a kilometre jump). The problem object has the extra field `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, the contiguous ranges in km.
+The road is known but has no point at this kilometre (beyond its end or inside a gap such as a kilometre jump). The problem object has the extra field `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, the contiguous ranges in km, plus `before` and `after` (`{"state": "Niederösterreich", "km": 77.2}` or null), the nearest marker below and above.
 
-What to do: Pick a kilometre inside one of the `ranges`.
+What to do: Pick a kilometre inside one of the `ranges`, or take `before`/`after`.
 
 ### unknown-id
 

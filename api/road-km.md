@@ -14,7 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 Position of a kilometre on a numbered road (A, S, B, L), e.g. `road=B1&km=61.2`. One road can have several sections with the same kilometre (federal states, kilometre jumps, branches); every match is returned, matches closer than 150 m are merged. A kilometre exactly on a marker returns the position of the marker (`exact` true).
 
-Otherwise the point is interpolated between the two neighbouring markers of the same section (`exact` false, `between` [km, km]): along the GIP.at road geometry (`interpolation` `road`) or, where the geometry does not fit, on the straight line (`interpolation` `straight`, larger `accuracy`); never across a gap (no geometry and a distance more than three times the kilometre difference). Each result: `location` [lng, lat], `state`, `name` (road name or null), `section` (id of the GIP edge sequence), `bearing` (degrees from north in the direction of increasing kilometres), `accuracy` (estimated position uncertainty in meters), `source` (`gip`), `exact`, and for interpolated points `between` and `interpolation`. Input is tolerant: `b1`, `B 1`, `B-1`; `km` with point or comma. Unknown road: 404 `unknown-road`; kilometre outside every section: 404 `km-out-of-range` with the extra field `ranges` [\{state, from, to\}]. Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered. The same points are the tileset `road-km` (`/v1/tiles/road-km`).
+Otherwise the point is interpolated between the two neighbouring markers of the same section (`exact` false, `between` [km, km]): along the GIP.at road geometry (`interpolation` `road`) or, where the geometry does not fit, on the straight line (`interpolation` `straight`, larger `accuracy`); never across a gap (no geometry and a distance more than three times the kilometre difference). Each result: `location` [lng, lat], `state`, `name` (road name or null), `section` (id of the GIP edge sequence), `bearing` (degrees from north in the direction of increasing kilometres), `accuracy` (estimated position uncertainty in meters), `source` (`gip`), `exact`, and for interpolated points `between` and `interpolation`. Input is tolerant: `b1`, `B 1`, `B-1`; `km` with point or comma. Unknown road: 404 `unknown-road`; kilometre outside every section (or in a gap): 404 `km-out-of-range` with the extra fields `ranges` [\{state, from, to\}] and `before`/`after` (\{state, km\} of the nearest marker below and above, or null). Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered. The same points are the tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameters**
 
@@ -175,9 +175,9 @@ data = res.json()
 
 `GET /v1/road-km/roads`
 
-All roads with kilometre markers and their contiguous kilometre ranges per federal state (`ranges` [\{state, from, to\}]), sorted by class (A, S, B, L) and number; for autocompletion with `q` (start of the road number, e.g. `B1` gives B1, B10, B100 ...). Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered.
+All roads with kilometre markers and their contiguous kilometre ranges per federal state (`ranges` [\{state, name, from, to\}], `name` is the road name in that state or null; `name` at the top is the first one), sorted by class (A, S, B, L) and number; for autocompletion with `q` (start of the road number, e.g.
 
-The same points are the tileset `road-km` (`/v1/tiles/road-km`).
+`B1` gives B1, B10, B100 ...). Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered. The same points are the tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameters**
 
@@ -221,11 +221,13 @@ data = res.json()
       "ranges": [
         {
           "state": "Niederösterreich",
+          "name": "Wiener Straße",
           "from": 16.44,
           "to": 77.2
         },
         {
           "state": "Oberösterreich",
+          "name": "Wiener Straße",
           "from": 139.95,
           "to": 300.2
         }
