@@ -14,7 +14,7 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 Search as you type over addresses, streets, places and points of interest from open government data. FeatureCollection in the same format as geocode (schema `Place`, with point geometry); points of interest also carry `category` and `maki`, stops `stop_id` and `modes`.
 
-`/retrieve/{id}` returns a single hit by its `id`.
+Road kilometres (`B1 km 61,2`) give the same points as `/v1/road-km` (`type` `road_ref`, id `roadkm.<road>.<metres>.<state 1-9>`). `/retrieve/{id}` returns a single hit by its `id`.
 
 **Parameters**
 

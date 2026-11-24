@@ -12,7 +12,9 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 `GET /v1/searchbox/suggest`
 
-Suche beim Tippen über Adressen, Straßen, Orte und POIs aus offenen Verwaltungsdaten. FeatureCollection im selben Format wie geocode (Schema `Place`, mit Punktgeometrie); POIs tragen zusätzlich `category` und `maki`, Haltestellen `stop_id` und `modes`. `/retrieve/{id}` liefert einen einzelnen Treffer über seine `id`.
+Suche beim Tippen über Adressen, Straßen, Orte und POIs aus offenen Verwaltungsdaten. FeatureCollection im selben Format wie geocode (Schema `Place`, mit Punktgeometrie); POIs tragen zusätzlich `category` und `maki`, Haltestellen `stop_id` und `modes`. Straßenkilometer (`B1 km 61,2`) liefern dieselben Punkte wie `/v1/road-km` (`type` `road_ref`, Id `roadkm.<Straße>.<Meter>.<Land 1-9>`).
+
+`/retrieve/{id}` liefert einen einzelnen Treffer über seine `id`.
 
 **Parameter**
 

@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/api/road-km/
 
-> Straßenkilometer-API für Österreich: Lage eines Kilometers auf A-, S-, B- und L-Straßen und Straßenkilometer zu einer Koordinate, aus offenen Verwaltungsdaten.
+> Straßenkilometer-API für Österreich: Lage eines Kilometers auf Bundes- und Landesstraßen und Straßenkilometer zu einer Koordinate, aus den Kilometerzeichen der GIP.at.
 
-Wandelt Straßennummer und Kilometer (`B1` km 61,2) in Koordinaten um und eine Koordinate in den nächsten Straßenkilometer. Niederösterreich: Hektometerpunkte des Landes Niederösterreich (offene Verwaltungsdaten, täglich aktualisiert); sonst die Kilometerpunkte der GIP.at. `/v1/geocode` versteht dieselbe Eingabe als Freitext (`B1 km 61,2`).
+Wandelt Straßennummer und Kilometer (`B1` km 61,2) in Koordinaten um und eine Koordinate in den nächsten Straßenkilometer. Quelle: die Kilometer- und Hektometerzeichen der GIP.at (offene Verwaltungsdaten) in allen Bundesländern; genau auf einem Zeichen kommt dessen Lage, dazwischen wird entlang der Straße gerechnet. Autobahnen, Schnellstraßen und Wien haben in der GIP.at keine Zeichen. Dieselben Punkte bilden die Kartenebene `road-km`. `/v1/geocode` versteht dieselbe Eingabe als Freitext (`B1 km 61,2`).
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
@@ -14,7 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 Lage eines Kilometers auf einer nummerierten Straße (A, S, B, L), z. B. `road=B1&km=61.2`. Eine Straße kann mehrere Abschnitte mit demselben Kilometer haben (Bundesländer, Kilometersprünge, Äste); alle Treffer werden geliefert, Treffer näher als 150 m zusammengefasst.
 
-Zwischen Nachbarpunkten wird linear interpoliert, nie über eine Lücke (Abstand größer als das Dreifache der Kilometerdifferenz). Je Treffer: `location` [lng, lat], `state`, `name` (Straßenname oder null), `section` (Id des Quellabschnitts), `bearing` (Grad ab Nord in Richtung steigender Kilometer), `accuracy` (geschätzte Lageunsicherheit in Metern), `source` (`noe` oder `gip`). Die Eingabe ist tolerant: `b1`, `B 1`, `B-1`; `km` mit Punkt oder Komma. Unbekannte Straße: 404 `unknown-road`; Kilometer außerhalb aller Abschnitte: 404 `km-out-of-range` mit dem Zusatzfeld `ranges` [\{state, from, to\}]. Quellen: Hektometerpunkte des Landes Niederösterreich (offene Verwaltungsdaten, CC BY 4.0, täglich aktualisiert) für Niederösterreich; sonst die Kilometerpunkte der GIP.at (A, S, B alle 0,1 km, L alle 0,5 km, soweit vorhanden; Autobahnen und Schnellstraßen an ASFINAG-Betriebskilometern kalibriert, CC BY 4.0).
+Ein Kilometer genau auf einem Zeichen liefert dessen Lage (`exact` true). Sonst wird zwischen den beiden benachbarten Zeichen desselben Abschnitts gerechnet (`exact` false, `between` [km, km]): entlang der Straßengeometrie der GIP.at (`interpolation` `road`) oder, wo die Geometrie nicht passt, auf der Geraden (`interpolation` `straight`, größere `accuracy`); nie über eine Lücke (ohne Geometrie und Abstand größer als das Dreifache der Kilometerdifferenz). Je Treffer: `location` [lng, lat], `state`, `name` (Straßenname oder null), `section` (Id der GIP-Kantensequenz), `bearing` (Grad ab Nord in Richtung steigender Kilometer), `accuracy` (geschätzte Lageunsicherheit in Metern), `source` (`gip`), `exact` und bei gerechneten Punkten `between` und `interpolation`. Die Eingabe ist tolerant: `b1`, `B 1`, `B-1`; `km` mit Punkt oder Komma. Unbekannte Straße: 404 `unknown-road`; Kilometer außerhalb aller Abschnitte: 404 `km-out-of-range` mit dem Zusatzfeld `ranges` [\{state, from, to\}]. Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
@@ -57,18 +57,24 @@ data = res.json()
   "results": [
     {
       "location": [
-        15.691093,
-        48.235457
+        15.691104,
+        48.23548
       ],
       "state": "Niederösterreich",
       "name": "Wiener Straße",
-      "section": "noe:6101002085",
-      "bearing": 64,
-      "accuracy": 5,
-      "source": "noe"
+      "section": "gip:244063",
+      "bearing": 228,
+      "accuracy": 38,
+      "source": "gip",
+      "exact": false,
+      "between": [
+        60.7,
+        62.12
+      ],
+      "interpolation": "road"
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -87,9 +93,9 @@ data = res.json()
 
 `GET /v1/road-km/reverse`
 
-Nächste Straßen mit Kilometerpunkten um einen Punkt: Projektion auf die Linie durch die Kilometerpunkte, Kilometer auf 10 m (`km` mit zwei Nachkommastellen), `distance` in Metern vom Punkt zur Straße, nächster zuerst; je Straße und Bundesland nur der nächste Treffer.
+Nächste Straßen mit Kilometerzeichen um einen Punkt: Projektion auf die Straßengeometrie zwischen den beiden benachbarten Zeichen (ohne Geometrie auf die Gerade), Kilometer im Verhältnis der Länge zwischen ihnen, auf 10 m (`km` mit zwei Nachkommastellen); liegt der Lotfußpunkt höchstens 1 m neben einem Zeichen, kommt dieses Zeichen (`exact` true, sein `km` und seine Lage), `distance` in Metern vom Punkt zur Straße, nächster zuerst; je Straße und Bundesland nur der nächste Treffer.
 
-Übrige Felder wie bei `/v1/road-km`. Leeres `results`, wenn im `radius` keine Straße liegt. Quellen: Hektometerpunkte des Landes Niederösterreich (offene Verwaltungsdaten, CC BY 4.0, täglich aktualisiert) für Niederösterreich; sonst die Kilometerpunkte der GIP.at (A, S, B alle 0,1 km, L alle 0,5 km, soweit vorhanden; Autobahnen und Schnellstraßen an ASFINAG-Betriebskilometern kalibriert, CC BY 4.0).
+Übrige Felder wie bei `/v1/road-km`. Leeres `results`, wenn im `radius` keine Straße liegt. Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
@@ -105,13 +111,13 @@ Nächste Straßen mit Kilometerpunkten um einen Punkt: Projektion auf die Linie 
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -120,7 +126,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -129,28 +135,29 @@ data = res.json()
 ```json
 {
   "location": [
-    15.6357,
-    48.2292
+    15.6965,
+    48.2381
   ],
   "radius": 50,
   "results": [
     {
-      "road": "L100",
-      "km": 3.45,
+      "road": "B1",
+      "km": 60.7,
       "location": [
-        15.635695,
-        48.22921
+        15.696458,
+        48.23812
       ],
       "distance": 0.8,
       "state": "Niederösterreich",
-      "name": null,
-      "section": "noe:26126808",
-      "bearing": 21,
+      "name": "Wiener Straße",
+      "section": "gip:244063",
+      "bearing": 253,
       "accuracy": 5,
-      "source": "noe"
+      "source": "gip",
+      "exact": true
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -164,13 +171,13 @@ data = res.json()
 | `429` | Rate-Limit überschritten, `Retry-After` abwarten |
 | `503` | Daten vorübergehend nicht verfügbar |
 
-## Straßen mit Kilometerpunkten {#roads-with-kilometre-points}
+## Straßen mit Kilometerzeichen {#roads-with-kilometre-markers}
 
 `GET /v1/road-km/roads`
 
-Alle Straßen mit Kilometerpunkten und ihren zusammenhängenden Kilometerbereichen je Bundesland (`ranges` [\{state, from, to\}]), sortiert nach Klasse (A, S, B, L) und Nummer; zur Autovervollständigung mit `q` (Anfang der Straßennummer, z. B. `B1` liefert B1, B10, B100 …).
+Alle Straßen mit Kilometerzeichen und ihren zusammenhängenden Kilometerbereichen je Bundesland (`ranges` [\{state, from, to\}]), sortiert nach Klasse (A, S, B, L) und Nummer; zur Autovervollständigung mit `q` (Anfang der Straßennummer, z. B. `B1` liefert B1, B10, B100 …).
 
-Quellen: Hektometerpunkte des Landes Niederösterreich (offene Verwaltungsdaten, CC BY 4.0, täglich aktualisiert) für Niederösterreich; sonst die Kilometerpunkte der GIP.at (A, S, B alle 0,1 km, L alle 0,5 km, soweit vorhanden; Autobahnen und Schnellstraßen an ASFINAG-Betriebskilometern kalibriert, CC BY 4.0).
+Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
@@ -214,18 +221,18 @@ data = res.json()
       "ranges": [
         {
           "state": "Niederösterreich",
-          "from": 0,
-          "to": 139.6
+          "from": 16.44,
+          "to": 77.2
         },
         {
           "state": "Oberösterreich",
-          "from": 139.6,
+          "from": 139.95,
           "to": 300.2
         }
       ]
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0); GIP.at, ASFINAG (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 

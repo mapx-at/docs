@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/api/road-km/
 
-> Road kilometre API for Austria: position of a kilometre on A, S, B and L roads and the road kilometre at a coordinate, from open government data.
+> Road kilometre API for Austria: position of a kilometre on federal and state roads and the road kilometre at a coordinate, from the kilometre markers of GIP.at.
 
-Turns a road number and kilometre (`B1` km 61.2) into coordinates and a coordinate into the nearest road kilometre. Lower Austria: hectometre points of the State of Lower Austria (open government data, updated daily); elsewhere the kilometre points of GIP.at. `/v1/geocode` understands the same input as free text (`B1 km 61,2`).
+Turns a road number and kilometre (`B1` km 61.2) into coordinates and a coordinate into the nearest road kilometre. Source: the kilometre and hectometre markers of GIP.at (open government data) in all federal states; exactly on a marker you get its position, in between the point is interpolated along the road. Motorways, expressways and Vienna have no markers in GIP.at. The same points are the map layer `road-km`. `/v1/geocode` understands the same input as free text (`B1 km 61,2`).
 
 Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Search](https://docs.mapx.at/guides/search.md)
 
@@ -12,9 +12,9 @@ Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [S
 
 `GET /v1/road-km`
 
-Position of a kilometre on a numbered road (A, S, B, L), e.g. `road=B1&km=61.2`. One road can have several sections with the same kilometre (federal states, kilometre jumps, branches); every match is returned, matches closer than 150 m are merged. Between neighbouring points the position is interpolated linearly, never across a gap (distance more than three times the kilometre difference).
+Position of a kilometre on a numbered road (A, S, B, L), e.g. `road=B1&km=61.2`. One road can have several sections with the same kilometre (federal states, kilometre jumps, branches); every match is returned, matches closer than 150 m are merged. A kilometre exactly on a marker returns the position of the marker (`exact` true).
 
-Each result: `location` [lng, lat], `state`, `name` (road name or null), `section` (id of the source section), `bearing` (degrees from north in the direction of increasing kilometres), `accuracy` (estimated position uncertainty in meters), `source` (`noe` or `gip`). Input is tolerant: `b1`, `B 1`, `B-1`; `km` with point or comma. Unknown road: 404 `unknown-road`; kilometre outside every section: 404 `km-out-of-range` with the extra field `ranges` [\{state, from, to\}]. Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+Otherwise the point is interpolated between the two neighbouring markers of the same section (`exact` false, `between` [km, km]): along the GIP.at road geometry (`interpolation` `road`) or, where the geometry does not fit, on the straight line (`interpolation` `straight`, larger `accuracy`); never across a gap (no geometry and a distance more than three times the kilometre difference). Each result: `location` [lng, lat], `state`, `name` (road name or null), `section` (id of the GIP edge sequence), `bearing` (degrees from north in the direction of increasing kilometres), `accuracy` (estimated position uncertainty in meters), `source` (`gip`), `exact`, and for interpolated points `between` and `interpolation`. Input is tolerant: `b1`, `B 1`, `B-1`; `km` with point or comma. Unknown road: 404 `unknown-road`; kilometre outside every section: 404 `km-out-of-range` with the extra field `ranges` [\{state, from, to\}]. Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered. The same points are the tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameters**
 
@@ -57,18 +57,24 @@ data = res.json()
   "results": [
     {
       "location": [
-        15.691093,
-        48.235457
+        15.691104,
+        48.23548
       ],
       "state": "Niederösterreich",
       "name": "Wiener Straße",
-      "section": "noe:6101002085",
-      "bearing": 64,
-      "accuracy": 5,
-      "source": "noe"
+      "section": "gip:244063",
+      "bearing": 228,
+      "accuracy": 38,
+      "source": "gip",
+      "exact": false,
+      "between": [
+        60.7,
+        62.12
+      ],
+      "interpolation": "road"
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -87,9 +93,9 @@ data = res.json()
 
 `GET /v1/road-km/reverse`
 
-Nearest roads with kilometre points around a point: projection onto the line through the kilometre points, kilometre to 10 m (`km` with two decimals), `distance` in meters from the point to the road, nearest first; per road and federal state only the closest match.
+Nearest roads with kilometre markers around a point: projection onto the road geometry between the two neighbouring markers (straight line where there is none), kilometre in proportion to the length between them, to 10 m (`km` with two decimals); a projection within 1 m of a marker returns the marker (`exact` true, its `km` and position), `distance` in meters from the point to the road, nearest first; per road and federal state only the closest match.
 
-Other fields as in `/v1/road-km`. Empty `results` if no road lies within `radius`. Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+Other fields as in `/v1/road-km`. Empty `results` if no road lies within `radius`. Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered. The same points are the tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameters**
 
@@ -105,13 +111,13 @@ Other fields as in `/v1/road-km`. Empty `results` if no road lies within `radius
 **curl**
 
 ```bash
-curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50" | jq
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50" | jq
 ```
 
 **JavaScript**
 
 ```js
-const res = await fetch("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const res = await fetch("https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
 const data = await res.json();
 ```
 
@@ -120,7 +126,7 @@ const data = await res.json();
 ```python
 import requests
 
-res = requests.get("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", headers={"Authorization": "Bearer YOUR_TOKEN"})
+res = requests.get("https://api.mapx.at/v1/road-km/reverse?lng=15.69646&lat=48.23812&radius=50", headers={"Authorization": "Bearer YOUR_TOKEN"})
 data = res.json()
 ```
 
@@ -129,28 +135,29 @@ data = res.json()
 ```json
 {
   "location": [
-    15.6357,
-    48.2292
+    15.6965,
+    48.2381
   ],
   "radius": 50,
   "results": [
     {
-      "road": "L100",
-      "km": 3.45,
+      "road": "B1",
+      "km": 60.7,
       "location": [
-        15.635695,
-        48.22921
+        15.696458,
+        48.23812
       ],
       "distance": 0.8,
       "state": "Niederösterreich",
-      "name": null,
-      "section": "noe:26126808",
-      "bearing": 21,
+      "name": "Wiener Straße",
+      "section": "gip:244063",
+      "bearing": 253,
       "accuracy": 5,
-      "source": "noe"
+      "source": "gip",
+      "exact": true
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 
@@ -164,11 +171,13 @@ data = res.json()
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `503` | Data temporarily unavailable |
 
-## Roads with kilometre points
+## Roads with kilometre markers
 
 `GET /v1/road-km/roads`
 
-All roads with kilometre points and their contiguous kilometre ranges per federal state (`ranges` [\{state, from, to\}]), sorted by class (A, S, B, L) and number; for autocompletion with `q` (start of the road number, e.g. `B1` gives B1, B10, B100 ...). Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+All roads with kilometre markers and their contiguous kilometre ranges per federal state (`ranges` [\{state, from, to\}]), sorted by class (A, S, B, L) and number; for autocompletion with `q` (start of the road number, e.g. `B1` gives B1, B10, B100 ...). Source: the kilometre and hectometre markers of GIP.at (table REFERENCE_POINT, open government data, CC BY 4.0) on federal and state roads of all federal states where GIP.at has them; GIP.at has no markers on motorways and expressways (A, S) and none in Vienna, those are not covered.
+
+The same points are the tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameters**
 
@@ -212,18 +221,18 @@ data = res.json()
       "ranges": [
         {
           "state": "Niederösterreich",
-          "from": 0,
-          "to": 139.6
+          "from": 16.44,
+          "to": 77.2
         },
         {
           "state": "Oberösterreich",
-          "from": 139.6,
+          "from": 139.95,
           "to": 300.2
         }
       ]
     }
   ],
-  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0); GIP.at, ASFINAG (CC BY 4.0)"
+  "attribution": "mapx.at | GIP.at (CC BY 4.0)"
 }
 ```
 

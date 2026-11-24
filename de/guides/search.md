@@ -25,7 +25,7 @@ const { features } = await (await fetch(url, { headers: { Authorization: "Bearer
 const [lon, lat] = features[0].geometry.coordinates;
 ```
 
-`features` kann leer sein; vor dem Zugriff auf `features[0]` die Länge prüfen. Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `A1 km 41`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
+`features` kann leer sein; vor dem Zugriff auf `features[0]` die Länge prüfen. Immer `types` angeben (`address`, `street`, `locality`, `place`, `district`, `region`, `postcode`, `poi`, `road_ref` für Straßenkilometer wie `B1 km 61,2`). Das Ergebnis lässt sich mit `bbox=minlon,minlat,maxlon,maxlat` eingrenzen oder mit `proximity=lon,lat` nach Entfernung ordnen.
 
 Alle Such-Endpunkte (geocode, reverse, batch, Search Box, Autofill) antworten im selben Format: eine GeoJSON-`FeatureCollection`, jeder Treffer mit stabiler `id`, Punkt-`geometry` und in `properties` den Feldern `type`, `name`, `place_formatted` (Anzeigezeile: `name, place_formatted`), `relevance`, `accuracy` und `address`. PLZ, Ort, Straße und Hausnummer stehen getrennt in `properties.address`. Ein Ort nach der Hausnummer hat Vorrang: `Hauptplatz 12a Graz` liefert Graz (Hauptplatz 12, die Straße, die Nachbarnummern), auch wenn es 12a nur anderswo gibt. Koordinaten wie `48.21, 16.37` als Suchtext werden wie bei Reverse Geocoding beantwortet.
 
