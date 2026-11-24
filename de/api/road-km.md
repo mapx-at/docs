@@ -4,7 +4,7 @@ Source: https://docs.mapx.at/de/api/road-km/
 
 > Straßenkilometer-API für Österreich: Lage eines Kilometers auf Bundes- und Landesstraßen und Straßenkilometer zu einer Koordinate, aus den Kilometerzeichen der GIP.at.
 
-Wandelt Straßennummer und Kilometer (`B1` km 61,2) in Koordinaten um und eine Koordinate in den nächsten Straßenkilometer. Quelle: die Kilometer- und Hektometerzeichen der GIP.at (offene Verwaltungsdaten) in allen Bundesländern; genau auf einem Zeichen kommt dessen Lage, dazwischen wird entlang der Straße gerechnet. Autobahnen, Schnellstraßen und Wien haben in der GIP.at keine Zeichen. Dieselben Punkte bilden die Kartenebene `road-km`. `/v1/geocode` versteht dieselbe Eingabe als Freitext (`B1 km 61,2`).
+Wandelt Straßennummer und Kilometer (`B1` km 61,2) in Koordinaten um und eine Koordinate in den nächsten Straßenkilometer. Quelle: die Straßenkilometrierung der GIP.at (offene Verwaltungsdaten) nach GIP-Standard: jeder Hektometer wird aus der kilometrierten Abschnittsfolge berechnet und an den Kilometerzeichen kalibriert; genau auf einem Zeichen kommt dessen Lage (`kind` `marker`), sonst ein berechneter Punkt (`kind` `computed`). Autobahnen und Schnellstraßen haben in der GIP.at keine Zeichen (grobe Genauigkeit), Wien hat keine Kilometrierung. Dieselben Punkte bilden die Kartenebene `road-km`. `/v1/geocode` versteht dieselbe Eingabe als Freitext (`B1 km 61,2`).
 
 Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [Suche](https://docs.mapx.at/de/guides/search.md)
 
@@ -14,7 +14,7 @@ Basis-URL: `https://api.mapx.at` · Rate-Limit-Zone: `search` (10/s) · Guide: [
 
 Lage eines Kilometers auf einer nummerierten Straße (A, S, B, L), z. B. `road=B1&km=61.2`. Eine Straße kann mehrere Abschnitte mit demselben Kilometer haben (Bundesländer, Kilometersprünge, Äste); alle Treffer werden geliefert, Treffer näher als 150 m zusammengefasst.
 
-Ein Kilometer genau auf einem Zeichen liefert dessen Lage (`exact` true). Sonst wird zwischen den beiden benachbarten Zeichen desselben Abschnitts gerechnet (`exact` false, `between` [km, km]): entlang der Straßengeometrie der GIP.at (`interpolation` `road`) oder, wo die Geometrie nicht passt, auf der Geraden (`interpolation` `straight`, größere `accuracy`); nie über eine Lücke (ohne Geometrie und Abstand größer als das Dreifache der Kilometerdifferenz). Je Treffer: `location` [lng, lat], `state`, `name` (Straßenname oder null), `section` (Id der GIP-Kantensequenz), `bearing` (Grad ab Nord in Richtung steigender Kilometer), `accuracy` (geschätzte Lageunsicherheit in Metern), `source` (`gip`), `exact` und bei gerechneten Punkten `between` und `interpolation`. Die Eingabe ist tolerant: `b1`, `B 1`, `B-1`; `km` mit Punkt oder Komma. Unbekannte Straße: 404 `unknown-road`; Kilometer außerhalb aller Abschnitte (oder in einer Lücke): 404 `km-out-of-range` mit den Zusatzfeldern `ranges` [\{state, from, to\}] und `before`/`after` (\{state, km\} des nächsten Zeichens darunter und darüber, sonst null). Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
+Ein Kilometer genau auf einem Zeichen liefert dessen Lage (`exact` true, `kind` `marker`), genau auf einem berechneten Hektometer dessen Lage (`exact` false, `kind` `computed`). Sonst wird zwischen den beiden benachbarten Punkten desselben Abschnitts gerechnet (`exact` false, `kind` `computed`, `between` [km, km]): entlang der Straßengeometrie der GIP.at (`interpolation` `road`) oder, wo die Geometrie nicht passt, auf der Geraden (`interpolation` `straight`, größere `accuracy`); nie über eine Lücke (ohne Geometrie und Abstand größer als das Dreifache der Kilometerdifferenz). Je Treffer: `location` [lng, lat], `state`, `name` (Straßenname oder null), `section` (Id der GIP-Kantensequenz), `bearing` (Grad ab Nord in Richtung steigender Kilometer), `accuracy` (geschätzte Lageunsicherheit in Metern), `source` (`gip`), `exact`, `kind` und bei gerechneten Punkten `between` und `interpolation`. Die Eingabe ist tolerant: `b1`, `B 1`, `B-1`; `km` mit Punkt oder Komma. Unbekannte Straße: 404 `unknown-road`; Kilometer außerhalb aller Abschnitte (oder in einer Lücke): 404 `km-out-of-range` mit den Zusatzfeldern `ranges` [\{state, from, to\}] und `before`/`after` (\{state, km\} des nächsten Zeichens darunter und darüber, sonst null). Quelle: die Straßenkilometrierung der GIP.at (offene Verwaltungsdaten, CC BY 4.0) nach GIP-Standard: jeder Hektometer wird aus der kilometrierten Abschnittsfolge (Tabelle LINK_2_EDGE_SEQUENCE) berechnet und an den Kilometerzeichen (Tabelle REFERENCE_POINT) kalibriert, die Zeichen selbst behalten ihre Lage (`kind` `marker`, berechnete Punkte `kind` `computed`). Autobahnen und Schnellstraßen (A, S) haben in der GIP.at keine Zeichen; dort ist die Abschnittsfolge nur grob an den Nummern der Anschlussstellen-Rampen kalibriert (`accuracy` 300 bis 500 m). Wien hat in der GIP.at keine Kilometrierung. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
@@ -64,14 +64,10 @@ data = res.json()
       "name": "Wiener Straße",
       "section": "gip:244063",
       "bearing": 228,
-      "accuracy": 38,
+      "accuracy": 10,
       "source": "gip",
       "exact": false,
-      "between": [
-        60.7,
-        62.12
-      ],
-      "interpolation": "road"
+      "kind": "computed"
     }
   ],
   "attribution": "mapx.at | GIP.at (CC BY 4.0)"
@@ -95,7 +91,7 @@ data = res.json()
 
 Nächste Straßen mit Kilometerzeichen um einen Punkt: Projektion auf die Straßengeometrie zwischen den beiden benachbarten Zeichen (ohne Geometrie auf die Gerade), Kilometer im Verhältnis der Länge zwischen ihnen, auf 10 m (`km` mit zwei Nachkommastellen); liegt der Lotfußpunkt höchstens 1 m neben einem Zeichen, kommt dieses Zeichen (`exact` true, sein `km` und seine Lage), `distance` in Metern vom Punkt zur Straße, nächster zuerst; je Straße und Bundesland nur der nächste Treffer.
 
-Übrige Felder wie bei `/v1/road-km`. Leeres `results`, wenn im `radius` keine Straße liegt. Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
+Übrige Felder wie bei `/v1/road-km`. Leeres `results`, wenn im `radius` keine Straße liegt. Quelle: die Straßenkilometrierung der GIP.at (offene Verwaltungsdaten, CC BY 4.0) nach GIP-Standard: jeder Hektometer wird aus der kilometrierten Abschnittsfolge (Tabelle LINK_2_EDGE_SEQUENCE) berechnet und an den Kilometerzeichen (Tabelle REFERENCE_POINT) kalibriert, die Zeichen selbst behalten ihre Lage (`kind` `marker`, berechnete Punkte `kind` `computed`). Autobahnen und Schnellstraßen (A, S) haben in der GIP.at keine Zeichen; dort ist die Abschnittsfolge nur grob an den Nummern der Anschlussstellen-Rampen kalibriert (`accuracy` 300 bis 500 m). Wien hat in der GIP.at keine Kilometrierung. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
@@ -154,7 +150,8 @@ data = res.json()
       "bearing": 253,
       "accuracy": 5,
       "source": "gip",
-      "exact": true
+      "exact": true,
+      "kind": "marker"
     }
   ],
   "attribution": "mapx.at | GIP.at (CC BY 4.0)"
@@ -177,7 +174,7 @@ data = res.json()
 
 Alle Straßen mit Kilometerzeichen und ihren zusammenhängenden Kilometerbereichen je Bundesland (`ranges` [\{state, name, from, to\}], `name` ist der Straßenname in diesem Land oder null; `name` oben ist der erste), sortiert nach Klasse (A, S, B, L) und Nummer; zur Autovervollständigung mit `q` (Anfang der Straßennummer, z. B.
 
-`B1` liefert B1, B10, B100 …). Quelle: die Kilometer- und Hektometerzeichen der GIP.at (Tabelle REFERENCE_POINT, offene Verwaltungsdaten, CC BY 4.0) auf Bundes- und Landesstraßen aller Bundesländer, soweit die GIP.at sie führt; auf Autobahnen und Schnellstraßen (A, S) und in Wien hat die GIP.at keine Zeichen, diese sind nicht abgedeckt. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
+`B1` liefert B1, B10, B100 …). Quelle: die Straßenkilometrierung der GIP.at (offene Verwaltungsdaten, CC BY 4.0) nach GIP-Standard: jeder Hektometer wird aus der kilometrierten Abschnittsfolge (Tabelle LINK_2_EDGE_SEQUENCE) berechnet und an den Kilometerzeichen (Tabelle REFERENCE_POINT) kalibriert, die Zeichen selbst behalten ihre Lage (`kind` `marker`, berechnete Punkte `kind` `computed`). Autobahnen und Schnellstraßen (A, S) haben in der GIP.at keine Zeichen; dort ist die Abschnittsfolge nur grob an den Nummern der Anschlussstellen-Rampen kalibriert (`accuracy` 300 bis 500 m). Wien hat in der GIP.at keine Kilometrierung. Dieselben Punkte bilden das Tileset `road-km` (`/v1/tiles/road-km`).
 
 **Parameter**
 
