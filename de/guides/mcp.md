@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/de/guides/mcp/
 
-> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 22 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
+> claude.ai, ChatGPT, Claude Code oder Cursor mit mapx verbinden: 23 lesende Werkzeuge für Suche, Routing, ÖV, Höhen, Verkehr und Wetter in Österreich.
 
-Der mapx-MCP-Server gibt einem KI-Assistenten 22 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus offenen Verwaltungsdaten, jede Antwort nennt ihre Quelle.
+Der mapx-MCP-Server gibt einem KI-Assistenten 23 Werkzeuge für Österreich-Geodaten: Adresssuche, Routen, öffentlicher Verkehr, Höhen, Verkehr und Wetter. Er nutzt das [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), jeder MCP-Client kann sich verbinden. Alle Werkzeuge lesen nur, die Daten gelten nur für Österreich und stammen aus offenen Verwaltungsdaten, jede Antwort nennt ihre Quelle.
 
 | Eigenschaft | Wert |
 |---|---|
@@ -173,6 +173,7 @@ Der Assistent wählt die Werkzeuge selbst. Koordinaten sind `{lng, lat}` in WGS8
 | Höhe | `elevation_profile` | Anstieg, Abstieg, tiefster und höchster Punkt entlang einer Linie | `points` (2 bis 200 Punkte), `samples`, `model` |
 | Verkehr | `traffic_incidents` | Unfälle, Stau, Baustellen und Sperren | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Verkehr | `speed_limits` | Gesetzliche Tempolimits an einem Punkt, in einem Rechteck oder entlang eines Pfads | `at`, `bbox`, `points`, `buffer` |
+| Verkehr | `road_km` | Straßenkilometer zu Koordinaten (`B1 km 61,2`) und der Straßenkilometer zu einem Punkt | `road`, `km`, `state`, `at`, `radius` |
 | Verkehr | `sign_limits` | Aktuell von Wechselverkehrszeichen auf Autobahnen angezeigte Tempolimits | `at`, `bbox`, `limit` |
 | Wetter | `weather` | Aktuelle Messwerte, stündliche Vorhersage oder Nowcast | `lng`, `lat`, `kind`, `hours` |
 | Wetter | `weather_warnings` | Wetterwarnungen von GeoSphere Austria | `at`, `bbox`, `type`, `min_level`, `active_now` |

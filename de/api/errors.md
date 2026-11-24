@@ -81,6 +81,8 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-font`](#unknown-font) | 404 | Unbekannte Schrift |
 | [`unknown-parameter`](#unknown-parameter) | 400 | Unbekannter Parameter |
 | [`unknown-layer`](#unknown-layer) | 404 | Unbekannte Ebene |
+| [`unknown-road`](#unknown-road) | 404 | Unbekannte Straße |
+| [`km-out-of-range`](#km-out-of-range) | 404 | Kilometer außerhalb des Bereichs |
 | [`unknown-id`](#unknown-id) | 404 | Unbekannte Id |
 | [`no-road-nearby`](#no-road-nearby) | 404 | Keine Straße in der Nähe |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Kachel außerhalb des Bereichs |
@@ -307,6 +309,22 @@ Was tun: Den Namen korrigieren oder den Parameter weglassen; die Parameter je En
 Eine Wetter- oder Luftgüte-Ebene (Pfad von `/v1/weather/tiles/…`, `/v1/air-quality/tiles/…`) ist nicht bekannt.
 
 Was tun: Einen von temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast verwenden.
+
+### unknown-road
+
+**404** · Unbekannte Straße
+
+`/v1/road-km` kennt für diese Straßennummer keine Kilometerpunkte (`param` = `road`) oder keine im gewünschten Land (`state`). Straßennummern sind A, S, B oder L mit bis zu vier Ziffern (`B1`, `L100`, `L1234a`).
+
+Was tun: Nummer prüfen; `/v1/road-km/roads` listet die Straßen mit Kilometerpunkten.
+
+### km-out-of-range
+
+**404** · Kilometer außerhalb des Bereichs
+
+Die Straße ist bekannt, hat an diesem Kilometer aber keinen Punkt (hinter dem Ende oder in einer Lücke, etwa bei einem Kilometersprung). Das Problem-Objekt hat das Zusatzfeld `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, die zusammenhängenden Bereiche in km.
+
+Was tun: Einen Kilometer innerhalb eines Bereichs aus `ranges` wählen.
 
 ### unknown-id
 

@@ -2,9 +2,9 @@
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 22 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 23 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 22 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from open government data, and every answer names its source.
+The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from open government data, and every answer names its source.
 
 | Property | Value |
 |---|---|
@@ -173,6 +173,7 @@ The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `ge
 | Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `points` (2 to 200 points), `samples`, `model` |
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
+| Traffic | `road_km` | Road kilometre to coordinates (`B1 km 61.2`) and the road kilometre at a point | `road`, `km`, `state`, `at`, `radius` |
 | Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lng`, `lat`, `kind`, `hours` |
 | Weather | `weather_warnings` | Weather warnings from GeoSphere Austria | `at`, `bbox`, `type`, `min_level`, `active_now` |

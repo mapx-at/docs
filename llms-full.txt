@@ -377,7 +377,7 @@ Yes, a free account and API token. Sign in at [account.mapx.at](https://account.
 
 ## Can I use mapx with Claude, ChatGPT or Cursor?
 
-Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 22 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
+Yes, through the [MCP server](https://docs.mapx.at/guides/mcp.md): 23 read-only tools for Austrian data. In claude.ai, ChatGPT and Claude Code you only enter `https://mcp.mapx.at/mcp` and sign in with your mapx account. For Cursor, VS Code, Gemini CLI and other clients, create a token of type "AI assistant (MCP)".
 
 ## Is mapx free?
 
@@ -1277,9 +1277,9 @@ Show `mapx.at | GeoSphere Austria (CC BY 4.0)` (the `attribution` field of the r
 
 Source: https://docs.mapx.at/guides/mcp/
 
-> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 22 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
+> Connect claude.ai, ChatGPT, Claude Code or Cursor to mapx: 23 read-only tools for search, routing, transit, elevation, traffic and weather in Austria.
 
-The mapx MCP server gives an AI assistant 22 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from open government data, and every answer names its source.
+The mapx MCP server gives an AI assistant 23 tools for Austrian geodata: address search, routes, public transport, heights, traffic and weather. It uses the [Model Context Protocol](https://modelcontextprotocol.io/) (MCP), so any MCP client can connect. All tools are read-only, the data covers Austria only and comes from open government data, and every answer names its source.
 
 | Property | Value |
 |---|---|
@@ -1448,6 +1448,7 @@ The assistant picks the tools itself. Coordinates are `{lng, lat}` in WGS84; `ge
 | Elevation | `elevation_profile` | Ascent, descent, lowest and highest point along a line | `points` (2 to 200 points), `samples`, `model` |
 | Traffic | `traffic_incidents` | Accidents, congestion, roadworks and closures | `bbox`, `road`, `road_class`, `types`, `planned` |
 | Traffic | `speed_limits` | Statutory speed limits at a point, in a box or along a path | `at`, `bbox`, `points`, `buffer` |
+| Traffic | `road_km` | Road kilometre to coordinates (`B1 km 61.2`) and the road kilometre at a point | `road`, `km`, `state`, `at`, `radius` |
 | Traffic | `sign_limits` | Speed limits shown right now by variable message signs on motorways | `at`, `bbox`, `limit` |
 | Weather | `weather` | Current observations, hourly forecast or nowcast | `lng`, `lat`, `kind`, `hours` |
 | Weather | `weather_warnings` | Weather warnings from GeoSphere Austria | `at`, `bbox`, `type`, `min_level`, `active_now` |
@@ -2142,6 +2143,7 @@ All APIs live under `https://api.mapx.at/v1/` and need a free API token from [ac
 - [Styles](https://docs.mapx.at/api/styles.md): Styles, fonts, sprites, Static Tiles.
 - [Geocoding](https://docs.mapx.at/api/geocoding.md): Forward, reverse and batch.
 - [Search Box](https://docs.mapx.at/api/search-box.md): Suggestions, retrieve, categories.
+- [Road kilometres](https://docs.mapx.at/api/road-km.md): Road kilometre to coordinates and back.
 - [Address](https://docs.mapx.at/api/address.md): Autofill and validation.
 - [Directions](https://docs.mapx.at/api/directions.md): Routes for car, truck, bike and foot, corridor graph.
 - [Isochrone](https://docs.mapx.at/api/isochrone.md): Reachable areas by time or distance.
@@ -2250,6 +2252,8 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-font`](#unknown-font) | 404 | Unknown font |
 | [`unknown-parameter`](#unknown-parameter) | 400 | Unknown parameter |
 | [`unknown-layer`](#unknown-layer) | 404 | Unknown layer |
+| [`unknown-road`](#unknown-road) | 404 | Unknown road |
+| [`km-out-of-range`](#km-out-of-range) | 404 | Kilometer out of range |
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
 | [`no-road-nearby`](#no-road-nearby) | 404 | No road nearby |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
@@ -2476,6 +2480,22 @@ What to do: Fix the name or drop the parameter; the parameters of each endpoint 
 A weather or air-quality layer (path of `/v1/weather/tiles/…`, `/v1/air-quality/tiles/…`) is not known.
 
 What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast (list: `/v1/weather/tiles/<param>.json`).
+
+### unknown-road
+
+**404** · Unknown road
+
+`/v1/road-km` has no kilometre points for this road number (`param` = `road`), or none in the requested state (`state`). Road numbers are A, S, B or L plus up to four digits (`B1`, `L100`, `L1234a`).
+
+What to do: Check the number; `/v1/road-km/roads` lists the roads with kilometre points.
+
+### km-out-of-range
+
+**404** · Kilometer out of range
+
+The road is known but has no point at this kilometre (beyond its end or inside a gap such as a kilometre jump). The problem object has the extra field `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, the contiguous ranges in km.
+
+What to do: Pick a kilometre inside one of the `ranges`.
 
 ### unknown-id
 
@@ -5286,6 +5306,249 @@ data = res.json()
 | `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
 | `429` | Rate limit exceeded, wait `Retry-After` seconds |
 | `502` | Upstream service unavailable |
+
+## Playground
+
+---
+
+# Road kilometre API: kilometre posts and coordinates
+
+Source: https://docs.mapx.at/api/road-km/
+
+> Road kilometre API for Austria: position of a kilometre on A, S, B and L roads and the road kilometre at a coordinate, from open government data.
+
+Turns a road number and kilometre (`B1` km 61.2) into coordinates and a coordinate into the nearest road kilometre. Lower Austria: hectometre points of the State of Lower Austria (open government data, updated daily); elsewhere the kilometre points of GIP.at. `/v1/geocode` understands the same input as free text (`B1 km 61,2`).
+
+Base URL: `https://api.mapx.at` · Rate-limit zone: `search` (10/s) · Guide: [Search](https://docs.mapx.at/guides/search.md)
+
+## Road kilometre to coordinates
+
+`GET /v1/road-km`
+
+Position of a kilometre on a numbered road (A, S, B, L), e.g. `road=B1&km=61.2`. One road can have several sections with the same kilometre (federal states, kilometre jumps, branches); every match is returned, matches closer than 150 m are merged. Between neighbouring points the position is interpolated linearly, never across a gap (distance more than three times the kilometre difference).
+
+Each result: `location` [lng, lat], `state`, `name` (road name or null), `section` (id of the source section), `bearing` (degrees from north in the direction of increasing kilometres), `accuracy` (estimated position uncertainty in meters), `source` (`noe` or `gip`). Input is tolerant: `b1`, `B 1`, `B-1`; `km` with point or comma. Unknown road: 404 `unknown-road`; kilometre outside every section: 404 `km-out-of-range` with the extra field `ranges` [\{state, from, to\}]. Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `road` | query | string | yes | – | Road number: A, S, B or L with 1 to 4 digits and an optional letter, e.g. `B1`, `L100`, `L1234a` |
+| `km` | query | string | yes | – | Kilometre, 0 to 2000, point or comma (`61.2`, `61,2`) |
+| `state` | query | string |  | – | Only this federal state: name (`Niederösterreich`, also without umlauts, any case), short form (`bgld`, `ktn`, `noe`, `ooe`, `sbg`, `stmk`, `t`, `vbg`, `w`) or ISO code `AT-1` to `AT-9` |
+
+**Example**
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km?road=B1&km=61.2" | jq
+```
+
+**JavaScript**
+
+```js
+const res = await fetch("https://api.mapx.at/v1/road-km?road=B1&km=61.2", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+res = requests.get("https://api.mapx.at/v1/road-km?road=B1&km=61.2", headers={"Authorization": "Bearer YOUR_TOKEN"})
+data = res.json()
+```
+
+**Example response**
+
+```json
+{
+  "road": "B1",
+  "km": 61.2,
+  "results": [
+    {
+      "location": [
+        15.691093,
+        48.235457
+      ],
+      "state": "Niederösterreich",
+      "name": "Wiener Straße",
+      "section": "noe:6101002085",
+      "bearing": 64,
+      "accuracy": 5,
+      "source": "noe"
+    }
+  ],
+  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+}
+```
+
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `404` | Not found (name, path or position) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Coordinates to road kilometre
+
+`GET /v1/road-km/reverse`
+
+Nearest roads with kilometre points around a point: projection onto the line through the kilometre points, kilometre to 10 m (`km` with two decimals), `distance` in meters from the point to the road, nearest first; per road and federal state only the closest match.
+
+Other fields as in `/v1/road-km`. Empty `results` if no road lies within `radius`. Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `lng` | query | string | yes | – | Longitude (WGS84) |
+| `lat` | query | string | yes | – | Latitude (WGS84) |
+| `radius` | query | number (1–500) |  | `50` | Search radius in meters, 1 to 500, default 50 |
+| `limit` | query | integer (1–20) |  | `5` | 1 to 20, default 5 |
+
+**Example**
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50" | jq
+```
+
+**JavaScript**
+
+```js
+const res = await fetch("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+res = requests.get("https://api.mapx.at/v1/road-km/reverse?lng=15.69109&lat=48.23546&radius=50", headers={"Authorization": "Bearer YOUR_TOKEN"})
+data = res.json()
+```
+
+**Example response**
+
+```json
+{
+  "location": [
+    15.6357,
+    48.2292
+  ],
+  "radius": 50,
+  "results": [
+    {
+      "road": "L100",
+      "km": 3.45,
+      "location": [
+        15.635695,
+        48.22921
+      ],
+      "distance": 0.8,
+      "state": "Niederösterreich",
+      "name": null,
+      "section": "noe:26126808",
+      "bearing": 21,
+      "accuracy": 5,
+      "source": "noe"
+    }
+  ],
+  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0)"
+}
+```
+
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
+
+## Roads with kilometre points
+
+`GET /v1/road-km/roads`
+
+All roads with kilometre points and their contiguous kilometre ranges per federal state (`ranges` [\{state, from, to\}]), sorted by class (A, S, B, L) and number; for autocompletion with `q` (start of the road number, e.g. `B1` gives B1, B10, B100 ...). Sources: hectometre points of the State of Lower Austria (Land Niederösterreich, open government data, CC BY 4.0, updated daily) for Lower Austria; elsewhere the kilometre points of GIP.at (A, S, B every 0.1 km, L every 0.5 km where available; motorways and expressways calibrated at ASFINAG operating kilometres, CC BY 4.0).
+
+**Parameters**
+
+| Name | In | Type | Required | Default | Description |
+|---|---|---|---|---|---|
+| `q` | query | string |  | – | Start of the road number, e.g. `B`, `B1`, `L10` (spaces ignored) |
+| `state` | query | string |  | – | Only this federal state: name (`Niederösterreich`, also without umlauts, any case), short form (`bgld`, `ktn`, `noe`, `ooe`, `sbg`, `stmk`, `t`, `vbg`, `w`) or ISO code `AT-1` to `AT-9` |
+
+**Example**
+
+**curl**
+
+```bash
+curl -s -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/road-km/roads?q=L10&state=Nieder%C3%B6sterreich" | jq
+```
+
+**JavaScript**
+
+```js
+const res = await fetch("https://api.mapx.at/v1/road-km/roads?q=L10&state=Nieder%C3%B6sterreich", { headers: { Authorization: "Bearer YOUR_TOKEN" } });
+const data = await res.json();
+```
+
+**Python**
+
+```python
+import requests
+
+res = requests.get("https://api.mapx.at/v1/road-km/roads?q=L10&state=Nieder%C3%B6sterreich", headers={"Authorization": "Bearer YOUR_TOKEN"})
+data = res.json()
+```
+
+**Example response**
+
+```json
+{
+  "roads": [
+    {
+      "road": "B1",
+      "name": "Wiener Straße",
+      "ranges": [
+        {
+          "state": "Niederösterreich",
+          "from": 0,
+          "to": 139.6
+        },
+        {
+          "state": "Oberösterreich",
+          "from": 139.6,
+          "to": 300.2
+        }
+      ]
+    }
+  ],
+  "attribution": "mapx.at | Land Niederösterreich (CC BY 4.0); GIP.at, ASFINAG (CC BY 4.0)"
+}
+```
+
+**Errors** (details: [error catalog](https://docs.mapx.at/api/errors.md))
+
+| Status | Meaning |
+|---|---|
+| `400` | A parameter is missing, invalid or unknown (`unknown-parameter`) |
+| `401` | Token missing or invalid (`missing-token`, `invalid-token`, `token-expired`) |
+| `403` | Token not allowed here (`origin-not-allowed`, `origin-missing`, `pk-not-allowed`, `app-not-allowed`, `token-blocked`, `ip-not-allowed`) |
+| `429` | Rate limit exceeded, wait `Retry-After` seconds |
+| `503` | Data temporarily unavailable |
 
 ## Playground
 

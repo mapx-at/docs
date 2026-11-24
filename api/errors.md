@@ -81,6 +81,8 @@ curl -si -H "Authorization: Bearer YOUR_TOKEN" "https://api.mapx.at/v1/geocode?q
 | [`unknown-font`](#unknown-font) | 404 | Unknown font |
 | [`unknown-parameter`](#unknown-parameter) | 400 | Unknown parameter |
 | [`unknown-layer`](#unknown-layer) | 404 | Unknown layer |
+| [`unknown-road`](#unknown-road) | 404 | Unknown road |
+| [`km-out-of-range`](#km-out-of-range) | 404 | Kilometer out of range |
 | [`unknown-id`](#unknown-id) | 404 | Unknown id |
 | [`no-road-nearby`](#no-road-nearby) | 404 | No road nearby |
 | [`tile-out-of-range`](#tile-out-of-range) | 404 | Tile out of range |
@@ -307,6 +309,22 @@ What to do: Fix the name or drop the parameter; the parameters of each endpoint 
 A weather or air-quality layer (path of `/v1/weather/tiles/…`, `/v1/air-quality/tiles/…`) is not known.
 
 What to do: Use one of temperature, precipitation, wind, humidity, cloud, pressure, aqi, no2, o3, pm10, pm25, dust, snowlimit, sunshine, radiation, cape, snowfall, rr_nowcast, pt_nowcast (list: `/v1/weather/tiles/<param>.json`).
+
+### unknown-road
+
+**404** · Unknown road
+
+`/v1/road-km` has no kilometre points for this road number (`param` = `road`), or none in the requested state (`state`). Road numbers are A, S, B or L plus up to four digits (`B1`, `L100`, `L1234a`).
+
+What to do: Check the number; `/v1/road-km/roads` lists the roads with kilometre points.
+
+### km-out-of-range
+
+**404** · Kilometer out of range
+
+The road is known but has no point at this kilometre (beyond its end or inside a gap such as a kilometre jump). The problem object has the extra field `ranges`: `[{"state": "Niederösterreich", "from": 0.0, "to": 174.6}]`, the contiguous ranges in km.
+
+What to do: Pick a kilometre inside one of the `ranges`.
 
 ### unknown-id
 

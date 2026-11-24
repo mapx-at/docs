@@ -14,7 +14,7 @@ Ja, ein kostenloses Konto und einen API-Token. Unter [account.mapx.at](https://a
 
 ## Kann ich mapx mit Claude, ChatGPT oder Cursor nutzen?
 
-Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 22 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
+Ja, über den [MCP-Server](https://docs.mapx.at/de/guides/mcp.md): 23 lesende Werkzeuge für Österreich-Daten. In claude.ai, ChatGPT und Claude Code trägst du nur `https://mcp.mapx.at/mcp` ein und meldest dich mit deinem mapx-Konto an. Für Cursor, VS Code, Gemini CLI und andere Clients legst du einen Token vom Typ „KI-Assistent (MCP)“ an.
 
 ## Ist mapx kostenlos?
 

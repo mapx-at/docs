@@ -20,6 +20,7 @@ Alle APIs liegen unter `https://api.mapx.at/v1/` und brauchen einen kostenlosen 
 - [Styles](https://docs.mapx.at/de/api/styles.md): Styles, Fonts, Sprites, Static Tiles.
 - [Geocoding](https://docs.mapx.at/de/api/geocoding.md): Forward, Reverse und Batch.
 - [Search Box](https://docs.mapx.at/de/api/search-box.md): Vorschläge, Retrieve, Kategorien.
+- [Straßenkilometer](https://docs.mapx.at/de/api/road-km.md): Straßenkilometer zu Koordinaten und zurück.
 - [Address](https://docs.mapx.at/de/api/address.md): Autofill und Validierung.
 - [Directions](https://docs.mapx.at/de/api/directions.md): Routen für Auto, Lkw, Rad und Fuß, Korridorgraph.
 - [Isochrone](https://docs.mapx.at/de/api/isochrone.md): Erreichbare Gebiete nach Zeit oder Distanz.
